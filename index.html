@@ -18,7 +18,7 @@
     <header class="navy-header text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <h1 class="text-xl md:text-2xl font-bold flex items-center gap-2">
-                <i class="fa-solid fa-trophy text-yellow-400"></i> Bảng Tổng Hợp Những Trận Pick Đỉnh Cao
+                <i class="fa-solid fa-trophy text-yellow-400"></i> Bảng Tổng Hợp Những Trận Pick KÈO 15K
             </h1>
             <div class="text-xs md:text-sm bg-blue-900/60 px-3 py-1.5 rounded-lg border border-blue-400/30">
                 <i class="fa-regular fa-calendar-check mr-1"></i> Ngày: <span id="currentDate">03/09/2026</span>
@@ -81,67 +81,128 @@
                 </button>
             </div>
 
-            <!-- Match Table -->
-            <div class="bg-white rounded-xl shadow-sm overflow-x-auto border border-gray-200">
-                <table class="w-full text-xs md:text-sm text-left border-collapse min-w-[1000px]">
-                    <thead class="navy-header text-white text-center">
-                        <tr>
-                            <th class="p-3 border border-blue-900" rowspan="2">STT</th>
-                            <th class="p-3 border border-blue-900 bg-green-800" colspan="2">Cặp Pick 1</th>
-                            <th class="p-3 border border-blue-900 bg-pink-900" colspan="2">Cặp Pick 2</th>
-                            <th class="p-3 border border-blue-900" colspan="2">Tỷ Số</th>
-                            <th class="p-3 border border-blue-900" colspan="2">Kèo</th>
-                            <th class="p-3 border border-blue-900" rowspan="2">Pick Thủ</th>
-                            <th class="p-3 border border-blue-900" rowspan="2">Số Trận</th>
-                            <th class="p-3 border border-blue-900" colspan="3">Thành Tiền (k)</th>
-                            <th class="p-3 border border-blue-900" rowspan="2">Thực Tế</th>
-                            <th class="p-3 border border-blue-900" rowspan="2">Trạng Thái</th>
-                        </tr>
-                        <tr>
-                            <th class="p-2 border border-blue-900 bg-green-700">VĐV 1</th>
-                            <th class="p-2 border border-blue-900 bg-green-700">VĐV 2</th>
-                            <th class="p-2 border border-blue-900 bg-pink-800">VĐV 1</th>
-                            <th class="p-2 border border-blue-900 bg-pink-800">VĐV 2</th>
-                            <th class="p-2 border border-blue-900">A</th>
-                            <th class="p-2 border border-blue-900">B</th>
-                            <th class="p-2 border border-blue-900">A</th>
-                            <th class="p-2 border border-blue-900">B</th>
-                            <th class="p-2 border border-blue-900">Thắng</th>
-                            <th class="p-2 border border-blue-900">Thua</th>
-                            <th class="p-2 border border-blue-900">Tổng</th>
-                        </tr>
-                    </thead>
-                    <tbody id="matchTableBody" class="divide-y divide-gray-200 text-center font-medium">
-                        <!-- Dynamic Match Rows -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
+           <!-- Form Thêm Trận Mới -->
+<div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6">
+  <h3 class="font-bold text-gray-800 text-base mb-4">
+    <i class="fa-solid fa-plus-circle text-blue-600 mr-1"></i> Thêm Trận Mới
+  </h3>
+  
+  <form id="add-match-form" class="space-y-4">
+    <!-- Chọn Ngày -->
+    <div>
+      <label for="match-date" class="block text-xs font-semibold text-gray-600 mb-1">Ngày thi đấu:</label>
+      <input type="date" id="match-date" name="match-date" class="w-full md:w-1/3 p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+    </div>
 
-        <!-- TAB 2: TỔNG HỢP CÔNG NỢ VĐV -->
-        <div id="tabSummary" class="hidden space-y-4">
-            <div class="bg-white rounded-xl shadow-sm overflow-x-auto border border-gray-200 p-4">
-                <h2 class="font-bold text-gray-700 text-lg mb-4">Bảng Theo Dõi Công Nợ Pick Thủ</h2>
-                <table class="w-full text-xs md:text-sm text-left border-collapse">
-                    <thead class="navy-header text-white text-center">
-                        <tr>
-                            <th class="p-3 border border-blue-900">Tên Pick Thủ</th>
-                            <th class="p-3 border border-blue-900">Số Trận Đã Đánh</th>
-                            <th class="p-3 border border-blue-900">Tổng Tiền Thắng (k)</th>
-                            <th class="p-3 border border-blue-900">Tổng Tiền Thua (k)</th>
-                            <th class="p-3 border border-blue-900">Thành Tiền (k)</th>
-                            <th class="p-3 border border-blue-900">Đã Nộp (k)</th>
-                            <th class="p-3 border border-blue-900">Còn Phải Thu / Trả (k)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="summaryTableBody" class="divide-y divide-gray-200 text-center font-medium">
-                        <!-- Dynamic Summary Rows -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <!-- Cặp Pick 1 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-blue-50 p-3 rounded-lg border border-blue-200">
+      <span class="col-span-full font-bold text-xs text-blue-800">CẶP PICK 1:</span>
+      <div>
+        <label for="vdiv1" class="block text-xs text-gray-600 mb-1">VĐV 1:</label>
+        <select id="vdiv1" class="w-full p-2 border border-gray-300 rounded-lg text-sm bg-white">
+          <option value="">-- Chọn VĐV 1 --</option>
+          <option value="Phú Mỗ">Phú Mỗ</option>
+          <option value="Hà Giấy">Hà Giấy</option>
+          <option value="Tiến Thọ">Tiến Thọ</option>
+          <option value="Lợi Trì">Lợi Trì</option>
+          <option value="Trí Đô">Trí Đô</option>
+          <option value="Tuấn La">Tuấn La</option>
+          <option value="Thanh Đàm">Thanh Đàm</option>
+          <option value="Long Diễn">Long Diễn</option>
+          <option value="Điền Chèm">Điền Chèm</option>
+          <option value="Châu Sĩ">Châu Sĩ</option>
+          <option value="Gà Tre">Gà Tre</option>
+          <option value="Vân Đỉnh">Vân Đỉnh</option>
+        </select>
+      </div>
 
-    </main>
+      <div>
+        <label for="vdiv2" class="block text-xs text-gray-600 mb-1">VĐV 2:</label>
+        <select id="vdiv2" class="w-full p-2 border border-gray-300 rounded-lg text-sm bg-white">
+          <option value="">-- Chọn VĐV 2 --</option>
+          <option value="Phú Mỗ">Phú Mỗ</option>
+          <option value="Hà Giấy">Hà Giấy</option>
+          <option value="Tiến Thọ">Tiến Thọ</option>
+          <option value="Lợi Trì">Lợi Trì</option>
+          <option value="Trí Đô">Trí Đô</option>
+          <option value="Tuấn La">Tuấn La</option>
+          <option value="Thanh Đàm">Thanh Đàm</option>
+          <option value="Long Diễn">Long Diễn</option>
+          <option value="Điền Chèm">Điền Chèm</option>
+          <option value="Châu Sĩ">Châu Sĩ</option>
+          <option value="Gà Tre">Gà Tre</option>
+          <option value="Vân Đỉnh">Vân Đỉnh</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Cặp Pick 2 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-red-50 p-3 rounded-lg border border-red-200">
+      <span class="col-span-full font-bold text-xs text-red-800">CẶP PICK 2:</span>
+      <div>
+        <label for="vdiv3" class="block text-xs text-gray-600 mb-1">VĐV 3:</label>
+        <select id="vdiv3" class="w-full p-2 border border-gray-300 rounded-lg text-sm bg-white">
+          <option value="">-- Chọn VĐV 3 --</option>
+          <option value="Phú Mỗ">Phú Mỗ</option>
+          <option value="Hà Giấy">Hà Giấy</option>
+          <option value="Tiến Thọ">Tiến Thọ</option>
+          <option value="Lợi Trì">Lợi Trì</option>
+          <option value="Trí Đô">Trí Đô</option>
+          <option value="Tuấn La">Tuấn La</option>
+          <option value="Thanh Đàm">Thanh Đàm</option>
+          <option value="Long Diễn">Long Diễn</option>
+          <option value="Điền Chèm">Điền Chèm</option>
+          <option value="Châu Sĩ">Châu Sĩ</option>
+          <option value="Gà Tre">Gà Tre</option>
+          <option value="Vân Đỉnh">Vân Đỉnh</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="vdiv4" class="block text-xs text-gray-600 mb-1">VĐV 4:</label>
+        <select id="vdiv4" class="w-full p-2 border border-gray-300 rounded-lg text-sm bg-white">
+          <option value="">-- Chọn VĐV 4 --</option>
+          <option value="Phú Mỗ">Phú Mỗ</option>
+          <option value="Hà Giấy">Hà Giấy</option>
+          <option value="Tiến Thọ">Tiến Thọ</option>
+          <option value="Lợi Trì">Lợi Trì</option>
+          <option value="Trí Đô">Trí Đô</option>
+          <option value="Tuấn La">Tuấn La</option>
+          <option value="Thanh Đàm">Thanh Đàm</option>
+          <option value="Long Diễn">Long Diễn</option>
+          <option value="Điền Chèm">Điền Chèm</option>
+          <option value="Châu Sĩ">Châu Sĩ</option>
+          <option value="Gà Tre">Gà Tre</option>
+          <option value="Vân Đỉnh">Vân Đỉnh</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Pick Thủ -->
+    <div>
+      <label for="pick-thu" class="block text-xs font-semibold text-gray-600 mb-1">Pick Thủ:</label>
+      <select id="pick-thu" class="w-full md:w-1/2 p-2 border border-gray-300 rounded-lg text-sm bg-white">
+        <option value="">-- Chọn Pick Thủ --</option>
+        <option value="Phú Mỗ">Phú Mỗ</option>
+        <option value="Hà Giấy">Hà Giấy</option>
+        <option value="Tiến Thọ">Tiến Thọ</option>
+        <option value="Lợi Trì">Lợi Trì</option>
+        <option value="Trí Đô">Trí Đô</option>
+        <option value="Tuấn La">Tuấn La</option>
+        <option value="Thanh Đàm">Thanh Đàm</option>
+        <option value="Long Diễn">Long Diễn</option>
+        <option value="Điền Chèm">Điền Chèm</option>
+        <option value="Châu Sĩ">Châu Sĩ</option>
+        <option value="Gà Tre">Gà Tre</option>
+        <option value="Vân Đỉnh">Vân Đỉnh</option>
+      </select>
+    </div>
+
+    <button type="button" onclick="addNewMatch()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm transition">
+      Thêm Trận Đấu
+    </button>
+  </form>
+</div>
 
     <!-- Modal Form Thêm Trận Mới -->
     <div id="addModal" class="fixed inset-0 bg-black/50 hidden z-50 flex justify-center items-center p-4">

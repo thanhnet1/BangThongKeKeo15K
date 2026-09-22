@@ -360,7 +360,8 @@
         "Gà Tre", "Dũng Ngạc", "Vân Đình", "Thành Sóc",
         "Khách 1", "Khách 2", "Khách 3", "Khách 4", "Khách 5"
     ];
-
+<script>
+    
     // QUẢN LÝ DỮ LIỆU LOCALSTORAGE THEO THIẾT BỊ CÁ NHÂN
     let vdvs = JSON.parse(localStorage.getItem("cmtd_vdvs")) || defaultVDVs;
     let dates = JSON.parse(localStorage.getItem("cmtd_dates")) || ["3/9/26", "24/9/26", "1/10/26"]; 
@@ -466,7 +467,8 @@
 
         return { money1, money2, isFinished: true };
     }
-
+<script>
+    
     // BẢNG THI ĐẤU (ĐÃ TỐI ƯU CỘT PICK THU HẸP, TỶ SỐ VÀ KÈO MỞ RỘNG)
     function renderMatchTable(date) {
         let matches = matchesData[date];

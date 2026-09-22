@@ -320,13 +320,28 @@
         .action-bar { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
         .total-row { background-color: #fef3c7; font-weight: 800; }
 
-        /* DÀNH CHO MOBILE */
-        @media (max-width: 600px) {
-            body { padding: 4px; }
-            .brand-title h1 { font-size: 15px; }
-            .tabs { justify-content: flex-start; }
-            table { width: 560px; } 
-        }
+        /* DÀNH CHO MOBILE - TỐI ƯU HIỂN THỊ MARGIN & SCROLL */
+@media (max-width: 600px) {
+  body { 
+    padding: 2px; 
+  }
+  .brand-title h1 { 
+    font-size: 14px; 
+  }
+  .main-layout { 
+    grid-template-columns: 1fr; 
+  }
+  /* Cho phép bảng tự động cuộn vuốt ngang mượt mà trên điện thoại */
+  .table-responsive { 
+    width: 100%; 
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch; 
+  }
+  table { 
+    min-width: 600px; /* Đảm bảo các cột không bị co ép chữ */
+    width: 100%;
+  }
+}
     </style>
 </head>
 <body>

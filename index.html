@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CLB PICKLEBALL - CMTD | Bảng Thống Kê Kèo 15K</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Thư viện SheetJS hỗ trợ xuất file Excel -->
@@ -11,9 +11,9 @@
         :root {
             --brand-yellow: #eab308;
             --brand-neon: #ccff00;
-            --primary-bg: #f1f5f9;
+            --primary-bg: #f8fafc;
             --card-bg: #ffffff;
-            --text-main: #1e293b;
+            --text-main: #0f172a;
             
             --pick1-bg: #e0f2fe;
             --pick1-color: #0369a1;
@@ -34,8 +34,9 @@
             font-family: 'Roboto', sans-serif;
             background-color: var(--primary-bg);
             color: var(--text-main);
-            padding: 6px;
-            font-size: 11px;
+            padding: 8px;
+            font-size: 12px;
+            line-height: 1.4;
         }
 
         .container {
@@ -43,25 +44,25 @@
             margin: 0 auto;
         }
 
-        /* HEADER CÂN ĐỐI */
+        /* HEADER CÂN ĐỐI TRÊN CẢ DESKTOP & MOBILE */
         .header-section {
             background: linear-gradient(135deg, #090d16 0%, #1a2332 100%);
             color: white;
-            padding: 10px 12px;
+            padding: 12px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             border-bottom: 3px solid var(--brand-neon);
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         .brand-title h1 {
             font-family: 'Montserrat', sans-serif;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 900;
             letter-spacing: 0.5px;
             color: var(--brand-neon);
@@ -70,7 +71,7 @@
         }
 
         .brand-title .subtitle {
-            font-size: 10px;
+            font-size: 11px;
             color: #cbd5e1;
             font-weight: 500;
         }
@@ -80,11 +81,11 @@
             background: var(--brand-yellow);
             color: #000;
             font-weight: 900;
-            font-size: 9px;
-            padding: 1px 6px;
-            border-radius: 3px;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 4px;
             text-transform: uppercase;
-            margin-top: 2px;
+            margin-top: 3px;
         }
 
         .header-actions {
@@ -97,24 +98,25 @@
         /* TABS NAVIGATION */
         .tabs {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 4px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             background: #e2e8f0;
-            padding: 3px;
+            padding: 4px;
             border-radius: 8px;
             overflow-x: auto;
             white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
         }
 
         .tab-btn {
             background: transparent;
             border: none;
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 11px;
+            font-size: 12px;
             color: #475569;
             transition: all 0.2s ease;
         }
@@ -125,19 +127,20 @@
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         }
 
-        /* NÚT BẤM */
+        /* NÚT BẤM CHUẨN ĐỘ CHẠM TOUCH */
         .btn {
             background-color: #2563eb;
             color: white;
             border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
+            padding: 6px 12px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: 700;
             font-size: 11px;
             display: inline-flex;
             align-items: center;
             gap: 4px;
+            touch-action: manipulation;
         }
         .btn-add-date { background: #15803d; }
         .btn-excel { background: #16a34a; }
@@ -148,21 +151,21 @@
         /* BỐ CỤC CHÍNH */
         .main-layout {
             display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 8px;
+            grid-template-columns: 1fr 360px;
+            gap: 10px;
             align-items: start;
         }
 
-        @media (max-width: 960px) {
+        @media (max-width: 980px) {
             .main-layout { grid-template-columns: 1fr; }
         }
 
         .card {
             background: var(--card-bg);
-            padding: 8px;
+            padding: 10px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.04);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             border: 1px solid #e2e8f0;
         }
 
@@ -170,18 +173,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             border-bottom: 1px solid #f1f5f9;
-            padding-bottom: 4px;
+            padding-bottom: 6px;
         }
 
         .card-title {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 800;
             color: #0f172a;
         }
 
-        /* BẢNG ĐẤU */
+        /* BẢNG ĐẤU LINH HOẠT THU HẸP CỘT PICK, TĂNG KHÔNG GIAN TỶ SỐ & KÈO */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -193,18 +196,15 @@
             border-collapse: separate;
             border-spacing: 0;
             font-size: 11px;
-            table-layout: fixed;
         }
 
         th, td {
             border-bottom: 1px solid var(--border-color);
             border-right: 1px solid var(--border-color);
-            padding: 3px 2px;
+            padding: 4px 2px;
             text-align: center;
             vertical-align: middle;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         th:first-child, td:first-child { border-left: 1px solid var(--border-color); }
@@ -218,21 +218,21 @@
             text-transform: uppercase;
         }
 
-        /* ĐIỀU CHỈNH KÍCH THƯỚC CỘT: CỘT PICK THU HẸP, MỞ RỘNG TỶ SỐ & KÈO */
-        .col-match { width: 32px; }          
-        .col-pick { width: 13.5%; }          
-        .col-score { width: 95px; }          
-        .col-kèo { width: 55px; }            
+        /* Cấu hình tỷ lệ các cột tối ưu */
+        .col-match { width: 36px; }          
+        .col-pick { width: 13%; min-width: 85px; } /* Thu hẹp cột Pick */         
+        .col-score { width: 95px; min-width: 95px; } /* Mở rộng cột Tỷ Số */         
+        .col-kèo { width: 60px; min-width: 60px; }   /* Mở rộng cột Kèo */          
 
-        .badge-pick1 { background-color: var(--pick1-bg); color: var(--pick1-color); padding: 1px 4px; border-radius: 3px; font-weight: 800; }
-        .badge-pick2 { background-color: var(--pick2-bg); color: var(--pick2-color); padding: 1px 4px; border-radius: 3px; font-weight: 800; }
-        .badge-score { background-color: var(--score-bg); color: #6b21a8; padding: 1px 4px; border-radius: 3px; font-weight: 800; }
+        .badge-pick1 { background-color: var(--pick1-bg); color: var(--pick1-color); padding: 2px 4px; border-radius: 3px; font-weight: 800; }
+        .badge-pick2 { background-color: var(--pick2-bg); color: var(--pick2-color); padding: 2px 4px; border-radius: 3px; font-weight: 800; }
+        .badge-score { background-color: var(--score-bg); color: #6b21a8; padding: 2px 4px; border-radius: 3px; font-weight: 800; }
 
         select {
             width: 100%;
-            padding: 2px 1px;
+            padding: 3px 1px;
             border: 1px solid #cbd5e1;
-            border-radius: 3px;
+            border-radius: 4px;
             font-size: 11px;
             background: #fff;
             outline: none;
@@ -246,8 +246,8 @@
         }
 
         .score-input {
-            width: 32px !important;
-            height: 22px;
+            width: 34px !important;
+            height: 24px;
             padding: 0 !important;
             font-weight: 900;
             text-align: center;
@@ -259,27 +259,27 @@
             outline: none;
         }
 
-        .win { color: var(--win-color); font-weight: 800; background-color: var(--win-bg); border-radius: 3px; padding: 2px 4px; display: inline-block; min-width: 36px; }
-        .lose { color: var(--lose-color); font-weight: 800; background-color: var(--lose-bg); border-radius: 3px; padding: 2px 4px; display: inline-block; min-width: 36px; }
+        .win { color: var(--win-color); font-weight: 800; background-color: var(--win-bg); border-radius: 3px; padding: 2px 4px; display: inline-block; min-width: 38px; }
+        .lose { color: var(--lose-color); font-weight: 800; background-color: var(--lose-bg); border-radius: 3px; padding: 2px 4px; display: inline-block; min-width: 38px; }
 
-        /* KHỐI SIDEBAR THỐNG KÊ */
+        /* KHỐI SIDEBAR THỐNG KÊ THU CHI TĂNG RỘNG */
         .sidebar-column {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .vdv-scroll-list {
-            max-height: 220px;
+            max-height: 240px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 4px;
         }
 
         .vdv-item {
             background: white;
-            padding: 4px 6px;
+            padding: 5px 8px;
             border-radius: 5px;
             border: 1px solid #e2e8f0;
             display: flex;
@@ -293,55 +293,41 @@
             cursor: pointer;
             border: none;
             background: #f1f5f9;
-            padding: 1px 4px;
+            padding: 2px 5px;
             border-radius: 3px;
-            font-size: 10px;
+            font-size: 11px;
         }
 
         .summary-dashboard {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 6px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .stat-card {
             background: #f8fafc;
-            padding: 6px;
+            padding: 8px;
             border-radius: 6px;
             border-left: 3px solid #2563eb;
             text-align: center;
         }
 
-        .stat-card .title { font-size: 9px; color: #64748b; font-weight: 700; text-transform: uppercase; }
-        .stat-card .value { font-size: 14px; font-weight: 900; margin-top: 1px; }
+        .stat-card .title { font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; }
+        .stat-card .value { font-size: 15px; font-weight: 900; margin-top: 2px; }
 
-        .checkbox-cell { transform: scale(1.1); cursor: pointer; }
-        .action-bar { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+        .checkbox-cell { transform: scale(1.2); cursor: pointer; }
+        .action-bar { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
         .total-row { background-color: #fef3c7; font-weight: 800; }
 
-        /* DÀNH CHO MOBILE - TỐI ƯU HIỂN THỊ MARGIN & SCROLL */
-@media (max-width: 600px) {
-  body { 
-    padding: 2px; 
-  }
-  .brand-title h1 { 
-    font-size: 14px; 
-  }
-  .main-layout { 
-    grid-template-columns: 1fr; 
-  }
-  /* Cho phép bảng tự động cuộn vuốt ngang mượt mà trên điện thoại */
-  .table-responsive { 
-    width: 100%; 
-    overflow-x: auto; 
-    -webkit-overflow-scrolling: touch; 
-  }
-  table { 
-    min-width: 600px; /* Đảm bảo các cột không bị co ép chữ */
-    width: 100%;
-  }
-}
+        /* ĐIỀU CHỈNH CHUẨN MOBILE (< 600PX) */
+        @media (max-width: 600px) {
+            body { padding: 4px; }
+            .brand-title h1 { font-size: 16px; }
+            .header-section { padding: 8px; }
+            .card { padding: 6px; }
+            table { width: 580px; } /* Đảm bảo bảng không bị vỡ khung khi cuộn trên điện thoại */
+        }
     </style>
 </head>
 <body>
@@ -351,20 +337,20 @@
     <div class="header-section">
         <div class="brand-title">
             <h1>CLB PICKLEBALL CMTD</h1>
-            <div class="subtitle">Bảng Thống Kê Kèo 15K & Quản Lý Đấu Cặp (Lưu Trên Thiết Bị)</div>
+            <div class="subtitle">Bảng Thống Kê Kèo 15K & Quản Lý Đấu Cặp (Máy Tính & Mobile)</div>
             <div class="slogan">⚡ GẶP LÀ VỤT ⚡</div>
         </div>
         <div class="header-actions">
             <button class="btn btn-add-date" onclick="addDateTab()">📅 + Thêm Ngày Đấu</button>
             <button class="btn btn-excel" onclick="exportToExcel()">📊 Xuất File Excel</button>
-            <button class="btn btn-clear" onclick="resetDeviceData()">🔄 Đặt Lại Dữ Liệu Thiết Bị</button>
+            <button class="btn btn-clear" onclick="resetDeviceData()">🔄 Đặt Lại Dữ Liệu</button>
         </div>
     </div>
 
-    <!-- TABS -->
+    <!-- TABS NAVIGATION -->
     <div class="tabs" id="tabContainer"></div>
 
-    <!-- NỘI DUNG -->
+    <!-- CONTAINER NỘI DUNG -->
     <div id="tabContent"></div>
 </div>
 
@@ -375,15 +361,14 @@
         "Gà Tre", "Dũng Ngạc", "Vân Đình", "Thành Sóc",
         "Khách 1", "Khách 2", "Khách 3", "Khách 4", "Khách 5"
     ];
-<script>
-    
-    // QUẢN LÝ DỮ LIỆU LOCALSTORAGE THEO THIẾT BỊ CÁ NHÂN
+
+    // QUẢN LÝ DỮ LIỆU LƯU TRÊN THIẾT BỊ CÁ NHÂN (LOCALSTORAGE)
     let vdvs = JSON.parse(localStorage.getItem("cmtd_vdvs")) || defaultVDVs;
     let dates = JSON.parse(localStorage.getItem("cmtd_dates")) || ["3/9/26", "24/9/26", "1/10/26"]; 
     let matchesData = JSON.parse(localStorage.getItem("cmtd_matches")) || {};
     let paymentStatus = JSON.parse(localStorage.getItem("cmtd_payments")) || {};
 
-    // Khởi tạo trận đấu mặc định nếu chưa có trong LocalStorage
+    // Khởi tạo 12 trận mặc định cho các ngày chưa có dữ liệu
     dates.forEach(d => {
         if (!matchesData[d]) {
             matchesData[d] = Array.from({ length: 12 }, (_, i) => ({
@@ -407,7 +392,7 @@
     }
 
     function resetDeviceData() {
-        if (confirm("Xác nhận xóa toàn bộ dữ liệu lưu trên thiết bị này và khôi phục mặc định?")) {
+        if (confirm("Xác nhận xóa dữ liệu lưu trên thiết bị này và khôi phục cài đặt gốc?")) {
             localStorage.clear();
             location.reload();
         }
@@ -471,6 +456,7 @@
 
         let winRate = 5, loseRate = -15;
 
+        // Trận thắng trắng (0 điểm) nhân đôi
         if (s1 === 0 || s2 === 0) {
             winRate *= 2;
             loseRate *= 2;
@@ -482,9 +468,8 @@
 
         return { money1, money2, isFinished: true };
     }
-<script>
-    
-    // BẢNG THI ĐẤU (ĐÃ TỐI ƯU CỘT PICK THU HẸP, TỶ SỐ VÀ KÈO MỞ RỘNG)
+
+    // BẢNG THI ĐẤU
     function renderMatchTable(date) {
         let matches = matchesData[date];
         let rowsHtml = "";
@@ -523,12 +508,12 @@
                     <h3 class="card-title">⚔️ Lịch Thi Đấu - Ngày ${date}</h3>
                 </div>
                 <div class="table-responsive">
-                    <table id="table-matches-${date}">
+                    <table>
                         <thead>
                             <tr>
                                 <th class="col-match">Trận</th>
-                                <th colspan="2" style="width:27%;"><span class="badge-pick1">PICK 1</span></th>
-                                <th colspan="2" style="width:27%;"><span class="badge-pick2">PICK 2</span></th>
+                                <th colspan="2" style="width:26%;"><span class="badge-pick1">PICK 1</span></th>
+                                <th colspan="2" style="width:26%;"><span class="badge-pick2">PICK 2</span></th>
                                 <th class="col-score"><span class="badge-score">Tỷ Số</span></th>
                                 <th class="col-kèo">Kèo 1</th>
                                 <th class="col-kèo">Kèo 2</th>
@@ -539,13 +524,13 @@
                 </div>
                 <div class="action-bar">
                     <button class="btn btn-add-match" onclick="addNewMatch('${date}')">➕ Thêm Trận</button>
-                    <button class="btn btn-save" onclick="saveDayData('${date}')">💾 Lưu Trên Thiết Bị</button>
+                    <button class="btn btn-save" onclick="saveDayData('${date}')">💾 Lưu Ngày Đấu</button>
                 </div>
             </div>
         `;
     }
 
-    // KHỐI THỐNG KÊ THU CHI ĐƯỢC TĂNG KHÔNG GIAN
+    // KHỐI THỐNG KÊ THU CHI TĂNG KHÔNG GIAN
     function renderSingleDaySummarySidebar(date) {
         let stats = {};
         vdvs.forEach(v => stats[v] = { matchCount: 0, totalMoney: 0 });
@@ -626,12 +611,12 @@
                 <div class="card-header">
                     <h3 class="card-title">👥 Danh Sách VĐV (${vdvs.length})</h3>
                 </div>
-                <div style="display: flex; gap: 4px; margin-bottom: 5px;">
-                    <input type="text" id="newVdvInput" placeholder="+ Nhập tên VĐV..." style="padding:3px; border:1px solid #ccc; border-radius:4px; width:100%; font-size:11px;">
+                <div style="display: flex; gap: 4px; margin-bottom: 6px;">
+                    <input type="text" id="newVdvInput" placeholder="+ Nhập tên VĐV..." style="padding:4px; border:1px solid #ccc; border-radius:4px; width:100%; font-size:11px;">
                     <button class="btn btn-add-match" onclick="addVDV()">Thêm</button>
                 </div>
-                <div style="margin-bottom: 5px;">
-                    <input type="text" id="searchVdvInput" placeholder="🔍 Tìm VĐV..." onkeyup="filterVDVList()" style="padding:3px; border:1px solid #ccc; border-radius:4px; width:100%; font-size:11px;">
+                <div style="margin-bottom: 6px;">
+                    <input type="text" id="searchVdvInput" placeholder="🔍 Tìm VĐV..." onkeyup="filterVDVList()" style="padding:4px; border:1px solid #ccc; border-radius:4px; width:100%; font-size:11px;">
                 </div>
                 <div class="vdv-scroll-list" id="vdvListContainer">
                     ${renderVDVItems(vdvs)}
@@ -641,7 +626,7 @@
     }
 
     function renderVDVItems(list) {
-        if (list.length === 0) return `<div style="text-align:center; color:#94a3b8; padding: 6px;">Không có VĐV</div>`;
+        if (list.length === 0) return `<div style="text-align:center; color:#94a3b8; padding: 6px;">Không tìm thấy VĐV</div>`;
         return list.map((name) => {
             let originalIndex = vdvs.indexOf(name);
             return `
@@ -685,7 +670,7 @@
     }
 
     function removeVDV(index) {
-        if (confirm(`Xóa VĐV "${vdvs[index]}"?`)) {
+        if (confirm(`Xóa VĐV "${vdvs[index]}" khỏi danh sách?`)) {
             vdvs.splice(index, 1);
             saveAllDataToStorage();
             renderCurrentTab();
@@ -716,7 +701,7 @@
 
     function saveDayData(date) {
         saveAllDataToStorage();
-        alert(`✅ Đã lưu kết quả ngày ${date} trên thiết bị của bạn!`);
+        alert(`✅ Đã lưu dữ liệu ngày ${date} thành công!`);
     }
 
     function togglePayment(payKey) {
@@ -725,7 +710,7 @@
         renderCurrentTab();
     }
 
-    // BẢNG TỔNG HỢP NHIỀU NGÀY
+    // BẢNG TỔNG HỢP TẤT CẢ CÁC NGÀY
     function renderMultiDaySummaryTable() {
         let playerStats = {};
         vdvs.forEach(v => {
@@ -773,7 +758,7 @@
 
             rowsHtml += `
                 <tr>
-                    <td style="text-align: left; font-weight: bold;">🥇 ${v}</td>
+                    <td style="text-align: left; font-weight: bold; padding-left: 6px;">🥇 ${v}</td>
                     ${dateCellsHtml}
                     <td><span class="${totalClass}">${totalAllDays > 0 ? '+' : ''}${totalAllDays} K</span></td>
                 </tr>
@@ -791,7 +776,7 @@
         return `
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">🏆 Thống Kê Tổng Hợp Tất Cả Các Ngày</h3>
+                    <h3 class="card-title">🏆 Bảng Thống Kê Tổng Hợp Tất Cả Các Ngày</h3>
                 </div>
                 <div class="table-responsive">
                     <table style="width:100%; table-layout:auto;">
@@ -816,11 +801,11 @@
         `;
     }
 
-    // CHỨC NĂNG XUẤT FILE EXCEL (.XLSX)
+    // TÍNH NĂNG XUẤT FILE EXCEL (.XLSX)
     function exportToExcel() {
         let wb = XLSX.utils.book_new();
 
-        // 1. Xuất trang Lịch thi đấu theo ngày
+        // Trang Lịch Thi Đấu Theo Ngày
         dates.forEach(d => {
             let wsData = [
                 ["TRẬN", "PICK 1 - VĐV 1", "PICK 1 - VĐV 2", "PICK 2 - VĐV 1", "PICK 2 - VĐV 2", "TỶ SỐ 1", "TỶ SỐ 2", "KÈO 1 (K)", "KÈO 2 (K)"]
@@ -846,7 +831,7 @@
             XLSX.utils.book_append_sheet(wb, ws, sheetName);
         });
 
-        // 2. Xuất trang Bảng Tổng Hợp
+        // Trang Bảng Tổng Hợp
         let summaryHeader = ["TÊN VĐV", ...dates.map(d => `Ngày ${d}`), "TỔNG CỘNG (K)"];
         let summaryData = [summaryHeader];
 

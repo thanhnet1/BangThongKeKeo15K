@@ -1,472 +1,360 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Trận Pick Kèo 15K</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .navy-header { background-color: #1B365D; }
-        .navy-card { background-color: #2C4D75; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Trận Pick Kèo 15K</title>
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .navy-header { background-color: #1B365D; }
+  </style>
 </head>
 <body class="bg-gray-100 font-sans text-gray-800 pb-12">
 
-    <!-- Header Navigation -->
-    <header class="navy-header text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-xl md:text-2xl font-bold flex items-center gap-2">
-                <i class="fa-solid fa-trophy text-yellow-400"></i> Bảng Tổng Hợp Những Trận Pick KÈO 15K
-            </h1>
-            <div class="text-xs md:text-sm bg-blue-900/60 px-3 py-1.5 rounded-lg border border-blue-400/30">
-                <i class="fa-regular fa-calendar-check mr-1"></i> Ngày: <span id="currentDate">03/09/2026</span>
-            </div>
-        </div>
-    </header>
+  <!-- Header -->
+  <header class="navy-header text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-xl md:text-2xl font-bold flex items-center gap-2">
+        <i class="fa-solid fa-trophy text-yellow-400"></i> Quản Lý Các Trận Pick Kèo 15K
+      </h1>
+      <div class="text-xs md:text-sm bg-blue-900/60 px-3 py-1.5 rounded-lg border border-blue-400/30">
+        <i class="fa-regular fa-calendar-check mr-1"></i>
+        <span>Hôm nay: </span>
+        <span id="headerTodayDate" class="font-bold text-yellow-300">--/--/----</span>
+      </div>
+    </div>
+  </header>
 
-    <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-2 md:px-4 mt-6">
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-2 md:px-4 mt-6">
 
-        <!-- Note Rules Box -->
-        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm">
-            <h3 class="font-bold text-red-800 text-sm md:text-base mb-1">
-                <i class="fa-solid fa-triangle-exclamation mr-1"></i> Quy định tính tiền:
-            </h3>
-            <ul class="text-xs md:text-sm text-red-700 space-y-1 list-disc list-inside">
-                <li><b>Thắng kèo:</b> Nhập số tiền cược sau khi đã trừ 10k cho BTC.</li>
-                <li><b>Thua kèo:</b> Nhập dấu âm (-) trước số tiền thua cược.</li>
-                <li><b>Đội Pick:</b> Pick thủ đánh đủ 4 trận mới được mang tiền về.</li>
-            </ul>
-        </div>
-
-        <!-- Dashboard Summary Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                <p class="text-xs text-gray-500 font-medium">Tổng Trận Đã Đấu</p>
-                <p id="statTotalMatches" class="text-2xl font-bold text-blue-600 mt-1">0</p>
-            </div>
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                <p class="text-xs text-gray-500 font-medium">Tiền BTC Thu Về (Đã nộp)</p>
-                <p id="statCollected" class="text-2xl font-bold text-green-600 mt-1">0k</p>
-            </div>
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                <p class="text-xs text-gray-500 font-medium">Tiền Còn Phải Thu</p>
-                <p id="statPending" class="text-2xl font-bold text-red-600 mt-1">0k</p>
-            </div>
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                <p class="text-xs text-gray-500 font-medium">Quỹ Còn Lại</p>
-                <p id="statFund" class="text-2xl font-bold text-orange-500 mt-1">0k</p>
-            </div>
-        </div>
-
-        <!-- Navigation Tabs -->
-        <div class="flex border-b border-gray-300 mb-6 bg-white rounded-t-xl overflow-hidden shadow-sm">
-            <button id="tabBtnDetails" onclick="switchTab('details')" class="px-6 py-3 font-semibold text-blue-600 border-b-2 border-blue-600 flex items-center gap-2 focus:outline-none">
-                <i class="fa-solid fa-list-check"></i> Chi Tiết Trận Đấu
-            </button>
-            <button id="tabBtnSummary" onclick="switchTab('summary')" class="px-6 py-3 font-semibold text-gray-500 hover:text-blue-600 flex items-center gap-2 focus:outline-none">
-                <i class="fa-solid fa-chart-pie"></i> Tổng Hợp Công Nợ VĐV
-            </button>
-        </div>
-
-        <!-- TAB 1: CHI TIẾT TRẬN ĐẤU -->
-        <div id="tabDetails" class="space-y-4">
-            <!-- Add Match Action -->
-            <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm">
-                <h2 class="font-bold text-gray-700 text-lg">Danh Sách Trận Pick</h2>
-                <button onclick="openAddModal()" class="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-lg font-medium shadow flex items-center gap-2 transition">
-                    <i class="fa-solid fa-plus"></i> Thêm Trận Mới
-                </button>
-            </div>
-
-           <!-- Form Thêm Trận Mới -->
-<div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6">
-  <h3 class="font-bold text-gray-800 text-base mb-4">
-    <i class="fa-solid fa-plus-circle text-blue-600 mr-1"></i> Thêm Trận Mới
-  </h3>
-  
-  <form id="add-match-form" class="space-y-4">
-    <!-- Chọn Ngày -->
-    <div>
-      <label for="match-date" class="block text-xs font-semibold text-gray-600 mb-1">Ngày thi đấu:</label>
-      <input type="date" id="match-date" name="match-date" class="w-full md:w-1/3 p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+    <!-- Quy định -->
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm">
+      <h3 class="font-bold text-red-800 text-sm md:text-base mb-1">
+        <i class="fa-solid fa-triangle-exclamation mr-1"></i> Quy định tính tiền tự động:
+      </h3>
+      <ul class="text-xs md:text-sm text-red-700 space-y-1 list-disc list-inside">
+        <li><b>Tỷ số:</b> Nhập dạng <code>11-9</code> (Cặp 1 thắng) hoặc <code>9-11</code> (Cặp 2 thắng).</li>
+        <li><b>Thắng cược:</b> Tự động cộng tiền thưởng (+15k/trận sau khi khấu trừ BTC).</li>
+        <li><b>Thua cược:</b> Tự động tính số tiền âm (-15k/trận).</li>
+      </ul>
     </div>
 
-    <!-- Cặp Pick 1 -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-blue-50 p-3 rounded-lg border border-blue-200">
-      <span class="col-span-full font-bold text-xs text-blue-800">CẶP PICK 1:</span>
-      <div>
-        <label for="vdiv1" class="block text-xs text-gray-600 mb-1">VĐV 1:</label>
-        <select id="vdiv1" class="w-full p-2 border border-gray-300 rounded-lg text-sm bg-white">
-          <option value="">-- Chọn VĐV 1 --</option>
-          <option value="Phú Mỗ">Phú Mỗ</option>
-          <option value="Hà Giấy">Hà Giấy</option>
-          <option value="Tiến Thọ">Tiến Thọ</option>
-          <option value="Lợi Trì">Lợi Trì</option>
-          <option value="Trí Đô">Trí Đô</option>
-          <option value="Tuấn La">Tuấn La</option>
-          <option value="Thanh Đàm">Thanh Đàm</option>
-          <option value="Long Diễn">Long Diễn</option>
-          <option value="Điền Chèm">Điền Chèm</option>
-          <option value="Châu Sĩ">Châu Sĩ</option>
-          <option value="Gà Tre">Gà Tre</option>
-          <option value="Vân Đỉnh">Vân Đỉnh</option>
-        </select>
+    <!-- Thống kê Tổng quan -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+        <p class="text-xs text-gray-500 font-medium">Tổng Trận Đã Đấu</p>
+        <p id="statTotalMatches" class="text-2xl font-bold text-blue-600 mt-1">0</p>
       </div>
-
-      <div>
-        <label for="vdiv2" class="block text-xs text-gray-600 mb-1">VĐV 2:</label>
-        <select id="vdiv2" class="w-full p-2 border border-gray-300 rounded-lg text-sm bg-white">
-          <option value="">-- Chọn VĐV 2 --</option>
-          <option value="Phú Mỗ">Phú Mỗ</option>
-          <option value="Hà Giấy">Hà Giấy</option>
-          <option value="Tiến Thọ">Tiến Thọ</option>
-          <option value="Lợi Trì">Lợi Trì</option>
-          <option value="Trí Đô">Trí Đô</option>
-          <option value="Tuấn La">Tuấn La</option>
-          <option value="Thanh Đàm">Thanh Đàm</option>
-          <option value="Long Diễn">Long Diễn</option>
-          <option value="Điền Chèm">Điền Chèm</option>
-          <option value="Châu Sĩ">Châu Sĩ</option>
-          <option value="Gà Tre">Gà Tre</option>
-          <option value="Vân Đỉnh">Vân Đỉnh</option>
-        </select>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+        <p class="text-xs text-gray-500 font-medium">Tiền BTC Thu Về</p>
+        <p id="statCollected" class="text-2xl font-bold text-green-600 mt-1">0k</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+        <p class="text-xs text-gray-500 font-medium">Tiền Còn Phải Thu</p>
+        <p id="statPending" class="text-2xl font-bold text-red-600 mt-1">0k</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+        <p class="text-xs text-gray-500 font-medium">Quỹ Cung Cấp</p>
+        <p id="statFund" class="text-2xl font-bold text-orange-500 mt-1">0k</p>
       </div>
     </div>
 
-    <!-- Cặp Pick 2 -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-red-50 p-3 rounded-lg border border-red-200">
-      <span class="col-span-full font-bold text-xs text-red-800">CẶP PICK 2:</span>
-      <div>
-        <label for="vdiv3" class="block text-xs text-gray-600 mb-1">VĐV 3:</label>
-        <select id="vdiv3" class="w-full p-2 border border-gray-300 rounded-lg text-sm bg-white">
-          <option value="">-- Chọn VĐV 3 --</option>
-          <option value="Phú Mỗ">Phú Mỗ</option>
-          <option value="Hà Giấy">Hà Giấy</option>
-          <option value="Tiến Thọ">Tiến Thọ</option>
-          <option value="Lợi Trì">Lợi Trì</option>
-          <option value="Trí Đô">Trí Đô</option>
-          <option value="Tuấn La">Tuấn La</option>
-          <option value="Thanh Đàm">Thanh Đàm</option>
-          <option value="Long Diễn">Long Diễn</option>
-          <option value="Điền Chèm">Điền Chèm</option>
-          <option value="Châu Sĩ">Châu Sĩ</option>
-          <option value="Gà Tre">Gà Tre</option>
-          <option value="Vân Đỉnh">Vân Đỉnh</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="vdiv4" class="block text-xs text-gray-600 mb-1">VĐV 4:</label>
-        <select id="vdiv4" class="w-full p-2 border border-gray-300 rounded-lg text-sm bg-white">
-          <option value="">-- Chọn VĐV 4 --</option>
-          <option value="Phú Mỗ">Phú Mỗ</option>
-          <option value="Hà Giấy">Hà Giấy</option>
-          <option value="Tiến Thọ">Tiến Thọ</option>
-          <option value="Lợi Trì">Lợi Trì</option>
-          <option value="Trí Đô">Trí Đô</option>
-          <option value="Tuấn La">Tuấn La</option>
-          <option value="Thanh Đàm">Thanh Đàm</option>
-          <option value="Long Diễn">Long Diễn</option>
-          <option value="Điền Chèm">Điền Chèm</option>
-          <option value="Châu Sĩ">Châu Sĩ</option>
-          <option value="Gà Tre">Gà Tre</option>
-          <option value="Vân Đỉnh">Vân Đỉnh</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Pick Thủ -->
-    <div>
-      <label for="pick-thu" class="block text-xs font-semibold text-gray-600 mb-1">Pick Thủ:</label>
-      <select id="pick-thu" class="w-full md:w-1/2 p-2 border border-gray-300 rounded-lg text-sm bg-white">
-        <option value="">-- Chọn Pick Thủ --</option>
-        <option value="Phú Mỗ">Phú Mỗ</option>
-        <option value="Hà Giấy">Hà Giấy</option>
-        <option value="Tiến Thọ">Tiến Thọ</option>
-        <option value="Lợi Trì">Lợi Trì</option>
-        <option value="Trí Đô">Trí Đô</option>
-        <option value="Tuấn La">Tuấn La</option>
-        <option value="Thanh Đàm">Thanh Đàm</option>
-        <option value="Long Diễn">Long Diễn</option>
-        <option value="Điền Chèm">Điền Chèm</option>
-        <option value="Châu Sĩ">Châu Sĩ</option>
-        <option value="Gà Tre">Gà Tre</option>
-        <option value="Vân Đỉnh">Vân Đỉnh</option>
-      </select>
-    </div>
-
-    <button type="button" onclick="addNewMatch()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm transition">
-      Thêm Trận Đấu
-    </button>
-  </form>
-</div>
-
-    <!-- Modal Form Thêm Trận Mới -->
-    <div id="addModal" class="fixed inset-0 bg-black/50 hidden z-50 flex justify-center items-center p-4">
-        <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-lg text-gray-800">Thêm Trận Pick Mới</h3>
-                <button onclick="closeAddModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-            
-            <form id="matchForm" onsubmit="saveMatch(event)" class="space-y-3 text-sm">
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block font-medium text-gray-700">Cặp Pick 1 (VĐV A1)</label>
-                        <input type="text" id="teamA1" required class="w-full border rounded p-2 mt-1">
-                    </div>
-                    <div>
-                        <label class="block font-medium text-gray-700">Cặp Pick 1 (VĐV A2)</label>
-                        <input type="text" id="teamA2" required class="w-full border rounded p-2 mt-1">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block font-medium text-gray-700">Cặp Pick 2 (VĐV B1)</label>
-                        <input type="text" id="teamB1" required class="w-full border rounded p-2 mt-1">
-                    </div>
-                    <div>
-                        <label class="block font-medium text-gray-700">Cặp Pick 2 (VĐV B2)</label>
-                        <input type="text" id="teamB2" required class="w-full border rounded p-2 mt-1">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-4 gap-2">
-                    <div>
-                        <label class="block font-medium text-gray-700">Tỷ số A</label>
-                        <input type="number" id="scoreA" value="11" required class="w-full border rounded p-2 mt-1 text-center">
-                    </div>
-                    <div>
-                        <label class="block font-medium text-gray-700">Tỷ số B</label>
-                        <input type="number" id="scoreB" value="9" required class="w-full border rounded p-2 mt-1 text-center">
-                    </div>
-                    <div>
-                        <label class="block font-medium text-gray-700">Kèo A</label>
-                        <input type="number" id="keoA" value="5" required class="w-full border rounded p-2 mt-1 text-center">
-                    </div>
-                    <div>
-                        <label class="block font-medium text-gray-700">Kèo B</label>
-                        <input type="number" id="keoB" value="-15" required class="w-full border rounded p-2 mt-1 text-center">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-2">
-                    <div>
-                        <label class="block font-medium text-gray-700">Pick Thủ</label>
-                        <input type="text" id="picker" required class="w-full border rounded p-2 mt-1">
-                    </div>
-                    <div>
-                        <label class="block font-medium text-gray-700">Số trận đánh</label>
-                        <input type="number" id="playedCount" value="4" required class="w-full border rounded p-2 mt-1 text-center">
-                    </div>
-                    <div>
-                        <label class="block font-medium text-gray-700">Thắng (k)</label>
-                        <input type="number" id="winMoney" value="0" class="w-full border rounded p-2 mt-1 text-center">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block font-medium text-gray-700">Thua (k - Nhập số âm)</label>
-                    <input type="number" id="loseMoney" value="0" class="w-full border rounded p-2 mt-1 text-center">
-                </div>
-
-                <div class="flex justify-end gap-2 pt-3 border-t">
-                    <button type="button" onclick="closeAddModal()" class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-100">Hủy</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium">Lưu Trận Đấu</button>
-                </div>
-            </form>
+    <!-- Form Thêm Trận Mới -->
+    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 mb-6">
+      <h3 class="font-bold text-gray-800 text-base mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-plus-circle text-blue-600"></i> Thêm Trận Đấu Mới
+      </h3>
+      
+      <form id="add-match-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+        <!-- Ngày thi đấu -->
+        <div>
+          <label for="match-date" class="block text-xs font-bold text-gray-700 mb-1">
+            <i class="fa-regular fa-calendar mr-1"></i>Chọn Ngày Thi Đấu:
+          </label>
+          <input type="date" id="match-date" required class="w-full md:w-1/4 p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
         </div>
+
+        <!-- Cặp Pick 1 & Cặp Pick 2 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Cặp Pick 1 -->
+          <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 space-y-3">
+            <span class="font-bold text-xs text-blue-800 block border-b border-blue-200 pb-1">CẶP PICK 1</span>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs text-gray-600 mb-1">VĐV 1:</label>
+                <select id="vdiv1" required class="vdv-select w-full p-2 border rounded-lg text-sm bg-white"></select>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-600 mb-1">VĐV 2:</label>
+                <select id="vdiv2" required class="vdv-select w-full p-2 border rounded-lg text-sm bg-white"></select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cặp Pick 2 -->
+          <div class="bg-red-50 p-3 rounded-lg border border-red-200 space-y-3">
+            <span class="font-bold text-xs text-red-800 block border-b border-red-200 pb-1">CẶP PICK 2</span>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs text-gray-600 mb-1">VĐV 3:</label>
+                <select id="vdiv3" required class="vdv-select w-full p-2 border rounded-lg text-sm bg-white"></select>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-600 mb-1">VĐV 4:</label>
+                <select id="vdiv4" required class="vdv-select w-full p-2 border rounded-lg text-sm bg-white"></select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pick Thủ & Tỷ Số -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Pick Thủ (Người bắt kèo):</label>
+            <select id="pick-thu" required class="vdv-select w-full p-2 border rounded-lg text-sm bg-white"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Tỷ Số (Ví dụ: 11-9):</label>
+            <input type="text" id="score-input" placeholder="Nhập tỷ số (VD: 11-9)" required class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow-md">
+          <i class="fa-solid fa-floppy-disk mr-1"></i> Lưu Trận Đấu
+        </button>
+      </form>
     </div>
 
-    <!-- Application Script -->
-    <script>
-        // Data Store (Dữ liệu mẫu khởi tạo từ bảng ảnh)
-        let matches = [
-            { id: 1, a1: 'Phú Mỗ', a2: 'Hà Giấy', b1: 'Tiến Thọ', b2: 'Lợi Trì', scoreA: 9, scoreB: 11, keoA: -15, keoB: 5, picker: 'Vân Đỉnh', count: 4, win: 10, lose: -30, paid: true },
-            { id: 2, a1: 'Trí Đô', a2: 'Tuấn La', b1: 'Thanh Đàm', b2: 'Long Diễn', scoreA: 9, scoreB: 11, keoA: -15, keoB: 5, picker: 'Trí Đô', count: 4, win: 10, lose: -30, paid: true },
-            { id: 3, a1: 'Hà Giấy', a2: 'Điền Chèm', b1: 'Tuấn La', b2: 'Lợi Trì', scoreA: 11, scoreB: 5, keoA: 5, keoB: -15, picker: 'Phú Mỗ', count: 5, win: 10, lose: -45, paid: true },
-            { id: 4, a1: 'Tiến Thọ', a2: 'Trí Đô', b1: 'Phú Mỗ', b2: 'Long Diễn', scoreA: 11, scoreB: 6, keoA: 5, keoB: -15, picker: 'Tiến Thọ', count: 5, win: 20, lose: -15, paid: false },
-            { id: 5, a1: 'Lợi Trì', a2: 'Châu Sĩ', b1: 'Hà Giấy', b2: 'Điền Chèm', scoreA: 11, scoreB: 6, keoA: 5, keoB: -15, picker: 'Tuấn La', count: 5, win: 10, lose: -45, paid: true },
-            { id: 6, a1: 'Thanh Đàm', a2: 'Châu Sĩ', b1: 'Hà Giấy', b2: 'Tuấn La', scoreA: 11, scoreB: 8, keoA: 5, keoB: -15, picker: 'Lợi Trì', count: 5, win: 15, lose: -30, paid: true },
-            { id: 7, a1: 'Long Diễn', a2: 'Điền Chèm', b1: 'Gà Tre', b2: 'Phú Mỗ', scoreA: 9, scoreB: 11, keoA: -15, keoB: 5, picker: 'Long Diễn', count: 5, win: 10, lose: -45, paid: false },
-            { id: 8, a1: 'Điền Chèm', a2: 'Vân Đỉnh', b1: 'Gà Tre', b2: 'Lợi Trì', scoreA: 6, scoreB: 11, keoA: -15, keoB: 5, picker: 'Hà Giấy', count: 5, win: 10, lose: -45, paid: true },
-            { id: 9, a1: 'Trí Đô', a2: 'Tiến Thọ', b1: 'Thanh Đàm', b2: 'Điền Chèm', scoreA: 11, scoreB: 9, keoA: 5, keoB: -15, picker: 'Thành Sóc', count: 0, win: 0, lose: 0, paid: false },
-            { id: 10, a1: 'Phú Mỗ', a2: 'Tuấn La', b1: 'Lợi Trì', b2: 'Điền Chèm', scoreA: 11, scoreB: 9, keoA: 5, keoB: -15, picker: 'Thanh Đàm', count: 5, win: 15, lose: -30, paid: false },
-            { id: 11, a1: 'Tiến Thọ', a2: 'Thanh Đàm', b1: 'Vân Đỉnh', b2: 'Châu Sĩ', scoreA: 11, scoreB: 9, keoA: 5, keoB: -15, picker: 'Điền Chèm', count: 5, win: 10, lose: -45, paid: true },
-            { id: 12, a1: 'Châu Sĩ', a2: 'Vân Đỉnh', b1: 'Châu Sĩ', b2: 'Gà Tre', scoreA: 11, scoreB: 7, keoA: 5, keoB: -15, picker: 'Châu Sĩ', count: 4, win: 10, lose: -30, paid: true },
-            { id: 13, a1: '', a2: '', b1: '', b2: '', scoreA: 0, scoreB: 0, keoA: 0, keoB: 0, picker: 'Gà Tre', count: 4, win: 10, lose: -30, paid: false }
-        ];
+    <!-- Bộ Lọc Ngày & Danh Sách Trận -->
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
+        <h2 class="font-bold text-gray-800 text-lg">Danh Sách Trận Đấu</h2>
+        
+        <!-- Nút chọn lọc theo ngày -->
+        <div class="flex items-center gap-2 w-full md:w-auto">
+          <label for="filter-date" class="text-xs font-semibold text-gray-600 whitespace-nowrap">Lọc Ngày:</label>
+          <select id="filter-date" onchange="renderMatches()" class="p-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none">
+            <option value="ALL">-- Tất cả các ngày --</option>
+          </select>
+        </div>
+      </div>
 
-        // Khởi tạo ứng dụng
-        document.addEventListener('DOMContentLoaded', () => {
-            renderTable();
-            renderSummary();
-            updateStats();
-        });
+      <!-- Bảng Trận Đấu -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs md:text-sm">
+          <thead>
+            <tr class="bg-gray-100 text-gray-700 border-b">
+              <th class="p-3">STT</th>
+              <th class="p-3">Ngày</th>
+              <th class="p-3">Cặp Pick 1</th>
+              <th class="p-3">Cặp Pick 2</th>
+              <th class="p-3 text-center">Tỷ Số</th>
+              <th class="p-3 text-center">Kèo</th>
+              <th class="p-3">Pick Thủ</th>
+              <th class="p-3 text-right">Thành Tiền</th>
+              <th class="p-3 text-center">Thao Tác</th>
+            </tr>
+          </thead>
+          <tbody id="matchTableBody" class="divide-y divide-gray-200">
+            <!-- Dữ liệu render tự động -->
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-        // Tab Switching Logic
-        function switchTab(tab) {
-            if (tab === 'details') {
-                document.getElementById('tabDetails').classList.remove('hidden');
-                document.getElementById('tabSummary').classList.add('hidden');
-                document.getElementById('tabBtnDetails').className = 'px-6 py-3 font-semibold text-blue-600 border-b-2 border-blue-600 flex items-center gap-2 focus:outline-none';
-                document.getElementById('tabBtnSummary').className = 'px-6 py-3 font-semibold text-gray-500 hover:text-blue-600 flex items-center gap-2 focus:outline-none';
-            } else {
-                document.getElementById('tabDetails').classList.add('hidden');
-                document.getElementById('tabSummary').classList.remove('hidden');
-                document.getElementById('tabBtnSummary').className = 'px-6 py-3 font-semibold text-blue-600 border-b-2 border-blue-600 flex items-center gap-2 focus:outline-none';
-                document.getElementById('tabBtnDetails').className = 'px-6 py-3 font-semibold text-gray-500 hover:text-blue-600 flex items-center gap-2 focus:outline-none';
-                renderSummary();
-            }
-        }
+  </main>
 
-        // Render Table Chi Tiết
-        function renderTable() {
-            const tbody = document.getElementById('matchTableBody');
-            tbody.innerHTML = '';
+  <script>
+    // Danh sách VĐV cố định
+    const PLAYERS = [
+      "Phú Mỗ", "Hà Giấy", "Tiến Thọ", "Lợi Trì", "Trí Đô", 
+      "Tuấn La", "Thanh Đàm", "Long Diễn", "Điền Chèm", "Châu Sĩ", 
+      "Gà Tre", "Vân Đỉnh"
+    ];
 
-            matches.forEach((m, idx) => {
-                const total = m.win + m.lose;
-                const totalColorClass = total > 0 ? 'text-green-600 bg-green-50' : (total < 0 ? 'text-red-600 bg-red-50' : 'text-gray-600');
-                
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-gray-50 transition border-b border-gray-200";
-                tr.innerHTML = `
-                    <td class="p-2 border font-bold text-gray-500">Trận ${idx + 1}</td>
-                    <td class="p-2 border bg-green-50/50 text-blue-900">${m.a1 || '-'}</td>
-                    <td class="p-2 border bg-green-50/50 text-blue-900">${m.a2 || '-'}</td>
-                    <td class="p-2 border bg-pink-50/50 text-purple-900">${m.b1 || '-'}</td>
-                    <td class="p-2 border bg-pink-50/50 text-purple-900">${m.b2 || '-'}</td>
-                    <td class="p-2 border font-semibold">${m.scoreA}</td>
-                    <td class="p-2 border font-semibold">${m.scoreB}</td>
-                    <td class="p-2 border ${m.keoA < 0 ? 'text-red-500' : 'text-blue-600'}">${m.keoA}</td>
-                    <td class="p-2 border ${m.keoB < 0 ? 'text-red-500' : 'text-blue-600'}">${m.keoB}</td>
-                    <td class="p-2 border font-bold text-blue-800">${m.picker}</td>
-                    <td class="p-2 border">${m.count || '-'}</td>
-                    <td class="p-2 border text-green-600">${m.win || 0}</td>
-                    <td class="p-2 border text-red-500">${m.lose || 0}</td>
-                    <td class="p-2 border font-bold ${totalColorClass}">${total}</td>
-                    <td class="p-2 border">
-                        <input type="checkbox" ${m.paid ? 'checked' : ''} onchange="togglePaid(${m.id})" class="w-4 h-4 text-blue-600 rounded cursor-pointer">
-                    </td>
-                    <td class="p-2 border font-medium">
-                        ${m.paid 
-                            ? '<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-bold">Đã nộp</span>' 
-                            : '<span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-bold">Chưa nộp</span>'}
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+    // Kho dữ liệu lưu trữ local
+    let matches = JSON.parse(localStorage.getItem('PICK_MATCHES')) || [];
 
-            updateStats();
-        }
+    // Khởi tạo giao diện
+    document.addEventListener('DOMContentLoaded', () => {
+      initPlayerDropdowns();
+      
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('match-date').value = today;
+      document.getElementById('headerTodayDate').textContent = formatDateVN(today);
 
-        // Toggle Trạng thái Nộp
-        function togglePaid(id) {
-            const match = matches.find(m => m.id === id);
-            if (match) {
-                match.paid = !match.paid;
-                renderTable();
-            }
-        }
+      updateDateFilterOptions();
+      renderMatches();
+    });
 
-        // Render Summary Tab
-        function renderSummary() {
-            const tbody = document.getElementById('summaryTableBody');
-            tbody.innerHTML = '';
+    // Điền danh sách VĐV vào các thẻ select
+    function initPlayerDropdowns() {
+      const dropdowns = document.querySelectorAll('.vdv-select');
+      dropdowns.forEach(select => {
+        select.innerHTML = '<option value="">-- Chọn VĐV --</option>' + 
+          PLAYERS.map(p => `<option value="${p}">${p}</option>`).join('');
+      });
+    }
 
-            // Map danh sách VĐV unique
-            const summaryMap = {};
+    // Xử lý gửi Form
+    function handleFormSubmit(e) {
+      e.preventDefault();
 
-            matches.forEach(m => {
-                if (!m.picker) return;
-                if (!summaryMap[m.picker]) {
-                    summaryMap[m.picker] = { count: 0, win: 0, lose: 0, paidAmount: 0 };
-                }
-                summaryMap[m.picker].count += m.count;
-                summaryMap[m.picker].win += m.win;
-                summaryMap[m.picker].lose += m.lose;
-                if (m.paid) {
-                    summaryMap[m.picker].paidAmount += (m.win + m.lose);
-                }
-            });
+      const date = document.getElementById('match-date').value;
+      const v1 = document.getElementById('vdiv1').value;
+      const v2 = document.getElementById('vdiv2').value;
+      const v3 = document.getElementById('vdiv3').value;
+      const v4 = document.getElementById('vdiv4').value;
+      const pickThu = document.getElementById('pick-thu').value;
+      const scoreRaw = document.getElementById('score-input').value.trim();
 
-            Object.keys(summaryMap).forEach(name => {
-                const item = summaryMap[name];
-                const total = item.win + item.lose;
-                const remaining = total - item.paidAmount;
+      if (!v1 || !v2 || !v3 || !v4 || !pickThu) {
+        alert("Vui lòng chọn đầy đủ danh sách VĐV và Pick thủ!");
+        return;
+      }
 
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-gray-50 border-b border-gray-200";
-                tr.innerHTML = `
-                    <td class="p-3 border font-bold text-gray-800">${name}</td>
-                    <td class="p-3 border">${item.count}</td>
-                    <td class="p-3 border text-green-600 font-semibold">${item.win}</td>
-                    <td class="p-3 border text-red-500 font-semibold">${item.lose}</td>
-                    <td class="p-3 border font-bold ${total >= 0 ? 'text-green-600' : 'text-red-600'}">${total}k</td>
-                    <td class="p-3 border text-blue-600 font-medium">${item.paidAmount}k</td>
-                    <td class="p-3 border font-bold ${remaining === 0 ? 'text-gray-400' : (remaining > 0 ? 'text-green-600' : 'text-red-600')}">
-                        ${remaining === 0 ? 'Đã hoàn tất' : remaining + 'k'}
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
+      // Phân tích tỷ số
+      const scoreParts = scoreRaw.split('-').map(s => parseInt(s.trim()));
+      if (scoreParts.length !== 2 || isNaN(scoreParts[0]) || isNaN(scoreParts[1])) {
+        alert("Tỷ số không hợp lệ! Vui lòng nhập theo định dạng dạng: 11-9 hoặc 9-11");
+        return;
+      }
 
-        // Update Header Cards
-        function updateStats() {
-            const totalMatches = matches.filter(m => m.a1 !== '').length;
-            let collected = 0;
-            let pending = 0;
+      const score1 = scoreParts[0];
+      const score2 = scoreParts[1];
 
-            matches.forEach(m => {
-                const total = m.win + m.lose;
-                if (m.paid) {
-                    collected += total;
-                } else {
-                    pending += total;
-                }
-            });
+      // Tự động tính toán Kèo và Số tiền
+      let keoStatus = "Hòa";
+      let amount = 0;
 
-            document.getElementById('statTotalMatches').innerText = totalMatches;
-            document.getElementById('statCollected').innerText = collected + 'k';
-            document.getElementById('statPending').innerText = pending + 'k';
-            document.getElementById('statFund').innerText = (collected + pending) + 'k';
-        }
+      // Giả định Pick Thủ nằm ở Cặp 1 hoặc Cặp 2 để tính Thắng/Thua
+      const isPickInPair1 = (pickThu === v1 || pickThu === v2);
+      const pair1Won = score1 > score2;
 
-        // Modal Controls
-        function openAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
-        function closeAddModal() { document.getElementById('addModal').classList.add('hidden'); }
+      if (score1 === score2) {
+        keoStatus = "Hòa";
+        amount = 0;
+      } else if ((isPickInPair1 && pair1Won) || (!isPickInPair1 && !pair1Won)) {
+        keoStatus = "Thắng Kèo";
+        amount = 15; // Thắng cược
+      } else {
+        keoStatus = "Thua Kèo";
+        amount = -15; // Thua cược
+      }
 
-        // Save New Match
-        function saveMatch(e) {
-            e.preventDefault();
-            const newMatch = {
-                id: Date.now(),
-                a1: document.getElementById('teamA1').value,
-                a2: document.getElementById('teamA2').value,
-                b1: document.getElementById('teamB1').value,
-                b2: document.getElementById('teamB2').value,
-                scoreA: parseInt(document.getElementById('scoreA').value) || 0,
-                scoreB: parseInt(document.getElementById('scoreB').value) || 0,
-                keoA: parseInt(document.getElementById('keoA').value) || 0,
-                keoB: parseInt(document.getElementById('keoB').value) || 0,
-                picker: document.getElementById('picker').value,
-                count: parseInt(document.getElementById('playedCount').value) || 0,
-                win: parseInt(document.getElementById('winMoney').value) || 0,
-                lose: parseInt(document.getElementById('loseMoney').value) || 0,
-                paid: false
-            };
+      const newMatch = {
+        id: Date.now(),
+        date: date,
+        pair1: `${v1} - ${v2}`,
+        pair2: `${v3} - ${v4}`,
+        score: `${score1} - ${score2}`,
+        keo: keoStatus,
+        pickThu: pickThu,
+        amount: amount
+      };
 
-            matches.push(newMatch);
-            renderTable();
-            closeAddModal();
-            document.getElementById('matchForm').reset();
-        }
-    </script>
+      matches.unshift(newMatch);
+      saveData();
+      
+      // Reset form
+      document.getElementById('add-match-form').reset();
+      document.getElementById('match-date').value = date;
+
+      updateDateFilterOptions();
+      renderMatches();
+    }
+
+    // Render Bảng và Cập nhật Thống kê
+    function renderMatches() {
+      const filterDate = document.getElementById('filter-date').value;
+      const tbody = document.getElementById('matchTableBody');
+      tbody.innerHTML = '';
+
+      let filteredMatches = matches;
+      if (filterDate !== 'ALL') {
+        filteredMatches = matches.filter(m => m.date === filterDate);
+      }
+
+      let totalMatches = filteredMatches.length;
+      let totalAmount = 0;
+
+      filteredMatches.forEach((m, index) => {
+        totalAmount += m.amount;
+        
+        const isWin = m.amount > 0;
+        const isLoss = m.amount < 0;
+
+        const row = `
+          <tr class="hover:bg-gray-50">
+            <td class="p-3 font-semibold text-gray-500">${totalMatches - index}</td>
+            <td class="p-3 whitespace-nowrap">${formatDateVN(m.date)}</td>
+            <td class="p-3 font-medium text-blue-900">${m.pair1}</td>
+            <td class="p-3 font-medium text-red-900">${m.pair2}</td>
+            <td class="p-3 text-center font-bold">${m.score}</td>
+            <td class="p-3 text-center">
+              <span class="px-2 py-1 rounded text-xs font-bold ${isWin ? 'bg-green-100 text-green-700' : isLoss ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'}">
+                ${m.keo}
+              </span>
+            </td>
+            <td class="p-3 font-semibold text-gray-700">${m.pickThu}</td>
+            <td class="p-3 text-right font-bold ${isWin ? 'text-green-600' : isLoss ? 'text-red-600' : 'text-gray-600'}">
+              ${m.amount > 0 ? '+' : ''}${m.amount}k
+            </td>
+            <td class="p-3 text-center">
+              <button onclick="deleteMatch(${m.id})" class="text-red-500 hover:text-red-700 p-1">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+
+      // Cập nhật thẻ Thống kê
+      document.getElementById('statTotalMatches').textContent = totalMatches;
+      document.getElementById('statCollected').textContent = `${totalAmount > 0 ? '+' : ''}${totalAmount}k`;
+      document.getElementById('statPending').textContent = `${totalAmount < 0 ? totalAmount : 0}k`;
+      document.getElementById('statFund').textContent = `${totalAmount}k`;
+    }
+
+    // Xóa trận đấu
+    function deleteMatch(id) {
+      if (confirm('Bạn có chắc chắn muốn xóa trận đấu này?')) {
+        matches = matches.filter(m => m.id !== id);
+        saveData();
+        updateDateFilterOptions();
+        renderMatches();
+      }
+    }
+
+    // Cập nhật danh sách các ngày có trong dữ liệu vào Bộ lọc
+    function updateDateFilterOptions() {
+      const select = document.getElementById('filter-date');
+      const currentValue = select.value;
+      
+      // Lấy danh sách ngày duy nhất
+      const uniqueDates = [...new Set(matches.map(m => m.date))].sort().reverse();
+
+      select.innerHTML = '<option value="ALL">-- Tất cả các ngày --</option>' +
+        uniqueDates.map(d => `<option value="${d}">${formatDateVN(d)}</option>`).join('');
+
+      select.value = uniqueDates.includes(currentValue) ? currentValue : 'ALL';
+    }
+
+    // Lưu vào LocalStorage
+    function saveData() {
+      localStorage.setItem('PICK_MATCHES', JSON.stringify(matches));
+    }
+
+    // Định dạng ngày DD/MM/YYYY
+    function formatDateVN(dateStr) {
+      if (!dateStr) return '';
+      const [year, month, day] = dateStr.split('-');
+      return `${day}/${month}/${year}`;
+    }
+  </script>
 </body>
 </html>

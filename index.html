@@ -1,360 +1,823 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quản Lý Trận Pick Kèo 15K</title>
-  <!-- Tailwind CSS & FontAwesome -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    .navy-header { background-color: #1B365D; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLB PICKLEBALL - CMTD | Bảng Thống Kê Kèo 15K</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-yellow: #eab308;
+            --brand-neon: #ccff00;
+            --brand-dark: #111827;
+            --brand-card: #1f2937;
+            --primary-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            
+            --pick1-bg: #e0f2fe;
+            --pick1-color: #0369a1;
+            --pick2-bg: #fce7f3;
+            --pick2-color: #be185d;
+            --score-bg: #f3e8ff;
+            --score-border: #9333ea;
+            --win-color: #16a34a;
+            --win-bg: #dcfce7;
+            --lose-color: #dc2626;
+            --lose-bg: #fee2e2;
+            --border-color: #cbd5e1;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 1650px;
+            margin: 0 auto;
+        }
+
+        /* HEADER THỂ THAO SANG TRỌNG */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #090d16 0%, #1a2332 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            border-bottom: 4px solid var(--brand-neon);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .club-logo {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--brand-neon);
+            box-shadow: 0 0 12px rgba(204, 255, 0, 0.4);
+            background: #000;
+        }
+
+        .brand-title h1 {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: var(--brand-neon);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .brand-title .subtitle {
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-top: 3px;
+            font-weight: 500;
+        }
+
+        .brand-title .slogan {
+            display: inline-block;
+            background: var(--brand-yellow);
+            color: #000;
+            font-weight: 900;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        /* TABS NAVIGATION */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: #e2e8f0;
+            padding: 6px;
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            color: #475569;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-btn:hover { color: #0f172a; background: rgba(255,255,255,0.6); }
+        .tab-btn.active {
+            background: #0f172a;
+            color: var(--brand-neon);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* NÚT BẤM */
+        .btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn:hover { transform: translateY(-1px); opacity: 0.95; }
+        .btn-add-date { background: #15803d; color: white; }
+        .btn-add-match { background: #16a34a; }
+        .btn-save { background: #2563eb; }
+
+        /* BỐ CỤC CHÍNH (BẢNG TRẬN ĐẤU + DANH SÁCH VĐV BÊN PHẢI) */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 800;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #0f172a;
+        }
+
+        /* CĂN CHỈNH BẢNG ĐẤU */
+        .table-responsive { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 13px;
+        }
+
+        th, td {
+            border-bottom: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            padding: 8px 6px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th:first-child, td:first-child { border-left: 1px solid var(--border-color); }
+        tr:first-child th { border-top: 1px solid var(--border-color); }
+
+        th {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-pick1 {
+            background-color: var(--pick1-bg);
+            color: var(--pick1-color);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-weight: 800;
+            border: 1px solid #bae6fd;
+        }
+
+        .badge-pick2 {
+            background-color: var(--pick2-bg);
+            color: var(--pick2-color);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-weight: 800;
+            border: 1px solid #fbcfe8;
+        }
+
+        .badge-score {
+            background-color: var(--score-bg);
+            color: #6b21a8;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-weight: 800;
+            border: 1px solid #e9d5ff;
+        }
+
+        select {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 13px;
+            background: #fff;
+            outline: none;
+        }
+
+        select:focus { border-color: #2563eb; }
+
+        /* MỞ RỘNG CỘT TỶ SỐ CÂN ĐỐI */
+        .score-box {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .score-input {
+            width: 50px !important;
+            padding: 6px !important;
+            font-weight: 900;
+            text-align: center;
+            font-size: 14px;
+            border: 2px solid var(--score-border) !important;
+            border-radius: 6px;
+            background: #faf5ff;
+            color: #581c87;
+            outline: none;
+        }
+
+        .win { color: var(--win-color); font-weight: 800; background-color: var(--win-bg); border-radius: 4px; padding: 4px 8px; }
+        .lose { color: var(--lose-color); font-weight: 800; background-color: var(--lose-bg); border-radius: 4px; padding: 4px 8px; }
+
+        /* DANH SÁCH VĐV BÊN PHẢI */
+        .vdv-sidebar {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .vdv-scroll-list {
+            max-height: 460px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-right: 4px;
+        }
+
+        .vdv-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .vdv-item:hover { border-color: #2563eb; }
+
+        .vdv-btn {
+            cursor: pointer;
+            border: none;
+            background: #f1f5f9;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        /* SUMMARY CARDS */
+        .summary-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #2563eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .stat-card .title { font-size: 12px; color: #64748b; font-weight: 700; text-transform: uppercase; }
+        .stat-card .value { font-size: 22px; font-weight: 900; margin-top: 5px; }
+
+        .checkbox-cell { transform: scale(1.3); cursor: pointer; }
+        .action-bar { display: flex; gap: 10px; margin-top: 15px; }
+        .total-row { background-color: #fef3c7; font-weight: 800; }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans text-gray-800 pb-12">
+<body>
 
-  <!-- Header -->
-  <header class="navy-header text-white shadow-lg sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-xl md:text-2xl font-bold flex items-center gap-2">
-        <i class="fa-solid fa-trophy text-yellow-400"></i> Quản Lý Các Trận Pick Kèo 15K
-      </h1>
-      <div class="text-xs md:text-sm bg-blue-900/60 px-3 py-1.5 rounded-lg border border-blue-400/30">
-        <i class="fa-regular fa-calendar-check mr-1"></i>
-        <span>Hôm nay: </span>
-        <span id="headerTodayDate" class="font-bold text-yellow-300">--/--/----</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Container -->
-  <main class="max-w-7xl mx-auto px-2 md:px-4 mt-6">
-
-    <!-- Quy định -->
-    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg shadow-sm">
-      <h3 class="font-bold text-red-800 text-sm md:text-base mb-1">
-        <i class="fa-solid fa-triangle-exclamation mr-1"></i> Quy định tính tiền tự động:
-      </h3>
-      <ul class="text-xs md:text-sm text-red-700 space-y-1 list-disc list-inside">
-        <li><b>Tỷ số:</b> Nhập dạng <code>11-9</code> (Cặp 1 thắng) hoặc <code>9-11</code> (Cặp 2 thắng).</li>
-        <li><b>Thắng cược:</b> Tự động cộng tiền thưởng (+15k/trận sau khi khấu trừ BTC).</li>
-        <li><b>Thua cược:</b> Tự động tính số tiền âm (-15k/trận).</li>
-      </ul>
-    </div>
-
-    <!-- Thống kê Tổng quan -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-        <p class="text-xs text-gray-500 font-medium">Tổng Trận Đã Đấu</p>
-        <p id="statTotalMatches" class="text-2xl font-bold text-blue-600 mt-1">0</p>
-      </div>
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-        <p class="text-xs text-gray-500 font-medium">Tiền BTC Thu Về</p>
-        <p id="statCollected" class="text-2xl font-bold text-green-600 mt-1">0k</p>
-      </div>
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-        <p class="text-xs text-gray-500 font-medium">Tiền Còn Phải Thu</p>
-        <p id="statPending" class="text-2xl font-bold text-red-600 mt-1">0k</p>
-      </div>
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-        <p class="text-xs text-gray-500 font-medium">Quỹ Cung Cấp</p>
-        <p id="statFund" class="text-2xl font-bold text-orange-500 mt-1">0k</p>
-      </div>
-    </div>
-
-    <!-- Form Thêm Trận Mới -->
-    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 mb-6">
-      <h3 class="font-bold text-gray-800 text-base mb-4 flex items-center gap-2">
-        <i class="fa-solid fa-plus-circle text-blue-600"></i> Thêm Trận Đấu Mới
-      </h3>
-      
-      <form id="add-match-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
-        <!-- Ngày thi đấu -->
-        <div>
-          <label for="match-date" class="block text-xs font-bold text-gray-700 mb-1">
-            <i class="fa-regular fa-calendar mr-1"></i>Chọn Ngày Thi Đấu:
-          </label>
-          <input type="date" id="match-date" required class="w-full md:w-1/4 p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-        </div>
-
-        <!-- Cặp Pick 1 & Cặp Pick 2 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Cặp Pick 1 -->
-          <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 space-y-3">
-            <span class="font-bold text-xs text-blue-800 block border-b border-blue-200 pb-1">CẶP PICK 1</span>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="block text-xs text-gray-600 mb-1">VĐV 1:</label>
-                <select id="vdiv1" required class="vdv-select w-full p-2 border rounded-lg text-sm bg-white"></select>
-              </div>
-              <div>
-                <label class="block text-xs text-gray-600 mb-1">VĐV 2:</label>
-                <select id="vdiv2" required class="vdv-select w-full p-2 border rounded-lg text-sm bg-white"></select>
-              </div>
+<div class="container">
+    <!-- HEADER LOGO CLB CMTD -->
+    <div class="header-section">
+        <div class="brand-container">
+            <img src="logocmtd.jpg" alt="Logo Pickleball CMTD" class="club-logo" onerror="this.src='https://via.placeholder.com/75/000000/ccff00?text=CMTD'">
+            <div class="brand-title">
+                <h1>CLB PICKLEBALL - CMTD</h1>
+                <div class="subtitle">Bảng Thống Kê Kèo 15K & Quản Lý Giải Đấu</div>
+                <div class="slogan">⚡ GẶP LÀ VỤT ⚡</div>
             </div>
-          </div>
-
-          <!-- Cặp Pick 2 -->
-          <div class="bg-red-50 p-3 rounded-lg border border-red-200 space-y-3">
-            <span class="font-bold text-xs text-red-800 block border-b border-red-200 pb-1">CẶP PICK 2</span>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="block text-xs text-gray-600 mb-1">VĐV 3:</label>
-                <select id="vdiv3" required class="vdv-select w-full p-2 border rounded-lg text-sm bg-white"></select>
-              </div>
-              <div>
-                <label class="block text-xs text-gray-600 mb-1">VĐV 4:</label>
-                <select id="vdiv4" required class="vdv-select w-full p-2 border rounded-lg text-sm bg-white"></select>
-              </div>
-            </div>
-          </div>
         </div>
-
-        <!-- Pick Thủ & Tỷ Số -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Pick Thủ (Người bắt kèo):</label>
-            <select id="pick-thu" required class="vdv-select w-full p-2 border rounded-lg text-sm bg-white"></select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Tỷ Số (Ví dụ: 11-9):</label>
-            <input type="text" id="score-input" placeholder="Nhập tỷ số (VD: 11-9)" required class="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-          </div>
-        </div>
-
-        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg text-sm transition shadow-md">
-          <i class="fa-solid fa-floppy-disk mr-1"></i> Lưu Trận Đấu
-        </button>
-      </form>
+        <button class="btn btn-add-date" onclick="addDateTab()">📅 + Thêm Ngày Đấu Mới</button>
     </div>
 
-    <!-- Bộ Lọc Ngày & Danh Sách Trận -->
-    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
-        <h2 class="font-bold text-gray-800 text-lg">Danh Sách Trận Đấu</h2>
-        
-        <!-- Nút chọn lọc theo ngày -->
-        <div class="flex items-center gap-2 w-full md:w-auto">
-          <label for="filter-date" class="text-xs font-semibold text-gray-600 whitespace-nowrap">Lọc Ngày:</label>
-          <select id="filter-date" onchange="renderMatches()" class="p-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none">
-            <option value="ALL">-- Tất cả các ngày --</option>
-          </select>
-        </div>
-      </div>
+    <!-- TABS -->
+    <div class="tabs" id="tabContainer"></div>
 
-      <!-- Bảng Trận Đấu -->
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse text-xs md:text-sm">
-          <thead>
-            <tr class="bg-gray-100 text-gray-700 border-b">
-              <th class="p-3">STT</th>
-              <th class="p-3">Ngày</th>
-              <th class="p-3">Cặp Pick 1</th>
-              <th class="p-3">Cặp Pick 2</th>
-              <th class="p-3 text-center">Tỷ Số</th>
-              <th class="p-3 text-center">Kèo</th>
-              <th class="p-3">Pick Thủ</th>
-              <th class="p-3 text-right">Thành Tiền</th>
-              <th class="p-3 text-center">Thao Tác</th>
-            </tr>
-          </thead>
-          <tbody id="matchTableBody" class="divide-y divide-gray-200">
-            <!-- Dữ liệu render tự động -->
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <!-- CONTENT KHU VỰC CHÍNH -->
+    <div id="tabContent"></div>
+</div>
 
-  </main>
-
-  <script>
-    // Danh sách VĐV cố định
-    const PLAYERS = [
-      "Phú Mỗ", "Hà Giấy", "Tiến Thọ", "Lợi Trì", "Trí Đô", 
-      "Tuấn La", "Thanh Đàm", "Long Diễn", "Điền Chèm", "Châu Sĩ", 
-      "Gà Tre", "Vân Đỉnh"
+<script>
+    // DỮ LIỆU
+    let defaultVDVs = [
+        "Tiến Thọ", "Trí Đỏ", "Phú Mỗ", "Long Diễn", "Lợi Trí", 
+        "Châu Sĩ", "Hà Giấy", "Điền Chèm", "Tuấn La", "Thanh Đàm", 
+        "Gà Tre", "Dũng Ngạc", "Vân Đình", "Thành Sóc",
+        "Khách 1", "Khách 2", "Khách 3", "Khách 4", "Khách 5"
     ];
 
-    // Kho dữ liệu lưu trữ local
-    let matches = JSON.parse(localStorage.getItem('PICK_MATCHES')) || [];
+    let vdvs = JSON.parse(localStorage.getItem("cmtd_vdvs")) || defaultVDVs;
+    let dates = JSON.parse(localStorage.getItem("cmtd_dates")) || ["3/9/26", "24/9/26", "1/10/26"]; 
+    let matchesData = JSON.parse(localStorage.getItem("cmtd_matches")) || {};
+    let paymentStatus = JSON.parse(localStorage.getItem("cmtd_payments")) || {};
 
-    // Khởi tạo giao diện
-    document.addEventListener('DOMContentLoaded', () => {
-      initPlayerDropdowns();
-      
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('match-date').value = today;
-      document.getElementById('headerTodayDate').textContent = formatDateVN(today);
-
-      updateDateFilterOptions();
-      renderMatches();
+    dates.forEach(d => {
+        if (!matchesData[d]) {
+            matchesData[d] = Array.from({ length: 10 }, (_, i) => ({
+                id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
+            }));
+        }
     });
 
-    // Điền danh sách VĐV vào các thẻ select
-    function initPlayerDropdowns() {
-      const dropdowns = document.querySelectorAll('.vdv-select');
-      dropdowns.forEach(select => {
-        select.innerHTML = '<option value="">-- Chọn VĐV --</option>' + 
-          PLAYERS.map(p => `<option value="${p}">${p}</option>`).join('');
-      });
+    let currentTab = dates[0] || "tonghop";
+
+    window.onload = function() {
+        renderTabs();
+        switchTab(currentTab);
+    };
+
+    function addDateTab() {
+        const dateStr = prompt("Nhập ngày đấu mới (VD: 8/10/26):");
+        if (dateStr && !dates.includes(dateStr)) {
+            dates.push(dateStr);
+            matchesData[dateStr] = Array.from({ length: 10 }, (_, i) => ({
+                id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
+            }));
+            saveAllDataToStorage();
+            renderTabs();
+            switchTab(dateStr);
+        }
     }
 
-    // Xử lý gửi Form
-    function handleFormSubmit(e) {
-      e.preventDefault();
-
-      const date = document.getElementById('match-date').value;
-      const v1 = document.getElementById('vdiv1').value;
-      const v2 = document.getElementById('vdiv2').value;
-      const v3 = document.getElementById('vdiv3').value;
-      const v4 = document.getElementById('vdiv4').value;
-      const pickThu = document.getElementById('pick-thu').value;
-      const scoreRaw = document.getElementById('score-input').value.trim();
-
-      if (!v1 || !v2 || !v3 || !v4 || !pickThu) {
-        alert("Vui lòng chọn đầy đủ danh sách VĐV và Pick thủ!");
-        return;
-      }
-
-      // Phân tích tỷ số
-      const scoreParts = scoreRaw.split('-').map(s => parseInt(s.trim()));
-      if (scoreParts.length !== 2 || isNaN(scoreParts[0]) || isNaN(scoreParts[1])) {
-        alert("Tỷ số không hợp lệ! Vui lòng nhập theo định dạng dạng: 11-9 hoặc 9-11");
-        return;
-      }
-
-      const score1 = scoreParts[0];
-      const score2 = scoreParts[1];
-
-      // Tự động tính toán Kèo và Số tiền
-      let keoStatus = "Hòa";
-      let amount = 0;
-
-      // Giả định Pick Thủ nằm ở Cặp 1 hoặc Cặp 2 để tính Thắng/Thua
-      const isPickInPair1 = (pickThu === v1 || pickThu === v2);
-      const pair1Won = score1 > score2;
-
-      if (score1 === score2) {
-        keoStatus = "Hòa";
-        amount = 0;
-      } else if ((isPickInPair1 && pair1Won) || (!isPickInPair1 && !pair1Won)) {
-        keoStatus = "Thắng Kèo";
-        amount = 15; // Thắng cược
-      } else {
-        keoStatus = "Thua Kèo";
-        amount = -15; // Thua cược
-      }
-
-      const newMatch = {
-        id: Date.now(),
-        date: date,
-        pair1: `${v1} - ${v2}`,
-        pair2: `${v3} - ${v4}`,
-        score: `${score1} - ${score2}`,
-        keo: keoStatus,
-        pickThu: pickThu,
-        amount: amount
-      };
-
-      matches.unshift(newMatch);
-      saveData();
-      
-      // Reset form
-      document.getElementById('add-match-form').reset();
-      document.getElementById('match-date').value = date;
-
-      updateDateFilterOptions();
-      renderMatches();
+    function renderTabs() {
+        const container = document.getElementById("tabContainer");
+        let html = "";
+        dates.forEach(d => {
+            html += `<button class="tab-btn ${currentTab === d ? 'active' : ''}" onclick="switchTab('${d}')">🗓️ Ngày ${d}</button>`;
+        });
+        html += `<button class="tab-btn ${currentTab === 'tonghop' ? 'active' : ''}" onclick="switchTab('tonghop')">🏆 Bảng Thống Kê Nhiều Ngày</button>`;
+        container.innerHTML = html;
     }
 
-    // Render Bảng và Cập nhật Thống kê
-    function renderMatches() {
-      const filterDate = document.getElementById('filter-date').value;
-      const tbody = document.getElementById('matchTableBody');
-      tbody.innerHTML = '';
+    function switchTab(tabName) {
+        currentTab = tabName;
+        renderTabs();
+        renderCurrentTab();
+    }
 
-      let filteredMatches = matches;
-      if (filterDate !== 'ALL') {
-        filteredMatches = matches.filter(m => m.date === filterDate);
-      }
+    function renderCurrentTab() {
+        const content = document.getElementById("tabContent");
+        if (currentTab === 'tonghop') {
+            content.innerHTML = renderMultiDaySummaryTable();
+        } else {
+            content.innerHTML = `
+                <div class="main-layout">
+                    <div>
+                        ${renderMatchTable(currentTab)}
+                        ${renderSingleDaySummaryTable(currentTab)}
+                    </div>
+                    <div>
+                        ${renderVDVSidebar()}
+                    </div>
+                </div>
+            `;
+            filterVDVList();
+        }
+    }
 
-      let totalMatches = filteredMatches.length;
-      let totalAmount = 0;
+    function calculateMatchResult(score1, score2) {
+        if (score1 === "" || score2 === "" || isNaN(score1) || isNaN(score2)) {
+            return { money1: 0, money2: 0, isFinished: false };
+        }
+        let s1 = parseInt(score1);
+        let s2 = parseInt(score2);
 
-      filteredMatches.forEach((m, index) => {
-        totalAmount += m.amount;
-        
-        const isWin = m.amount > 0;
-        const isLoss = m.amount < 0;
+        let winRate = 5, loseRate = -15;
 
-        const row = `
-          <tr class="hover:bg-gray-50">
-            <td class="p-3 font-semibold text-gray-500">${totalMatches - index}</td>
-            <td class="p-3 whitespace-nowrap">${formatDateVN(m.date)}</td>
-            <td class="p-3 font-medium text-blue-900">${m.pair1}</td>
-            <td class="p-3 font-medium text-red-900">${m.pair2}</td>
-            <td class="p-3 text-center font-bold">${m.score}</td>
-            <td class="p-3 text-center">
-              <span class="px-2 py-1 rounded text-xs font-bold ${isWin ? 'bg-green-100 text-green-700' : isLoss ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'}">
-                ${m.keo}
-              </span>
-            </td>
-            <td class="p-3 font-semibold text-gray-700">${m.pickThu}</td>
-            <td class="p-3 text-right font-bold ${isWin ? 'text-green-600' : isLoss ? 'text-red-600' : 'text-gray-600'}">
-              ${m.amount > 0 ? '+' : ''}${m.amount}k
-            </td>
-            <td class="p-3 text-center">
-              <button onclick="deleteMatch(${m.id})" class="text-red-500 hover:text-red-700 p-1">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-            </td>
-          </tr>
+        if (s1 === 0 || s2 === 0) {
+            winRate *= 2;   // +10k
+            loseRate *= 2;  // -30k
+        }
+
+        let money1 = 0, money2 = 0;
+        if (s1 > s2) { money1 = winRate; money2 = loseRate; }
+        else if (s2 > s1) { money1 = loseRate; money2 = winRate; }
+
+        return { money1, money2, isFinished: true };
+    }
+
+    // BẢNG TRẬN ĐẤU CÂN ĐỐI
+    function renderMatchTable(date) {
+        let matches = matchesData[date];
+        let rowsHtml = "";
+
+        matches.forEach((m, idx) => {
+            let res = calculateMatchResult(m.score1, m.score2);
+            let m1Text = res.isFinished ? (res.money1 > 0 ? `+${res.money1}K` : `${res.money1}K`) : "-";
+            let m2Text = res.isFinished ? (res.money2 > 0 ? `+${res.money2}K` : `${res.money2}K`) : "-";
+            
+            let m1Class = res.money1 > 0 ? 'win' : (res.money1 < 0 ? 'lose' : '');
+            let m2Class = res.money2 > 0 ? 'win' : (res.money2 < 0 ? 'lose' : '');
+
+            rowsHtml += `
+                <tr>
+                    <td><b>Trận ${m.id}</b></td>
+                    <td><select onchange="updateMatch('${date}', ${idx}, 'c1_p1', this.value)">${getOptions(m.c1_p1)}</select></td>
+                    <td><select onchange="updateMatch('${date}', ${idx}, 'c1_p2', this.value)">${getOptions(m.c1_p2)}</select></td>
+                    <td><select onchange="updateMatch('${date}', ${idx}, 'c2_p1', this.value)">${getOptions(m.c2_p1)}</select></td>
+                    <td><select onchange="updateMatch('${date}', ${idx}, 'c2_p2', this.value)">${getOptions(m.c2_p2)}</select></td>
+                    <td style="background-color: #faf5ff; width: 140px;">
+                        <div class="score-box">
+                            <input type="number" class="score-input" value="${m.score1}" onchange="updateMatch('${date}', ${idx}, 'score1', this.value)">
+                            <b style="color: var(--score-border)">:</b>
+                            <input type="number" class="score-input" value="${m.score2}" onchange="updateMatch('${date}', ${idx}, 'score2', this.value)">
+                        </div>
+                    </td>
+                    <td style="width: 90px;"><span class="${m1Class}">${m1Text}</span></td>
+                    <td style="width: 90px;"><span class="${m2Class}">${m2Text}</span></td>
+                </tr>
+            `;
+        });
+
+        return `
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">⚔️ Danh Sách Trận Đấu - Ngày ${date}</h3>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 65px;">STT</th>
+                                <th colspan="2"><span class="badge-pick1">Cặp PICK 1</span></th>
+                                <th colspan="2"><span class="badge-pick2">Cặp PICK 2</span></th>
+                                <th><span class="badge-score">🎯 Tỷ Số Trận</span></th>
+                                <th>Kèo Pick 1</th>
+                                <th>Kèo Pick 2</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rowsHtml}</tbody>
+                    </table>
+                </div>
+                <div class="action-bar">
+                    <button class="btn btn-add-match" onclick="addNewMatch('${date}')">➕ Thêm Trận Đấu</button>
+                    <button class="btn btn-save" onclick="saveDayData('${date}')">💾 Lưu Dữ Liệu Ngày ${date}</button>
+                </div>
+            </div>
         `;
-        tbody.innerHTML += row;
-      });
-
-      // Cập nhật thẻ Thống kê
-      document.getElementById('statTotalMatches').textContent = totalMatches;
-      document.getElementById('statCollected').textContent = `${totalAmount > 0 ? '+' : ''}${totalAmount}k`;
-      document.getElementById('statPending').textContent = `${totalAmount < 0 ? totalAmount : 0}k`;
-      document.getElementById('statFund').textContent = `${totalAmount}k`;
     }
 
-    // Xóa trận đấu
-    function deleteMatch(id) {
-      if (confirm('Bạn có chắc chắn muốn xóa trận đấu này?')) {
-        matches = matches.filter(m => m.id !== id);
-        saveData();
-        updateDateFilterOptions();
-        renderMatches();
-      }
+    // LIST SỔ XUỐNG BÊN PHẢI CÓ Ô TÌM KIẾM VA ĐẾM VĐV
+    function renderVDVSidebar() {
+        return `
+            <div class="card vdv-sidebar">
+                <div class="card-header" style="margin-bottom: 10px; padding-bottom: 8px;">
+                    <h3 class="card-title">👥 Danh Sách VĐV (${vdvs.length})</h3>
+                </div>
+                <div style="display: flex; gap: 6px; margin-bottom: 10px;">
+                    <input type="text" id="newVdvInput" placeholder="+ Nhập tên VĐV..." style="padding:6px; border:1px solid #ccc; border-radius:6px; width:100%;">
+                    <button class="btn btn-add-match" style="padding: 6px 12px;" onclick="addVDV()">Thêm</button>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <input type="text" id="searchVdvInput" placeholder="🔍 Tìm kiếm VĐV..." onkeyup="filterVDVList()" style="padding:6px; border:1px solid #ccc; border-radius:6px; width:100%; background:#fff;">
+                </div>
+                <div class="vdv-scroll-list" id="vdvListContainer">
+                    ${renderVDVItems(vdvs)}
+                </div>
+            </div>
+        `;
     }
 
-    // Cập nhật danh sách các ngày có trong dữ liệu vào Bộ lọc
-    function updateDateFilterOptions() {
-      const select = document.getElementById('filter-date');
-      const currentValue = select.value;
-      
-      // Lấy danh sách ngày duy nhất
-      const uniqueDates = [...new Set(matches.map(m => m.date))].sort().reverse();
-
-      select.innerHTML = '<option value="ALL">-- Tất cả các ngày --</option>' +
-        uniqueDates.map(d => `<option value="${d}">${formatDateVN(d)}</option>`).join('');
-
-      select.value = uniqueDates.includes(currentValue) ? currentValue : 'ALL';
+    function renderVDVItems(list) {
+        if (list.length === 0) return `<div style="text-align:center; color:#94a3b8; padding: 10px;">Không có VĐV</div>`;
+        return list.map((name) => {
+            let originalIndex = vdvs.indexOf(name);
+            return `
+                <div class="vdv-item">
+                    <span>🥇 ${name}</span>
+                    <div>
+                        <button class="vdv-btn" onclick="editVDV(${originalIndex})" title="Sửa tên">✏️</button>
+                        <button class="vdv-btn" onclick="removeVDV(${originalIndex})" title="Xóa" style="color: red;">❌</button>
+                    </div>
+                </div>
+            `;
+        }).join("");
     }
 
-    // Lưu vào LocalStorage
-    function saveData() {
-      localStorage.setItem('PICK_MATCHES', JSON.stringify(matches));
+    function filterVDVList() {
+        const query = document.getElementById("searchVdvInput")?.value.toLowerCase() || "";
+        const filtered = vdvs.filter(v => v.toLowerCase().includes(query));
+        const container = document.getElementById("vdvListContainer");
+        if (container) container.innerHTML = renderVDVItems(filtered);
     }
 
-    // Định dạng ngày DD/MM/YYYY
-    function formatDateVN(dateStr) {
-      if (!dateStr) return '';
-      const [year, month, day] = dateStr.split('-');
-      return `${day}/${month}/${year}`;
+    function addVDV() {
+        const input = document.getElementById("newVdvInput");
+        const name = input.value.trim();
+        if (name && !vdvs.includes(name)) {
+            vdvs.push(name);
+            input.value = "";
+            saveAllDataToStorage();
+            renderCurrentTab();
+        }
     }
-  </script>
+
+    function editVDV(index) {
+        const oldName = vdvs[index];
+        const newName = prompt(`Sửa tên VĐV "${oldName}":`, oldName);
+        if (newName && newName.trim() !== "" && newName !== oldName) {
+            vdvs[index] = newName.trim();
+            saveAllDataToStorage();
+            renderCurrentTab();
+        }
+    }
+
+    function removeVDV(index) {
+        if (confirm(`Bạn muốn xóa VĐV "${vdvs[index]}"?`)) {
+            vdvs.splice(index, 1);
+            saveAllDataToStorage();
+            renderCurrentTab();
+        }
+    }
+
+    function getOptions(selectedVal) {
+        let html = `<option value="">-- VĐV --</option>`;
+        vdvs.forEach(v => {
+            html += `<option value="${v}" ${v === selectedVal ? 'selected' : ''}>${v}</option>`;
+        });
+        return html;
+    }
+
+    function addNewMatch(date) {
+        let matches = matchesData[date];
+        let newId = matches.length + 1;
+        matches.push({ id: newId, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "" });
+        renderCurrentTab();
+    }
+
+    function updateMatch(date, matchIndex, field, value) {
+        matchesData[date][matchIndex][field] = value;
+        renderCurrentTab();
+    }
+
+    function saveDayData(date) {
+        saveAllDataToStorage();
+        alert(`✅ Đã lưu kết quả ngày ${date} thành công!`);
+    }
+
+    function saveAllDataToStorage() {
+        localStorage.setItem("cmtd_vdvs", JSON.stringify(vdvs));
+        localStorage.setItem("cmtd_dates", JSON.stringify(dates));
+        localStorage.setItem("cmtd_matches", JSON.stringify(matchesData));
+        localStorage.setItem("cmtd_payments", JSON.stringify(paymentStatus));
+    }
+
+    // BẢNG THU CHI NGÀY
+    function renderSingleDaySummaryTable(date) {
+        let stats = {};
+        vdvs.forEach(v => stats[v] = { matchCount: 0, totalMoney: 0 });
+
+        matchesData[date].forEach(m => {
+            let res = calculateMatchResult(m.score1, m.score2);
+            if (res.isFinished) {
+                [m.c1_p1, m.c1_p2].forEach(p => { if (p && stats[p]) { stats[p].matchCount++; stats[p].totalMoney += res.money1; } });
+                [m.c2_p1, m.c2_p2].forEach(p => { if (p && stats[p]) { stats[p].matchCount++; stats[p].totalMoney += res.money2; } });
+            }
+        });
+
+        let rowsHtml = "";
+        let btcCollected = 0, btcRemaining = 0;
+
+        vdvs.forEach(v => {
+            let count = stats[v].matchCount;
+            let rawMoney = stats[v].totalMoney;
+            if (count === 0) return;
+
+            let eligible = (count >= 4 && rawMoney > 0);
+            let finalMoney = eligible ? rawMoney : (rawMoney <= 0 ? rawMoney : 0);
+
+            let payKey = `${date}_${v}`;
+            let isPaid = !!paymentStatus[payKey];
+
+            if (finalMoney < 0) {
+                if (isPaid) btcCollected += Math.abs(finalMoney);
+                else btcRemaining += Math.abs(finalMoney);
+            }
+
+            rowsHtml += `
+                <tr>
+                    <td style="text-align: left; font-weight: bold;">👤 ${v}</td>
+                    <td><b>${count} trận</b></td>
+                    <td><span class="${rawMoney >= 0 ? 'win' : 'lose'}">${rawMoney > 0 ? '+' : ''}${rawMoney} K</span></td>
+                    <td>${eligible ? `<span class="win">+${finalMoney} K (Đủ ĐK)</span>` : (count < 4 && rawMoney > 0 ? `<span style="color:#d97706; font-weight: bold;">Thiếu trận (${count}/4)</span>` : `<span class="lose">${finalMoney} K</span>`)}</td>
+                    <td><input type="checkbox" class="checkbox-cell" ${isPaid ? 'checked' : ''} onchange="togglePayment('${payKey}')"></td>
+                    <td>${isPaid ? `<b style="color:var(--win-color)">✅ Đã nộp</b>` : (finalMoney < 0 ? `<b style="color:var(--lose-color)">⏳ Cần thu ${Math.abs(finalMoney)}K</b>` : '🎉 Không nộp')}</td>
+                </tr>
+            `;
+        });
+
+        return `
+            <div class="card" style="border-top: 4px solid var(--brand-yellow);">
+                <div class="card-header">
+                    <h3 class="card-title">📊 Bảng Tổng Hợp Thu Chi - Ngày ${date}</h3>
+                </div>
+                <div class="summary-dashboard">
+                    <div class="stat-card" style="border-left-color: var(--win-color);">
+                        <div class="title">💵 BTC Đã Thu (${date})</div>
+                        <div class="value" style="color: var(--win-color);">${btcCollected} K</div>
+                    </div>
+                    <div class="stat-card" style="border-left-color: var(--lose-color);">
+                        <div class="title">📌 Còn Phải Thu (${date})</div>
+                        <div class="value" style="color: var(--lose-color);">${btcRemaining} K</div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>VĐV Tham Gia</th>
+                                <th>Số Trận</th>
+                                <th>Tiền Tích Lũy</th>
+                                <th>Thành Tiền</th>
+                                <th>Đã Nộp</th>
+                                <th>Trạng Thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rowsHtml || '<tr><td colspan="6" style="padding:15px; color:#94a3b8;">Chưa có dữ liệu trận đấu</td></tr>'}</tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    function togglePayment(payKey) {
+        paymentStatus[payKey] = !paymentStatus[payKey];
+        saveAllDataToStorage();
+        renderCurrentTab();
+    }
+
+    // BẢNG THỐNG KÊ TỔNG HỢP NHIỀU NGÀY
+    function renderMultiDaySummaryTable() {
+        let playerStats = {};
+        vdvs.forEach(v => {
+            playerStats[v] = {};
+            dates.forEach(d => playerStats[v][d] = { count: 0, rawMoney: 0 });
+        });
+
+        let dayTotals = {};
+        dates.forEach(d => dayTotals[d] = 0);
+
+        dates.forEach(d => {
+            matchesData[d].forEach(m => {
+                let res = calculateMatchResult(m.score1, m.score2);
+                if (res.isFinished) {
+                    [m.c1_p1, m.c1_p2].forEach(p => { if (p && playerStats[p]) { playerStats[p][d].count++; playerStats[p][d].rawMoney += res.money1; } });
+                    [m.c2_p1, m.c2_p2].forEach(p => { if (p && playerStats[p]) { playerStats[p][d].count++; playerStats[p][d].rawMoney += res.money2; } });
+                }
+            });
+        });
+
+        let dateHeadersHtml = dates.map(d => `<th>📅 Ngày ${d}</th>`).join("");
+        let rowsHtml = "";
+        let grandTotalAllDays = 0;
+
+        vdvs.forEach(v => {
+            let totalAllDays = 0;
+            let dateCellsHtml = dates.map(d => {
+                let data = playerStats[v][d];
+                let count = data.count;
+                let rawMoney = data.rawMoney;
+                let eligible = (count >= 4 && rawMoney > 0);
+                let finalMoney = eligible ? rawMoney : (rawMoney <= 0 ? rawMoney : 0);
+                
+                totalAllDays += finalMoney;
+                dayTotals[d] += finalMoney;
+
+                let cellClass = finalMoney > 0 ? 'win' : (finalMoney < 0 ? 'lose' : '');
+                let cellText = count > 0 ? `${finalMoney > 0 ? '+' : ''}${finalMoney}K <small style="color:#64748b">(${count}t)</small>` : '-';
+                
+                return `<td><span class="${cellClass}">${cellText}</span></td>`;
+            }).join("");
+
+            grandTotalAllDays += totalAllDays;
+            let totalClass = totalAllDays > 0 ? 'win' : (totalAllDays < 0 ? 'lose' : '');
+
+            rowsHtml += `
+                <tr>
+                    <td style="text-align: left; font-weight: bold;">🥇 ${v}</td>
+                    ${dateCellsHtml}
+                    <td><span class="${totalClass}" style="font-size: 14px;">${totalAllDays > 0 ? '+' : ''}${totalAllDays} K</span></td>
+                </tr>
+            `;
+        });
+
+        let dayTotalsCellsHtml = dates.map(d => {
+            let tot = dayTotals[d];
+            let cls = tot > 0 ? 'win' : (tot < 0 ? 'lose' : '');
+            return `<td><span class="${cls}">${tot > 0 ? '+' : ''}${tot} K</span></td>`;
+        }).join("");
+
+        let grandTotalClass = grandTotalAllDays > 0 ? 'win' : (grandTotalAllDays < 0 ? 'lose' : '');
+
+        return `
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🏆 Bảng Thống Kê Tổng Hợp Tất Cả Các Ngày</h3>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="text-align: left; padding-left: 12px;">Tên VĐV (${vdvs.length})</th>
+                                ${dateHeadersHtml}
+                                <th style="background-color: #fef3c7; color: #b45309;">🔥 TỔNG TẤT CẢ NGÀY</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rowsHtml}
+                            <tr class="total-row">
+                                <td style="text-align: left; padding-left: 12px;">💰 TỔNG CỘNG NGÀY</td>
+                                ${dayTotalsCellsHtml}
+                                <td><span class="${grandTotalClass}" style="font-size: 15px;">${grandTotalAllDays > 0 ? '+' : ''}${grandTotalAllDays} K</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+</script>
+
 </body>
 </html>

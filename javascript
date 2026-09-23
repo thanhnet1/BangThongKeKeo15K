@@ -37,3 +37,9 @@ async function handleThucTeChange(event, docId, newValue) {
     alert("Lỗi khi lưu dữ liệu: " + error.message);
   }
 }
+<!-- Ví dụ thẻ input ô checkbox cột THỰC TẾ -->
+<input 
+  type="checkbox" 
+  ${item.thucTe ? 'checked' : ''} 
+  onclick="handleThucTeChange(event, '${item.id}', this.checked)"
+/>

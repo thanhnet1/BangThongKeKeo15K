@@ -38,7 +38,7 @@
     .cloud-online { background-color: #22c55e; color: white; }
     .cloud-syncing { background-color: #f59e0b; color: white; }
     
-    /* Style nút chung & nút nhỏ (btn-sm) */
+    /* Nút chung & nút nhỏ (btn-sm) */
     .btn { background-color: var(--accent-color); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; }
     .btn:hover { opacity: 0.9; }
     .btn-sm { padding: 4px 8px; font-size: 11px; }
@@ -93,11 +93,6 @@
       <div class="header-right">
         <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối...</div>
         
-        <!-- CÁC NÚT QUẢN LÝ NGÀY TRÊN CÙNG (NHỎ GỌN) -->
-        <button class="btn btn-sm" onclick="addDateTab()">📅 + Ngày</button>
-        <button class="btn btn-sm btn-orange" id="btnRenameDate" onclick="renameCurrentDate()">✏️ Sửa Tên</button>
-        <button class="btn btn-sm btn-red" id="btnDeleteDate" onclick="deleteCurrentDate()">🗑️ Xóa Ngày</button>
-        
         <div style="position: relative;">
           <button class="btn btn-sm btn-purple" onclick="toggleVdvDropdown(event)">👥 VĐV (<span id="vdvCountBtn">0</span>) ▾</button>
           <div class="dropdown-menu" id="vdvDropdown">
@@ -141,7 +136,6 @@
     let paymentStatus = {};
     let currentTab = "";
 
-    // MẬT KHẨU ADMIN BẢO VỆ CỘT THỰC TẾ
     const ADMIN_PASSCODE = "123456";
     let isAdminVerified = false;
 
@@ -220,7 +214,15 @@
       }
     }
 
-    // ĐỔI TÊN NGÀY ĐANG CHỌN
+    function addMatch(dateStr) {
+      if (!matchesData[dateStr]) matchesData[dateStr] = [];
+      const newId = matchesData[dateStr].length + 1;
+      matchesData[dateStr].push({
+        id: newId, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
+      });
+      saveDataToFirestore();
+    }
+
     function renameCurrentDate() {
       if (currentTab === "tonghop") return;
       const oldDate = currentTab;
@@ -250,7 +252,6 @@
       }
     }
 
-    // XÓA NGÀY ĐANG CHỌN
     function deleteCurrentDate() {
       if (currentTab === "tonghop") return;
       const dateToDelete = currentTab;
@@ -310,19 +311,8 @@
       let html = dates.map(d => `
         <button class="tab-btn ${currentTab === d ? 'active' : ''}" onclick="switchTab('${d}')">📅 ${d}</button>
       `).join('');
-      html += `<button class="tab-btn ${currentTab === 'tonghop' ? 'active' : ''}" onclick="switchTab('tonghop')">📊 TỔNG HỢP CẢ GIẢI</button>`;
+      html += `<button class="tab-btn ${currentTab === 'tonghop' ? 'active' : ''}" onclick="switchTab('tonghop')">📊 TỔNG HỢP CÁC NGÀY</button>`;
       container.innerHTML = html;
-
-      // Tránh cho phép sửa/xóa khi ở tab Tổng Hợp
-      const btnRename = document.getElementById("btnRenameDate");
-      const btnDelete = document.getElementById("btnDeleteDate");
-      if (currentTab === "tonghop") {
-        btnRename.style.display = "none";
-        btnDelete.style.display = "none";
-      } else {
-        btnRename.style.display = "inline-block";
-        btnDelete.style.display = "inline-block";
-      }
     }
 
     function switchTab(tab) {
@@ -369,6 +359,12 @@
         <div class="card">
           <div class="card-header">
             <h2 class="card-title">Bảng Thống Kê Những Trận Pick Đỉnh Cao - Ngày ${dateStr}</h2>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button class="btn btn-sm btn-green" onclick="addMatch('${dateStr}')">➕ Thêm Trận</button>
+              <button class="btn btn-sm" onclick="addDateTab()">📅 + Ngày</button>
+              <button class="btn btn-sm btn-orange" onclick="renameCurrentDate()">✏️ Sửa Tên Ngày</button>
+              <button class="btn btn-sm btn-red" onclick="deleteCurrentDate()">🗑️ Xóa Ngày</button>
+            </div>
           </div>
           <p style="color: red; font-size: 11px; margin: 4px 0 10px 0; font-style: italic;">
             Note: - Thắng kèo nhập số tiền cược sau khi trừ 10K cho BTC (+5K nếu kèo 15K)<br>

@@ -23,3 +23,70 @@
     </div>
   </div>
 </div>
+// Biến toàn cục lưu trạng thái Admin
+let IS_ADMIN_LOGGED_IN = false;
+
+// 1. Mở / Đóng Modal Đăng nhập
+function openLoginModal() {
+  document.getElementById('login-modal').style.display = 'flex';
+}
+function closeLoginModal() {
+  document.getElementById('login-modal').style.display = 'none';
+}
+
+// 2. Thực hiện Đăng Nhập Admin qua Firebase Auth
+async function loginAdmin() {
+  const email = document.getElementById('admin-email').value;
+  const password = document.getElementById('admin-password').value;
+
+  try {
+    await firebase.auth().signInWithEmailAndPassword(email, password);
+    alert('Đăng nhập Admin thành công!');
+    closeLoginModal();
+  } catch (error) {
+    alert('Đăng nhập thất bại: ' + error.message);
+  }
+}
+
+// 3. Đăng Xuất Admin
+function logoutAdmin() {
+  firebase.auth().signOut().then(() => {
+    alert('Đã đăng xuất quyền Admin!');
+  });
+}
+
+// 4. Lắng nghe trạng thái Đăng nhập từ Firebase
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    // Đã đăng nhập Admin thành công
+    IS_ADMIN_LOGGED_IN = true;
+    document.getElementById('btn-login-admin').style.display = 'none';
+    document.getElementById('admin-status').style.display = 'flex';
+  } else {
+    // Chưa đăng nhập (Người dùng thông thường)
+    IS_ADMIN_LOGGED_IN = false;
+    document.getElementById('btn-login-admin').style.display = 'inline-block';
+    document.getElementById('admin-status').style.display = 'none';
+  }
+
+  // Cập nhật lại thuộc tính ô tích Thực tế trên Bảng
+  applyAdminPermissionToCheckboxes();
+});
+
+// 5. Hàm áp dụng quyền vào các ô Checkbox thuộc cột "THỰC TẾ"
+function applyAdminPermissionToCheckboxes() {
+  // Giả sử các ô Checkbox cột Thực tế có class="thuc-te-checkbox"
+  const checkboxes = document.querySelectorAll('.thuc-te-checkbox');
+
+  checkboxes.forEach((cb) => {
+    if (IS_ADMIN_LOGGED_IN) {
+      cb.removeAttribute('disabled');
+      cb.style.cursor = 'pointer';
+      cb.title = 'Bấm để tích chọn trạng thái thực tế';
+    } else {
+      cb.setAttribute('disabled', 'true');
+      cb.style.cursor = 'not-allowed';
+      cb.title = 'Chỉ tài khoản Admin mới có quyền tích chọn!';
+    }
+  });
+}

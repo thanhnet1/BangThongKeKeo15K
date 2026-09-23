@@ -16,95 +16,232 @@
       --primary-color: #0f172a;
       --accent-color: #2563eb;
       --score-border: #a855f7;
-      --bg-body: #f1f5f9;
-      --card-bg: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.96);
       --border-color: #cbd5e1;
       --text-main: #1e293b;
     }
     * { box-sizing: border-box; }
-    body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 10px; }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      /* Nền hình ảnh Pickleball sinh động */
+      background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.75)), 
+                  url('https://images.unsplash.com/photo-1599586120429-48281b6a0eca?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text-main);
+      margin: 0;
+      padding: 15px 10px;
+      min-height: 100vh;
+    }
+    
     .container { max-width: 1600px; margin: 0 auto; }
     
-    /* HEADER & NAVBAR */
-    .header-section { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 10px 14px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
-    .header-left { display: flex; align-items: center; gap: 8px; }
-    .brand-title h1 { margin: 0; font-size: 16px; font-weight: 900; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .brand-title .subtitle { font-size: 10px; color: #94a3b8; margin-top: 1px; }
+    /* HEADER SECTION */
+    .header-section {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 14px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .brand-title { display: flex; align-items: center; gap: 12px; }
+    .brand-title h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 900;
+      background: linear-gradient(90deg, #38bdf8, #818cf8, #f43f5e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.5px;
+    }
+    .brand-title .subtitle { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
+    /* MENU HÀNG NGANG BÊN DƯỚI TIÊU ĐỀ */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 12px;
+    }
     
-    /* MENU HÀNG NGANG TRÊN CÙNG */
-    .top-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .nav-item { position: relative; }
-    .nav-btn { background-color: #334155; color: white; border: 1px solid #475569; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 4px; }
-    .nav-btn:hover { background-color: var(--accent-color); border-color: var(--accent-color); }
+    .nav-btn {
+      background: rgba(51, 65, 85, 0.8);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-btn:hover {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
     
     /* DROPDOWN MENU */
-    .dropdown-menu { display: none; position: absolute; top: 115%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--border-color); z-index: 1000; padding: 6px 0; color: var(--text-main); }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 120%;
+      left: 0;
+      min-width: 230px;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      border: 1px solid var(--border-color);
+      z-index: 1000;
+      padding: 6px 0;
+      color: var(--text-main);
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
     .dropdown-menu.right-align { left: auto; right: 0; }
     .dropdown-menu.show { display: block; }
-    .dropdown-item { padding: 8px 12px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #334155; transition: background 0.15s; }
+    .dropdown-item {
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #334155;
+      transition: background 0.15s;
+    }
     .dropdown-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
     .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 4px 0; }
     
-    .cloud-status { font-size: 10px; padding: 3px 6px; border-radius: 20px; font-weight: bold; }
-    .cloud-online { background-color: #22c55e; color: white; }
+    .cloud-status { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold; margin-left: auto; }
+    .cloud-online { background-color: #10b981; color: white; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
     .cloud-syncing { background-color: #f59e0b; color: white; }
     
+    /* BANNER PICKLEBALL MỚI THAY CHO 3 DÒNG NOTE */
+    .pickleball-banner {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-left: 5px solid #38bdf8;
+      border-radius: 10px;
+      padding: 12px 18px;
+      margin-bottom: 15px;
+      color: #f8fafc;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .banner-content { display: flex; align-items: center; gap: 12px; }
+    .banner-icon { font-size: 28px; }
+    .banner-text { font-size: 12px; line-height: 1.5; }
+    .banner-text strong { color: #38bdf8; }
+    .banner-tag {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
     /* VĐV SEARCH LIST IN MENU */
     .vdv-container { padding: 8px; width: 260px; }
     .vdv-scroll-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
-    .vdv-item { background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+    .vdv-item { background: #f8fafc; padding: 5px 8px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
 
-    /* NÚT CHUNG */
-    .btn { background-color: var(--accent-color); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; }
-    .btn:hover { opacity: 0.9; }
+    /* BUTTONS */
+    .btn { background-color: var(--accent-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
     .btn-sm { padding: 4px 8px; font-size: 11px; }
-    .btn-green { background-color: #16a34a; }
+    .btn-green { background-color: #10b981; }
     
-    /* BẢNG ĐẤU & CARD */
-    .card { background: var(--card-bg); padding: 12px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 12px; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; }
-    .card-title { font-size: 15px; font-weight: 800; text-align: center; color: var(--primary-color); margin: 0; flex-grow: 1; }
+    /* CARDS & TABLES */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      margin-bottom: 16px;
+    }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+    .card-title { font-size: 16px; font-weight: 800; text-align: center; color: var(--primary-color); margin: 0; flex-grow: 1; text-transform: uppercase; }
     
     .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 700px; table-layout: fixed; }
-    th, td { border: 1px solid #cbd5e1; padding: 5px 3px; text-align: center; vertical-align: middle; word-wrap: break-word; }
+    th, td { border: 1px solid #cbd5e1; padding: 6px 4px; text-align: center; vertical-align: middle; word-wrap: break-word; }
     th { background-color: #f1f5f9; color: #334155; font-weight: 800; font-size: 11px; text-transform: uppercase; }
     
     .th-pick1 { background-color: #dcfce7; color: #166534; }
     .th-pick2 { background-color: #fee2e2; color: #991b1b; }
     .th-money { background-color: #fef3c7; color: #92400e; }
     
-    select, input[type="text"] { width: 100%; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 11px; background: #fff; text-overflow: ellipsis; }
-    .score-input { width: 38px !important; padding: 3px !important; font-weight: 800; text-align: center; font-size: 12px; border: 2px solid var(--score-border) !important; border-radius: 4px; background: #faf5ff; }
+    select, input[type="text"] { width: 100%; padding: 5px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 11px; background: #fff; text-overflow: ellipsis; }
+    .score-input { width: 40px !important; padding: 3px !important; font-weight: 800; text-align: center; font-size: 12px; border: 2px solid var(--score-border) !important; border-radius: 5px; background: #faf5ff; }
     
-    .ham-badge { background-color: #dc2626; color: white; padding: 1px 4px; border-radius: 3px; font-weight: 900; font-size: 10px; }
+    .ham-badge { background-color: #dc2626; color: white; padding: 2px 5px; border-radius: 4px; font-weight: 900; font-size: 10px; }
     .txt-win { color: #16a34a; font-weight: 800; }
     .txt-lose { color: #dc2626; font-weight: 800; }
     .note-paid { color: #2563eb; font-weight: 800; }
     .note-unpaid { color: #dc2626; font-weight: 800; }
-    .checkbox-cell { transform: scale(1.1); cursor: pointer; }
+    .checkbox-cell { transform: scale(1.2); cursor: pointer; }
     .total-summary-row { background-color: #f8fafc; font-weight: 800; }
 
-    /* MODAL CHO MINI GAME */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
+    /* MODAL */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
     .modal.show { display: flex; }
-    .modal-content { background: white; padding: 16px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    .modal-content { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- HEADER & THANH MENU HÀNG NGANG TRÊN CÙNG -->
+    <!-- HEADER SECTION -->
     <div class="header-section">
-      <div class="header-left">
-        <span style="font-size: 24px;">🏓</span>
+      <div class="header-top">
         <div class="brand-title">
-          <h1>CLB PICKLEBALL - CMTD</h1>
-          <div class="subtitle">Thống Kê Trận Pick Đỉnh Cao</div>
+          <span style="font-size: 32px;">🏓</span>
+          <div>
+            <h1>CLB PICKLEBALL - CMTD</h1>
+            <div class="subtitle">Hệ Thống Thống Kê & Bảng Đấu Pickleball Chuyên Nghiệp</div>
+          </div>
         </div>
+        <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối...</div>
       </div>
 
-      <!-- NAVBAR MENU HÀNG NGANG -->
+      <!-- NAVBAR MENU HÀNG NGANG ĐƯỢC ĐƯA XUỐNG DƯỚI TIÊU ĐỀ -->
       <div class="top-nav">
+        <!-- NÚT HOME MỚI -->
+        <div class="nav-item">
+          <button class="nav-btn" onclick="goHome()">🏠 HOME</button>
+        </div>
+
         <!-- MENU 1: PICK THỦ -->
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuVdv', event)">👥 PICK THỦ (<span id="vdvCountBtn">0</span>) ▾</button>
@@ -160,8 +297,6 @@
             <div class="dropdown-item" onclick="alert('Đang mở Mini Game 2...')">▶️ Chơi Game 2</div>
           </div>
         </div>
-
-        <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối...</div>
       </div>
     </div>
     
@@ -172,8 +307,8 @@
   <div class="modal" id="gameModal">
     <div class="modal-content">
       <h3 style="margin-top:0;" id="gameModalTitle">Chỉnh Sửa Mini Game</h3>
-      <textarea id="gameContentInput" rows="6" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px;" placeholder="Nhập nội dung/thể lệ game..."></textarea>
-      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+      <textarea id="gameContentInput" rows="6" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;" placeholder="Nhập nội dung/thể lệ game..."></textarea>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
         <button class="btn" style="background-color:#64748b;" onclick="closeGameModal()">Hủy</button>
         <button class="btn btn-green" onclick="saveGameContent()">Lưu Thay Đổi</button>
       </div>
@@ -196,12 +331,18 @@
     const db = firebase.firestore();
     const docRef = db.collection("clubs").doc("cmtd_main_data");
 
-    // BIẾN TOÀN CỤC
+    // MẢNG MÀU NỔI BẬT DÀNH CHO CÁC PICK THỦ TRONG BẢNG TỔNG HỢP
+    const VDV_COLORS = [
+      "#2563eb", "#d97706", "#059669", "#dc2626", "#7c3aed", 
+      "#db2777", "#0284c7", "#15803d", "#b45309", "#4338ca",
+      "#c026d3", "#0d9488", "#ea580c", "#4f46e5", "#059669"
+    ];
+
     let vdvs = [];
     let dates = [];
     let matchesData = {};
     let paymentStatus = {};
-    let miniGame1Content = "Thủ lệ Mini Game 1...";
+    let miniGame1Content = "Thể lệ Mini Game 1...";
     let miniGame2Content = "Thể lệ Mini Game 2...";
     let currentTab = "";
     let activeGameEditing = 1;
@@ -260,6 +401,15 @@
       statusEl.className = "cloud-status cloud-syncing";
       statusEl.innerHTML = "⏳ Đang lưu...";
       docRef.set({ vdvs, dates, matchesData, paymentStatus, miniGame1Content, miniGame2Content }, { merge: true });
+    }
+
+    /* NÚT HOME */
+    function goHome() {
+      if (dates.length > 0) {
+        switchTab(dates[0]);
+      } else {
+        switchTab('tonghop');
+      }
     }
 
     /* DROPDOWN MENU MANAGEMENT */
@@ -467,15 +617,24 @@
     function renderSingleDayTab(container, dateStr) {
       const matches = matchesData[dateStr] || [];
       let html = `
+        <!-- BANNER PICKLEBALL THAY THẾ CHO 3 DÒNG NOTE CŨ -->
+        <div class="pickleball-banner">
+          <div class="banner-content">
+            <span class="banner-icon">🏆</span>
+            <div class="banner-text">
+              <strong>QUY TẮC TÍNH KÈO PICKLEBALL CMTD:</strong><br>
+              • Thắng kèo: Nhập tiền thắng sau trừ 10K cho BTC (+5K nếu kèo 15K).<br>
+              • Thua kèo: Nhập dấu trừ (-) trước số tiền thua (-15K nếu kèo 15K).<br>
+              • Tỷ số 0 là <strong>HẦM</strong> (Kèo x2: Thắng +10K, Thua -30K).
+            </div>
+          </div>
+          <div class="banner-tag">OFFICIAL MATCH</div>
+        </div>
+
         <div class="card">
           <div class="card-header">
             <h2 class="card-title">Bảng Thống Kê Những Trận Pick Đỉnh Cao - Ngày ${dateStr}</h2>
           </div>
-          <p style="color: red; font-size: 11px; margin: 4px 0 10px 0; font-style: italic;">
-            Note: - Thắng kèo nhập số tiền cược sau khi trừ 10K cho BTC (+5K nếu kèo 15K)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Thua kèo nhập - trước số tiền thua cược (-15K nếu kèo 15K)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Tỷ số 0 được tính là HẦM (kèo x2: Thắng +10K, Thua -30K)
-          </p>
           <div class="table-responsive">
             <table>
               <colgroup>
@@ -490,7 +649,6 @@
               </colgroup>
               <thead>
                 <tr>
-                  <!-- NÚT THÊM TRẬN ĐƯỢC ĐẶT NGAY TRÊN CỘT STT -->
                   <th>
                     <button class="btn btn-sm btn-green" onclick="addMatch('${dateStr}')" style="width:100%; margin-bottom:2px;">➕ Thêm</button>
                     STT
@@ -642,7 +800,7 @@
 
       let summaryRowsHtml = "";
 
-      vdvs.forEach(v => {
+      vdvs.forEach((v, vIndex) => {
         const st = stats[v];
         if (st.played > 0) {
           const payKey = `${dateStr}_${v}`;
@@ -743,6 +901,7 @@
       container.innerHTML = matchesHtml + summaryTableHtml;
     }
 
+    /* BẢNG TỔNG HỢP VỚI MỖI PICK THỦ 1 MÀU KHÁC NHAU */
     function renderTongHopTab(container) {
       let vdvDayTotals = {};
       vdvs.forEach(v => {
@@ -793,7 +952,7 @@
             <table>
               <thead>
                 <tr>
-                  <th style="width: 150px;">VĐV</th>
+                  <th style="width: 160px;">VĐV (PICK THỦ)</th>
                   ${dates.map(d => `<th>NGÀY ${d}</th>`).join('')}
                   <th style="background-color: #fef08a; color: #854d0e;">TỔNG KÈO</th>
                 </tr>
@@ -801,7 +960,7 @@
               <tbody>
       `;
 
-      vdvs.forEach(v => {
+      vdvs.forEach((v, index) => {
         let rowSum = 0;
         let dayCells = dates.map(d => {
           let val = vdvDayTotals[v][d];
@@ -812,10 +971,16 @@
 
         grandTotalAllDays += rowSum;
         let totalCls = rowSum > 0 ? 'txt-win' : (rowSum < 0 ? 'txt-lose' : '');
+        
+        // Gán màu riêng cho từng Pick Thủ dựa trên mảng VDV_COLORS
+        let vdvColor = VDV_COLORS[index % VDV_COLORS.length];
 
         html += `
           <tr>
-            <td><strong>${v}</strong></td>
+            <td style="color: ${vdvColor}; font-weight: 800; font-size: 13px; text-align: left; padding-left: 12px;">
+              <span style="display:inline-block; width:8px; height:8px; background-color:${vdvColor}; border-radius:50%; margin-right:6px;"></span>
+              ${v}
+            </td>
             ${dayCells}
             <td class="${totalCls}" style="background-color: #fef9c3;"><strong>${rowSum > 0 ? '+' + rowSum + 'K' : rowSum + 'K'}</strong></td>
           </tr>

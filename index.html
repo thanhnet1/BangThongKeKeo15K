@@ -17,76 +17,67 @@
       --accent-color: #2563eb;
       --accent-hover: #1d4ed8;
       --pick1-bg: #e0f2fe;
-      --pick1-color: #0369a1;
       --pick2-bg: #ffedf7;
-      --pick2-color: #be185d;
-      --score-bg: #faf5ff;
       --score-border: #a855f7;
       --win-color: #16a34a;
-      --win-bg: #dcfce7;
       --lose-color: #dc2626;
-      --lose-bg: #fee2e2;
       --bg-body: #f1f5f9;
       --card-bg: #ffffff;
       --border-color: #cbd5e1;
       --text-main: #1e293b;
     }
     * { box-sizing: border-box; }
-    body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 15px 10px; }
-    .container { max-width: 1650px; margin: 0 auto; }
-    .header-section { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 16px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
-    .header-left { display: flex; align-items: center; gap: 12px; }
-    .brand-title h1 { margin: 0; font-size: 20px; font-weight: 900; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .brand-title .subtitle { font-size: 12px; color: #94a3b8; margin-top: 2px; font-weight: 500; }
+    body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 10px; }
+    .container { max-width: 1600px; margin: 0 auto; }
+    .header-section { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 12px 16px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .brand-title h1 { margin: 0; font-size: 18px; font-weight: 900; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .brand-title .subtitle { font-size: 11px; color: #94a3b8; margin-top: 2px; }
     .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; position: relative; }
-    .cloud-status { font-size: 11px; padding: 4px 8px; border-radius: 20px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
+    .cloud-status { font-size: 11px; padding: 4px 8px; border-radius: 20px; font-weight: bold; }
     .cloud-online { background-color: #22c55e; color: white; }
     .cloud-syncing { background-color: #f59e0b; color: white; }
-    .btn { background-color: var(--accent-color); color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 12px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-    .btn:hover { background-color: var(--accent-hover); transform: translateY(-1px); }
+    .btn { background-color: var(--accent-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; transition: all 0.2s; white-space: nowrap; }
+    .btn:hover { background-color: var(--accent-hover); }
     .btn-green { background-color: #16a34a; }
     .btn-purple { background-color: #9333ea; }
-    .dropdown-menu { display: none; position: absolute; top: 110%; right: 0; width: 320px; background: white; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--border-color); z-index: 1000; padding: 12px; color: var(--text-main); }
+    .dropdown-menu { display: none; position: absolute; top: 110%; right: 0; width: 300px; background: white; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--border-color); z-index: 1000; padding: 10px; color: var(--text-main); }
     .dropdown-menu.show { display: block; }
-    .vdv-scroll-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
-    .vdv-item { background: #f8fafc; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 12px; }
-    .tabs { display: flex; gap: 6px; margin-bottom: 15px; background: #e2e8f0; padding: 5px; border-radius: 10px; overflow-x: auto; }
-    .tab-btn { background: transparent; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; color: #64748b; white-space: nowrap; }
+    .vdv-scroll-list { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+    .vdv-item { background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+    .tabs { display: flex; gap: 6px; margin-bottom: 12px; background: #e2e8f0; padding: 4px; border-radius: 8px; overflow-x: auto; }
+    .tab-btn { background: transparent; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; color: #64748b; white-space: nowrap; }
     .tab-btn.active { background: var(--card-bg); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
-    .card { background: var(--card-bg); padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 15px; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
-    .card-title { font-size: 15px; font-weight: 800; margin: 0; color: var(--primary-color); }
-    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .card { background: var(--card-bg); padding: 12px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 12px; }
+    .card-header { margin-bottom: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; }
+    .card-title { font-size: 16px; font-weight: 800; text-align: center; color: var(--primary-color); margin: 0; }
     
-    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1000px; }
-    th, td { border: 1px solid #cbd5e1; padding: 6px 4px; text-align: center; vertical-align: middle; }
+    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 900px; table-layout: fixed; }
+    th, td { border: 1px solid #cbd5e1; padding: 5px 3px; text-align: center; vertical-align: middle; word-wrap: break-word; }
     th { background-color: #f1f5f9; color: #334155; font-weight: 800; font-size: 11px; text-transform: uppercase; }
     
-    .th-pick-win { background-color: #dcfce7; color: #166534; }
-    .th-pick-lose { background-color: #fee2e2; color: #991b1b; }
+    .th-pick1 { background-color: #dcfce7; color: #166534; }
+    .th-pick2 { background-color: #fee2e2; color: #991b1b; }
     .th-money { background-color: #fef3c7; color: #92400e; }
     
-    select, input[type="text"] { width: 100%; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; background: #fff; }
-    .score-input { width: 45px !important; padding: 4px !important; font-weight: 800; text-align: center; font-size: 13px; border: 2px solid var(--score-border) !important; border-radius: 4px; background: #faf5ff; }
+    select, input[type="text"] { width: 100%; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 11px; background: #fff; text-overflow: ellipsis; }
+    .score-input { width: 38px !important; padding: 3px !important; font-weight: 800; text-align: center; font-size: 12px; border: 2px solid var(--score-border) !important; border-radius: 4px; background: #faf5ff; }
     
-    .ham-badge { background-color: #dc2626; color: white; padding: 2px 6px; border-radius: 4px; font-weight: 900; font-size: 11px; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
-
+    .ham-badge { background-color: #dc2626; color: white; padding: 1px 4px; border-radius: 3px; font-weight: 900; font-size: 10px; }
     .txt-win { color: #16a34a; font-weight: 800; }
     .txt-lose { color: #dc2626; font-weight: 800; }
     .note-paid { color: #2563eb; font-weight: 800; }
     .note-unpaid { color: #dc2626; font-weight: 800; }
-    .checkbox-cell { transform: scale(1.2); cursor: pointer; }
-    
+    .checkbox-cell { transform: scale(1.1); cursor: pointer; }
     .total-summary-row { background-color: #f8fafc; font-weight: 800; }
-    .total-summary-row td { font-size: 13px; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header-section">
       <div class="header-left">
-        <span style="font-size: 32px;">🏓</span>
+        <span style="font-size: 28px;">🏓</span>
         <div class="brand-title">
           <h1>CLB PICKLEBALL - CMTD</h1>
           <div class="subtitle">Bảng Thống Kê Những Trận Pick Đỉnh Cao</div>
@@ -98,8 +89,8 @@
         <div style="position: relative;">
           <button class="btn btn-purple" onclick="toggleVdvDropdown(event)">👥 VĐV (<span id="vdvCountBtn">0</span>) ▾</button>
           <div class="dropdown-menu" id="vdvDropdown">
-            <div style="font-weight: 800; font-size: 13px; margin-bottom: 8px;">Quản Lý Danh Sách VĐV</div>
-            <div style="display: flex; gap: 4px; margin-bottom: 8px;">
+            <div style="font-weight: 800; font-size: 12px; margin-bottom: 6px;">Quản Lý Danh Sách VĐV</div>
+            <div style="display: flex; gap: 4px; margin-bottom: 6px;">
               <input type="text" id="newVdvInput" placeholder="Tên VĐV mới...">
               <button class="btn btn-green" style="padding: 4px 8px;" onclick="addVDV()">Thêm</button>
             </div>
@@ -138,7 +129,7 @@
     let paymentStatus = {};
     let currentTab = "";
 
-    // MẬT KHẨU ADMIN CỘT THỰC TẾ
+    // MẬT KHẨU ADMIN BẢO VỆ CỘT THỰC TẾ
     const ADMIN_PASSCODE = "123456";
     let isAdminVerified = false;
 
@@ -273,7 +264,6 @@
       saveDataToFirestore();
     }
 
-    // XÁC THỰC MẬT KHẨU ADMIN KHI TICK CỘT THỰC TẾ
     function togglePayment(payKey) {
       if (!isAdminVerified) {
         const inputPass = prompt("🔑 Nhập mật khẩu Quản trị viên để thay đổi cột THỰC TẾ:");
@@ -306,22 +296,32 @@
       let html = `
         <div class="card">
           <div class="card-header">
-            <h2 class="card-title" style="text-align: center; width:100%; font-size:18px;">Bảng Tổng Hợp Những Trận Pick Đỉnh Cao - Ngày ${dateStr}</h2>
+            <h2 class="card-title">Bảng Tổng Hợp Những Trận Pick Đỉnh Cao - Ngày ${dateStr}</h2>
           </div>
-          <p style="color: red; font-size: 11px; margin-top: -5px; font-style: italic;">
+          <p style="color: red; font-size: 11px; margin: 4px 0 10px 0; font-style: italic;">
             Note: - Thắng kèo nhập số tiền cược sau khi trừ 10K cho BTC (+5K nếu kèo 15K)<br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Thua kèo nhập - trước số tiền thua cược (-15K nếu kèo 15K)<br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Tỷ số 0 được tính là HẦM (kèo x2: Thắng +10K, Thua -30K)
           </p>
           <div class="table-responsive">
             <table>
+              <colgroup>
+                <col style="width: 65px;">
+                <col style="width: 18%;">
+                <col style="width: 18%;">
+                <col style="width: 18%;">
+                <col style="width: 18%;">
+                <col style="width: 90px;">
+                <col style="width: 50px;">
+                <col style="width: 50px;">
+              </colgroup>
               <thead>
                 <tr>
-                  <th style="width: 50px;">STT</th>
-                  <th colspan="2" class="th-pick-win">Cặp Pick Thắng</th>
-                  <th colspan="2" class="th-pick-lose">Cặp Pick Thua</th>
-                  <th style="width: 100px;">Tỷ Số</th>
-                  <th colspan="2" class="th-money">Kèo</th>
+                  <th>STT</th>
+                  <th colspan="2" class="th-pick1">CẶP PICK 1</th>
+                  <th colspan="2" class="th-pick2">CẶP PICK 2</th>
+                  <th>TỶ SỐ</th>
+                  <th colspan="2" class="th-money">KÈO</th>
                 </tr>
               </thead>
               <tbody>
@@ -331,19 +331,28 @@
         const s1 = parseInt(m.score1);
         const s2 = parseInt(m.score2);
         
-        let keoWin = 5;
-        let keoLose = -15;
+        let keo1 = "";
+        let keo2 = "";
 
-        // Kiểm tra HẦM (tỷ số = 0) -> x2 Kèo
         if (!isNaN(s1) && !isNaN(s2)) {
-          if (s1 === 0 || s2 === 0) {
-            keoWin = 10;
-            keoLose = -30;
+          let isHam = (s1 === 0 || s2 === 0);
+          let winVal = isHam ? 10 : 5;
+          let loseVal = isHam ? -30 : -15;
+
+          if (s1 > s2) {
+            keo1 = winVal;
+            keo2 = loseVal;
+          } else if (s2 > s1) {
+            keo1 = loseVal;
+            keo2 = winVal;
+          } else {
+            keo1 = 0;
+            keo2 = 0;
           }
         }
 
-        const score1Display = (!isNaN(s1) && s1 === 0) ? `<span class="ham-badge">HẦM</span>` : (m.score1 !== "" ? m.score1 : "");
-        const score2Display = (!isNaN(s2) && s2 === 0) ? `<span class="ham-badge">HẦM</span>` : (m.score2 !== "" ? m.score2 : "");
+        const score1Display = (!isNaN(s1) && s1 === 0) ? `<span class="ham-badge">HẦM</span>` : "";
+        const score2Display = (!isNaN(s2) && s2 === 0) ? `<span class="ham-badge">HẦM</span>` : "";
 
         html += `
           <tr>
@@ -378,10 +387,10 @@
                 <span>-</span>
                 <input type="text" class="score-input" value="${m.score2}" onchange="updateMatch('${dateStr}', ${idx}, 'score2', this.value)">
               </div>
-              <div style="font-size:10px; margin-top:2px;">${score1Display} ${score2Display}</div>
+              <div style="font-size:9px; margin-top:1px;">${score1Display} ${score2Display}</div>
             </td>
-            <td class="txt-lose">${!isNaN(s1) && !isNaN(s2) ? keoLose : ''}</td>
-            <td class="txt-win">${!isNaN(s1) && !isNaN(s2) ? keoWin : ''}</td>
+            <td class="${keo1 > 0 ? 'txt-win' : (keo1 < 0 ? 'txt-lose' : '')}">${keo1}</td>
+            <td class="${keo2 > 0 ? 'txt-win' : (keo2 < 0 ? 'txt-lose' : '')}">${keo2}</td>
           </tr>
         `;
       });
@@ -401,7 +410,7 @@
       let stats = {};
 
       vdvs.forEach(v => {
-        stats[v] = { played: 0, winK: 0, loseK: 0, bringBack: 0, total: 0 };
+        stats[v] = { played: 0, winK: 0, loseK: 0, total: 0 };
       });
 
       matches.forEach(m => {
@@ -452,6 +461,7 @@
 
       let sumBringBack = 0;
       let sumThucThu = 0;
+      let sumAmThucTe = 0;
 
       let summaryRowsHtml = "";
 
@@ -461,16 +471,24 @@
           const payKey = `${dateStr}_${v}`;
           const isPaid = paymentStatus[payKey] || false;
 
+          // Điều kiện "Tiền mang về": Đánh đủ >= 4 trận VÀ Tổng tiền > 0
           let bringBack = 0;
-          if (st.total < 0) {
-            bringBack = Math.abs(st.total);
+          if (st.played >= 4 && st.total > 0) {
+            bringBack = st.total;
+            sumBringBack += bringBack;
           }
-          sumBringBack += bringBack;
+
+          // Tính giá trị Âm của VĐV
+          if (st.total < 0) {
+            sumAmThucTe += st.total;
+            if (isPaid) {
+              sumThucThu += Math.abs(st.total);
+            }
+          }
 
           let noteText = "";
           if (st.total < 0) {
             noteText = isPaid ? `<span class="note-paid">Đã nộp</span>` : `<span class="note-unpaid">Chưa nộp</span>`;
-            if (isPaid) sumThucThu += bringBack;
           } else if (st.total > 0) {
             noteText = isPaid ? `<span class="note-paid">Đã nhận</span>` : `<span class="note-unpaid">Chưa nhận</span>`;
           }
@@ -492,7 +510,9 @@
         }
       });
 
-      let quyCon = sumThucThu - sumBringBack;
+      // Tổng Tiền BTC Thu Về = Tổng giá trị âm thực tế sau khi đã trừ đi tiền mang về của những người đủ điều kiện
+      let btcThuVeCalculated = sumAmThucTe + sumBringBack; 
+      let quyCon = sumThucThu - Math.abs(btcThuVeCalculated);
 
       let summaryTableHtml = `
         <div class="card">
@@ -501,15 +521,25 @@
           </div>
           <div class="table-responsive">
             <table>
+              <colgroup>
+                <col style="width: 15%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+                <col style="width: 15%;">
+                <col style="width: 12%;">
+                <col style="width: 8%;">
+                <col style="width: 20%;">
+              </colgroup>
               <thead>
                 <tr>
-                  <th style="width: 160px;">Pick Thủ</th>
+                  <th>Pick Thủ</th>
                   <th>Số trận đánh</th>
                   <th>Thắng/K</th>
                   <th>Thua/K</th>
                   <th>Tiền mang về</th>
                   <th>Tổng</th>
-                  <th style="width: 70px;">Thực Tế</th>
+                  <th>Thực Tế</th>
                   <th>Note</th>
                 </tr>
               </thead>
@@ -517,16 +547,17 @@
                 ${summaryRowsHtml}
                 <tr class="total-summary-row">
                   <td style="color: red; text-align: left;"><strong>Tổng Tiền BTC Thu Về</strong></td>
-                  <td>0</td>
+                  <td></td>
                   <td></td>
                   <td></td>
                   <td style="color: blue;">${sumBringBack}</td>
+                  <td style="color: red;">${btcThuVeCalculated}</td>
                   <td style="color: blue;">${sumThucThu}</td>
-                  <td colspan="2"></td>
+                  <td></td>
                 </tr>
                 <tr class="total-summary-row">
                   <td style="color: red; text-align: left;" colspan="4"><strong>Quỹ Còn</strong></td>
-                  <td colspan="2" style="color: red; font-size: 16px;"><strong>${quyCon}</strong></td>
+                  <td colspan="2" style="color: red; font-size: 15px;"><strong>${quyCon}</strong></td>
                   <td colspan="2"></td>
                 </tr>
               </tbody>
@@ -620,10 +651,10 @@
         const matches = matchesData[d] || [];
         const data = matches.map(m => ({
           "Trận": m.id,
-          "Pick Thắng 1": m.c1_p1,
-          "Pick Thắng 2": m.c1_p2,
-          "Pick Thua 1": m.c2_p1,
-          "Pick Thua 2": m.c2_p2,
+          "Cặp Pick 1 - VĐV 1": m.c1_p1,
+          "Cặp Pick 1 - VĐV 2": m.c1_p2,
+          "Cặp Pick 2 - VĐV 1": m.c2_p1,
+          "Cặp Pick 2 - VĐV 2": m.c2_p2,
           "Tỷ số 1": m.score1,
           "Tỷ số 2": m.score2
         }));

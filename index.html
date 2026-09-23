@@ -15,12 +15,7 @@
     :root {
       --primary-color: #0f172a;
       --accent-color: #2563eb;
-      --accent-hover: #1d4ed8;
-      --pick1-bg: #e0f2fe;
-      --pick2-bg: #ffedf7;
       --score-border: #a855f7;
-      --win-color: #16a34a;
-      --lose-color: #dc2626;
       --bg-body: #f1f5f9;
       --card-bg: #ffffff;
       --border-color: #cbd5e1;
@@ -29,33 +24,45 @@
     * { box-sizing: border-box; }
     body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 10px; }
     .container { max-width: 1600px; margin: 0 auto; }
-    .header-section { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 10px 14px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+    
+    /* HEADER & NAVBAR */
+    .header-section { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 10px 14px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
     .header-left { display: flex; align-items: center; gap: 8px; }
     .brand-title h1 { margin: 0; font-size: 16px; font-weight: 900; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .brand-title .subtitle { font-size: 10px; color: #94a3b8; margin-top: 1px; }
-    .header-right { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; position: relative; }
+    
+    /* MENU HÀNG NGANG TRÊN CÙNG */
+    .top-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .nav-item { position: relative; }
+    .nav-btn { background-color: #334155; color: white; border: 1px solid #475569; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 4px; }
+    .nav-btn:hover { background-color: var(--accent-color); border-color: var(--accent-color); }
+    
+    /* DROPDOWN MENU */
+    .dropdown-menu { display: none; position: absolute; top: 115%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--border-color); z-index: 1000; padding: 6px 0; color: var(--text-main); }
+    .dropdown-menu.right-align { left: auto; right: 0; }
+    .dropdown-menu.show { display: block; }
+    .dropdown-item { padding: 8px 12px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #334155; transition: background 0.15s; }
+    .dropdown-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+    .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 4px 0; }
+    
     .cloud-status { font-size: 10px; padding: 3px 6px; border-radius: 20px; font-weight: bold; }
     .cloud-online { background-color: #22c55e; color: white; }
     .cloud-syncing { background-color: #f59e0b; color: white; }
     
-    /* Nút chung & nút nhỏ (btn-sm) */
+    /* VĐV SEARCH LIST IN MENU */
+    .vdv-container { padding: 8px; width: 260px; }
+    .vdv-scroll-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+    .vdv-item { background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+
+    /* NÚT CHUNG */
     .btn { background-color: var(--accent-color); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; }
     .btn:hover { opacity: 0.9; }
     .btn-sm { padding: 4px 8px; font-size: 11px; }
     .btn-green { background-color: #16a34a; }
-    .btn-purple { background-color: #9333ea; }
-    .btn-orange { background-color: #ea580c; }
-    .btn-red { background-color: #dc2626; }
     
-    .dropdown-menu { display: none; position: absolute; top: 110%; right: 0; width: 280px; background: white; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--border-color); z-index: 1000; padding: 10px; color: var(--text-main); }
-    .dropdown-menu.show { display: block; }
-    .vdv-scroll-list { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
-    .vdv-item { background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
-    .tabs { display: flex; gap: 6px; margin-bottom: 12px; background: #e2e8f0; padding: 4px; border-radius: 8px; overflow-x: auto; }
-    .tab-btn { background: transparent; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; color: #64748b; white-space: nowrap; }
-    .tab-btn.active { background: var(--card-bg); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+    /* BẢNG ĐẤU & CARD */
     .card { background: var(--card-bg); padding: 12px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 12px; }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; flex-wrap: wrap; gap: 8px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; }
     .card-title { font-size: 15px; font-weight: 800; text-align: center; color: var(--primary-color); margin: 0; flex-grow: 1; }
     
     .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -77,11 +84,16 @@
     .note-unpaid { color: #dc2626; font-weight: 800; }
     .checkbox-cell { transform: scale(1.1); cursor: pointer; }
     .total-summary-row { background-color: #f8fafc; font-weight: 800; }
+
+    /* MODAL CHO MINI GAME */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
+    .modal.show { display: flex; }
+    .modal-content { background: white; padding: 16px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- HEADER TRÊN CÙNG -->
+    <!-- HEADER & THANH MENU HÀNG NGANG TRÊN CÙNG -->
     <div class="header-section">
       <div class="header-left">
         <span style="font-size: 24px;">🏓</span>
@@ -90,27 +102,82 @@
           <div class="subtitle">Thống Kê Trận Pick Đỉnh Cao</div>
         </div>
       </div>
-      <div class="header-right">
-        <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối...</div>
-        
-        <div style="position: relative;">
-          <button class="btn btn-sm btn-purple" onclick="toggleVdvDropdown(event)">👥 VĐV (<span id="vdvCountBtn">0</span>) ▾</button>
-          <div class="dropdown-menu" id="vdvDropdown">
-            <div style="font-weight: 800; font-size: 12px; margin-bottom: 6px;">Quản Lý Danh Sách VĐV</div>
-            <div style="display: flex; gap: 4px; margin-bottom: 6px;">
-              <input type="text" id="newVdvInput" placeholder="Tên VĐV mới...">
-              <button class="btn btn-green btn-sm" onclick="addVDV()">Thêm</button>
+
+      <!-- NAVBAR MENU HÀNG NGANG -->
+      <div class="top-nav">
+        <!-- MENU 1: PICK THỦ -->
+        <div class="nav-item">
+          <button class="nav-btn" onclick="toggleMenu('menuVdv', event)">👥 PICK THỦ (<span id="vdvCountBtn">0</span>) ▾</button>
+          <div class="dropdown-menu" id="menuVdv">
+            <div class="vdv-container">
+              <div style="font-weight: 800; font-size: 12px; margin-bottom: 6px;">Danh Sách VĐV</div>
+              <div style="display: flex; gap: 4px; margin-bottom: 6px;">
+                <input type="text" id="newVdvInput" placeholder="Tên VĐV mới...">
+                <button class="btn btn-green btn-sm" onclick="addVDV()">Thêm</button>
+              </div>
+              <input type="text" id="searchVdvInput" placeholder="🔍 Tìm VĐV..." onkeyup="filterVDVList()" style="margin-bottom: 6px;">
+              <div class="vdv-scroll-list" id="vdvListContainer"></div>
             </div>
-            <input type="text" id="searchVdvInput" placeholder="🔍 Tìm VĐV..." onkeyup="filterVDVList()" style="margin-bottom: 6px;">
-            <div class="vdv-scroll-list" id="vdvListContainer"></div>
           </div>
         </div>
-        <button class="btn btn-sm btn-green" onclick="exportToExcel()">📥 Xuất Excel</button>
+
+        <!-- MENU 2: SETTING -->
+        <div class="nav-item">
+          <button class="nav-btn" onclick="toggleMenu('menuSetting', event)">⚙️ SETTING ▾</button>
+          <div class="dropdown-menu" id="menuSetting">
+            <div class="dropdown-item" onclick="addDateTab()">📅 ➕ Thêm Ngày Mới</div>
+            <div class="dropdown-item" onclick="renameCurrentDate()">✏️ Sửa Tên Ngày Hiện Tại</div>
+            <div class="dropdown-item" style="color:red;" onclick="deleteCurrentDate()">🗑️ Xóa Ngày Hiện Tại</div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" onclick="exportToExcel()">📥 Xuất Dữ Liệu Excel</div>
+          </div>
+        </div>
+
+        <!-- MENU 3: TỔNG HỢP CÁC NGÀY -->
+        <div class="nav-item">
+          <button class="nav-btn" onclick="toggleMenu('menuTongHop', event)">📊 TỔNG HỢP CÁC NGÀY ▾</button>
+          <div class="dropdown-menu" id="menuTongHop">
+            <div id="datesMenuList"></div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" style="font-weight: 800; color: var(--accent-color);" onclick="switchTab('tonghop')">📊 Bảng Tổng Hợp Tất Cả Ngày</div>
+          </div>
+        </div>
+
+        <!-- MENU 4: MINI GAME 1 -->
+        <div class="nav-item">
+          <button class="nav-btn" onclick="toggleMenu('menuMini1', event)">🎮 MINI GAME 1 ▾</button>
+          <div class="dropdown-menu" id="menuMini1">
+            <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Nội Dung Game 1</div>
+            <div class="dropdown-item" onclick="alert('Đang mở Mini Game 1...')">▶️ Chơi Game 1</div>
+          </div>
+        </div>
+
+        <!-- MENU 5: MINI GAME 2 -->
+        <div class="nav-item">
+          <button class="nav-btn" onclick="toggleMenu('menuMini2', event)">🎯 MINI GAME 2 ▾</button>
+          <div class="dropdown-menu right-align" id="menuMini2">
+            <div class="dropdown-item" onclick="openGameModal(2)">⚙️ Chỉnh Sửa Nội Dung Game 2</div>
+            <div class="dropdown-item" onclick="alert('Đang mở Mini Game 2...')">▶️ Chơi Game 2</div>
+          </div>
+        </div>
+
+        <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối...</div>
       </div>
     </div>
     
-    <div class="tabs" id="tabContainer"></div>
     <div id="tabContent"></div>
+  </div>
+
+  <!-- MODAL CHỈNH SỬA MINI GAME -->
+  <div class="modal" id="gameModal">
+    <div class="modal-content">
+      <h3 style="margin-top:0;" id="gameModalTitle">Chỉnh Sửa Mini Game</h3>
+      <textarea id="gameContentInput" rows="6" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:4px;" placeholder="Nhập nội dung/thể lệ game..."></textarea>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+        <button class="btn" style="background-color:#64748b;" onclick="closeGameModal()">Hủy</button>
+        <button class="btn btn-green" onclick="saveGameContent()">Lưu Thay Đổi</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -134,13 +201,16 @@
     let dates = [];
     let matchesData = {};
     let paymentStatus = {};
+    let miniGame1Content = "Thủ lệ Mini Game 1...";
+    let miniGame2Content = "Thể lệ Mini Game 2...";
     let currentTab = "";
+    let activeGameEditing = 1;
 
     const ADMIN_PASSCODE = "123456";
     let isAdminVerified = false;
 
     window.onload = function() {
-      document.addEventListener('click', closeDropdownOutside);
+      document.addEventListener('click', closeAllDropdowns);
       listenToFirestore();
     };
 
@@ -153,6 +223,8 @@
           dates = data.dates || ["3/9/26"];
           matchesData = data.matchesData || {};
           paymentStatus = data.paymentStatus || {};
+          miniGame1Content = data.miniGame1Content || miniGame1Content;
+          miniGame2Content = data.miniGame2Content || miniGame2Content;
           
           if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop")) {
             currentTab = dates[0] || "tonghop";
@@ -162,7 +234,7 @@
         } else {
           initDefaultFirestore();
         }
-        renderTabs();
+        renderDatesMenu();
         renderCurrentTab();
       }, (error) => {
         const statusEl = document.getElementById("cloudStatus");
@@ -187,89 +259,42 @@
       const statusEl = document.getElementById("cloudStatus");
       statusEl.className = "cloud-status cloud-syncing";
       statusEl.innerHTML = "⏳ Đang lưu...";
-      docRef.set({ vdvs, dates, matchesData, paymentStatus }, { merge: true });
+      docRef.set({ vdvs, dates, matchesData, paymentStatus, miniGame1Content, miniGame2Content }, { merge: true });
     }
 
-    function toggleVdvDropdown(e) {
+    /* DROPDOWN MENU MANAGEMENT */
+    function toggleMenu(menuId, e) {
       e.stopPropagation();
-      const menu = document.getElementById("vdvDropdown");
-      menu.classList.toggle("show");
-      if (menu.classList.contains("show")) renderVDVItems(vdvs);
-    }
-
-    function closeDropdownOutside(e) {
-      const menu = document.getElementById("vdvDropdown");
-      if (menu && !menu.contains(e.target)) menu.classList.remove("show");
-    }
-
-    function addDateTab() {
-      const dateStr = prompt("Nhập ngày đấu mới (VD: 8/10/26):");
-      if (dateStr && !dates.includes(dateStr)) {
-        dates.push(dateStr);
-        matchesData[dateStr] = Array.from({ length: 15 }, (_, i) => ({
-          id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
-        }));
-        currentTab = dateStr;
-        saveDataToFirestore();
+      const targetMenu = document.getElementById(menuId);
+      const isAlreadyShow = targetMenu.classList.contains("show");
+      closeAllDropdowns();
+      if (!isAlreadyShow) {
+        targetMenu.classList.add("show");
+        if (menuId === 'menuVdv') renderVDVItems(vdvs);
       }
     }
 
-    function addMatch(dateStr) {
-      if (!matchesData[dateStr]) matchesData[dateStr] = [];
-      const newId = matchesData[dateStr].length + 1;
-      matchesData[dateStr].push({
-        id: newId, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
-      });
-      saveDataToFirestore();
+    function closeAllDropdowns() {
+      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
     }
 
-    function renameCurrentDate() {
-      if (currentTab === "tonghop") return;
-      const oldDate = currentTab;
-      const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
-      if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
-        const trimmed = newDate.trim();
-        if (dates.includes(trimmed)) {
-          alert("⚠️ Tên ngày này đã tồn tại!");
-          return;
-        }
-        const idx = dates.indexOf(oldDate);
-        if (idx !== -1) dates[idx] = trimmed;
-
-        matchesData[trimmed] = matchesData[oldDate];
-        delete matchesData[oldDate];
-
-        Object.keys(paymentStatus).forEach(key => {
-          if (key.startsWith(`${oldDate}_`)) {
-            const vdvName = key.split('_')[1];
-            paymentStatus[`${trimmed}_${vdvName}`] = paymentStatus[key];
-            delete paymentStatus[key];
-          }
-        });
-
-        currentTab = trimmed;
-        saveDataToFirestore();
-      }
+    function renderDatesMenu() {
+      const container = document.getElementById("datesMenuList");
+      container.innerHTML = dates.map(d => `
+        <div class="dropdown-item ${currentTab === d ? 'txt-win' : ''}" onclick="switchTab('${d}')">
+          📅 Ngày ${d}
+        </div>
+      `).join('');
     }
 
-    function deleteCurrentDate() {
-      if (currentTab === "tonghop") return;
-      const dateToDelete = currentTab;
-      if (confirm(`❌ Bạn có chắc chắn muốn XÓA TOÀN BỘ dữ liệu của ngày "${dateToDelete}"?`)) {
-        dates = dates.filter(d => d !== dateToDelete);
-        delete matchesData[dateToDelete];
-
-        Object.keys(paymentStatus).forEach(key => {
-          if (key.startsWith(`${dateToDelete}_`)) {
-            delete paymentStatus[key];
-          }
-        });
-
-        currentTab = dates.length > 0 ? dates[0] : "tonghop";
-        saveDataToFirestore();
-      }
+    function switchTab(tab) {
+      currentTab = tab;
+      closeAllDropdowns();
+      renderDatesMenu();
+      renderCurrentTab();
     }
 
+    /* VĐV MANAGEMENT */
     function addVDV() {
       const input = document.getElementById("newVdvInput");
       const name = input.value.trim();
@@ -306,19 +331,82 @@
       `).join('');
     }
 
-    function renderTabs() {
-      const container = document.getElementById("tabContainer");
-      let html = dates.map(d => `
-        <button class="tab-btn ${currentTab === d ? 'active' : ''}" onclick="switchTab('${d}')">📅 ${d}</button>
-      `).join('');
-      html += `<button class="tab-btn ${currentTab === 'tonghop' ? 'active' : ''}" onclick="switchTab('tonghop')">📊 TỔNG HỢP CÁC NGÀY</button>`;
-      container.innerHTML = html;
+    /* DATE & MATCH MANAGEMENT */
+    function addDateTab() {
+      closeAllDropdowns();
+      const dateStr = prompt("Nhập ngày đấu mới (VD: 8/10/26):");
+      if (dateStr && !dates.includes(dateStr)) {
+        dates.push(dateStr);
+        matchesData[dateStr] = Array.from({ length: 15 }, (_, i) => ({
+          id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
+        }));
+        currentTab = dateStr;
+        saveDataToFirestore();
+      }
     }
 
-    function switchTab(tab) {
-      currentTab = tab;
-      renderTabs();
-      renderCurrentTab();
+    function renameCurrentDate() {
+      closeAllDropdowns();
+      if (currentTab === "tonghop") {
+        alert("⚠️ Không thể đổi tên tab Tổng Hợp!");
+        return;
+      }
+      const oldDate = currentTab;
+      const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
+      if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
+        const trimmed = newDate.trim();
+        if (dates.includes(trimmed)) {
+          alert("⚠️ Tên ngày này đã tồn tại!");
+          return;
+        }
+        const idx = dates.indexOf(oldDate);
+        if (idx !== -1) dates[idx] = trimmed;
+
+        matchesData[trimmed] = matchesData[oldDate];
+        delete matchesData[oldDate];
+
+        Object.keys(paymentStatus).forEach(key => {
+          if (key.startsWith(`${oldDate}_`)) {
+            const vdvName = key.split('_')[1];
+            paymentStatus[`${trimmed}_${vdvName}`] = paymentStatus[key];
+            delete paymentStatus[key];
+          }
+        });
+
+        currentTab = trimmed;
+        saveDataToFirestore();
+      }
+    }
+
+    function deleteCurrentDate() {
+      closeAllDropdowns();
+      if (currentTab === "tonghop") {
+        alert("⚠️ Không thể xóa tab Tổng Hợp!");
+        return;
+      }
+      const dateToDelete = currentTab;
+      if (confirm(`❌ Bạn có chắc chắn muốn XÓA TOÀN BỘ dữ liệu của ngày "${dateToDelete}"?`)) {
+        dates = dates.filter(d => d !== dateToDelete);
+        delete matchesData[dateToDelete];
+
+        Object.keys(paymentStatus).forEach(key => {
+          if (key.startsWith(`${dateToDelete}_`)) {
+            delete paymentStatus[key];
+          }
+        });
+
+        currentTab = dates.length > 0 ? dates[0] : "tonghop";
+        saveDataToFirestore();
+      }
+    }
+
+    function addMatch(dateStr) {
+      if (!matchesData[dateStr]) matchesData[dateStr] = [];
+      const newId = matchesData[dateStr].length + 1;
+      matchesData[dateStr].push({
+        id: newId, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
+      });
+      saveDataToFirestore();
     }
 
     function updateMatch(dateStr, matchIndex, field, value) {
@@ -344,6 +432,29 @@
       saveDataToFirestore();
     }
 
+    /* MINI GAME MODAL HANDLERS */
+    function openGameModal(gameId) {
+      closeAllDropdowns();
+      activeGameEditing = gameId;
+      document.getElementById("gameModalTitle").innerText = `Chỉnh Sửa Mini Game ${gameId}`;
+      document.getElementById("gameContentInput").value = gameId === 1 ? miniGame1Content : miniGame2Content;
+      document.getElementById("gameModal").classList.add("show");
+    }
+
+    function closeGameModal() {
+      document.getElementById("gameModal").classList.remove("show");
+    }
+
+    function saveGameContent() {
+      const val = document.getElementById("gameContentInput").value;
+      if (activeGameEditing === 1) miniGame1Content = val;
+      else miniGame2Content = val;
+      saveDataToFirestore();
+      closeGameModal();
+      alert(`✅ Đã cập nhật nội dung Mini Game ${activeGameEditing}`);
+    }
+
+    /* RENDER TAB CONTENTS */
     function renderCurrentTab() {
       const content = document.getElementById("tabContent");
       if (currentTab === "tonghop") {
@@ -359,12 +470,6 @@
         <div class="card">
           <div class="card-header">
             <h2 class="card-title">Bảng Thống Kê Những Trận Pick Đỉnh Cao - Ngày ${dateStr}</h2>
-            <div style="display: flex; gap: 6px; align-items: center;">
-              <button class="btn btn-sm btn-green" onclick="addMatch('${dateStr}')">➕ Thêm Trận</button>
-              <button class="btn btn-sm" onclick="addDateTab()">📅 + Ngày</button>
-              <button class="btn btn-sm btn-orange" onclick="renameCurrentDate()">✏️ Sửa Tên Ngày</button>
-              <button class="btn btn-sm btn-red" onclick="deleteCurrentDate()">🗑️ Xóa Ngày</button>
-            </div>
           </div>
           <p style="color: red; font-size: 11px; margin: 4px 0 10px 0; font-style: italic;">
             Note: - Thắng kèo nhập số tiền cược sau khi trừ 10K cho BTC (+5K nếu kèo 15K)<br>
@@ -374,7 +479,7 @@
           <div class="table-responsive">
             <table>
               <colgroup>
-                <col style="width: 65px;">
+                <col style="width: 80px;">
                 <col style="width: 18%;">
                 <col style="width: 18%;">
                 <col style="width: 18%;">
@@ -385,7 +490,11 @@
               </colgroup>
               <thead>
                 <tr>
-                  <th>STT</th>
+                  <!-- NÚT THÊM TRẬN ĐƯỢC ĐẶT NGAY TRÊN CỘT STT -->
+                  <th>
+                    <button class="btn btn-sm btn-green" onclick="addMatch('${dateStr}')" style="width:100%; margin-bottom:2px;">➕ Thêm</button>
+                    STT
+                  </th>
                   <th colspan="2" class="th-pick1">CẶP PICK 1</th>
                   <th colspan="2" class="th-pick2">CẶP PICK 2</th>
                   <th>TỶ SỐ</th>
@@ -737,6 +846,7 @@
     }
 
     function exportToExcel() {
+      closeAllDropdowns();
       const wb = XLSX.utils.book_new();
       dates.forEach(d => {
         const matches = matchesData[d] || [];

@@ -27,5 +27,8 @@ function updateCheckboxPermission() {
     }
   });
 }
-<!-- Ví dụ cấu hình cột Thực tế trong file HTML/JS -->
-<input type="checkbox" class="thuc-te-checkbox" ${item.thucTe ? 'checked' : ''} onchange="updateThucTe('${item.id}', this.checked)">
+<input 
+  type="checkbox" 
+  ${item.thucTe ? 'checked' : ''} 
+  onclick="checkAdminThucTe(event, '${item.id}', this.checked, this)"
+/>

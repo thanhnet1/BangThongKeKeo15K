@@ -648,45 +648,38 @@
     }
 </script>
  </script>   
-// Đặt mật khẩu Admin (thay 123456 bằng mật khẩu bạn muốn)
-const ADMIN_PASSWORD = "123456"; 
-let daXacNhanAdmin = false;
 
-function checkAdminThucTe(event, docId, checkboxElem) {
-  // Nếu chưa xác nhận mật khẩu Admin trong phiên này
-  if (!daXacNhanAdmin) {
-    event.preventDefault(); // Chặn không cho tự động tích chọn
+// Mật khẩu Admin do bạn tự đặt
+const ADMIN_PASSCODE = "123456";
+let isAdminVerified = false;
 
-    const inputPass = prompt("🔑 Nhập mật khẩu Admin để tích cột THỰC TẾ:");
-
-    if (inputPass === ADMIN_PASSWORD) {
-      daXacNhanAdmin = true; // Lưu trạng thái đã nhập đúng
+function togglePayment(payKey) {
+  // Nếu chưa xác thực mật khẩu Admin
+  if (!isAdminVerified) {
+    const inputPass = prompt("🔑 Nhập mật khẩu Admin để thay đổi cột THỰC TẾ:");
+    
+    if (inputPass === ADMIN_PASSCODE) {
+      isAdminVerified = true;
       alert("✅ Xác thực Admin thành công!");
-      
-      // Đổi trạng thái ô checkbox và cập nhật
-      checkboxElem.checked = !checkboxElem.checked;
-      luuTrangThaiThucTe(docId, checkboxElem.checked);
     } else if (inputPass !== null) {
-      alert("❌ Mật khẩu không đúng! Chỉ Admin mới được phép tích cột này.");
+      alert("❌ Mật khẩu không đúng! Chỉ Admin mới có quyền đổi trạng thái cột này.");
+      return; // Dừng lại, không cho đổi trạng thái
+    } else {
+      return; // Bấm Hủy
     }
-  } else {
-    // Nếu đã xác thực rồi thì cho tích thẳng và lưu
-    luuTrangThaiThucTe(docId, checkboxElem.checked);
   }
-}
 
-function luuTrangThaiThucTe(docId, isChecked) {
-  db.collection('thong_ke_keo').doc(docId).update({
-    thucTe: isChecked
-  }).catch(err => alert("Lỗi lưu dữ liệu: " + err.message));
+  // Đổi trạng thái khi đã xác thực đúng Admin
+  paymentStatus[payKey] = !paymentStatus[payKey];
+  saveDataToFirestore();
 }
     </script>
 </script>    
-</body>
-</html>
+<!-- Cột Thực tế / Đã thanh toán -->
 <input 
   type="checkbox" 
-  ${item.thucTe ? 'checked' : ''} 
-  onclick="checkAdminThucTe(event, '${item.id}', this)"
+  class="checkbox-cell" 
+  ${isPaid ? 'checked' : ''} 
+  onclick="togglePayment('${payKey}')"
 />
 </script>

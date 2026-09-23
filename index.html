@@ -2,191 +2,212 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CLB PICKLEBALL - CMTD | Bảng Thống Kê Kèo 15K</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Thư viện SheetJS hỗ trợ xuất file Excel -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Thư viện SheetJS để xuất Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         :root {
-            --brand-yellow: #eab308;
-            --brand-neon: #ccff00;
-            --primary-bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            
+            --primary-color: #0f172a;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
             --pick1-bg: #e0f2fe;
             --pick1-color: #0369a1;
-            --pick2-bg: #fce7f3;
+            --pick2-bg: #ffedf7;
             --pick2-color: #be185d;
             --score-bg: #f3e8ff;
-            --score-border: #9333ea;
-            --win-color: #15803d;
+            --score-border: #a855f7;
+            --win-color: #16a34a;
             --win-bg: #dcfce7;
-            --lose-color: #b91c1c;
+            --lose-color: #dc2626;
             --lose-bg: #fee2e2;
+            --bg-body: #f1f5f9;
+            --card-bg: #ffffff;
             --border-color: #cbd5e1;
+            --text-main: #1e293b;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; }
 
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: var(--primary-bg);
+            background-color: var(--bg-body);
             color: var(--text-main);
-            padding: 8px;
-            font-size: 12px;
-            line-height: 1.4;
+            margin: 0;
+            padding: 15px 10px;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
-        /* HEADER CÂN ĐỐI TRÊN CẢ DESKTOP & MOBILE */
+        /* HEADER CHIA 2 BÊN CÂN ĐỐI */
         .header-section {
-            background: linear-gradient(135deg, #090d16 0%, #1a2332 100%);
-            color: white;
-            padding: 12px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            margin-bottom: 10px;
-            border-bottom: 3px solid var(--brand-neon);
-            text-align: center;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .brand-title h1 {
-            font-family: 'Montserrat', sans-serif;
+            margin: 0;
             font-size: 20px;
             font-weight: 900;
             letter-spacing: 0.5px;
-            color: var(--brand-neon);
-            line-height: 1.2;
-            text-transform: uppercase;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .brand-title .subtitle {
-            font-size: 11px;
-            color: #cbd5e1;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 2px;
             font-weight: 500;
         }
 
-        .brand-title .slogan {
-            display: inline-block;
-            background: var(--brand-yellow);
-            color: #000;
-            font-weight: 900;
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            margin-top: 3px;
-        }
-
-        .header-actions {
+        .header-right {
             display: flex;
-            gap: 6px;
+            align-items: center;
+            gap: 8px;
             flex-wrap: wrap;
-            justify-content: center;
+            position: relative;
         }
 
-        /* TABS NAVIGATION */
+        /* BUTTONS */
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            white-space: nowrap;
+        }
+        .btn:hover { background-color: var(--accent-hover); transform: translateY(-1px); }
+        .btn-green { background-color: #16a34a; }
+        .btn-green:hover { background-color: #15803d; }
+        .btn-amber { background-color: #d97706; }
+        .btn-amber:hover { background-color: #b45309; }
+        .btn-purple { background-color: #9333ea; }
+        .btn-purple:hover { background-color: #7e22ce; }
+
+        /* DROPDOWN MENU DANH SÁCH VĐV */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 110%;
+            right: 0;
+            width: 320px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 12px;
+            color: var(--text-main);
+        }
+        .dropdown-menu.show { display: block; }
+
+        .vdv-scroll-list {
+            max-height: 320px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .vdv-item {
+            background: #f8fafc;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        /* TABS */
         .tabs {
             display: flex;
-            justify-content: flex-start;
-            gap: 4px;
-            margin-bottom: 10px;
+            gap: 6px;
+            margin-bottom: 15px;
             background: #e2e8f0;
-            padding: 4px;
-            border-radius: 8px;
+            padding: 5px;
+            border-radius: 10px;
             overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
         }
 
         .tab-btn {
             background: transparent;
             border: none;
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 700;
             font-size: 12px;
-            color: #475569;
+            color: #64748b;
+            white-space: nowrap;
             transition: all 0.2s ease;
         }
 
         .tab-btn.active {
-            background: #0f172a;
-            color: var(--brand-neon);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            background: var(--card-bg);
+            color: var(--accent-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
         }
 
-        /* NÚT BẤM CHUẨN ĐỘ CHẠM TOUCH */
-        .btn {
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 11px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            touch-action: manipulation;
-        }
-        .btn-add-date { background: #15803d; }
-        .btn-excel { background: #16a34a; }
-        .btn-add-match { background: #16a34a; }
-        .btn-save { background: #2563eb; }
-        .btn-clear { background: #dc2626; }
-
-        /* BỐ CỤC CHÍNH */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 1fr 360px;
-            gap: 10px;
-            align-items: start;
-        }
-
-        @media (max-width: 980px) {
-            .main-layout { grid-template-columns: 1fr; }
-        }
-
+        /* CARDS & TABLES */
         .card {
             background: var(--card-bg);
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
-            margin-bottom: 10px;
-            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
-            border-bottom: 1px solid #f1f5f9;
-            padding-bottom: 6px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 8px;
         }
 
         .card-title {
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 800;
-            color: #0f172a;
+            margin: 0;
+            color: var(--primary-color);
         }
 
-        /* BẢNG ĐẤU LINH HOẠT THU HẸP CỘT PICK, TĂNG KHÔNG GIAN TỶ SỐ & KÈO */
         .table-responsive {
-            width: 100%;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
@@ -195,16 +216,16 @@
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            font-size: 11px;
+            font-size: 12px;
+            min-width: 750px;
         }
 
         th, td {
             border-bottom: 1px solid var(--border-color);
             border-right: 1px solid var(--border-color);
-            padding: 4px 2px;
+            padding: 6px 4px;
             text-align: center;
             vertical-align: middle;
-            white-space: nowrap;
         }
 
         th:first-child, td:first-child { border-left: 1px solid var(--border-color); }
@@ -212,145 +233,101 @@
 
         th {
             background-color: #f8fafc;
-            color: #334155;
+            color: #475569;
             font-weight: 800;
-            font-size: 10px;
             text-transform: uppercase;
+            font-size: 10px;
         }
 
-        /* Cấu hình tỷ lệ các cột tối ưu */
-        .col-match { width: 36px; }          
-        .col-pick { width: 13%; min-width: 85px; } /* Thu hẹp cột Pick */         
-        .col-score { width: 95px; min-width: 95px; } /* Mở rộng cột Tỷ Số */         
-        .col-kèo { width: 60px; min-width: 60px; }   /* Mở rộng cột Kèo */          
+        .badge-pick1 { background-color: var(--pick1-bg); color: var(--pick1-color); padding: 4px 8px; border-radius: 4px; font-weight: 800; }
+        .badge-pick2 { background-color: var(--pick2-bg); color: var(--pick2-color); padding: 4px 8px; border-radius: 4px; font-weight: 800; }
+        .badge-score { background-color: var(--score-bg); color: #6b21a8; padding: 4px 8px; border-radius: 4px; font-weight: 800; }
 
-        .badge-pick1 { background-color: var(--pick1-bg); color: var(--pick1-color); padding: 2px 4px; border-radius: 3px; font-weight: 800; }
-        .badge-pick2 { background-color: var(--pick2-bg); color: var(--pick2-color); padding: 2px 4px; border-radius: 3px; font-weight: 800; }
-        .badge-score { background-color: var(--score-bg); color: #6b21a8; padding: 2px 4px; border-radius: 3px; font-weight: 800; }
-
-        select {
+        select, input[type="text"] {
             width: 100%;
-            padding: 3px 1px;
+            padding: 5px;
             border: 1px solid #cbd5e1;
             border-radius: 4px;
-            font-size: 11px;
+            font-size: 12px;
             background: #fff;
-            outline: none;
-        }
-
-        .score-box {
-            display: flex;
-            gap: 2px;
-            justify-content: center;
-            align-items: center;
         }
 
         .score-input {
-            width: 34px !important;
-            height: 24px;
-            padding: 0 !important;
-            font-weight: 900;
+            width: 42px !important;
+            padding: 4px !important;
+            font-weight: 800;
             text-align: center;
-            font-size: 12px;
-            border: 1.5px solid var(--score-border) !important;
+            font-size: 13px;
+            border: 2px solid var(--score-border) !important;
             border-radius: 4px;
             background: #faf5ff;
-            color: #581c87;
-            outline: none;
         }
 
-        .win { color: var(--win-color); font-weight: 800; background-color: var(--win-bg); border-radius: 3px; padding: 2px 4px; display: inline-block; min-width: 38px; }
-        .lose { color: var(--lose-color); font-weight: 800; background-color: var(--lose-bg); border-radius: 3px; padding: 2px 4px; display: inline-block; min-width: 38px; }
-
-        /* KHỐI SIDEBAR THỐNG KÊ THU CHI TĂNG RỘNG */
-        .sidebar-column {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .vdv-scroll-list {
-            max-height: 240px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .vdv-item {
-            background: white;
-            padding: 5px 8px;
-            border-radius: 5px;
-            border: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            font-size: 11px;
-        }
-
-        .vdv-btn {
-            cursor: pointer;
-            border: none;
-            background: #f1f5f9;
-            padding: 2px 5px;
-            border-radius: 3px;
-            font-size: 11px;
-        }
+        .win { color: var(--win-color); font-weight: 800; background-color: var(--win-bg); border-radius: 4px; padding: 2px 5px; }
+        .lose { color: var(--lose-color); font-weight: 800; background-color: var(--lose-bg); border-radius: 4px; padding: 2px 5px; }
 
         .summary-dashboard {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            margin-bottom: 8px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
         }
 
         .stat-card {
-            background: #f8fafc;
-            padding: 8px;
-            border-radius: 6px;
-            border-left: 3px solid #2563eb;
-            text-align: center;
+            background: white;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
         }
 
-        .stat-card .title { font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; }
-        .stat-card .value { font-size: 15px; font-weight: 900; margin-top: 2px; }
+        .stat-card .title { font-size: 11px; color: #64748b; font-weight: 700; }
+        .stat-card .value { font-size: 18px; font-weight: 900; margin-top: 2px; }
 
         .checkbox-cell { transform: scale(1.2); cursor: pointer; }
-        .action-bar { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
         .total-row { background-color: #fef3c7; font-weight: 800; }
-
-        /* ĐIỀU CHỈNH CHUẨN MOBILE (< 600PX) */
-        @media (max-width: 600px) {
-            body { padding: 4px; }
-            .brand-title h1 { font-size: 16px; }
-            .header-section { padding: 8px; }
-            .card { padding: 6px; }
-            table { width: 580px; } /* Đảm bảo bảng không bị vỡ khung khi cuộn trên điện thoại */
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- HEADER -->
+    <!-- HEADER 2 BÊN -->
     <div class="header-section">
-        <div class="brand-title">
-            <h1>CLB PICKLEBALL CMTD</h1>
-            <div class="subtitle">Bảng Thống Kê Kèo 15K & Quản Lý Đấu Cặp (Máy Tính & Mobile)</div>
-            <div class="slogan">⚡ GẶP LÀ VỤT ⚡</div>
+        <div class="header-left">
+            <span style="font-size: 32px;">🏓</span>
+            <div class="brand-title">
+                <h1>CLB PICKLEBALL - CMTD</h1>
+                <div class="subtitle">Bảng Thống Kê Kèo 15K & Quản Lý Giải Đấu</div>
+            </div>
         </div>
-        <div class="header-actions">
-            <button class="btn btn-add-date" onclick="addDateTab()">📅 + Thêm Ngày Đấu</button>
-            <button class="btn btn-excel" onclick="exportToExcel()">📊 Xuất File Excel</button>
-            <button class="btn btn-clear" onclick="resetDeviceData()">🔄 Đặt Lại Dữ Liệu</button>
+        
+        <div class="header-right">
+            <button class="btn" onclick="addDateTab()">📅 + Thêm Ngày</button>
+            
+            <div style="position: relative;">
+                <button class="btn btn-purple" onclick="toggleVdvDropdown(event)">👥 VĐV (<span id="vdvCountBtn">0</span>) ▾</button>
+                <!-- DROPDOWN DANH SÁCH VĐV -->
+                <div class="dropdown-menu" id="vdvDropdown">
+                    <div style="font-weight: 800; font-size: 13px; margin-bottom: 8px;">Quản Lý Danh Sách VĐV</div>
+                    <div style="display: flex; gap: 4px; margin-bottom: 8px;">
+                        <input type="text" id="newVdvInput" placeholder="Tên VĐV mới..." style="font-size: 11px;">
+                        <button class="btn btn-green" style="padding: 4px 8px;" onclick="addVDV()">Thêm</button>
+                    </div>
+                    <input type="text" id="searchVdvInput" placeholder="🔍 Tìm VĐV..." onkeyup="filterVDVList()" style="font-size: 11px; margin-bottom: 6px;">
+                    <div class="vdv-scroll-list" id="vdvListContainer"></div>
+                </div>
+            </div>
+
+            <button class="btn btn-green" onclick="exportToExcel()">📥 Xuất Excel</button>
+            <button class="btn btn-amber" onclick="backupCloudData()">☁️ Sao Lưu Cloud</button>
+            <input type="file" id="restoreFileInput" style="display: none;" onchange="restoreCloudData(event)">
         </div>
     </div>
 
-    <!-- TABS NAVIGATION -->
+    <!-- TABS HỆ THỐNG -->
     <div class="tabs" id="tabContainer"></div>
 
-    <!-- CONTAINER NỘI DUNG -->
+    <!-- NỘI DUNG CHÍNH -->
     <div id="tabContent"></div>
 </div>
 
@@ -358,20 +335,17 @@
     let defaultVDVs = [
         "Tiến Thọ", "Trí Đỏ", "Phú Mỗ", "Long Diễn", "Lợi Trí", 
         "Châu Sĩ", "Hà Giấy", "Điền Chèm", "Tuấn La", "Thanh Đàm", 
-        "Gà Tre", "Dũng Ngạc", "Vân Đình", "Thành Sóc",
-        "Khách 1", "Khách 2", "Khách 3", "Khách 4", "Khách 5"
+        "Gà Tre", "Dũng Ngạc", "Vân Đình", "Thành Sóc"
     ];
 
-    // QUẢN LÝ DỮ LIỆU LƯU TRÊN THIẾT BỊ CÁ NHÂN (LOCALSTORAGE)
     let vdvs = JSON.parse(localStorage.getItem("cmtd_vdvs")) || defaultVDVs;
     let dates = JSON.parse(localStorage.getItem("cmtd_dates")) || ["3/9/26", "24/9/26", "1/10/26"]; 
     let matchesData = JSON.parse(localStorage.getItem("cmtd_matches")) || {};
     let paymentStatus = JSON.parse(localStorage.getItem("cmtd_payments")) || {};
 
-    // Khởi tạo 12 trận mặc định cho các ngày chưa có dữ liệu
     dates.forEach(d => {
         if (!matchesData[d]) {
-            matchesData[d] = Array.from({ length: 12 }, (_, i) => ({
+            matchesData[d] = Array.from({ length: 10 }, (_, i) => ({
                 id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
             }));
         }
@@ -382,27 +356,26 @@
     window.onload = function() {
         renderTabs();
         switchTab(currentTab);
+        document.addEventListener('click', closeDropdownOutside);
     };
 
-    function saveAllDataToStorage() {
-        localStorage.setItem("cmtd_vdvs", JSON.stringify(vdvs));
-        localStorage.setItem("cmtd_dates", JSON.stringify(dates));
-        localStorage.setItem("cmtd_matches", JSON.stringify(matchesData));
-        localStorage.setItem("cmtd_payments", JSON.stringify(paymentStatus));
+    function toggleVdvDropdown(e) {
+        e.stopPropagation();
+        const menu = document.getElementById("vdvDropdown");
+        menu.classList.toggle("show");
+        if (menu.classList.contains("show")) renderVDVItems(vdvs);
     }
 
-    function resetDeviceData() {
-        if (confirm("Xác nhận xóa dữ liệu lưu trên thiết bị này và khôi phục cài đặt gốc?")) {
-            localStorage.clear();
-            location.reload();
-        }
+    function closeDropdownOutside(e) {
+        const menu = document.getElementById("vdvDropdown");
+        if (menu && !menu.contains(e.target)) menu.classList.remove("show");
     }
 
     function addDateTab() {
         const dateStr = prompt("Nhập ngày đấu mới (VD: 8/10/26):");
         if (dateStr && !dates.includes(dateStr)) {
             dates.push(dateStr);
-            matchesData[dateStr] = Array.from({ length: 12 }, (_, i) => ({
+            matchesData[dateStr] = Array.from({ length: 10 }, (_, i) => ({
                 id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
             }));
             saveAllDataToStorage();
@@ -417,8 +390,9 @@
         dates.forEach(d => {
             html += `<button class="tab-btn ${currentTab === d ? 'active' : ''}" onclick="switchTab('${d}')">🗓️ Ngày ${d}</button>`;
         });
-        html += `<button class="tab-btn ${currentTab === 'tonghop' ? 'active' : ''}" onclick="switchTab('tonghop')">🏆 Bảng Tổng Hợp</button>`;
+        html += `<button class="tab-btn ${currentTab === 'tonghop' ? 'active' : ''}" onclick="switchTab('tonghop')">🏆 Bảng Thống Kê Nhiều Ngày</button>`;
         container.innerHTML = html;
+        document.getElementById("vdvCountBtn").innerText = vdvs.length;
     }
 
     function switchTab(tabName) {
@@ -433,17 +407,9 @@
             content.innerHTML = renderMultiDaySummaryTable();
         } else {
             content.innerHTML = `
-                <div class="main-layout">
-                    <div>
-                        ${renderMatchTable(currentTab)}
-                    </div>
-                    <div class="sidebar-column">
-                        ${renderSingleDaySummarySidebar(currentTab)}
-                        ${renderVDVSidebar()}
-                    </div>
-                </div>
+                ${renderMatchTable(currentTab)}
+                ${renderSingleDaySummaryTable(currentTab)}
             `;
-            filterVDVList();
         }
     }
 
@@ -451,16 +417,10 @@
         if (score1 === "" || score2 === "" || isNaN(score1) || isNaN(score2)) {
             return { money1: 0, money2: 0, isFinished: false };
         }
-        let s1 = parseInt(score1);
-        let s2 = parseInt(score2);
-
+        let s1 = parseInt(score1), s2 = parseInt(score2);
         let winRate = 5, loseRate = -15;
 
-        // Trận thắng trắng (0 điểm) nhân đôi
-        if (s1 === 0 || s2 === 0) {
-            winRate *= 2;
-            loseRate *= 2;
-        }
+        if (s1 === 0 || s2 === 0) { winRate *= 2; loseRate *= 2; }
 
         let money1 = 0, money2 = 0;
         if (s1 > s2) { money1 = winRate; money2 = loseRate; }
@@ -469,7 +429,6 @@
         return { money1, money2, isFinished: true };
     }
 
-    // BẢNG THI ĐẤU
     function renderMatchTable(date) {
         let matches = matchesData[date];
         let rowsHtml = "";
@@ -478,26 +437,25 @@
             let res = calculateMatchResult(m.score1, m.score2);
             let m1Text = res.isFinished ? (res.money1 > 0 ? `+${res.money1}K` : `${res.money1}K`) : "-";
             let m2Text = res.isFinished ? (res.money2 > 0 ? `+${res.money2}K` : `${res.money2}K`) : "-";
-            
             let m1Class = res.money1 > 0 ? 'win' : (res.money1 < 0 ? 'lose' : '');
             let m2Class = res.money2 > 0 ? 'win' : (res.money2 < 0 ? 'lose' : '');
 
             rowsHtml += `
                 <tr>
-                    <td class="col-match"><b>T${m.id}</b></td>
-                    <td class="col-pick"><select onchange="updateMatch('${date}', ${idx}, 'c1_p1', this.value)">${getOptions(m.c1_p1)}</select></td>
-                    <td class="col-pick"><select onchange="updateMatch('${date}', ${idx}, 'c1_p2', this.value)">${getOptions(m.c1_p2)}</select></td>
-                    <td class="col-pick"><select onchange="updateMatch('${date}', ${idx}, 'c2_p1', this.value)">${getOptions(m.c2_p1)}</select></td>
-                    <td class="col-pick"><select onchange="updateMatch('${date}', ${idx}, 'c2_p2', this.value)">${getOptions(m.c2_p2)}</select></td>
-                    <td class="col-score">
-                        <div class="score-box">
+                    <td><b>Trận ${m.id}</b></td>
+                    <td><select onchange="updateMatch('${date}', ${idx}, 'c1_p1', this.value)">${getOptions(m.c1_p1)}</select></td>
+                    <td><select onchange="updateMatch('${date}', ${idx}, 'c1_p2', this.value)">${getOptions(m.c1_p2)}</select></td>
+                    <td><select onchange="updateMatch('${date}', ${idx}, 'c2_p1', this.value)">${getOptions(m.c2_p1)}</select></td>
+                    <td><select onchange="updateMatch('${date}', ${idx}, 'c2_p2', this.value)">${getOptions(m.c2_p2)}</select></td>
+                    <td style="background-color: #faf5ff;">
+                        <div style="display: flex; gap: 2px; justify-content: center; align-items: center;">
                             <input type="number" class="score-input" value="${m.score1}" onchange="updateMatch('${date}', ${idx}, 'score1', this.value)">
-                            <b>:</b>
+                            <b style="color: var(--score-border)">:</b>
                             <input type="number" class="score-input" value="${m.score2}" onchange="updateMatch('${date}', ${idx}, 'score2', this.value)">
                         </div>
                     </td>
-                    <td class="col-kèo"><span class="${m1Class}">${m1Text}</span></td>
-                    <td class="col-kèo"><span class="${m2Class}">${m2Text}</span></td>
+                    <td><span class="${m1Class}">${m1Text}</span></td>
+                    <td><span class="${m2Class}">${m2Text}</span></td>
                 </tr>
             `;
         });
@@ -505,33 +463,124 @@
         return `
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">⚔️ Lịch Thi Đấu - Ngày ${date}</h3>
+                    <h3 class="card-title">⚔️ Danh Sách Trận Đấu Ngày: ${date}</h3>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-green" onclick="addNewMatch('${date}')">➕ Thêm Trận</button>
+                        <button class="btn" onclick="saveDayData('${date}')">💾 Lưu Ngày ${date}</button>
+                    </div>
                 </div>
                 <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th class="col-match">Trận</th>
-                                <th colspan="2" style="width:26%;"><span class="badge-pick1">PICK 1</span></th>
-                                <th colspan="2" style="width:26%;"><span class="badge-pick2">PICK 2</span></th>
-                                <th class="col-score"><span class="badge-score">Tỷ Số</span></th>
-                                <th class="col-kèo">Kèo 1</th>
-                                <th class="col-kèo">Kèo 2</th>
+                                <th style="width: 60px;">STT</th>
+                                <th colspan="2"><span class="badge-pick1">Cặp PICK 1</span></th>
+                                <th colspan="2"><span class="badge-pick2">Cặp PICK 2</span></th>
+                                <th style="width: 120px;"><span class="badge-score">🎯 Tỷ Số</span></th>
+                                <th style="width: 80px;">Kèo Pick 1</th>
+                                <th style="width: 80px;">Kèo Pick 2</th>
                             </tr>
                         </thead>
                         <tbody>${rowsHtml}</tbody>
                     </table>
                 </div>
-                <div class="action-bar">
-                    <button class="btn btn-add-match" onclick="addNewMatch('${date}')">➕ Thêm Trận</button>
-                    <button class="btn btn-save" onclick="saveDayData('${date}')">💾 Lưu Ngày Đấu</button>
-                </div>
             </div>
         `;
     }
 
-    // KHỐI THỐNG KÊ THU CHI TĂNG KHÔNG GIAN
-    function renderSingleDaySummarySidebar(date) {
+    function renderVDVItems(list) {
+        const container = document.getElementById("vdvListContainer");
+        if (!container) return;
+        if (list.length === 0) {
+            container.innerHTML = `<div style="text-align:center; color:#94a3b8; padding: 6px;">Không có VĐV</div>`;
+            return;
+        }
+        container.innerHTML = list.map((name) => {
+            let idx = vdvs.indexOf(name);
+            return `
+                <div class="vdv-item">
+                    <span>🥇 ${name}</span>
+                    <div>
+                        <button style="border:none; background:none; cursor:pointer;" onclick="editVDV(${idx})">✏️</button>
+                        <button style="border:none; background:none; cursor:pointer;" onclick="removeVDV(${idx})">❌</button>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function filterVDVList() {
+        const q = document.getElementById("searchVdvInput")?.value.toLowerCase() || "";
+        renderVDVItems(vdvs.filter(v => v.toLowerCase().includes(q)));
+    }
+
+    function addVDV() {
+        const input = document.getElementById("newVdvInput");
+        const name = input.value.trim();
+        if (name && !vdvs.includes(name)) {
+            vdvs.push(name);
+            input.value = "";
+            saveAllDataToStorage();
+            renderTabs();
+            renderVDVItems(vdvs);
+            renderCurrentTab();
+        }
+    }
+
+    function editVDV(index) {
+        const oldName = vdvs[index];
+        const newName = prompt(`Sửa tên VĐV "${oldName}":`, oldName);
+        if (newName && newName.trim() !== "" && newName !== oldName) {
+            vdvs[index] = newName.trim();
+            saveAllDataToStorage();
+            renderTabs();
+            renderVDVItems(vdvs);
+            renderCurrentTab();
+        }
+    }
+
+    function removeVDV(index) {
+        if (confirm(`Bạn có muốn xóa VĐV "${vdvs[index]}"?`)) {
+            vdvs.splice(index, 1);
+            saveAllDataToStorage();
+            renderTabs();
+            renderVDVItems(vdvs);
+            renderCurrentTab();
+        }
+    }
+
+    function getOptions(selectedVal) {
+        let html = `<option value="">-- Chọn VĐV --</option>`;
+        vdvs.forEach(v => {
+            html += `<option value="${v}" ${v === selectedVal ? 'selected' : ''}>${v}</option>`;
+        });
+        return html;
+    }
+
+    function addNewMatch(date) {
+        let matches = matchesData[date];
+        matches.push({ id: matches.length + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "" });
+        renderCurrentTab();
+    }
+
+    function updateMatch(date, matchIndex, field, value) {
+        matchesData[date][matchIndex][field] = value;
+        renderCurrentTab();
+    }
+
+    function saveDayData(date) {
+        saveAllDataToStorage();
+        alert(`✅ Đã lưu kết quả ngày ${date}!`);
+    }
+
+    function saveAllDataToStorage() {
+        localStorage.setItem("cmtd_vdvs", JSON.stringify(vdvs));
+        localStorage.setItem("cmtd_dates", JSON.stringify(dates));
+        localStorage.setItem("cmtd_matches", JSON.stringify(matchesData));
+        localStorage.setItem("cmtd_payments", JSON.stringify(paymentStatus));
+    }
+
+    function renderSingleDaySummaryTable(date) {
         let stats = {};
         vdvs.forEach(v => stats[v] = { matchCount: 0, totalMoney: 0 });
 
@@ -553,7 +602,6 @@
 
             let eligible = (count >= 4 && rawMoney > 0);
             let finalMoney = eligible ? rawMoney : (rawMoney <= 0 ? rawMoney : 0);
-
             let payKey = `${date}_${v}`;
             let isPaid = !!paymentStatus[payKey];
 
@@ -564,144 +612,48 @@
 
             rowsHtml += `
                 <tr>
-                    <td style="text-align: left; font-weight: bold;">${v}</td>
-                    <td>${count} trận</td>
-                    <td><span class="${eligible ? 'win' : (rawMoney <= 0 ? 'lose' : '')}">${finalMoney}K</span></td>
+                    <td style="text-align: left; font-weight: bold;">👤 ${v}</td>
+                    <td><b>${count} trận</b></td>
+                    <td><span class="${rawMoney >= 0 ? 'win' : 'lose'}">${rawMoney > 0 ? '+' : ''}${rawMoney} K</span></td>
+                    <td>${eligible ? `<span class="win">+${finalMoney} K (Đủ ĐK)</span>` : (count < 4 && rawMoney > 0 ? `<span style="color:#d97706; font-weight: bold;">Thiếu trận (${count}/4)</span>` : `<span class="lose">${finalMoney} K</span>`)}</td>
                     <td><input type="checkbox" class="checkbox-cell" ${isPaid ? 'checked' : ''} onchange="togglePayment('${payKey}')"></td>
+                    <td>${isPaid ? `<b style="color:var(--win-color)">✅ Đã nộp</b>` : (finalMoney < 0 ? `<b style="color:var(--lose-color)">⏳ Cần thu ${Math.abs(finalMoney)}K</b>` : '🎉 Không nộp')}</td>
                 </tr>
             `;
         });
 
         return `
-            <div class="card" style="border-top: 3px solid var(--brand-yellow);">
+            <div class="card" style="border-top: 4px solid var(--accent-color);">
                 <div class="card-header">
-                    <h3 class="card-title">💵 Thu Chi Trong Ngày</h3>
+                    <h3 class="card-title">📊 Tổng Hợp Thu Chi - Ngày ${date}</h3>
                 </div>
                 <div class="summary-dashboard">
                     <div class="stat-card" style="border-left-color: var(--win-color);">
-                        <div class="title">Đã Thu</div>
+                        <div class="title">💵 BTC đã thu (${date})</div>
                         <div class="value" style="color: var(--win-color);">${btcCollected} K</div>
                     </div>
                     <div class="stat-card" style="border-left-color: var(--lose-color);">
-                        <div class="title">Còn Phải Thu</div>
+                        <div class="title">📌 Còn phải thu (${date})</div>
                         <div class="value" style="color: var(--lose-color);">${btcRemaining} K</div>
                     </div>
                 </div>
-                <div class="table-responsive" style="max-height: 220px; overflow-y: auto;">
-                    <table style="width: 100%; table-layout: auto;">
+                <div class="table-responsive">
+                    <table>
                         <thead>
                             <tr>
-                                <th style="text-align: left;">VĐV</th>
+                                <th>VĐV Tham Gia</th>
                                 <th>Số Trận</th>
-                                <th>Tổng Tiền</th>
-                                <th>Đã Thu</th>
+                                <th>Tiền Tích Lũy</th>
+                                <th>Thành Tiền</th>
+                                <th>Đã Nộp</th>
+                                <th>Trạng Thái</th>
                             </tr>
                         </thead>
-                        <tbody>${rowsHtml || '<tr><td colspan="4" style="color:#94a3b8;">Chưa có dữ liệu</td></tr>'}</tbody>
+                        <tbody>${rowsHtml || '<tr><td colspan="6" style="padding:10px; color:#94a3b8;">Chưa có dữ liệu ngày này</td></tr>'}</tbody>
                     </table>
                 </div>
             </div>
         `;
-    }
-
-    // DANH SÁCH VĐV
-    function renderVDVSidebar() {
-        return `
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">👥 Danh Sách VĐV (${vdvs.length})</h3>
-                </div>
-                <div style="display: flex; gap: 4px; margin-bottom: 6px;">
-                    <input type="text" id="newVdvInput" placeholder="+ Nhập tên VĐV..." style="padding:4px; border:1px solid #ccc; border-radius:4px; width:100%; font-size:11px;">
-                    <button class="btn btn-add-match" onclick="addVDV()">Thêm</button>
-                </div>
-                <div style="margin-bottom: 6px;">
-                    <input type="text" id="searchVdvInput" placeholder="🔍 Tìm VĐV..." onkeyup="filterVDVList()" style="padding:4px; border:1px solid #ccc; border-radius:4px; width:100%; font-size:11px;">
-                </div>
-                <div class="vdv-scroll-list" id="vdvListContainer">
-                    ${renderVDVItems(vdvs)}
-                </div>
-            </div>
-        `;
-    }
-
-    function renderVDVItems(list) {
-        if (list.length === 0) return `<div style="text-align:center; color:#94a3b8; padding: 6px;">Không tìm thấy VĐV</div>`;
-        return list.map((name) => {
-            let originalIndex = vdvs.indexOf(name);
-            return `
-                <div class="vdv-item">
-                    <span>🥇 ${name}</span>
-                    <div>
-                        <button class="vdv-btn" onclick="editVDV(${originalIndex})">✏️</button>
-                        <button class="vdv-btn" onclick="removeVDV(${originalIndex})" style="color: red;">❌</button>
-                    </div>
-                </div>
-            `;
-        }).join("");
-    }
-
-    function filterVDVList() {
-        const query = document.getElementById("searchVdvInput")?.value.toLowerCase() || "";
-        const filtered = vdvs.filter(v => v.toLowerCase().includes(query));
-        const container = document.getElementById("vdvListContainer");
-        if (container) container.innerHTML = renderVDVItems(filtered);
-    }
-
-    function addVDV() {
-        const input = document.getElementById("newVdvInput");
-        const name = input.value.trim();
-        if (name && !vdvs.includes(name)) {
-            vdvs.push(name);
-            input.value = "";
-            saveAllDataToStorage();
-            renderCurrentTab();
-        }
-    }
-
-    function editVDV(index) {
-        const oldName = vdvs[index];
-        const newName = prompt(`Sửa tên VĐV "${oldName}":`, oldName);
-        if (newName && newName.trim() !== "" && newName !== oldName) {
-            vdvs[index] = newName.trim();
-            saveAllDataToStorage();
-            renderCurrentTab();
-        }
-    }
-
-    function removeVDV(index) {
-        if (confirm(`Xóa VĐV "${vdvs[index]}" khỏi danh sách?`)) {
-            vdvs.splice(index, 1);
-            saveAllDataToStorage();
-            renderCurrentTab();
-        }
-    }
-
-    function getOptions(selectedVal) {
-        let html = `<option value="">-- Chọn --</option>`;
-        vdvs.forEach(v => {
-            html += `<option value="${v}" ${v === selectedVal ? 'selected' : ''}>${v}</option>`;
-        });
-        return html;
-    }
-
-    function addNewMatch(date) {
-        let matches = matchesData[date];
-        let newId = matches.length + 1;
-        matches.push({ id: newId, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "" });
-        saveAllDataToStorage();
-        renderCurrentTab();
-    }
-
-    function updateMatch(date, matchIndex, field, value) {
-        matchesData[date][matchIndex][field] = value;
-        saveAllDataToStorage();
-        renderCurrentTab();
-    }
-
-    function saveDayData(date) {
-        saveAllDataToStorage();
-        alert(`✅ Đã lưu dữ liệu ngày ${date} thành công!`);
     }
 
     function togglePayment(payKey) {
@@ -710,7 +662,6 @@
         renderCurrentTab();
     }
 
-    // BẢNG TỔNG HỢP TẤT CẢ CÁC NGÀY
     function renderMultiDaySummaryTable() {
         let playerStats = {};
         vdvs.forEach(v => {
@@ -731,7 +682,7 @@
             });
         });
 
-        let dateHeadersHtml = dates.map(d => `<th>Ngày ${d}</th>`).join("");
+        let dateHeadersHtml = dates.map(d => `<th>📅 Ngày ${d}</th>`).join("");
         let rowsHtml = "";
         let grandTotalAllDays = 0;
 
@@ -748,8 +699,7 @@
                 dayTotals[d] += finalMoney;
 
                 let cellClass = finalMoney > 0 ? 'win' : (finalMoney < 0 ? 'lose' : '');
-                let cellText = count > 0 ? `${finalMoney > 0 ? '+' : ''}${finalMoney}K <small>(${count}t)</small>` : '-';
-                
+                let cellText = count > 0 ? `${finalMoney > 0 ? '+' : ''}${finalMoney}K <small style="color:#64748b">(${count}t)</small>` : '-';
                 return `<td><span class="${cellClass}">${cellText}</span></td>`;
             }).join("");
 
@@ -758,7 +708,7 @@
 
             rowsHtml += `
                 <tr>
-                    <td style="text-align: left; font-weight: bold; padding-left: 6px;">🥇 ${v}</td>
+                    <td style="text-align: left; font-weight: bold;">🥇 ${v}</td>
                     ${dateCellsHtml}
                     <td><span class="${totalClass}">${totalAllDays > 0 ? '+' : ''}${totalAllDays} K</span></td>
                 </tr>
@@ -771,28 +721,26 @@
             return `<td><span class="${cls}">${tot > 0 ? '+' : ''}${tot} K</span></td>`;
         }).join("");
 
-        let grandTotalClass = grandTotalAllDays > 0 ? 'win' : (grandTotalAllDays < 0 ? 'lose' : '');
-
         return `
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">🏆 Bảng Thống Kê Tổng Hợp Tất Cả Các Ngày</h3>
+                    <h3 class="card-title">🏆 Thống Kê Tổng Hợp Tất Cả Các Ngày</h3>
                 </div>
                 <div class="table-responsive">
-                    <table style="width:100%; table-layout:auto;">
+                    <table>
                         <thead>
                             <tr>
-                                <th style="text-align: left; padding-left: 6px;">VĐV (${vdvs.length})</th>
+                                <th style="text-align: left; padding-left: 8px;">Tên VĐV (${vdvs.length})</th>
                                 ${dateHeadersHtml}
-                                <th style="background-color: #fef3c7; color: #b45309;">TỔNG CỘNG</th>
+                                <th style="background-color: #ffedd5; color: #c2410c;">🔥 TỔNG CỘNG</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${rowsHtml}
                             <tr class="total-row">
-                                <td style="text-align: left; padding-left: 6px;">💰 TỔNG CỘNG NGÀY</td>
+                                <td style="text-align: left; padding-left: 8px;">💰 TỔNG CỘNG NGÀY</td>
                                 ${dayTotalsCellsHtml}
-                                <td><span class="${grandTotalClass}">${grandTotalAllDays > 0 ? '+' : ''}${grandTotalAllDays} K</span></td>
+                                <td><span class="${grandTotalAllDays > 0 ? 'win' : 'lose'}">${grandTotalAllDays > 0 ? '+' : ''}${grandTotalAllDays} K</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -801,67 +749,60 @@
         `;
     }
 
-    // TÍNH NĂNG XUẤT FILE EXCEL (.XLSX)
+    // NÚT XUẤT EXCEL
     function exportToExcel() {
         let wb = XLSX.utils.book_new();
 
-        // Trang Lịch Thi Đấu Theo Ngày
+        // 1. Sheet Chi tiet tung ngay
         dates.forEach(d => {
-            let wsData = [
-                ["TRẬN", "PICK 1 - VĐV 1", "PICK 1 - VĐV 2", "PICK 2 - VĐV 1", "PICK 2 - VĐV 2", "TỶ SỐ 1", "TỶ SỐ 2", "KÈO 1 (K)", "KÈO 2 (K)"]
-            ];
-            
+            let sheetData = [["STT", "Pick 1 - VĐV 1", "Pick 1 - VĐV 2", "Pick 2 - VĐV 1", "Pick 2 - VĐV 2", "Tỷ Số 1", "Tỷ Số 2", "Kèo Pick 1", "Kèo Pick 2"]];
             matchesData[d].forEach(m => {
                 let res = calculateMatchResult(m.score1, m.score2);
-                wsData.push([
-                    `Trận ${m.id}`,
-                    m.c1_p1 || "",
-                    m.c1_p2 || "",
-                    m.c2_p1 || "",
-                    m.c2_p2 || "",
-                    m.score1 !== "" ? parseInt(m.score1) : "",
-                    m.score2 !== "" ? parseInt(m.score2) : "",
-                    res.isFinished ? res.money1 : "",
-                    res.isFinished ? res.money2 : ""
-                ]);
+                sheetData.push([`Trận ${m.id}`, m.c1_p1, m.c1_p2, m.c2_p1, m.c2_p2, m.score1, m.score2, res.money1, res.money2]);
             });
-
-            let ws = XLSX.utils.aoa_to_sheet(wsData);
-            let sheetName = `Ngay_${d.replace(/\//g, '-')}`;
-            XLSX.utils.book_append_sheet(wb, ws, sheetName);
+            let ws = XLSX.utils.aoa_to_sheet(sheetData);
+            XLSX.utils.book_append_sheet(wb, ws, `Ngay_${d.replace(/\//g, '-')}`);
         });
 
-        // Trang Bảng Tổng Hợp
-        let summaryHeader = ["TÊN VĐV", ...dates.map(d => `Ngày ${d}`), "TỔNG CỘNG (K)"];
-        let summaryData = [summaryHeader];
+        XLSX.writeFile(wb, `Thong_Ke_Pickleball_CMTD.xlsx`);
+    }
 
-        vdvs.forEach(v => {
-            let row = [v];
-            let totalAllDays = 0;
-            dates.forEach(d => {
-                let count = 0;
-                let rawMoney = 0;
-                matchesData[d].forEach(m => {
-                    let res = calculateMatchResult(m.score1, m.score2);
-                    if (res.isFinished) {
-                        if (m.c1_p1 === v || m.c1_p2 === v) { count++; rawMoney += res.money1; }
-                        if (m.c2_p1 === v || m.c2_p2 === v) { count++; rawMoney += res.money2; }
-                    }
-                });
-                let eligible = (count >= 4 && rawMoney > 0);
-                let finalMoney = eligible ? rawMoney : (rawMoney <= 0 ? rawMoney : 0);
-                totalAllDays += finalMoney;
-                row.push(finalMoney);
-            });
-            row.push(totalAllDays);
-            summaryData.push(row);
-        });
+    // SAO LƯU & KHÔI PHỤC DỮ LIỆU CLOUD (JSON)
+    function backupCloudData() {
+        let data = {
+            vdvs, dates, matchesData, paymentStatus
+        };
+        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+        let downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", `Backup_CMTD_Pickleball_${new Date().toISOString().slice(0,10)}.json`);
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+    }
 
-        let wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
-        XLSX.utils.book_append_sheet(wb, wsSummary, "Bang_Tong_Hop");
-
-        // Tải xuống file Excel
-        XLSX.writeFile(wb, "CLB_Pickleball_CMTD_Keo15K.xlsx");
+    function restoreCloudData(e) {
+        let file = e.target.files[0];
+        if (!file) return;
+        let reader = new FileReader();
+        reader.onload = function(evt) {
+            try {
+                let data = JSON.parse(evt.target.result);
+                if (data.vdvs && data.dates && data.matchesData) {
+                    vdvs = data.vdvs;
+                    dates = data.dates;
+                    matchesData = data.matchesData;
+                    paymentStatus = data.paymentStatus || {};
+                    saveAllDataToStorage();
+                    renderTabs();
+                    switchTab(dates[0]);
+                    alert("✅ Khôi phục dữ liệu sao lưu thành công!");
+                }
+            } catch (err) {
+                alert("❌ File sao lưu không hợp lệ!");
+            }
+        };
+        reader.readAsText(file);
     }
 </script>
 

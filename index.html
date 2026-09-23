@@ -29,30 +29,34 @@
     * { box-sizing: border-box; }
     body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 10px; }
     .container { max-width: 1600px; margin: 0 auto; }
-    .header-section { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 12px 16px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
-    .header-left { display: flex; align-items: center; gap: 10px; }
-    .brand-title h1 { margin: 0; font-size: 18px; font-weight: 900; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .brand-title .subtitle { font-size: 11px; color: #94a3b8; margin-top: 2px; }
-    .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; position: relative; }
-    .cloud-status { font-size: 11px; padding: 4px 8px; border-radius: 20px; font-weight: bold; }
+    .header-section { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 10px 14px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+    .header-left { display: flex; align-items: center; gap: 8px; }
+    .brand-title h1 { margin: 0; font-size: 16px; font-weight: 900; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .brand-title .subtitle { font-size: 10px; color: #94a3b8; margin-top: 1px; }
+    .header-right { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; position: relative; }
+    .cloud-status { font-size: 10px; padding: 3px 6px; border-radius: 20px; font-weight: bold; }
     .cloud-online { background-color: #22c55e; color: white; }
     .cloud-syncing { background-color: #f59e0b; color: white; }
-    .btn { background-color: var(--accent-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; transition: all 0.2s; white-space: nowrap; }
-    .btn:hover { background-color: var(--accent-hover); }
+    
+    /* Style nút chung & nút nhỏ (btn-sm) */
+    .btn { background-color: var(--accent-color); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; }
+    .btn:hover { opacity: 0.9; }
+    .btn-sm { padding: 4px 8px; font-size: 11px; }
     .btn-green { background-color: #16a34a; }
     .btn-purple { background-color: #9333ea; }
     .btn-orange { background-color: #ea580c; }
     .btn-red { background-color: #dc2626; }
-    .dropdown-menu { display: none; position: absolute; top: 110%; right: 0; width: 300px; background: white; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--border-color); z-index: 1000; padding: 10px; color: var(--text-main); }
+    
+    .dropdown-menu { display: none; position: absolute; top: 110%; right: 0; width: 280px; background: white; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--border-color); z-index: 1000; padding: 10px; color: var(--text-main); }
     .dropdown-menu.show { display: block; }
     .vdv-scroll-list { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
-    .vdv-item { background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+    .vdv-item { background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
     .tabs { display: flex; gap: 6px; margin-bottom: 12px; background: #e2e8f0; padding: 4px; border-radius: 8px; overflow-x: auto; }
     .tab-btn { background: transparent; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; color: #64748b; white-space: nowrap; }
     .tab-btn.active { background: var(--card-bg); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
     .card { background: var(--card-bg); padding: 12px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 12px; }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; flex-wrap: wrap; gap: 8px; }
-    .card-title { font-size: 16px; font-weight: 800; text-align: center; color: var(--primary-color); margin: 0; flex-grow: 1; }
+    .card-title { font-size: 15px; font-weight: 800; text-align: center; color: var(--primary-color); margin: 0; flex-grow: 1; }
     
     .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 700px; table-layout: fixed; }
@@ -77,30 +81,36 @@
 </head>
 <body>
   <div class="container">
+    <!-- HEADER TRÊN CÙNG -->
     <div class="header-section">
       <div class="header-left">
-        <span style="font-size: 28px;">🏓</span>
+        <span style="font-size: 24px;">🏓</span>
         <div class="brand-title">
           <h1>CLB PICKLEBALL - CMTD</h1>
-          <div class="subtitle">Bảng Thống Kê Những Trận Pick Đỉnh Cao</div>
+          <div class="subtitle">Thống Kê Trận Pick Đỉnh Cao</div>
         </div>
       </div>
       <div class="header-right">
         <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối...</div>
-        <button class="btn" onclick="addDateTab()">📅 + Thêm Ngày</button>
+        
+        <!-- CÁC NÚT QUẢN LÝ NGÀY TRÊN CÙNG (NHỎ GỌN) -->
+        <button class="btn btn-sm" onclick="addDateTab()">📅 + Ngày</button>
+        <button class="btn btn-sm btn-orange" id="btnRenameDate" onclick="renameCurrentDate()">✏️ Sửa Tên</button>
+        <button class="btn btn-sm btn-red" id="btnDeleteDate" onclick="deleteCurrentDate()">🗑️ Xóa Ngày</button>
+        
         <div style="position: relative;">
-          <button class="btn btn-purple" onclick="toggleVdvDropdown(event)">👥 VĐV (<span id="vdvCountBtn">0</span>) ▾</button>
+          <button class="btn btn-sm btn-purple" onclick="toggleVdvDropdown(event)">👥 VĐV (<span id="vdvCountBtn">0</span>) ▾</button>
           <div class="dropdown-menu" id="vdvDropdown">
             <div style="font-weight: 800; font-size: 12px; margin-bottom: 6px;">Quản Lý Danh Sách VĐV</div>
             <div style="display: flex; gap: 4px; margin-bottom: 6px;">
               <input type="text" id="newVdvInput" placeholder="Tên VĐV mới...">
-              <button class="btn btn-green" style="padding: 4px 8px;" onclick="addVDV()">Thêm</button>
+              <button class="btn btn-green btn-sm" onclick="addVDV()">Thêm</button>
             </div>
             <input type="text" id="searchVdvInput" placeholder="🔍 Tìm VĐV..." onkeyup="filterVDVList()" style="margin-bottom: 6px;">
             <div class="vdv-scroll-list" id="vdvListContainer"></div>
           </div>
         </div>
-        <button class="btn btn-green" onclick="exportToExcel()">📥 Xuất Excel</button>
+        <button class="btn btn-sm btn-green" onclick="exportToExcel()">📥 Xuất Excel</button>
       </div>
     </div>
     
@@ -210,8 +220,10 @@
       }
     }
 
-    // TÍNH NĂNG ĐỔI TÊN NGÀY
-    function renameCurrentDate(oldDate) {
+    // ĐỔI TÊN NGÀY ĐANG CHỌN
+    function renameCurrentDate() {
+      if (currentTab === "tonghop") return;
+      const oldDate = currentTab;
       const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
       if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
         const trimmed = newDate.trim();
@@ -219,16 +231,12 @@
           alert("⚠️ Tên ngày này đã tồn tại!");
           return;
         }
-        // Đổi tên trong mảng dates
         const idx = dates.indexOf(oldDate);
-        if (idx !== -1) {
-          dates[idx] = trimmed;
-        }
-        // Chuyển dữ liệu trận đấu sang tên ngày mới
+        if (idx !== -1) dates[idx] = trimmed;
+
         matchesData[trimmed] = matchesData[oldDate];
         delete matchesData[oldDate];
 
-        // Cập nhật key thanh toán
         Object.keys(paymentStatus).forEach(key => {
           if (key.startsWith(`${oldDate}_`)) {
             const vdvName = key.split('_')[1];
@@ -242,13 +250,14 @@
       }
     }
 
-    // TÍNH NĂNG XÓA NGÀY
-    function deleteCurrentDate(dateToDelete) {
+    // XÓA NGÀY ĐANG CHỌN
+    function deleteCurrentDate() {
+      if (currentTab === "tonghop") return;
+      const dateToDelete = currentTab;
       if (confirm(`❌ Bạn có chắc chắn muốn XÓA TOÀN BỘ dữ liệu của ngày "${dateToDelete}"?`)) {
         dates = dates.filter(d => d !== dateToDelete);
         delete matchesData[dateToDelete];
 
-        // Xóa key thanh toán tương ứng
         Object.keys(paymentStatus).forEach(key => {
           if (key.startsWith(`${dateToDelete}_`)) {
             delete paymentStatus[key];
@@ -303,6 +312,17 @@
       `).join('');
       html += `<button class="tab-btn ${currentTab === 'tonghop' ? 'active' : ''}" onclick="switchTab('tonghop')">📊 TỔNG HỢP CẢ GIẢI</button>`;
       container.innerHTML = html;
+
+      // Tránh cho phép sửa/xóa khi ở tab Tổng Hợp
+      const btnRename = document.getElementById("btnRenameDate");
+      const btnDelete = document.getElementById("btnDeleteDate");
+      if (currentTab === "tonghop") {
+        btnRename.style.display = "none";
+        btnDelete.style.display = "none";
+      } else {
+        btnRename.style.display = "inline-block";
+        btnDelete.style.display = "inline-block";
+      }
     }
 
     function switchTab(tab) {
@@ -349,10 +369,6 @@
         <div class="card">
           <div class="card-header">
             <h2 class="card-title">Bảng Thống Kê Những Trận Pick Đỉnh Cao - Ngày ${dateStr}</h2>
-            <div style="display:flex; gap:6px;">
-              <button class="btn btn-orange" onclick="renameCurrentDate('${dateStr}')">✏️ Sửa Tên Ngày</button>
-              <button class="btn btn-red" onclick="deleteCurrentDate('${dateStr}')">🗑️ Xóa Ngày</button>
-            </div>
           </div>
           <p style="color: red; font-size: 11px; margin: 4px 0 10px 0; font-style: italic;">
             Note: - Thắng kèo nhập số tiền cược sau khi trừ 10K cho BTC (+5K nếu kèo 15K)<br>

@@ -494,7 +494,11 @@
                 </tr>
             `;
         });
+const payKey = `${dateStr}_${vdv}`;
+const isPaid = paymentStatus[payKey] || false;
 
+// Đảm bảo thẻ input checkbox hiển thị chuẩn:
+`<input type="checkbox" class="checkbox-cell" ${isPaid ? 'checked' : ''} onclick="togglePayment('${payKey}')">`
         return `
             <div class="card" style="border-top: 4px solid var(--accent-color);">
                 <div class="card-header">
@@ -668,19 +672,32 @@ function togglePayment(payKey) {
       return; // Bấm Hủy
     }
   }
+// ==========================================
+// CẤU HÌNH BẢO MẬT ADMIN CHO CỘT THỰC TẾ
+// ==========================================
+const ADMIN_PASSCODE = "123456"; // Mật khẩu Admin của bạn
+let isAdminVerified = false;
 
-  // Đổi trạng thái khi đã xác thực đúng Admin
+function togglePayment(payKey) {
+  // 1. Nếu chưa xác nhận mật khẩu Admin trước đó
+  if (!isAdminVerified) {
+    const inputPass = prompt("🔑 Nhập mật khẩu Quản trị viên để thay đổi cột THỰC TẾ:");
+    
+    if (inputPass === ADMIN_PASSCODE) {
+      isAdminVerified = true;
+      alert("✅ Xác thực Quản trị viên thành công!");
+    } else if (inputPass !== null) {
+      alert("❌ Mật khẩu sai! Chỉ quản trị viên mới có quyền thay đổi trạng thái cột này.");
+      return; // Dừng lại, không cho đổi trạng thái
+    } else {
+      return; // Bấm Hủy
+    }
+  }
+
+  // 2. Đổi trạng thái khi đã xác thực đúng Admin
   paymentStatus[payKey] = !paymentStatus[payKey];
   saveDataToFirestore();
 }
-<script>
-    
-<!-- Cột Thực tế / Đã thanh toán -->
-    <script>
-<input 
-  type="checkbox" 
-  class="checkbox-cell" 
-  ${isPaid ? 'checked' : ''} 
-  onclick="togglePayment('${payKey}')"
-/>
-<script>
+</script>
+</body>
+</html>

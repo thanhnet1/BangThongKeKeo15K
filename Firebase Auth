@@ -1,34 +1,24 @@
-// Biến lưu trạng thái Admin
-let IS_ADMIN = false;
+// Đặt mật khẩu Admin tùy chọn
+const ADMIN_PASSCODE = "123456";
+let isAdminVerified = false;
 
-// Lắng nghe đăng nhập từ Firebase
-firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    IS_ADMIN = true;
-    console.log("Đã đăng nhập quyền Admin");
-  } else {
-    IS_ADMIN = false;
-    console.log("Khách thông thường");
-  }
-  // Cập nhật lại trạng thái các ô Checkbox trên bảng
-  updateCheckboxPermission();
-});
-
-// Bật/Tắt thuộc tính disabled của cột Thực tế
-function updateCheckboxPermission() {
-  const checkboxes = document.querySelectorAll('.thuc-te-checkbox');
-  checkboxes.forEach((cb) => {
-    if (IS_ADMIN) {
-      cb.removeAttribute('disabled'); // Mở khóa cho Admin tích
-      cb.style.cursor = 'pointer';
+function togglePayment(payKey) {
+  // 1. Kiểm tra xác thực Admin
+  if (!isAdminVerified) {
+    const inputPass = prompt("🔑 Nhập mật khẩu Admin để thay đổi cột THỰC TẾ:");
+    
+    if (inputPass === ADMIN_PASSCODE) {
+      isAdminVerified = true;
+      alert("✅ Xác thực Admin thành công!");
+    } else if (inputPass !== null) {
+      alert("❌ Mật khẩu không đúng! Bạn không có quyền đổi trạng thái cột này.");
+      return; // Dừng lại không cho tích
     } else {
-      cb.setAttribute('disabled', 'true'); // Khóa đối với người dùng thường
-      cb.style.cursor = 'not-allowed';
+      return; // Bấm Hủy (Cancel)
     }
-  });
+  }
+
+  // 2. Cập nhật trạng thái và lưu lên Firestore
+  paymentStatus[payKey] = !paymentStatus[payKey];
+  saveDataToFirestore();
 }
-<input 
-  type="checkbox" 
-  ${item.thucTe ? 'checked' : ''} 
-  onclick="checkAdminThucTe(event, '${item.id}', this.checked, this)"
-/>

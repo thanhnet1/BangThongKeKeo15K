@@ -49,7 +49,7 @@
       flex-direction: column;
       gap: 14px;
       position: relative;
-      z-index: 500; /* Ưu tiên hiển thị header cao hơn nội dung phía dưới */
+      z-index: 500;
     }
 
     .header-top {
@@ -57,20 +57,29 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
     }
 
-    .brand-title { display: flex; align-items: center; gap: 12px; }
-    .brand-title h1 {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 900;
-      background: linear-gradient(90deg, #38bdf8, #818cf8, #f43f5e);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 0.5px;
+    /* ĐÃ THAY THẾ TIÊU ĐỀ BẰNG BANNER HÌNH ẢNH */
+    .brand-title { 
+      display: flex; 
+      align-items: center; 
+      max-width: 100%;
     }
-    .brand-title .subtitle { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+    
+    .app-banner-img {
+      max-height: 85px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+
+    @media (max-width: 768px) {
+      .app-banner-img {
+        max-height: 60px;
+      }
+    }
 
     /* MENU HÀNG NGANG */
     .top-nav {
@@ -106,7 +115,7 @@
       box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
     }
     
-    /* DROPDOWN MENU - SỬA LỖI BỊ BẢNG CHE (Z-INDEX CAO) */
+    /* DROPDOWN MENU */
     .dropdown-menu {
       display: none;
       position: absolute;
@@ -117,7 +126,7 @@
       border-radius: 10px;
       box-shadow: 0 15px 35px rgba(0,0,0,0.4);
       border: 1px solid var(--border-color);
-      z-index: 9999 !important; /* Xử lý lỗi menu bị che */
+      z-index: 9999 !important;
       padding: 6px 0;
       color: var(--text-main);
       animation: fadeIn 0.2s ease;
@@ -144,7 +153,7 @@
     .cloud-online { background-color: #10b981; color: white; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
     .cloud-syncing { background-color: #f59e0b; color: white; }
     
-    /* BANNER PICKLEBALL */
+    /* BANNER PICKLEBALL KHU VỰC THÔNG BÁO QUY TẮC */
     .pickleball-banner {
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
       border-left: 5px solid #38bdf8;
@@ -210,7 +219,6 @@
     }
     .card-title { font-size: 16px; font-weight: 800; color: var(--primary-color); margin: 0; text-transform: uppercase; }
     
-    /* CỤM NÚT NGOÀI BẢNG */
     .table-actions-toolbar {
       display: flex;
       align-items: center;
@@ -224,7 +232,6 @@
       border: 1px solid #cbd5e1;
     }
     
-    /* CĂN CHỈNH BẢNG CÂN ĐỐI */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -239,7 +246,6 @@
     .th-pick2 { background-color: #fee2e2; color: #991b1b; }
     .th-money { background-color: #fef3c7; color: #92400e; }
     
-    /* SELECTS VỚI MÀU TỪNG VĐV */
     select {
       width: 100%;
       padding: 5px;
@@ -274,12 +280,9 @@
     <!-- HEADER SECTION -->
     <div class="header-section">
       <div class="header-top">
+        <!-- BANNER THAY THẾ TIÊU ĐỀ CHỮ -->
         <div class="brand-title">
-          <span style="font-size: 32px;">🏓</span>
-          <div>
-            <h1>CLB PICKLEBALL - CMTD</h1>
-            <div class="subtitle">Hệ Thống Thống Kê & Bảng Đấu Pickleball Chuyên Nghiệp</div>
-          </div>
+          <img src="banner.png" alt="CLB PICKLEBALL - CMTD Gặp Là Vụt" class="app-banner-img">
         </div>
         <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối...</div>
       </div>
@@ -379,7 +382,6 @@
     const db = firebase.firestore();
     const docRef = db.collection("clubs").doc("cmtd_main_data");
 
-    // MẢNG MÀU SẮC ĐA DẠNG DÀNH CHO CÁC PICK THỦ
     const VDV_COLORS = [
       "#2563eb", "#d97706", "#059669", "#dc2626", "#7c3aed", 
       "#db2777", "#0284c7", "#15803d", "#b45309", "#4338ca",
@@ -451,7 +453,6 @@
       docRef.set({ vdvs, dates, matchesData, paymentStatus, miniGame1Content, miniGame2Content }, { merge: true });
     }
 
-    /* NÚT HOME */
     function goHome() {
       if (dates.length > 0) {
         switchTab(dates[0]);
@@ -460,7 +461,6 @@
       }
     }
 
-    /* DROPDOWN MENU MANAGEMENT */
     function toggleMenu(menuId, e) {
       e.stopPropagation();
       const targetMenu = document.getElementById(menuId);
@@ -492,7 +492,6 @@
       renderCurrentTab();
     }
 
-    /* VĐV MANAGEMENT */
     function addVDV() {
       const input = document.getElementById("newVdvInput");
       const name = input.value.trim();
@@ -533,7 +532,6 @@
       }).join('');
     }
 
-    /* DATE & MATCH MANAGEMENT */
     function addDateTab() {
       closeAllDropdowns();
       const dateStr = prompt("Nhập ngày đấu mới (VD: 8/10/26):");
@@ -602,7 +600,6 @@
       }
     }
 
-    /* NGOÀI BẢNG: THÊM TRẬN & XÓA TRẬN CUỐI */
     function addMatch(dateStr) {
       if (!matchesData[dateStr]) matchesData[dateStr] = [];
       const newId = matchesData[dateStr].length + 1;
@@ -644,7 +641,6 @@
       saveDataToFirestore();
     }
 
-    /* MINI GAME MODAL HANDLERS */
     function openGameModal(gameId) {
       closeAllDropdowns();
       activeGameEditing = gameId;
@@ -666,7 +662,6 @@
       alert(`✅ Đã cập nhật nội dung Mini Game ${activeGameEditing}`);
     }
 
-    /* RENDER TAB CONTENTS */
     function renderCurrentTab() {
       const content = document.getElementById("tabContent");
       if (currentTab === "tonghop") {
@@ -676,7 +671,6 @@
       }
     }
 
-    // TẠO OPTIONS CÓ MÀU SẮC DÀNH CHO CÁC THẺ SELECT
     function generateVdvOptionsHtml(selectedValue) {
       return vdvs.map((v, i) => {
         const color = VDV_COLORS[i % VDV_COLORS.length];
@@ -704,8 +698,6 @@
         <div class="card">
           <div class="card-header-flex">
             <h2 class="card-title">BẢNG THỐNG KÊ TRẬN PICK - NGÀY ${dateStr}</h2>
-            
-            <!-- ĐƯA NÚT THÊM/XÓA TRẬN RA NGOÀI BẢNG NGAY TRÊN CỘT STT -->
             <div class="table-actions-toolbar">
               <button class="btn btn-green" onclick="addMatch('${dateStr}')">➕ Thêm Trận</button>
               <button class="btn btn-red" onclick="removeLastMatch('${dateStr}')">🗑️ Xóa Trận Cuối</button>
@@ -763,7 +755,6 @@
         const score1Display = (!isNaN(s1) && s1 === 0) ? `<span class="ham-badge">HẦM</span>` : "";
         const score2Display = (!isNaN(s2) && s2 === 0) ? `<span class="ham-badge">HẦM</span>` : "";
 
-        // Tìm màu gán cho từng ô select đang được chọn
         const c1_p1_color = m.c1_p1 ? VDV_COLORS[vdvs.indexOf(m.c1_p1) % VDV_COLORS.length] : "#334155";
         const c1_p2_color = m.c1_p2 ? VDV_COLORS[vdvs.indexOf(m.c1_p2) % VDV_COLORS.length] : "#334155";
         const c2_p1_color = m.c2_p1 ? VDV_COLORS[vdvs.indexOf(m.c2_p1) % VDV_COLORS.length] : "#334155";
@@ -983,7 +974,6 @@
       container.innerHTML = matchesHtml + summaryTableHtml;
     }
 
-    /* BẢNG TỔNG HỢP VỚI MỖI PICK THỦ 1 MÀU KHÁC NHAU */
     function renderTongHopTab(container) {
       let vdvDayTotals = {};
       vdvs.forEach(v => {
@@ -1053,8 +1043,6 @@
 
         grandTotalAllDays += rowSum;
         let totalCls = rowSum > 0 ? 'txt-win' : (rowSum < 0 ? 'txt-lose' : '');
-        
-        // Gán màu sắc nổi bật cho tên từng Pick Thủ
         let vdvColor = VDV_COLORS[index % VDV_COLORS.length];
 
         html += `

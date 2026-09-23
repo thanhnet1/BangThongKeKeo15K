@@ -24,7 +24,6 @@
     
     body {
       font-family: 'Roboto', sans-serif;
-      /* Nền hình ảnh Pickleball sinh động */
       background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.75)), 
                   url('https://images.unsplash.com/photo-1599586120429-48281b6a0eca?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
       background-size: cover;
@@ -34,11 +33,11 @@
       min-height: 100vh;
     }
     
-    .container { max-width: 1600px; margin: 0 auto; }
+    .container { max-width: 1600px; margin: 0 auto; position: relative; }
     
     /* HEADER SECTION */
     .header-section {
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.9);
       backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: white;
@@ -49,6 +48,8 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
+      position: relative;
+      z-index: 500; /* Ưu tiên hiển thị header cao hơn nội dung phía dưới */
     }
 
     .header-top {
@@ -71,7 +72,7 @@
     }
     .brand-title .subtitle { font-size: 12px; color: #94a3b8; margin-top: 2px; }
 
-    /* MENU HÀNG NGANG BÊN DƯỚI TIÊU ĐỀ */
+    /* MENU HÀNG NGANG */
     .top-nav {
       display: flex;
       align-items: center;
@@ -79,11 +80,12 @@
       flex-wrap: wrap;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       padding-top: 12px;
+      position: relative;
     }
     
     .nav-item { position: relative; }
     .nav-btn {
-      background: rgba(51, 65, 85, 0.8);
+      background: rgba(51, 65, 85, 0.9);
       color: white;
       border: 1px solid rgba(255, 255, 255, 0.2);
       padding: 8px 14px;
@@ -104,18 +106,18 @@
       box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
     }
     
-    /* DROPDOWN MENU */
+    /* DROPDOWN MENU - SỬA LỖI BỊ BẢNG CHE (Z-INDEX CAO) */
     .dropdown-menu {
       display: none;
       position: absolute;
-      top: 120%;
+      top: 115%;
       left: 0;
-      min-width: 230px;
+      min-width: 240px;
       background: #ffffff;
       border-radius: 10px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
       border: 1px solid var(--border-color);
-      z-index: 1000;
+      z-index: 9999 !important; /* Xử lý lỗi menu bị che */
       padding: 6px 0;
       color: var(--text-main);
       animation: fadeIn 0.2s ease;
@@ -142,7 +144,7 @@
     .cloud-online { background-color: #10b981; color: white; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
     .cloud-syncing { background-color: #f59e0b; color: white; }
     
-    /* BANNER PICKLEBALL MỚI THAY CHO 3 DÒNG NOTE */
+    /* BANNER PICKLEBALL */
     .pickleball-banner {
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
       border-left: 5px solid #38bdf8;
@@ -156,6 +158,8 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 12px;
+      position: relative;
+      z-index: 10;
     }
     .banner-content { display: flex; align-items: center; gap: 12px; }
     .banner-icon { font-size: 28px; }
@@ -179,8 +183,9 @@
     /* BUTTONS */
     .btn { background-color: var(--accent-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; }
     .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-    .btn-sm { padding: 4px 8px; font-size: 11px; }
+    .btn-sm { padding: 5px 10px; font-size: 11px; }
     .btn-green { background-color: #10b981; }
+    .btn-red { background-color: #ef4444; }
     
     /* CARDS & TABLES */
     .card {
@@ -190,12 +195,43 @@
       border-radius: 12px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.15);
       margin-bottom: 16px;
+      position: relative;
+      z-index: 10;
     }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
-    .card-title { font-size: 16px; font-weight: 800; text-align: center; color: var(--primary-color); margin: 0; flex-grow: 1; text-transform: uppercase; }
+    .card-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .card-title { font-size: 16px; font-weight: 800; color: var(--primary-color); margin: 0; text-transform: uppercase; }
     
-    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 700px; table-layout: fixed; }
+    /* CỤM NÚT NGOÀI BẢNG */
+    .table-actions-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+    }
+    
+    /* CĂN CHỈNH BẢNG CÂN ĐỐI */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      min-width: 800px;
+      table-layout: fixed;
+    }
     th, td { border: 1px solid #cbd5e1; padding: 6px 4px; text-align: center; vertical-align: middle; word-wrap: break-word; }
     th { background-color: #f1f5f9; color: #334155; font-weight: 800; font-size: 11px; text-transform: uppercase; }
     
@@ -203,8 +239,21 @@
     .th-pick2 { background-color: #fee2e2; color: #991b1b; }
     .th-money { background-color: #fef3c7; color: #92400e; }
     
-    select, input[type="text"] { width: 100%; padding: 5px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 11px; background: #fff; text-overflow: ellipsis; }
-    .score-input { width: 40px !important; padding: 3px !important; font-weight: 800; text-align: center; font-size: 12px; border: 2px solid var(--score-border) !important; border-radius: 5px; background: #faf5ff; }
+    /* SELECTS VỚI MÀU TỪNG VĐV */
+    select {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #fff;
+      text-overflow: ellipsis;
+      cursor: pointer;
+    }
+    input[type="text"] { width: 100%; padding: 5px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 11px; background: #fff; }
+
+    .score-input { width: 38px !important; padding: 3px !important; font-weight: 800; text-align: center; font-size: 12px; border: 2px solid var(--score-border) !important; border-radius: 5px; background: #faf5ff; }
     
     .ham-badge { background-color: #dc2626; color: white; padding: 2px 5px; border-radius: 4px; font-weight: 900; font-size: 10px; }
     .txt-win { color: #16a34a; font-weight: 800; }
@@ -215,7 +264,7 @@
     .total-summary-row { background-color: #f8fafc; font-weight: 800; }
 
     /* MODAL */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; }
     .modal.show { display: flex; }
     .modal-content { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
   </style>
@@ -235,9 +284,8 @@
         <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối...</div>
       </div>
 
-      <!-- NAVBAR MENU HÀNG NGANG ĐƯỢC ĐƯA XUỐNG DƯỚI TIÊU ĐỀ -->
+      <!-- NAVBAR MENU HÀNG NGANG -->
       <div class="top-nav">
-        <!-- NÚT HOME MỚI -->
         <div class="nav-item">
           <button class="nav-btn" onclick="goHome()">🏠 HOME</button>
         </div>
@@ -331,7 +379,7 @@
     const db = firebase.firestore();
     const docRef = db.collection("clubs").doc("cmtd_main_data");
 
-    // MẢNG MÀU NỔI BẬT DÀNH CHO CÁC PICK THỦ TRONG BẢNG TỔNG HỢP
+    // MẢNG MÀU SẮC ĐA DẠNG DÀNH CHO CÁC PICK THỦ
     const VDV_COLORS = [
       "#2563eb", "#d97706", "#059669", "#dc2626", "#7c3aed", 
       "#db2777", "#0284c7", "#15803d", "#b45309", "#4338ca",
@@ -473,12 +521,16 @@
     function renderVDVItems(list) {
       document.getElementById("vdvCountBtn").innerText = vdvs.length;
       const container = document.getElementById("vdvListContainer");
-      container.innerHTML = list.map(v => `
-        <div class="vdv-item">
-          <span>${v}</span>
-          <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="deleteVDV('${v}')">✕</button>
-        </div>
-      `).join('');
+      container.innerHTML = list.map(v => {
+        const vIndex = vdvs.indexOf(v);
+        const color = VDV_COLORS[vIndex % VDV_COLORS.length];
+        return `
+          <div class="vdv-item">
+            <span style="color:${color}; font-weight:bold;">${v}</span>
+            <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="deleteVDV('${v}')">✕</button>
+          </div>
+        `;
+      }).join('');
     }
 
     /* DATE & MATCH MANAGEMENT */
@@ -550,6 +602,7 @@
       }
     }
 
+    /* NGOÀI BẢNG: THÊM TRẬN & XÓA TRẬN CUỐI */
     function addMatch(dateStr) {
       if (!matchesData[dateStr]) matchesData[dateStr] = [];
       const newId = matchesData[dateStr].length + 1;
@@ -557,6 +610,15 @@
         id: newId, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
       });
       saveDataToFirestore();
+    }
+
+    function removeLastMatch(dateStr) {
+      if (matchesData[dateStr] && matchesData[dateStr].length > 0) {
+        if (confirm(`Xóa trận đấu cuối cùng (Trận ${matchesData[dateStr].length})?`)) {
+          matchesData[dateStr].pop();
+          saveDataToFirestore();
+        }
+      }
     }
 
     function updateMatch(dateStr, matchIndex, field, value) {
@@ -614,10 +676,18 @@
       }
     }
 
+    // TẠO OPTIONS CÓ MÀU SẮC DÀNH CHO CÁC THẺ SELECT
+    function generateVdvOptionsHtml(selectedValue) {
+      return vdvs.map((v, i) => {
+        const color = VDV_COLORS[i % VDV_COLORS.length];
+        const isSelected = selectedValue === v ? 'selected' : '';
+        return `<option value="${v}" ${isSelected} style="color: ${color}; font-weight: bold;">${v}</option>`;
+      }).join('');
+    }
+
     function renderSingleDayTab(container, dateStr) {
       const matches = matchesData[dateStr] || [];
       let html = `
-        <!-- BANNER PICKLEBALL THAY THẾ CHO 3 DÒNG NOTE CŨ -->
         <div class="pickleball-banner">
           <div class="banner-content">
             <span class="banner-icon">🏆</span>
@@ -632,27 +702,31 @@
         </div>
 
         <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">Bảng Thống Kê Những Trận Pick Đỉnh Cao - Ngày ${dateStr}</h2>
+          <div class="card-header-flex">
+            <h2 class="card-title">BẢNG THỐNG KÊ TRẬN PICK - NGÀY ${dateStr}</h2>
+            
+            <!-- ĐƯA NÚT THÊM/XÓA TRẬN RA NGOÀI BẢNG NGAY TRÊN CỘT STT -->
+            <div class="table-actions-toolbar">
+              <button class="btn btn-green" onclick="addMatch('${dateStr}')">➕ Thêm Trận</button>
+              <button class="btn btn-red" onclick="removeLastMatch('${dateStr}')">🗑️ Xóa Trận Cuối</button>
+            </div>
           </div>
+
           <div class="table-responsive">
             <table>
               <colgroup>
-                <col style="width: 80px;">
-                <col style="width: 18%;">
-                <col style="width: 18%;">
-                <col style="width: 18%;">
-                <col style="width: 18%;">
+                <col style="width: 70px;">
+                <col style="width: 19%;">
+                <col style="width: 19%;">
+                <col style="width: 19%;">
+                <col style="width: 19%;">
                 <col style="width: 90px;">
-                <col style="width: 50px;">
-                <col style="width: 50px;">
+                <col style="width: 45px;">
+                <col style="width: 45px;">
               </colgroup>
               <thead>
                 <tr>
-                  <th>
-                    <button class="btn btn-sm btn-green" onclick="addMatch('${dateStr}')" style="width:100%; margin-bottom:2px;">➕ Thêm</button>
-                    STT
-                  </th>
+                  <th>STT</th>
                   <th colspan="2" class="th-pick1">CẶP PICK 1</th>
                   <th colspan="2" class="th-pick2">CẶP PICK 2</th>
                   <th>TỶ SỐ</th>
@@ -689,31 +763,37 @@
         const score1Display = (!isNaN(s1) && s1 === 0) ? `<span class="ham-badge">HẦM</span>` : "";
         const score2Display = (!isNaN(s2) && s2 === 0) ? `<span class="ham-badge">HẦM</span>` : "";
 
+        // Tìm màu gán cho từng ô select đang được chọn
+        const c1_p1_color = m.c1_p1 ? VDV_COLORS[vdvs.indexOf(m.c1_p1) % VDV_COLORS.length] : "#334155";
+        const c1_p2_color = m.c1_p2 ? VDV_COLORS[vdvs.indexOf(m.c1_p2) % VDV_COLORS.length] : "#334155";
+        const c2_p1_color = m.c2_p1 ? VDV_COLORS[vdvs.indexOf(m.c2_p1) % VDV_COLORS.length] : "#334155";
+        const c2_p2_color = m.c2_p2 ? VDV_COLORS[vdvs.indexOf(m.c2_p2) % VDV_COLORS.length] : "#334155";
+
         html += `
           <tr>
             <td><strong>Trận ${m.id}</strong></td>
             <td>
-              <select onchange="updateMatch('${dateStr}', ${idx}, 'c1_p1', this.value)">
+              <select style="color: ${c1_p1_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c1_p1', this.value)">
                 <option value="">-- VĐV 1 --</option>
-                ${vdvs.map(v => `<option value="${v}" ${m.c1_p1 === v ? 'selected' : ''}>${v}</option>`).join('')}
+                ${generateVdvOptionsHtml(m.c1_p1)}
               </select>
             </td>
             <td>
-              <select onchange="updateMatch('${dateStr}', ${idx}, 'c1_p2', this.value)">
+              <select style="color: ${c1_p2_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c1_p2', this.value)">
                 <option value="">-- VĐV 2 --</option>
-                ${vdvs.map(v => `<option value="${v}" ${m.c1_p2 === v ? 'selected' : ''}>${v}</option>`).join('')}
+                ${generateVdvOptionsHtml(m.c1_p2)}
               </select>
             </td>
             <td>
-              <select onchange="updateMatch('${dateStr}', ${idx}, 'c2_p1', this.value)">
+              <select style="color: ${c2_p1_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c2_p1', this.value)">
                 <option value="">-- VĐV 1 --</option>
-                ${vdvs.map(v => `<option value="${v}" ${m.c2_p1 === v ? 'selected' : ''}>${v}</option>`).join('')}
+                ${generateVdvOptionsHtml(m.c2_p1)}
               </select>
             </td>
             <td>
-              <select onchange="updateMatch('${dateStr}', ${idx}, 'c2_p2', this.value)">
+              <select style="color: ${c2_p2_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c2_p2', this.value)">
                 <option value="">-- VĐV 2 --</option>
-                ${vdvs.map(v => `<option value="${v}" ${m.c2_p2 === v ? 'selected' : ''}>${v}</option>`).join('')}
+                ${generateVdvOptionsHtml(m.c2_p2)}
               </select>
             </td>
             <td>
@@ -800,11 +880,13 @@
 
       let summaryRowsHtml = "";
 
-      vdvs.forEach((v, vIndex) => {
+      vdvs.forEach((v) => {
         const st = stats[v];
         if (st.played > 0) {
           const payKey = `${dateStr}_${v}`;
           const isPaid = paymentStatus[payKey] || false;
+          const vIndex = vdvs.indexOf(v);
+          const vColor = VDV_COLORS[vIndex % VDV_COLORS.length];
 
           let bringBack = 0;
           if (st.played >= 4 && st.total > 0) {
@@ -828,7 +910,7 @@
 
           summaryRowsHtml += `
             <tr>
-              <td><strong>${v}</strong></td>
+              <td style="color: ${vColor}; font-weight: 800; text-align: left; padding-left: 12px;">${v}</td>
               <td>${st.played}</td>
               <td class="txt-win">${st.winK > 0 ? st.winK : ''}</td>
               <td class="txt-lose">${st.loseK < 0 ? st.loseK : ''}</td>
@@ -848,28 +930,28 @@
 
       let summaryTableHtml = `
         <div class="card">
-          <div class="card-header">
+          <div class="card-header-flex">
             <h2 class="card-title">BẢNG TỔNG HỢP THÀNH TIỀN & THU CHI</h2>
           </div>
           <div class="table-responsive">
             <table>
               <colgroup>
-                <col style="width: 15%;">
+                <col style="width: 18%;">
                 <col style="width: 10%;">
                 <col style="width: 10%;">
                 <col style="width: 10%;">
-                <col style="width: 15%;">
-                <col style="width: 12%;">
+                <col style="width: 14%;">
+                <col style="width: 10%;">
                 <col style="width: 8%;">
                 <col style="width: 20%;">
               </colgroup>
               <thead>
                 <tr>
                   <th>Pick Thủ</th>
-                  <th>Số trận đánh</th>
+                  <th>Số trận</th>
                   <th>Thắng/K</th>
                   <th>Thua/K</th>
-                  <th>Tiền mang về</th>
+                  <th>Mang về</th>
                   <th>Tổng</th>
                   <th>Thực Tế</th>
                   <th>Note</th>
@@ -945,7 +1027,7 @@
 
       let html = `
         <div class="card">
-          <div class="card-header">
+          <div class="card-header-flex">
             <h2 class="card-title">BẢNG TỔNG HỢP TỪNG NGÀY</h2>
           </div>
           <div class="table-responsive">
@@ -972,7 +1054,7 @@
         grandTotalAllDays += rowSum;
         let totalCls = rowSum > 0 ? 'txt-win' : (rowSum < 0 ? 'txt-lose' : '');
         
-        // Gán màu riêng cho từng Pick Thủ dựa trên mảng VDV_COLORS
+        // Gán màu sắc nổi bật cho tên từng Pick Thủ
         let vdvColor = VDV_COLORS[index % VDV_COLORS.length];
 
         html += `

@@ -647,6 +647,7 @@
         XLSX.writeFile(wb, `Thong_Ke_Pickleball_CMTD.xlsx`);
     }
 </script>
+ </script>   
 // Đặt mật khẩu Admin (thay 123456 bằng mật khẩu bạn muốn)
 const ADMIN_PASSWORD = "123456"; 
 let daXacNhanAdmin = false;
@@ -679,6 +680,8 @@ function luuTrangThaiThucTe(docId, isChecked) {
     thucTe: isChecked
   }).catch(err => alert("Lỗi lưu dữ liệu: " + err.message));
 }
+    </script>
+</script>    
 </body>
 </html>
 <input 
@@ -686,3 +689,4 @@ function luuTrangThaiThucTe(docId, isChecked) {
   ${item.thucTe ? 'checked' : ''} 
   onclick="checkAdminThucTe(event, '${item.id}', this)"
 />
+</script>

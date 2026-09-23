@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLB PICKLEBALL - CMTD | Bảng Thống Kê Kèo 15K</title>
+    <title>CLB PICKLEBALL - CMTD | Bảng Thống Kê Cloud Firestore</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <!-- Thư viện SheetJS để xuất Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <!-- THƯ VIỆN CLOUD FIRESTORE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --primary-color: #0f172a;
@@ -29,261 +33,77 @@
         }
 
         * { box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 15px 10px; }
+        .container { max-width: 1600px; margin: 0 auto; }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            margin: 0;
-            padding: 15px 10px;
-        }
-
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        /* HEADER CHIA 2 BÊN CÂN ĐỐI */
         .header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: white;
-            padding: 16px 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
+            color: white; padding: 16px 20px; border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); margin-bottom: 20px; flex-wrap: wrap; gap: 15px;
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .header-left { display: flex; align-items: center; gap: 12px; }
         .brand-title h1 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 900;
-            letter-spacing: 0.5px;
+            margin: 0; font-size: 20px; font-weight: 900; letter-spacing: 0.5px;
             background: linear-gradient(90deg, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
+        .brand-title .subtitle { font-size: 12px; color: #94a3b8; margin-top: 2px; font-weight: 500; }
+        .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; position: relative; }
 
-        .brand-title .subtitle {
-            font-size: 12px;
-            color: #94a3b8;
-            margin-top: 2px;
-            font-weight: 500;
-        }
+        .cloud-status { font-size: 11px; padding: 4px 8px; border-radius: 20px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
+        .cloud-online { background-color: #22c55e; color: white; }
+        .cloud-syncing { background-color: #f59e0b; color: white; }
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            position: relative;
-        }
-
-        /* BUTTONS */
         .btn {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 12px;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            white-space: nowrap;
+            background-color: var(--accent-color); color: white; border: none; padding: 8px 14px;
+            border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 12px; transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); white-space: nowrap;
         }
         .btn:hover { background-color: var(--accent-hover); transform: translateY(-1px); }
         .btn-green { background-color: #16a34a; }
         .btn-green:hover { background-color: #15803d; }
-        .btn-amber { background-color: #d97706; }
-        .btn-amber:hover { background-color: #b45309; }
         .btn-purple { background-color: #9333ea; }
         .btn-purple:hover { background-color: #7e22ce; }
 
-        /* DROPDOWN MENU DANH SÁCH VĐV */
         .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 110%;
-            right: 0;
-            width: 320px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            border: 1px solid var(--border-color);
-            z-index: 1000;
-            padding: 12px;
-            color: var(--text-main);
+            display: none; position: absolute; top: 110%; right: 0; width: 320px; background: white;
+            border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--border-color);
+            z-index: 1000; padding: 12px; color: var(--text-main);
         }
         .dropdown-menu.show { display: block; }
+        .vdv-scroll-list { max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+        .vdv-item { background: #f8fafc; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 12px; }
 
-        .vdv-scroll-list {
-            max-height: 320px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 8px;
-        }
+        .tabs { display: flex; gap: 6px; margin-bottom: 15px; background: #e2e8f0; padding: 5px; border-radius: 10px; overflow-x: auto; }
+        .tab-btn { background: transparent; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; color: #64748b; white-space: nowrap; transition: all 0.2s ease; }
+        .tab-btn.active { background: var(--card-bg); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
 
-        .vdv-item {
-            background: #f8fafc;
-            padding: 6px 10px;
-            border-radius: 6px;
-            border: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            font-size: 12px;
-        }
+        .card { background: var(--card-bg); padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
+        .card-title { font-size: 15px; font-weight: 800; margin: 0; color: var(--primary-color); }
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-        /* TABS */
-        .tabs {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 15px;
-            background: #e2e8f0;
-            padding: 5px;
-            border-radius: 10px;
-            overflow-x: auto;
-        }
-
-        .tab-btn {
-            background: transparent;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 12px;
-            color: #64748b;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-        }
-
-        .tab-btn.active {
-            background: var(--card-bg);
-            color: var(--accent-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-        }
-
-        /* CARDS & TABLES */
-        .card {
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            margin-bottom: 15px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 8px;
-        }
-
-        .card-title {
-            font-size: 15px;
-            font-weight: 800;
-            margin: 0;
-            color: var(--primary-color);
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            font-size: 12px;
-            min-width: 750px;
-        }
-
-        th, td {
-            border-bottom: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-            padding: 6px 4px;
-            text-align: center;
-            vertical-align: middle;
-        }
-
+        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; min-width: 750px; }
+        th, td { border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 6px 4px; text-align: center; vertical-align: middle; }
         th:first-child, td:first-child { border-left: 1px solid var(--border-color); }
         tr:first-child th { border-top: 1px solid var(--border-color); }
-
-        th {
-            background-color: #f8fafc;
-            color: #475569;
-            font-weight: 800;
-            text-transform: uppercase;
-            font-size: 10px;
-        }
+        th { background-color: #f8fafc; color: #475569; font-weight: 800; text-transform: uppercase; font-size: 10px; }
 
         .badge-pick1 { background-color: var(--pick1-bg); color: var(--pick1-color); padding: 4px 8px; border-radius: 4px; font-weight: 800; }
         .badge-pick2 { background-color: var(--pick2-bg); color: var(--pick2-color); padding: 4px 8px; border-radius: 4px; font-weight: 800; }
         .badge-score { background-color: var(--score-bg); color: #6b21a8; padding: 4px 8px; border-radius: 4px; font-weight: 800; }
 
-        select, input[type="text"] {
-            width: 100%;
-            padding: 5px;
-            border: 1px solid #cbd5e1;
-            border-radius: 4px;
-            font-size: 12px;
-            background: #fff;
-        }
-
-        .score-input {
-            width: 42px !important;
-            padding: 4px !important;
-            font-weight: 800;
-            text-align: center;
-            font-size: 13px;
-            border: 2px solid var(--score-border) !important;
-            border-radius: 4px;
-            background: #faf5ff;
-        }
-
+        select, input[type="text"] { width: 100%; padding: 5px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; background: #fff; }
+        .score-input { width: 42px !important; padding: 4px !important; font-weight: 800; text-align: center; font-size: 13px; border: 2px solid var(--score-border) !important; border-radius: 4px; background: #faf5ff; }
         .win { color: var(--win-color); font-weight: 800; background-color: var(--win-bg); border-radius: 4px; padding: 2px 5px; }
         .lose { color: var(--lose-color); font-weight: 800; background-color: var(--lose-bg); border-radius: 4px; padding: 2px 5px; }
 
-        .summary-dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 10px 12px;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-        }
-
+        .summary-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 12px; }
+        .stat-card { background: white; padding: 10px 12px; border-radius: 8px; border-left: 4px solid var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
         .stat-card .title { font-size: 11px; color: #64748b; font-weight: 700; }
         .stat-card .value { font-size: 18px; font-weight: 900; margin-top: 2px; }
-
         .checkbox-cell { transform: scale(1.2); cursor: pointer; }
         .total-row { background-color: #fef3c7; font-weight: 800; }
     </style>
@@ -291,22 +111,21 @@
 <body>
 
 <div class="container">
-    <!-- HEADER 2 BÊN -->
     <div class="header-section">
         <div class="header-left">
             <span style="font-size: 32px;">🏓</span>
             <div class="brand-title">
                 <h1>CLB PICKLEBALL - CMTD</h1>
-                <div class="subtitle">Bảng Thống Kê Kèo 15K & Quản Lý Giải Đấu</div>
+                <div class="subtitle">Cloud Firestore Realtime Sync</div>
             </div>
         </div>
         
         <div class="header-right">
+            <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối Firestore...</div>
             <button class="btn" onclick="addDateTab()">📅 + Thêm Ngày</button>
             
             <div style="position: relative;">
                 <button class="btn btn-purple" onclick="toggleVdvDropdown(event)">👥 VĐV (<span id="vdvCountBtn">0</span>) ▾</button>
-                <!-- DROPDOWN DANH SÁCH VĐV -->
                 <div class="dropdown-menu" id="vdvDropdown">
                     <div style="font-weight: 800; font-size: 13px; margin-bottom: 8px;">Quản Lý Danh Sách VĐV</div>
                     <div style="display: flex; gap: 4px; margin-bottom: 8px;">
@@ -319,45 +138,91 @@
             </div>
 
             <button class="btn btn-green" onclick="exportToExcel()">📥 Xuất Excel</button>
-            <button class="btn btn-amber" onclick="backupCloudData()">☁️ Sao Lưu Cloud</button>
-            <input type="file" id="restoreFileInput" style="display: none;" onchange="restoreCloudData(event)">
         </div>
     </div>
 
-    <!-- TABS HỆ THỐNG -->
     <div class="tabs" id="tabContainer"></div>
-
-    <!-- NỘI DUNG CHÍNH -->
     <div id="tabContent"></div>
 </div>
 
 <script>
-    let defaultVDVs = [
-        "Tiến Thọ", "Trí Đỏ", "Phú Mỗ", "Long Diễn", "Lợi Trí", 
-        "Châu Sĩ", "Hà Giấy", "Điền Chèm", "Tuấn La", "Thanh Đàm", 
-        "Gà Tre", "Dũng Ngạc", "Vân Đình", "Thành Sóc"
-    ];
+    // =========================================================================
+    // DÁN THÔNG SỐ CONFIG LẤY TỪ BƯỚC 2 VÀO ĐÂY
+    // =========================================================================
+    const firebaseConfig = {
+        apiKey: "THAY_BẰNG_API_KEY_CỦA_BẠN",
+        authDomain: "pickleball-cmtd.firebaseapp.com",
+        projectId: "pickleball-cmtd",
+        storageBucket: "pickleball-cmtd.appspot.com",
+        messagingSenderId: "THAY_SENDER_ID",
+        appId: "THAY_APP_ID"
+    };
 
-    let vdvs = JSON.parse(localStorage.getItem("cmtd_vdvs")) || defaultVDVs;
-    let dates = JSON.parse(localStorage.getItem("cmtd_dates")) || ["3/9/26", "24/9/26", "1/10/26"]; 
-    let matchesData = JSON.parse(localStorage.getItem("cmtd_matches")) || {};
-    let paymentStatus = JSON.parse(localStorage.getItem("cmtd_payments")) || {};
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const docRef = db.collection("clubs").doc("cmtd_main_data");
 
-    dates.forEach(d => {
-        if (!matchesData[d]) {
+    let vdvs = [];
+    let dates = [];
+    let matchesData = {};
+    let paymentStatus = {};
+    let currentTab = "";
+
+    window.onload = function() {
+        document.addEventListener('click', closeDropdownOutside);
+        listenToFirestore();
+    };
+
+    // TỰ ĐỘNG ĐỒNG BỘ REALTIME TỪ CLOUD FIRESTORE
+    function listenToFirestore() {
+        docRef.onSnapshot((doc) => {
+            const statusEl = document.getElementById("cloudStatus");
+            if (doc.exists) {
+                const data = doc.data();
+                vdvs = data.vdvs || [];
+                dates = data.dates || ["3/9/26"];
+                matchesData = data.matchesData || {};
+                paymentStatus = data.paymentStatus || {};
+
+                if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop")) {
+                    currentTab = dates[0];
+                }
+
+                statusEl.className = "cloud-status cloud-online";
+                statusEl.innerHTML = "☁️ Firestore Online";
+            } else {
+                initDefaultFirestore();
+            }
+            renderTabs();
+            renderCurrentTab();
+        }, (error) => {
+            const statusEl = document.getElementById("cloudStatus");
+            statusEl.className = "cloud-status cloud-syncing";
+            statusEl.innerHTML = "⚠️ Lỗi kết nối Firestore";
+        });
+    }
+
+    function initDefaultFirestore() {
+        vdvs = ["Tiến Thọ", "Trí Đỏ", "Phú Mỗ", "Long Diễn", "Lợi Trí", "Châu Sĩ", "Hà Giấy", "Điền Chèm", "Tuấn La", "Thanh Đàm", "Gà Tre", "Dũng Ngạc", "Vân Đình", "Thành Sóc"];
+        dates = ["3/9/26", "24/9/26", "1/10/26"];
+        matchesData = {};
+        dates.forEach(d => {
             matchesData[d] = Array.from({ length: 10 }, (_, i) => ({
                 id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
             }));
-        }
-    });
+        });
+        saveDataToFirestore();
+    }
 
-    let currentTab = dates[0] || "tonghop";
+    function saveDataToFirestore() {
+        const statusEl = document.getElementById("cloudStatus");
+        statusEl.className = "cloud-status cloud-syncing";
+        statusEl.innerHTML = "⏳ Đang lưu Firestore...";
 
-    window.onload = function() {
-        renderTabs();
-        switchTab(currentTab);
-        document.addEventListener('click', closeDropdownOutside);
-    };
+        docRef.set({
+            vdvs, dates, matchesData, paymentStatus
+        }, { merge: true });
+    }
 
     function toggleVdvDropdown(e) {
         e.stopPropagation();
@@ -378,8 +243,7 @@
             matchesData[dateStr] = Array.from({ length: 10 }, (_, i) => ({
                 id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
             }));
-            saveAllDataToStorage();
-            renderTabs();
+            saveDataToFirestore();
             switchTab(dateStr);
         }
     }
@@ -430,7 +294,7 @@
     }
 
     function renderMatchTable(date) {
-        let matches = matchesData[date];
+        let matches = matchesData[date] || [];
         let rowsHtml = "";
 
         matches.forEach((m, idx) => {
@@ -466,7 +330,6 @@
                     <h3 class="card-title">⚔️ Danh Sách Trận Đấu Ngày: ${date}</h3>
                     <div style="display: flex; gap: 6px;">
                         <button class="btn btn-green" onclick="addNewMatch('${date}')">➕ Thêm Trận</button>
-                        <button class="btn" onclick="saveDayData('${date}')">💾 Lưu Ngày ${date}</button>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -520,10 +383,7 @@
         if (name && !vdvs.includes(name)) {
             vdvs.push(name);
             input.value = "";
-            saveAllDataToStorage();
-            renderTabs();
-            renderVDVItems(vdvs);
-            renderCurrentTab();
+            saveDataToFirestore();
         }
     }
 
@@ -532,20 +392,14 @@
         const newName = prompt(`Sửa tên VĐV "${oldName}":`, oldName);
         if (newName && newName.trim() !== "" && newName !== oldName) {
             vdvs[index] = newName.trim();
-            saveAllDataToStorage();
-            renderTabs();
-            renderVDVItems(vdvs);
-            renderCurrentTab();
+            saveDataToFirestore();
         }
     }
 
     function removeVDV(index) {
         if (confirm(`Bạn có muốn xóa VĐV "${vdvs[index]}"?`)) {
             vdvs.splice(index, 1);
-            saveAllDataToStorage();
-            renderTabs();
-            renderVDVItems(vdvs);
-            renderCurrentTab();
+            saveDataToFirestore();
         }
     }
 
@@ -558,39 +412,29 @@
     }
 
     function addNewMatch(date) {
-        let matches = matchesData[date];
-        matches.push({ id: matches.length + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "" });
-        renderCurrentTab();
+        if (!matchesData[date]) matchesData[date] = [];
+        matchesData[date].push({ id: matchesData[date].length + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "" });
+        saveDataToFirestore();
     }
 
     function updateMatch(date, matchIndex, field, value) {
         matchesData[date][matchIndex][field] = value;
-        renderCurrentTab();
-    }
-
-    function saveDayData(date) {
-        saveAllDataToStorage();
-        alert(`✅ Đã lưu kết quả ngày ${date}!`);
-    }
-
-    function saveAllDataToStorage() {
-        localStorage.setItem("cmtd_vdvs", JSON.stringify(vdvs));
-        localStorage.setItem("cmtd_dates", JSON.stringify(dates));
-        localStorage.setItem("cmtd_matches", JSON.stringify(matchesData));
-        localStorage.setItem("cmtd_payments", JSON.stringify(paymentStatus));
+        saveDataToFirestore();
     }
 
     function renderSingleDaySummaryTable(date) {
         let stats = {};
         vdvs.forEach(v => stats[v] = { matchCount: 0, totalMoney: 0 });
 
-        matchesData[date].forEach(m => {
-            let res = calculateMatchResult(m.score1, m.score2);
-            if (res.isFinished) {
-                [m.c1_p1, m.c1_p2].forEach(p => { if (p && stats[p]) { stats[p].matchCount++; stats[p].totalMoney += res.money1; } });
-                [m.c2_p1, m.c2_p2].forEach(p => { if (p && stats[p]) { stats[p].matchCount++; stats[p].totalMoney += res.money2; } });
-            }
-        });
+        if (matchesData[date]) {
+            matchesData[date].forEach(m => {
+                let res = calculateMatchResult(m.score1, m.score2);
+                if (res.isFinished) {
+                    [m.c1_p1, m.c1_p2].forEach(p => { if (p && stats[p]) { stats[p].matchCount++; stats[p].totalMoney += res.money1; } });
+                    [m.c2_p1, m.c2_p2].forEach(p => { if (p && stats[p]) { stats[p].matchCount++; stats[p].totalMoney += res.money2; } });
+                }
+            });
+        }
 
         let rowsHtml = "";
         let btcCollected = 0, btcRemaining = 0;
@@ -658,8 +502,7 @@
 
     function togglePayment(payKey) {
         paymentStatus[payKey] = !paymentStatus[payKey];
-        saveAllDataToStorage();
-        renderCurrentTab();
+        saveDataToFirestore();
     }
 
     function renderMultiDaySummaryTable() {
@@ -673,13 +516,15 @@
         dates.forEach(d => dayTotals[d] = 0);
 
         dates.forEach(d => {
-            matchesData[d].forEach(m => {
-                let res = calculateMatchResult(m.score1, m.score2);
-                if (res.isFinished) {
-                    [m.c1_p1, m.c1_p2].forEach(p => { if (p && playerStats[p]) { playerStats[p][d].count++; playerStats[p][d].rawMoney += res.money1; } });
-                    [m.c2_p1, m.c2_p2].forEach(p => { if (p && playerStats[p]) { playerStats[p][d].count++; playerStats[p][d].rawMoney += res.money2; } });
-                }
-            });
+            if (matchesData[d]) {
+                matchesData[d].forEach(m => {
+                    let res = calculateMatchResult(m.score1, m.score2);
+                    if (res.isFinished) {
+                        [m.c1_p1, m.c1_p2].forEach(p => { if (p && playerStats[p]) { playerStats[p][d].count++; playerStats[p][d].rawMoney += res.money1; } });
+                        [m.c2_p1, m.c2_p2].forEach(p => { if (p && playerStats[p]) { playerStats[p][d].count++; playerStats[p][d].rawMoney += res.money2; } });
+                    }
+                });
+            }
         });
 
         let dateHeadersHtml = dates.map(d => `<th>📅 Ngày ${d}</th>`).join("");
@@ -749,60 +594,20 @@
         `;
     }
 
-    // NÚT XUẤT EXCEL
     function exportToExcel() {
         let wb = XLSX.utils.book_new();
-
-        // 1. Sheet Chi tiet tung ngay
         dates.forEach(d => {
             let sheetData = [["STT", "Pick 1 - VĐV 1", "Pick 1 - VĐV 2", "Pick 2 - VĐV 1", "Pick 2 - VĐV 2", "Tỷ Số 1", "Tỷ Số 2", "Kèo Pick 1", "Kèo Pick 2"]];
-            matchesData[d].forEach(m => {
-                let res = calculateMatchResult(m.score1, m.score2);
-                sheetData.push([`Trận ${m.id}`, m.c1_p1, m.c1_p2, m.c2_p1, m.c2_p2, m.score1, m.score2, res.money1, res.money2]);
-            });
+            if (matchesData[d]) {
+                matchesData[d].forEach(m => {
+                    let res = calculateMatchResult(m.score1, m.score2);
+                    sheetData.push([`Trận ${m.id}`, m.c1_p1, m.c1_p2, m.c2_p1, m.c2_p2, m.score1, m.score2, res.money1, res.money2]);
+                });
+            }
             let ws = XLSX.utils.aoa_to_sheet(sheetData);
             XLSX.utils.book_append_sheet(wb, ws, `Ngay_${d.replace(/\//g, '-')}`);
         });
-
         XLSX.writeFile(wb, `Thong_Ke_Pickleball_CMTD.xlsx`);
-    }
-
-    // SAO LƯU & KHÔI PHỤC DỮ LIỆU CLOUD (JSON)
-    function backupCloudData() {
-        let data = {
-            vdvs, dates, matchesData, paymentStatus
-        };
-        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
-        let downloadAnchor = document.createElement('a');
-        downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", `Backup_CMTD_Pickleball_${new Date().toISOString().slice(0,10)}.json`);
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        downloadAnchor.remove();
-    }
-
-    function restoreCloudData(e) {
-        let file = e.target.files[0];
-        if (!file) return;
-        let reader = new FileReader();
-        reader.onload = function(evt) {
-            try {
-                let data = JSON.parse(evt.target.result);
-                if (data.vdvs && data.dates && data.matchesData) {
-                    vdvs = data.vdvs;
-                    dates = data.dates;
-                    matchesData = data.matchesData;
-                    paymentStatus = data.paymentStatus || {};
-                    saveAllDataToStorage();
-                    renderTabs();
-                    switchTab(dates[0]);
-                    alert("✅ Khôi phục dữ liệu sao lưu thành công!");
-                }
-            } catch (err) {
-                alert("❌ File sao lưu không hợp lệ!");
-            }
-        };
-        reader.readAsText(file);
     }
 </script>
 

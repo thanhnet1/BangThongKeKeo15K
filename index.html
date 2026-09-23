@@ -1,703 +1,581 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLB PICKLEBALL - CMTD | Thống Kê Cloud Firestore</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <!-- Thư viện SheetJS xuất Excel -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLB PICKLEBALL - CMTD | Thống Kê Cloud Firestore</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <!-- Thư viện SheetJS xuất Excel -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- FIREBASE SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-    <!-- FIREBASE SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
-    <style>
-        :root {
-            --primary-color: #0f172a;
-            --accent-color: #2563eb;
-            --accent-hover: #1d4ed8;
-            --pick1-bg: #e0f2fe;
-            --pick1-color: #0369a1;
-            --pick2-bg: #ffedf7;
-            --pick2-color: #be185d;
-            --score-bg: #f3e8ff;
-            --score-border: #a855f7;
-            --win-color: #16a34a;
-            --win-bg: #dcfce7;
-            --lose-color: #dc2626;
-            --lose-bg: #fee2e2;
-            --bg-body: #f1f5f9;
-            --card-bg: #ffffff;
-            --border-color: #cbd5e1;
-            --text-main: #1e293b;
-        }
-
-        * { box-sizing: border-box; }
-        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 15px 10px; }
-        .container { max-width: 1600px; margin: 0 auto; }
-
-        .header-section {
-            display: flex; justify-content: space-between; align-items: center;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: white; padding: 16px 20px; border-radius: 12px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); margin-bottom: 20px; flex-wrap: wrap; gap: 15px;
-        }
-
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .brand-title h1 {
-            margin: 0; font-size: 20px; font-weight: 900; letter-spacing: 0.5px;
-            background: linear-gradient(90deg, #38bdf8, #818cf8);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .brand-title .subtitle { font-size: 12px; color: #94a3b8; margin-top: 2px; font-weight: 500; }
-        .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; position: relative; }
-
-        .cloud-status { font-size: 11px; padding: 4px 8px; border-radius: 20px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
-        .cloud-online { background-color: #22c55e; color: white; }
-        .cloud-syncing { background-color: #f59e0b; color: white; }
-
-        .btn {
-            background-color: var(--accent-color); color: white; border: none; padding: 8px 14px;
-            border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 12px; transition: all 0.2s;
-            display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); white-space: nowrap;
-        }
-        .btn:hover { background-color: var(--accent-hover); transform: translateY(-1px); }
-        .btn-green { background-color: #16a34a; }
-        .btn-green:hover { background-color: #15803d; }
-        .btn-purple { background-color: #9333ea; }
-        .btn-purple:hover { background-color: #7e22ce; }
-
-        .dropdown-menu {
-            display: none; position: absolute; top: 110%; right: 0; width: 320px; background: white;
-            border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--border-color);
-            z-index: 1000; padding: 12px; color: var(--text-main);
-        }
-        .dropdown-menu.show { display: block; }
-        .vdv-scroll-list { max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
-        .vdv-item { background: #f8fafc; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 12px; }
-
-        .tabs { display: flex; gap: 6px; margin-bottom: 15px; background: #e2e8f0; padding: 5px; border-radius: 10px; overflow-x: auto; }
-        .tab-btn { background: transparent; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; color: #64748b; white-space: nowrap; transition: all 0.2s ease; }
-        .tab-btn.active { background: var(--card-bg); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
-
-        .card { background: var(--card-bg); padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
-        .card-title { font-size: 15px; font-weight: 800; margin: 0; color: var(--primary-color); }
-        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
-        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; min-width: 800px; }
-        th, td { border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 6px 4px; text-align: center; vertical-align: middle; }
-        th:first-child, td:first-child { border-left: 1px solid var(--border-color); }
-        tr:first-child th { border-top: 1px solid var(--border-color); }
-        th { background-color: #f8fafc; color: #475569; font-weight: 800; text-transform: uppercase; font-size: 10px; }
-
-        .badge-pick1 { background-color: var(--pick1-bg); color: var(--pick1-color); padding: 4px 8px; border-radius: 4px; font-weight: 800; }
-        .badge-pick2 { background-color: var(--pick2-bg); color: var(--pick2-color); padding: 4px 8px; border-radius: 4px; font-weight: 800; }
-        .badge-score { background-color: var(--score-bg); color: #6b21a8; padding: 4px 8px; border-radius: 4px; font-weight: 800; }
-
-        select, input[type="text"] { width: 100%; padding: 5px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; background: #fff; }
-        .score-input { width: 42px !important; padding: 4px !important; font-weight: 800; text-align: center; font-size: 13px; border: 2px solid var(--score-border) !important; border-radius: 4px; background: #faf5ff; }
-        .win { color: var(--win-color); font-weight: 800; background-color: var(--win-bg); border-radius: 4px; padding: 2px 5px; }
-        .lose { color: var(--lose-color); font-weight: 800; background-color: var(--lose-bg); border-radius: 4px; padding: 2px 5px; }
-
-        .summary-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 12px; }
-        .stat-card { background: white; padding: 10px 12px; border-radius: 8px; border-left: 4px solid var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
-        .stat-card .title { font-size: 11px; color: #64748b; font-weight: 700; }
-        .stat-card .value { font-size: 18px; font-weight: 900; margin-top: 2px; }
-        .checkbox-cell { transform: scale(1.2); cursor: pointer; }
-        .total-row { background-color: #fef3c7; font-weight: 800; }
-    </style>
+  <style>
+    :root {
+      --primary-color: #0f172a;
+      --accent-color: #2563eb;
+      --accent-hover: #1d4ed8;
+      --pick1-bg: #e0f2fe;
+      --pick1-color: #0369a1;
+      --pick2-bg: #ffedf7;
+      --pick2-color: #be185d;
+      --score-bg: #f3e8ff;
+      --score-border: #a855f7;
+      --win-color: #16a34a;
+      --win-bg: #dcfce7;
+      --lose-color: #dc2626;
+      --lose-bg: #fee2e2;
+      --bg-body: #f1f5f9;
+      --card-bg: #ffffff;
+      --border-color: #cbd5e1;
+      --text-main: #1e293b;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 15px 10px; }
+    .container { max-width: 1600px; margin: 0 auto; }
+    .header-section { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 16px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .brand-title h1 { margin: 0; font-size: 20px; font-weight: 900; letter-spacing: 0.5px; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .brand-title .subtitle { font-size: 12px; color: #94a3b8; margin-top: 2px; font-weight: 500; }
+    .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; position: relative; }
+    .cloud-status { font-size: 11px; padding: 4px 8px; border-radius: 20px; font-weight: bold; display: flex; align-items: center; gap: 4px; }
+    .cloud-online { background-color: #22c55e; color: white; }
+    .cloud-syncing { background-color: #f59e0b; color: white; }
+    .btn { background-color: var(--accent-color); color: white; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 12px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); white-space: nowrap; }
+    .btn:hover { background-color: var(--accent-hover); transform: translateY(-1px); }
+    .btn-green { background-color: #16a34a; }
+    .btn-green:hover { background-color: #15803d; }
+    .btn-purple { background-color: #9333ea; }
+    .btn-purple:hover { background-color: #7e22ce; }
+    .dropdown-menu { display: none; position: absolute; top: 110%; right: 0; width: 320px; background: white; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--border-color); z-index: 1000; padding: 12px; color: var(--text-main); }
+    .dropdown-menu.show { display: block; }
+    .vdv-scroll-list { max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+    .vdv-item { background: #f8fafc; padding: 6px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 12px; }
+    .tabs { display: flex; gap: 6px; margin-bottom: 15px; background: #e2e8f0; padding: 5px; border-radius: 10px; overflow-x: auto; }
+    .tab-btn { background: transparent; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 12px; color: #64748b; white-space: nowrap; transition: all 0.2s ease; }
+    .tab-btn.active { background: var(--card-bg); color: var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.08); }
+    .card { background: var(--card-bg); padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 15px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
+    .card-title { font-size: 15px; font-weight: 800; margin: 0; color: var(--primary-color); }
+    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; min-width: 800px; }
+    th, td { border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 6px 4px; text-align: center; vertical-align: middle; }
+    th:first-child, td:first-child { border-left: 1px solid var(--border-color); }
+    tr:first-child th { border-top: 1px solid var(--border-color); }
+    th { background-color: #f8fafc; color: #475569; font-weight: 800; text-transform: uppercase; font-size: 10px; }
+    .badge-pick1 { background-color: var(--pick1-bg); color: var(--pick1-color); padding: 4px 8px; border-radius: 4px; font-weight: 800; }
+    .badge-pick2 { background-color: var(--pick2-bg); color: var(--pick2-color); padding: 4px 8px; border-radius: 4px; font-weight: 800; }
+    .badge-score { background-color: var(--score-bg); color: #6b21a8; padding: 4px 8px; border-radius: 4px; font-weight: 800; }
+    select, input[type="text"] { width: 100%; padding: 5px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; background: #fff; }
+    .score-input { width: 42px !important; padding: 4px !important; font-weight: 800; text-align: center; font-size: 13px; border: 2px solid var(--score-border) !important; border-radius: 4px; background: #faf5ff; }
+    .win { color: var(--win-color); font-weight: 800; background-color: var(--win-bg); border-radius: 4px; padding: 2px 5px; }
+    .lose { color: var(--lose-color); font-weight: 800; background-color: var(--lose-bg); border-radius: 4px; padding: 2px 5px; }
+    .summary-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 12px; }
+    .stat-card { background: white; padding: 10px 12px; border-radius: 8px; border-left: 4px solid var(--accent-color); box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
+    .stat-card .title { font-size: 11px; color: #64748b; font-weight: 700; }
+    .stat-card .value { font-size: 18px; font-weight: 900; margin-top: 2px; }
+    .checkbox-cell { transform: scale(1.2); cursor: pointer; }
+    .total-row { background-color: #fef3c7; font-weight: 800; }
+  </style>
 </head>
 <body>
-
-<div class="container">
+  <div class="container">
     <div class="header-section">
-        <div class="header-left">
-            <span style="font-size: 32px;">🏓</span>
-            <div class="brand-title">
-                <h1>CLB PICKLEBALL - CMTD</h1>
-                <div class="subtitle">Cloud Firestore Realtime Sync</div>
-            </div>
+      <div class="header-left">
+        <span style="font-size: 32px;">🏓</span>
+        <div class="brand-title">
+          <h1>CLB PICKLEBALL - CMTD</h1>
+          <div class="subtitle">Cloud Firestore Realtime Sync</div>
         </div>
-        
-        <div class="header-right">
-            <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối Firestore...</div>
-            <button class="btn" onclick="addDateTab()">📅 + Thêm Ngày</button>
-            
-            <div style="position: relative;">
-                <button class="btn btn-purple" onclick="toggleVdvDropdown(event)">👥 VĐV (<span id="vdvCountBtn">0</span>) ▾</button>
-                <div class="dropdown-menu" id="vdvDropdown">
-                    <div style="font-weight: 800; font-size: 13px; margin-bottom: 8px;">Quản Lý Danh Sách VĐV</div>
-                    <div style="display: flex; gap: 4px; margin-bottom: 8px;">
-                        <input type="text" id="newVdvInput" placeholder="Tên VĐV mới..." style="font-size: 11px;">
-                        <button class="btn btn-green" style="padding: 4px 8px;" onclick="addVDV()">Thêm</button>
-                    </div>
-                    <input type="text" id="searchVdvInput" placeholder="🔍 Tìm VĐV..." onkeyup="filterVDVList()" style="font-size: 11px; margin-bottom: 6px;">
-                    <div class="vdv-scroll-list" id="vdvListContainer"></div>
-                </div>
+      </div>
+      <div class="header-right">
+        <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối Firestore...</div>
+        <button class="btn" onclick="addDateTab()">📅 + Thêm Ngày</button>
+        <div style="position: relative;">
+          <button class="btn btn-purple" onclick="toggleVdvDropdown(event)">👥 VĐV (<span id="vdvCountBtn">0</span>) ▾</button>
+          <div class="dropdown-menu" id="vdvDropdown">
+            <div style="font-weight: 800; font-size: 13px; margin-bottom: 8px;">Quản Lý Danh Sách VĐV</div>
+            <div style="display: flex; gap: 4px; margin-bottom: 8px;">
+              <input type="text" id="newVdvInput" placeholder="Tên VĐV mới..." style="font-size: 11px;">
+              <button class="btn btn-green" style="padding: 4px 8px;" onclick="addVDV()">Thêm</button>
             </div>
-
-            <button class="btn btn-green" onclick="exportToExcel()">📥 Xuất Excel</button>
+            <input type="text" id="searchVdvInput" placeholder="🔍 Tìm VĐV..." onkeyup="filterVDVList()" style="font-size: 11px; margin-bottom: 6px;">
+            <div class="vdv-scroll-list" id="vdvListContainer"></div>
+          </div>
         </div>
+        <button class="btn btn-green" onclick="exportToExcel()">📥 Xuất Excel</button>
+      </div>
     </div>
-
+    
     <div class="tabs" id="tabContainer"></div>
     <div id="tabContent"></div>
-</div>
+  </div>
 
-<script>
+  <script>
+    // CẤU HÌNH FIREBASE
     const firebaseConfig = {
-        apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
-        authDomain: "pickleball-cmtd.firebaseapp.com",
-        projectId: "pickleball-cmtd",
-        storageBucket: "pickleball-cmtd.firebasestorage.app",
-        messagingSenderId: "648591152243",
-        appId: "1:648591152243:web:3343caf2da821373070606",
-        measurementId: "G-T91KPDZFJR"
+      apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
+      authDomain: "pickleball-cmtd.firebaseapp.com",
+      projectId: "pickleball-cmtd",
+      storageBucket: "pickleball-cmtd.firebasestorage.app",
+      messagingSenderId: "648591152243",
+      appId: "1:648591152243:web:3343caf2da821373070606",
+      measurementId: "G-T91KPDZFJR"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const docRef = db.collection("clubs").doc("cmtd_main_data");
 
+    // BIẾN TOÀN CỤC
     let vdvs = [];
     let dates = [];
     let matchesData = {};
     let paymentStatus = {};
     let currentTab = "";
 
+    // MẬT KHẨU ADMIN BẢO VỆ CỘT THỰC TẾ
+    const ADMIN_PASSCODE = "123456"; // Đặt mật khẩu Admin ở đây
+    let isAdminVerified = false;
+
     window.onload = function() {
-        document.addEventListener('click', closeDropdownOutside);
-        listenToFirestore();
+      document.addEventListener('click', closeDropdownOutside);
+      listenToFirestore();
     };
 
     function listenToFirestore() {
-        docRef.onSnapshot((doc) => {
-            const statusEl = document.getElementById("cloudStatus");
-            if (doc.exists) {
-                const data = doc.data();
-                vdvs = data.vdvs || [];
-                dates = data.dates || ["3/9/26"];
-                matchesData = data.matchesData || {};
-                paymentStatus = data.paymentStatus || {};
-
-                if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop")) {
-                    currentTab = dates[0];
-                }
-
-                statusEl.className = "cloud-status cloud-online";
-                statusEl.innerHTML = "☁️ Firestore Online";
-            } else {
-                initDefaultFirestore();
-            }
-            renderTabs();
-            renderCurrentTab();
-        }, (error) => {
-            const statusEl = document.getElementById("cloudStatus");
-            statusEl.className = "cloud-status cloud-syncing";
-            statusEl.innerHTML = "⚠️ Lỗi kết nối Firestore";
-        });
+      docRef.onSnapshot((doc) => {
+        const statusEl = document.getElementById("cloudStatus");
+        if (doc.exists) {
+          const data = doc.data();
+          vdvs = data.vdvs || [];
+          dates = data.dates || ["3/9/26"];
+          matchesData = data.matchesData || {};
+          paymentStatus = data.paymentStatus || {};
+          
+          if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop")) {
+            currentTab = dates[0];
+          }
+          statusEl.className = "cloud-status cloud-online";
+          statusEl.innerHTML = "☁️ Firestore Online";
+        } else {
+          initDefaultFirestore();
+        }
+        renderTabs();
+        renderCurrentTab();
+      }, (error) => {
+        const statusEl = document.getElementById("cloudStatus");
+        statusEl.className = "cloud-status cloud-syncing";
+        statusEl.innerHTML = "⚠️ Lỗi kết nối Firestore";
+      });
     }
 
     function initDefaultFirestore() {
-        vdvs = ["Vân Đình", "Trí Đỏ", "Phú Mỗ", "Tiến Thọ", "Tuấn La", "Lợi Trí", "Long Diễn", "Hà Giấy", "Thành Sóc", "Thanh Đàm", "Điền Chèm", "Dũng Ngạc", "Huyền Béo", "Châu Sĩ", "Gà Tre", "Khách 1", "Khách 2"];
-        dates = ["3/9/26", "10/9/26", "24/9/26"];
-        matchesData = {};
-        dates.forEach(d => {
-            matchesData[d] = Array.from({ length: 10 }, (_, i) => ({
-                id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
-            }));
-        });
-        saveDataToFirestore();
+      vdvs = ["Vân Đình", "Trí Đỏ", "Phú Mỗ", "Tiến Thọ", "Tuấn La", "Lợi Trí", "Long Diễn", "Hà Giấy", "Thành Sóc", "Thanh Đàm", "Điền Chèm", "Dũng Ngạc", "Huyền Béo", "Châu Sĩ", "Gà Tre", "Khách 1", "Khách 2"];
+      dates = ["3/9/26", "10/9/26", "24/9/26"];
+      matchesData = {};
+      dates.forEach(d => {
+        matchesData[d] = Array.from({ length: 10 }, (_, i) => ({
+          id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
+        }));
+      });
+      saveDataToFirestore();
     }
 
     function saveDataToFirestore() {
-        const statusEl = document.getElementById("cloudStatus");
-        statusEl.className = "cloud-status cloud-syncing";
-        statusEl.innerHTML = "⏳ Đang lưu Firestore...";
-
-        docRef.set({
-            vdvs, dates, matchesData, paymentStatus
-        }, { merge: true });
+      const statusEl = document.getElementById("cloudStatus");
+      statusEl.className = "cloud-status cloud-syncing";
+      statusEl.innerHTML = "⏳ Đang lưu Firestore...";
+      docRef.set({ vdvs, dates, matchesData, paymentStatus }, { merge: true });
     }
 
     function toggleVdvDropdown(e) {
-        e.stopPropagation();
-        const menu = document.getElementById("vdvDropdown");
-        menu.classList.toggle("show");
-        if (menu.classList.contains("show")) renderVDVItems(vdvs);
+      e.stopPropagation();
+      const menu = document.getElementById("vdvDropdown");
+      menu.classList.toggle("show");
+      if (menu.classList.contains("show")) renderVDVItems(vdvs);
     }
 
     function closeDropdownOutside(e) {
-        const menu = document.getElementById("vdvDropdown");
-        if (menu && !menu.contains(e.target)) menu.classList.remove("show");
+      const menu = document.getElementById("vdvDropdown");
+      if (menu && !menu.contains(e.target)) menu.classList.remove("show");
     }
 
     function addDateTab() {
-        const dateStr = prompt("Nhập ngày đấu mới (VD: 8/10/26):");
-        if (dateStr && !dates.includes(dateStr)) {
-            dates.push(dateStr);
-            matchesData[dateStr] = Array.from({ length: 10 }, (_, i) => ({
-                id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
-            }));
-            saveDataToFirestore();
-            switchTab(dateStr);
-        }
-    }
-
-    function renderTabs() {
-        const container = document.getElementById("tabContainer");
-        let html = "";
-        dates.forEach(d => {
-            html += `<button class="tab-btn ${currentTab === d ? 'active' : ''}" onclick="switchTab('${d}')">🗓️ Ngày ${d}</button>`;
-        });
-        html += `<button class="tab-btn ${currentTab === 'tonghop' ? 'active' : ''}" onclick="switchTab('tonghop')">🏆 Bảng Thống Kê Nhiều Ngày</button>`;
-        container.innerHTML = html;
-        document.getElementById("vdvCountBtn").innerText = vdvs.length;
-    }
-
-    function switchTab(tabName) {
-        currentTab = tabName;
-        renderTabs();
-        renderCurrentTab();
-    }
-
-    function renderCurrentTab() {
-        const content = document.getElementById("tabContent");
-        if (currentTab === 'tonghop') {
-            content.innerHTML = renderMultiDaySummaryTable();
-        } else {
-            content.innerHTML = `
-                ${renderMatchTable(currentTab)}
-                ${renderSingleDaySummaryTable(currentTab)}
-            `;
-        }
-    }
-
-    function calculateMatchResult(score1, score2) {
-        if (score1 === "" || score2 === "" || isNaN(score1) || isNaN(score2)) {
-            return { money1: 0, money2: 0, isFinished: false };
-        }
-        let s1 = parseInt(score1), s2 = parseInt(score2);
-        let winRate = 5, loseRate = -15;
-
-        if (s1 === 0 || s2 === 0) { winRate *= 2; loseRate *= 2; }
-
-        let money1 = 0, money2 = 0;
-        if (s1 > s2) { money1 = winRate; money2 = loseRate; }
-        else if (s2 > s1) { money1 = loseRate; money2 = winRate; }
-
-        return { money1, money2, isFinished: true };
-    }
-
-    function renderMatchTable(date) {
-        let matches = matchesData[date] || [];
-        let rowsHtml = "";
-
-        matches.forEach((m, idx) => {
-            let res = calculateMatchResult(m.score1, m.score2);
-            let m1Text = res.isFinished ? (res.money1 > 0 ? `+${res.money1}K` : `${res.money1}K`) : "-";
-            let m2Text = res.isFinished ? (res.money2 > 0 ? `+${res.money2}K` : `${res.money2}K`) : "-";
-            let m1Class = res.money1 > 0 ? 'win' : (res.money1 < 0 ? 'lose' : '');
-            let m2Class = res.money2 > 0 ? 'win' : (res.money2 < 0 ? 'lose' : '');
-
-            rowsHtml += `
-                <tr>
-                    <td><b>Trận ${m.id}</b></td>
-                    <td><select onchange="updateMatch('${date}', ${idx}, 'c1_p1', this.value)">${getOptions(m.c1_p1)}</select></td>
-                    <td><select onchange="updateMatch('${date}', ${idx}, 'c1_p2', this.value)">${getOptions(m.c1_p2)}</select></td>
-                    <td><select onchange="updateMatch('${date}', ${idx}, 'c2_p1', this.value)">${getOptions(m.c2_p1)}</select></td>
-                    <td><select onchange="updateMatch('${date}', ${idx}, 'c2_p2', this.value)">${getOptions(m.c2_p2)}</select></td>
-                    <td style="background-color: #faf5ff;">
-                        <div style="display: flex; gap: 2px; justify-content: center; align-items: center;">
-                            <input type="number" class="score-input" value="${m.score1}" onchange="updateMatch('${date}', ${idx}, 'score1', this.value)">
-                            <b style="color: var(--score-border)">:</b>
-                            <input type="number" class="score-input" value="${m.score2}" onchange="updateMatch('${date}', ${idx}, 'score2', this.value)">
-                        </div>
-                    </td>
-                    <td><span class="${m1Class}">${m1Text}</span></td>
-                    <td><span class="${m2Class}">${m2Text}</span></td>
-                </tr>
-            `;
-        });
-
-        return `
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">⚔️ Danh Sách Trận Đấu Ngày: ${date}</h3>
-                    <div style="display: flex; gap: 6px;">
-                        <button class="btn btn-green" onclick="addNewMatch('${date}')">➕ Thêm Trận</button>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width: 60px;">STT</th>
-                                <th colspan="2"><span class="badge-pick1">Cặp PICK 1</span></th>
-                                <th colspan="2"><span class="badge-pick2">Cặp PICK 2</span></th>
-                                <th style="width: 120px;"><span class="badge-score">🎯 Tỷ Số</span></th>
-                                <th style="width: 80px;">Kèo Pick 1</th>
-                                <th style="width: 80px;">Kèo Pick 2</th>
-                            </tr>
-                        </thead>
-                        <tbody>${rowsHtml}</tbody>
-                    </table>
-                </div>
-            </div>
-        `;
-    }
-
-    function renderVDVItems(list) {
-        const container = document.getElementById("vdvListContainer");
-        if (!container) return;
-        if (list.length === 0) {
-            container.innerHTML = `<div style="text-align:center; color:#94a3b8; padding: 6px;">Không có VĐV</div>`;
-            return;
-        }
-        container.innerHTML = list.map((name) => {
-            let idx = vdvs.indexOf(name);
-            return `
-                <div class="vdv-item">
-                    <span>🥇 ${name}</span>
-                    <div>
-                        <button style="border:none; background:none; cursor:pointer;" onclick="editVDV(${idx})">✏️</button>
-                        <button style="border:none; background:none; cursor:pointer;" onclick="removeVDV(${idx})">❌</button>
-                    </div>
-                </div>
-            `;
-        }).join("");
-    }
-
-    function filterVDVList() {
-        const q = document.getElementById("searchVdvInput")?.value.toLowerCase() || "";
-        renderVDVItems(vdvs.filter(v => v.toLowerCase().includes(q)));
+      const dateStr = prompt("Nhập ngày đấu mới (VD: 8/10/26):");
+      if (dateStr && !dates.includes(dateStr)) {
+        dates.push(dateStr);
+        matchesData[dateStr] = Array.from({ length: 10 }, (_, i) => ({
+          id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
+        }));
+        currentTab = dateStr;
+        saveDataToFirestore();
+      }
     }
 
     function addVDV() {
-        const input = document.getElementById("newVdvInput");
-        const name = input.value.trim();
-        if (name && !vdvs.includes(name)) {
-            vdvs.push(name);
-            input.value = "";
-            saveDataToFirestore();
-        }
-    }
-
-    function editVDV(index) {
-        const oldName = vdvs[index];
-        const newName = prompt(`Sửa tên VĐV "${oldName}":`, oldName);
-        if (newName && newName.trim() !== "" && newName !== oldName) {
-            vdvs[index] = newName.trim();
-            saveDataToFirestore();
-        }
-    }
-
-    function removeVDV(index) {
-        if (confirm(`Bạn có muốn xóa VĐV "${vdvs[index]}"?`)) {
-            vdvs.splice(index, 1);
-            saveDataToFirestore();
-        }
-    }
-
-    function getOptions(selectedVal) {
-        let html = `<option value="">-- Chọn VĐV --</option>`;
-        vdvs.forEach(v => {
-            html += `<option value="${v}" ${v === selectedVal ? 'selected' : ''}>${v}</option>`;
-        });
-        return html;
-    }
-
-    function addNewMatch(date) {
-        if (!matchesData[date]) matchesData[date] = [];
-        matchesData[date].push({ id: matchesData[date].length + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "" });
+      const input = document.getElementById("newVdvInput");
+      const name = input.value.trim();
+      if (name && !vdvs.includes(name)) {
+        vdvs.push(name);
+        input.value = "";
+        renderVDVItems(vdvs);
         saveDataToFirestore();
+      }
     }
 
-    function updateMatch(date, matchIndex, field, value) {
-        matchesData[date][matchIndex][field] = value;
+    function deleteVDV(name) {
+      if (confirm(`Bạn có chắc muốn xóa VĐV ${name}?`)) {
+        vdvs = vdvs.filter(v => v !== name);
+        renderVDVItems(vdvs);
         saveDataToFirestore();
+      }
     }
 
-    function renderSingleDaySummaryTable(date) {
-        let stats = {};
-        vdvs.forEach(v => stats[v] = { matchCount: 0, sumMinus: 0, sumPlus: 0 });
-
-        if (matchesData[date]) {
-            matchesData[date].forEach(m => {
-                let res = calculateMatchResult(m.score1, m.score2);
-                if (res.isFinished) {
-                    [m.c1_p1, m.c1_p2].forEach(p => { 
-                        if (p && stats[p]) { 
-                            stats[p].matchCount++; 
-                            if (res.money1 < 0) stats[p].sumMinus += res.money1;
-                            else stats[p].sumPlus += res.money1;
-                        } 
-                    });
-                    [m.c2_p1, m.c2_p2].forEach(p => { 
-                        if (p && stats[p]) { 
-                            stats[p].matchCount++; 
-                            if (res.money2 < 0) stats[p].sumMinus += res.money2;
-                            else stats[p].sumPlus += res.money2;
-                        } 
-                    });
-                }
-            });
-        }
-
-        let rowsHtml = "";
-        let btcCollected = 0;       // BTC ĐÃ THU = Tổng cột TỔNG của những VĐV ĐÃ TICK
-        let btcRemaining = 0;       // BTC CÒN PHẢI THU = Tổng cột TỔNG của những VĐV CHƯA TICK
-        let grandTotalColumnSum = 0; // Tổng toàn bộ cột TỔNG (cả tick và chưa tick)
-
-        vdvs.forEach(v => {
-            let count = stats[v].matchCount;
-            let sumMinus = stats[v].sumMinus; 
-            let sumPlus = stats[v].sumPlus;   
-
-            if (count === 0) return;
-
-            let colOMoney = sumPlus + sumMinus;
-            let carryHomeMoney = (count >= 4 && colOMoney > 0) ? colOMoney : 0;
-
-            grandTotalColumnSum += colOMoney;
-
-            let payKey = `${date}_${v}`;
-            let isPaid = !!paymentStatus[payKey];
-
-            // TÍNH TOÁN CHUYỂN DỒN KHI TICK
-            if (isPaid) {
-                btcCollected += colOMoney; // Đã tick: chuyển sang BTC ĐÃ THU
-            } else {
-                btcRemaining += colOMoney; // Chưa tick: tính vào BTC CÒN PHẢI THU
-            }
-
-            let needToPay = colOMoney < 0 ? Math.abs(colOMoney) : 0;
-
-            rowsHtml += `
-                <tr>
-                    <td style="text-align: left; font-weight: bold;">👤 ${v}</td>
-                    <td><b>${count}</b></td>
-                    <td><span class="${sumPlus > 0 ? 'win' : ''}">${sumPlus > 0 ? sumPlus : ''}</span></td>
-                    <td><span class="${sumMinus < 0 ? 'lose' : ''}">${sumMinus < 0 ? sumMinus : ''}</span></td>
-                    <td><span class="${carryHomeMoney > 0 ? 'win' : ''}">${carryHomeMoney > 0 ? carryHomeMoney : ''}</span></td>
-                    <td><span class="${colOMoney > 0 ? 'win' : (colOMoney < 0 ? 'lose' : '')}">${colOMoney !== 0 ? colOMoney : '0'}</span></td>
-                    <td><input type="checkbox" class="checkbox-cell" ${isPaid ? 'checked' : ''} onchange="togglePayment('${payKey}')"></td>
-                    <td>
-                        ${needToPay > 0 
-                            ? (isPaid 
-                                ? `<b style="color:var(--win-color)">✅ Đã nộp ${needToPay}K</b>` 
-                                : `<b style="color:var(--lose-color)">Chưa nộp</b>`)
-                            : (carryHomeMoney > 0 ? `<b style="color:var(--win-color)">${isPaid ? '✅ Đã nhận' : 'Chưa nhận'}</b>` : '')}
-                    </td>
-                </tr>
-            `;
-        });
-const payKey = `${dateStr}_${vdv}`;
-const isPaid = paymentStatus[payKey] || false;
-
-// Đảm bảo thẻ input checkbox hiển thị chuẩn:
-`<input type="checkbox" class="checkbox-cell" ${isPaid ? 'checked' : ''} onclick="togglePayment('${payKey}')">`
-        return `
-            <div class="card" style="border-top: 4px solid var(--accent-color);">
-                <div class="card-header">
-                    <h3 class="card-title">📊 Pick Thủ - Thành Tiền - Ngày ${date}</h3>
-                </div>
-                <div class="summary-dashboard">
-                    <div class="stat-card" style="border-left-color: var(--win-color);">
-                        <div class="title">💵 BTC Đã Thu (${date})</div>
-                        <div class="value" style="color: var(--win-color);">${btcCollected} K</div>
-                    </div>
-                    <div class="stat-card" style="border-left-color: var(--lose-color);">
-                        <div class="title">📌 BTC Còn Phải Thu (${date})</div>
-                        <div class="value" style="color: var(--lose-color);">${btcRemaining} K</div>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Pick Thủ</th>
-                                <th>Số trận đánh</th>
-                                <th>Thắng/K</th>
-                                <th>Thua/K</th>
-                                <th>Tiền mang về</th>
-                                <th>Tổng</th>
-                                <th>Thực Tế</th>
-                                <th>Note</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${rowsHtml || '<tr><td colspan="8" style="padding:10px; color:#94a3b8;">Chưa có dữ liệu ngày này</td></tr>'}
-                            <tr class="total-row">
-                                <td style="text-align: left; padding-left: 8px; color: var(--primary-color);" colspan="5"><b>Tổng Cột TỔNG</b></td>
-                                <td style="color: ${grandTotalColumnSum >= 0 ? 'var(--win-color)' : 'var(--lose-color)'}; font-size: 16px;"><b>${grandTotalColumnSum}</b></td>
-                                <td style="color: var(--win-color); font-size: 14px;"><b>${btcCollected}</b></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        `;
+    function filterVDVList() {
+      const query = document.getElementById("searchVdvInput").value.toLowerCase();
+      const filtered = vdvs.filter(v => v.toLowerCase().includes(query));
+      renderVDVItems(filtered);
     }
 
+    function renderVDVItems(list) {
+      document.getElementById("vdvCountBtn").innerText = vdvs.length;
+      const container = document.getElementById("vdvListContainer");
+      container.innerHTML = list.map(v => `
+        <div class="vdv-item">
+          <span>${v}</span>
+          <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="deleteVDV('${v}')">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function renderTabs() {
+      const container = document.getElementById("tabContainer");
+      let html = dates.map(d => `
+        <button class="tab-btn ${currentTab === d ? 'active' : ''}" onclick="switchTab('${d}')">📅 ${d}</button>
+      `).join('');
+      html += `<button class="tab-btn ${currentTab === 'tonghop' ? 'active' : ''}" onclick="switchTab('tonghop')">📊 TỔNG HỢP CLB</button>`;
+      container.innerHTML = html;
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      renderTabs();
+      renderCurrentTab();
+    }
+
+    function updateMatch(dateStr, matchIndex, field, value) {
+      matchesData[dateStr][matchIndex][field] = value;
+      saveDataToFirestore();
+    }
+
+    // XÁC THỰC MẬT KHẨU ADMIN KHI TICK CỘT THỰC TẾ
     function togglePayment(payKey) {
-        paymentStatus[payKey] = !paymentStatus[payKey];
-        saveDataToFirestore();
+      if (!isAdminVerified) {
+        const inputPass = prompt("🔑 Nhập mật khẩu Quản trị viên để thay đổi cột THỰC TẾ:");
+        if (inputPass === ADMIN_PASSCODE) {
+          isAdminVerified = true;
+          alert("✅ Xác thực Quản trị viên thành công!");
+        } else if (inputPass !== null) {
+          alert("❌ Mật khẩu không đúng! Bạn không có quyền sửa cột này.");
+          return;
+        } else {
+          return;
+        }
+      }
+
+      paymentStatus[payKey] = !paymentStatus[payKey];
+      saveDataToFirestore();
     }
 
-    function renderMultiDaySummaryTable() {
-        let playerStats = {};
-        vdvs.forEach(v => {
-            playerStats[v] = {};
-            dates.forEach(d => playerStats[v][d] = { count: 0, rawMoney: 0 });
-        });
+    function renderCurrentTab() {
+      const content = document.getElementById("tabContent");
+      if (currentTab === "tonghop") {
+        renderTongHopTab(content);
+      } else {
+        renderSingleDayTab(content, currentTab);
+      }
+    }
 
-        let dayTotals = {};
-        dates.forEach(d => dayTotals[d] = 0);
-
-        dates.forEach(d => {
-            if (matchesData[d]) {
-                matchesData[d].forEach(m => {
-                    let res = calculateMatchResult(m.score1, m.score2);
-                    if (res.isFinished) {
-                        [m.c1_p1, m.c1_p2].forEach(p => { if (p && playerStats[p]) { playerStats[p][d].count++; playerStats[p][d].rawMoney += res.money1; } });
-                        [m.c2_p1, m.c2_p2].forEach(p => { if (p && playerStats[p]) { playerStats[p][d].count++; playerStats[p][d].rawMoney += res.money2; } });
-                    }
-                });
-            }
-        });
-
-        let dateHeadersHtml = dates.map(d => `<th>📅 Ngày ${d}</th>`).join("");
-        let rowsHtml = "";
-        let grandTotalAllDays = 0;
-
-        vdvs.forEach(v => {
-            let totalAllDays = 0;
-            let dateCellsHtml = dates.map(d => {
-                let data = playerStats[v][d];
-                let count = data.count;
-                let finalMoney = data.rawMoney;
-                
-                totalAllDays += finalMoney;
-                dayTotals[d] += finalMoney;
-
-                let cellClass = finalMoney > 0 ? 'win' : (finalMoney < 0 ? 'lose' : '');
-                let cellText = count > 0 ? `${finalMoney > 0 ? '+' : ''}${finalMoney}K <small style="color:#64748b">(${count}t)</small>` : '-';
-                return `<td><span class="${cellClass}">${cellText}</span></td>`;
-            }).join("");
-
-            grandTotalAllDays += totalAllDays;
-            let totalClass = totalAllDays > 0 ? 'win' : (totalAllDays < 0 ? 'lose' : '');
-
-            rowsHtml += `
+    function renderSingleDayTab(container, dateStr) {
+      const matches = matchesData[dateStr] || [];
+      let html = `
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">DANH SÁCH CÁC TRẬN ĐẤU - NGÀY ${dateStr}</h2>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
                 <tr>
-                    <td style="text-align: left; font-weight: bold;">🥇 ${v}</td>
-                    ${dateCellsHtml}
-                    <td><span class="${totalClass}">${totalAllDays > 0 ? '+' : ''}${totalAllDays} K</span></td>
+                  <th style="width: 40px;">STT</th>
+                  <th>CẶP 1 (SÂN TÍM)</th>
+                  <th style="width: 100px;">TỶ SỐ</th>
+                  <th>CẶP 2 (SÂN CAM)</th>
+                  <th>KÈO GIAO HƯU</th>
                 </tr>
-            `;
-        });
+              </thead>
+              <tbody>
+      `;
 
-        let dayTotalsCellsHtml = dates.map(d => {
-            let tot = dayTotals[d];
-            let cls = tot > 0 ? 'win' : (tot < 0 ? 'lose' : '');
-            return `<td><span class="${cls}">${tot > 0 ? '+' : ''}${tot} K</span></td>`;
-        }).join("");
-
-        return `
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">🏆 Thống Kê Tổng Hợp Tất Cả Các Ngày</h3>
-                </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="text-align: left; padding-left: 8px;">Tên VĐV (${vdvs.length})</th>
-                                ${dateHeadersHtml}
-                                <th style="background-color: #ffedd5; color: #c2410c;">🔥 TỔNG CỘNG</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${rowsHtml}
-                            <tr class="total-row">
-                                <td style="text-align: left; padding-left: 8px;">💰 TỔNG CỘNG NGÀY</td>
-                                ${dayTotalsCellsHtml}
-                                <td><span class="${grandTotalAllDays > 0 ? 'win' : 'lose'}">${grandTotalAllDays > 0 ? '+' : ''}${grandTotalAllDays} K</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+      matches.forEach((m, idx) => {
+        const vdvOptions = vdvs.map(v => `<option value="${v}">${v}</option>`).join('');
+        html += `
+          <tr>
+            <td><strong>#${m.id}</strong></td>
+            <td>
+              <div style="display:flex; gap:4px;">
+                <select onchange="updateMatch('${dateStr}', ${idx}, 'c1_p1', this.value)">
+                  <option value="">-- VĐV 1 --</option>
+                  ${vdvs.map(v => `<option value="${v}" ${m.c1_p1 === v ? 'selected' : ''}>${v}</option>`).join('')}
+                </select>
+                <select onchange="updateMatch('${dateStr}', ${idx}, 'c1_p2', this.value)">
+                  <option value="">-- VĐV 2 --</option>
+                  ${vdvs.map(v => `<option value="${v}" ${m.c1_p2 === v ? 'selected' : ''}>${v}</option>`).join('')}
+                </select>
+              </div>
+            </td>
+            <td>
+              <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
+                <input type="text" class="score-input" value="${m.score1}" onchange="updateMatch('${dateStr}', ${idx}, 'score1', this.value)">
+                <span>-</span>
+                <input type="text" class="score-input" value="${m.score2}" onchange="updateMatch('${dateStr}', ${idx}, 'score2', this.value)">
+              </div>
+            </td>
+            <td>
+              <div style="display:flex; gap:4px;">
+                <select onchange="updateMatch('${dateStr}', ${idx}, 'c2_p1', this.value)">
+                  <option value="">-- VĐV 1 --</option>
+                  ${vdvs.map(v => `<option value="${v}" ${m.c2_p1 === v ? 'selected' : ''}>${v}</option>`).join('')}
+                </select>
+                <select onchange="updateMatch('${dateStr}', ${idx}, 'c2_p2', this.value)">
+                  <option value="">-- VĐV 2 --</option>
+                  ${vdvs.map(v => `<option value="${v}" ${m.c2_p2 === v ? 'selected' : ''}>${v}</option>`).join('')}
+                </select>
+              </div>
+            </td>
+            <td><span class="badge-pick1">Kèo 15K</span></td>
+          </tr>
         `;
+      });
+
+      html += `
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      renderSingleDaySummaryTable(dateStr, html, container);
+    }
+
+    function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
+      const matches = matchesData[dateStr] || [];
+      let stats = {};
+
+      vdvs.forEach(v => { stats[v] = { win: 0, lose: 0, balance: 0 }; });
+
+      matches.forEach(m => {
+        const s1 = parseInt(m.score1);
+        const s2 = parseInt(m.score2);
+        if (!isNaN(s1) && !isNaN(s2)) {
+          const pair1 = [m.c1_p1, m.c1_p2].filter(Boolean);
+          const pair2 = [m.c2_p1, m.c2_p2].filter(Boolean);
+
+          if (s1 > s2) {
+            pair1.forEach(v => { if (stats[v]) { stats[v].win++; stats[v].balance += 15; } });
+            pair2.forEach(v => { if (stats[v]) { stats[v].lose++; stats[v].balance -= 15; } });
+          } else if (s2 > s1) {
+            pair2.forEach(v => { if (stats[v]) { stats[v].win++; stats[v].balance += 15; } });
+            pair1.forEach(v => { if (stats[v]) { stats[v].lose++; stats[v].balance -= 15; } });
+          }
+        }
+      });
+
+      const activeVdvs = vdvs.filter(v => (stats[v].win + stats[v].lose) > 0);
+
+      let thuKiem = 0;
+      let chiKiem = 0;
+      let thucThu = 0;
+
+      activeVdvs.forEach(v => {
+        const bal = stats[v].balance;
+        const payKey = `${dateStr}_${v}`;
+        const isPaid = paymentStatus[payKey] || false;
+
+        if (bal < 0) {
+          thuKiem += Math.abs(bal);
+          if (isPaid) thucThu += Math.abs(bal);
+        } else if (bal > 0) {
+          chiKiem += bal;
+        }
+      });
+
+      let summaryHtml = `
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">BẢNG TỔNG HỢP KÈO & THU CHI - NGÀY ${dateStr}</h2>
+          </div>
+
+          <div class="summary-dashboard">
+            <div class="stat-card">
+              <div class="title">BTC CẦN THU (ÂM KÈO)</div>
+              <div class="value" style="color: #dc2626;">${thuKiem}.000 đ</div>
+            </div>
+            <div class="stat-card">
+              <div class="title">BTC ĐÃ THU (THỰC TẾ)</div>
+              <div class="value" style="color: #16a34a;">${thucThu}.000 đ</div>
+            </div>
+            <div class="stat-card">
+              <div class="title">BTC CÒN PHẢI THU</div>
+              <div class="value" style="color: #d97706;">${thuKiem - thucThu}.000 đ</div>
+            </div>
+            <div class="stat-card">
+              <div class="title">BTC CẦN CHI (DƯƠNG KÈO)</div>
+              <div class="value" style="color: #2563eb;">${chiKiem}.000 đ</div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>VĐV</th>
+                  <th>THẮNG</th>
+                  <th>THUA</th>
+                  <th>TỔNG TRẬN</th>
+                  <th>SỐ TIỀN (15K/TRẬN)</th>
+                  <th style="width: 100px;">THỰC TẾ</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+
+      activeVdvs.forEach(v => {
+        const st = stats[v];
+        const payKey = `${dateStr}_${v}`;
+        const isPaid = paymentStatus[payKey] || false;
+        const balText = st.balance > 0 ? `+${st.balance}.000 đ` : (st.balance < 0 ? `${st.balance}.000 đ` : "0 đ");
+        const balClass = st.balance > 0 ? "win" : (st.balance < 0 ? "lose" : "");
+
+        summaryHtml += `
+          <tr>
+            <td><strong>${v}</strong></td>
+            <td><span class="win">${st.win}</span></td>
+            <td><span class="lose">${st.lose}</span></td>
+            <td><strong>${st.win + st.lose}</strong></td>
+            <td><span class="${balClass}">${balText}</span></td>
+            <td>
+              <input type="checkbox" class="checkbox-cell" ${isPaid ? 'checked' : ''} onclick="togglePayment('${payKey}')">
+            </td>
+          </tr>
+        `;
+      });
+
+      summaryHtml += `
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = matchesHtml + summaryHtml;
+    }
+
+    function renderTongHopTab(container) {
+      let globalStats = {};
+      vdvs.forEach(v => { globalStats[v] = { win: 0, lose: 0, balance: 0 }; });
+
+      dates.forEach(d => {
+        const matches = matchesData[d] || [];
+        matches.forEach(m => {
+          const s1 = parseInt(m.score1);
+          const s2 = parseInt(m.score2);
+          if (!isNaN(s1) && !isNaN(s2)) {
+            const pair1 = [m.c1_p1, m.c1_p2].filter(Boolean);
+            const pair2 = [m.c2_p1, m.c2_p2].filter(Boolean);
+
+            if (s1 > s2) {
+              pair1.forEach(v => { if (globalStats[v]) { globalStats[v].win++; globalStats[v].balance += 15; } });
+              pair2.forEach(v => { if (globalStats[v]) { globalStats[v].lose++; globalStats[v].balance -= 15; } });
+            } else if (s2 > s1) {
+              pair2.forEach(v => { if (globalStats[v]) { globalStats[v].win++; globalStats[v].balance += 15; } });
+              pair1.forEach(v => { if (globalStats[v]) { globalStats[v].lose++; globalStats[v].balance -= 15; } });
+            }
+          }
+        });
+      });
+
+      let html = `
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">BẢNG TỔNG HỢP TOÀN BỘ GIẢI ĐẤU CLB</h2>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>VĐV</th>
+                  <th>TỔNG THẮNG</th>
+                  <th>TỔNG THUA</th>
+                  <th>TỔNG TRẬN</th>
+                  <th>TỶ LỆ THẮNG</th>
+                  <th>TỔNG QUỸ TIỀN</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+
+      vdvs.forEach(v => {
+        const st = globalStats[v];
+        const total = st.win + st.lose;
+        if (total > 0) {
+          const winRate = Math.round((st.win / total) * 100);
+          const balText = st.balance > 0 ? `+${st.balance}.000 đ` : (st.balance < 0 ? `${st.balance}.000 đ` : "0 đ");
+          const balClass = st.balance > 0 ? "win" : (st.balance < 0 ? "lose" : "");
+
+          html += `
+            <tr>
+              <td><strong>${v}</strong></td>
+              <td><span class="win">${st.win}</span></td>
+              <td><span class="lose">${st.lose}</span></td>
+              <td><strong>${total}</strong></td>
+              <td><strong>${winRate}%</strong></td>
+              <td><span class="${balClass}">${balText}</span></td>
+            </tr>
+          `;
+        }
+      });
+
+      html += `
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
     }
 
     function exportToExcel() {
-        let wb = XLSX.utils.book_new();
-        dates.forEach(d => {
-            let sheetData = [["STT", "Pick Thủ - Cặp 1", "Pick Thủ - Cặp 1", "Pick Thủ - Cặp 2", "Pick Thủ - Cặp 2", "Tỷ Số 1", "Tỷ Số 2", "Kèo Pick 1", "Kèo Pick 2"]];
-            if (matchesData[d]) {
-                matchesData[d].forEach(m => {
-                    let res = calculateMatchResult(m.score1, m.score2);
-                    sheetData.push([`Trận ${m.id}`, m.c1_p1, m.c1_p2, m.c2_p1, m.c2_p2, m.score1, m.score2, res.money1, res.money2]);
-                });
-            }
-            let ws = XLSX.utils.aoa_to_sheet(sheetData);
-            XLSX.utils.book_append_sheet(wb, ws, `Ngay_${d.replace(/\//g, '-')}`);
-        });
-        XLSX.writeFile(wb, `Thong_Ke_Pickleball_CMTD.xlsx`);
+      const wb = XLSX.utils.book_new();
+      dates.forEach(d => {
+        const matches = matchesData[d] || [];
+        const data = matches.map(m => ({
+          "STT": m.id,
+          "Cặp 1 - VĐV 1": m.c1_p1,
+          "Cặp 1 - VĐV 2": m.c1_p2,
+          "Tỷ số 1": m.score1,
+          "Tỷ số 2": m.score2,
+          "Cặp 2 - VĐV 1": m.c2_p1,
+          "Cặp 2 - VĐV 2": m.c2_p2
+        }));
+        const ws = XLSX.utils.json_to_sheet(data);
+        XLSX.utils.book_append_sheet(wb, ws, `Ngay_${d.replace(/\//g, '-')}`);
+      });
+      XLSX.writeFile(wb, "Pickleball_CMTD_ThongKe.xlsx");
     }
-    
-    <script>
-// Mật khẩu Admin do bạn tự đặt
-    <script>
-const ADMIN_PASSCODE = "123456";
-let isAdminVerified = false;
-
-function togglePayment(payKey) {
-  // Nếu chưa xác thực mật khẩu Admin
-  if (!isAdminVerified) {
-    const inputPass = prompt("🔑 Nhập mật khẩu Admin để thay đổi cột THỰC TẾ:");
-    
-    if (inputPass === ADMIN_PASSCODE) {
-      isAdminVerified = true;
-      alert("✅ Xác thực Admin thành công!");
-    } else if (inputPass !== null) {
-      alert("❌ Mật khẩu không đúng! Chỉ Admin mới có quyền đổi trạng thái cột này.");
-      return; // Dừng lại, không cho đổi trạng thái
-    } else {
-      return; // Bấm Hủy
-    }
-  }
-// ==========================================
-// CẤU HÌNH BẢO MẬT ADMIN CHO CỘT THỰC TẾ
-// ==========================================
-const ADMIN_PASSCODE = "123456"; // Mật khẩu Admin của bạn
-let isAdminVerified = false;
-
-function togglePayment(payKey) {
-  // 1. Nếu chưa xác nhận mật khẩu Admin trước đó
-  if (!isAdminVerified) {
-    const inputPass = prompt("🔑 Nhập mật khẩu Quản trị viên để thay đổi cột THỰC TẾ:");
-    
-    if (inputPass === ADMIN_PASSCODE) {
-      isAdminVerified = true;
-      alert("✅ Xác thực Quản trị viên thành công!");
-    } else if (inputPass !== null) {
-      alert("❌ Mật khẩu sai! Chỉ quản trị viên mới có quyền thay đổi trạng thái cột này.");
-      return; // Dừng lại, không cho đổi trạng thái
-    } else {
-      return; // Bấm Hủy
-    }
-  }
-
-  // 2. Đổi trạng thái khi đã xác thực đúng Admin
-  paymentStatus[payKey] = !paymentStatus[payKey];
-  saveDataToFirestore();
-}
-</script>
+  </script>
 </body>
 </html>

@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLB PICKLEBALL - CMTD | Bảng Thống Kê Cloud Firestore</title>
+    <title>CLB PICKLEBALL - CMTD | Thống Kê Cloud Firestore</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Thư viện SheetJS xuất Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    <!-- THƯ VIỆN CLOUD FIRESTORE SDK -->
+    <!-- FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
@@ -85,7 +86,7 @@
         .card-title { font-size: 15px; font-weight: 800; margin: 0; color: var(--primary-color); }
         .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; min-width: 750px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; min-width: 800px; }
         th, td { border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color); padding: 6px 4px; text-align: center; vertical-align: middle; }
         th:first-child, td:first-child { border-left: 1px solid var(--border-color); }
         tr:first-child th { border-top: 1px solid var(--border-color); }
@@ -146,16 +147,14 @@
 </div>
 
 <script>
-    // =========================================================================
-    // DÁN THÔNG SỐ CONFIG LẤY TỪ BƯỚC 2 VÀO ĐÂY
-    // =========================================================================
     const firebaseConfig = {
-        apiKey: "THAY_BẰNG_API_KEY_CỦA_BẠN",
+        apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
         authDomain: "pickleball-cmtd.firebaseapp.com",
         projectId: "pickleball-cmtd",
-        storageBucket: "pickleball-cmtd.appspot.com",
-        messagingSenderId: "THAY_SENDER_ID",
-        appId: "THAY_APP_ID"
+        storageBucket: "pickleball-cmtd.firebasestorage.app",
+        messagingSenderId: "648591152243",
+        appId: "1:648591152243:web:3343caf2da821373070606",
+        measurementId: "G-T91KPDZFJR"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -173,7 +172,6 @@
         listenToFirestore();
     };
 
-    // TỰ ĐỘNG ĐỒNG BỘ REALTIME TỪ CLOUD FIRESTORE
     function listenToFirestore() {
         docRef.onSnapshot((doc) => {
             const statusEl = document.getElementById("cloudStatus");
@@ -203,8 +201,8 @@
     }
 
     function initDefaultFirestore() {
-        vdvs = ["Tiến Thọ", "Trí Đỏ", "Phú Mỗ", "Long Diễn", "Lợi Trí", "Châu Sĩ", "Hà Giấy", "Điền Chèm", "Tuấn La", "Thanh Đàm", "Gà Tre", "Dũng Ngạc", "Vân Đình", "Thành Sóc"];
-        dates = ["3/9/26", "24/9/26", "1/10/26"];
+        vdvs = ["Vân Đình", "Trí Đỏ", "Phú Mỗ", "Tiến Thọ", "Tuấn La", "Lợi Trí", "Long Diễn", "Hà Giấy", "Thành Sóc", "Thanh Đàm", "Điền Chèm", "Dũng Ngạc", "Huyền Béo", "Châu Sĩ", "Gà Tre", "Khách 1", "Khách 2"];
+        dates = ["3/9/26", "10/9/26", "24/9/26"];
         matchesData = {};
         dates.forEach(d => {
             matchesData[d] = Array.from({ length: 10 }, (_, i) => ({
@@ -424,44 +422,75 @@
 
     function renderSingleDaySummaryTable(date) {
         let stats = {};
-        vdvs.forEach(v => stats[v] = { matchCount: 0, totalMoney: 0 });
+        vdvs.forEach(v => stats[v] = { matchCount: 0, sumMinus: 0, sumPlus: 0 });
 
         if (matchesData[date]) {
             matchesData[date].forEach(m => {
                 let res = calculateMatchResult(m.score1, m.score2);
                 if (res.isFinished) {
-                    [m.c1_p1, m.c1_p2].forEach(p => { if (p && stats[p]) { stats[p].matchCount++; stats[p].totalMoney += res.money1; } });
-                    [m.c2_p1, m.c2_p2].forEach(p => { if (p && stats[p]) { stats[p].matchCount++; stats[p].totalMoney += res.money2; } });
+                    [m.c1_p1, m.c1_p2].forEach(p => { 
+                        if (p && stats[p]) { 
+                            stats[p].matchCount++; 
+                            if (res.money1 < 0) stats[p].sumMinus += res.money1;
+                            else stats[p].sumPlus += res.money1;
+                        } 
+                    });
+                    [m.c2_p1, m.c2_p2].forEach(p => { 
+                        if (p && stats[p]) { 
+                            stats[p].matchCount++; 
+                            if (res.money2 < 0) stats[p].sumMinus += res.money2;
+                            else stats[p].sumPlus += res.money2;
+                        } 
+                    });
                 }
             });
         }
 
         let rowsHtml = "";
-        let btcCollected = 0, btcRemaining = 0;
+        let btcCollected = 0;       // BTC ĐÃ THU = Tổng cột TỔNG của những VĐV ĐÃ TICK
+        let btcRemaining = 0;       // BTC CÒN PHẢI THU = Tổng cột TỔNG của những VĐV CHƯA TICK
+        let grandTotalColumnSum = 0; // Tổng toàn bộ cột TỔNG (cả tick và chưa tick)
 
         vdvs.forEach(v => {
             let count = stats[v].matchCount;
-            let rawMoney = stats[v].totalMoney;
+            let sumMinus = stats[v].sumMinus; 
+            let sumPlus = stats[v].sumPlus;   
+
             if (count === 0) return;
 
-            let eligible = (count >= 4 && rawMoney > 0);
-            let finalMoney = eligible ? rawMoney : (rawMoney <= 0 ? rawMoney : 0);
+            let colOMoney = sumPlus + sumMinus;
+            let carryHomeMoney = (count >= 4 && colOMoney > 0) ? colOMoney : 0;
+
+            grandTotalColumnSum += colOMoney;
+
             let payKey = `${date}_${v}`;
             let isPaid = !!paymentStatus[payKey];
 
-            if (finalMoney < 0) {
-                if (isPaid) btcCollected += Math.abs(finalMoney);
-                else btcRemaining += Math.abs(finalMoney);
+            // TÍNH TOÁN CHUYỂN DỒN KHI TICK
+            if (isPaid) {
+                btcCollected += colOMoney; // Đã tick: chuyển sang BTC ĐÃ THU
+            } else {
+                btcRemaining += colOMoney; // Chưa tick: tính vào BTC CÒN PHẢI THU
             }
+
+            let needToPay = colOMoney < 0 ? Math.abs(colOMoney) : 0;
 
             rowsHtml += `
                 <tr>
                     <td style="text-align: left; font-weight: bold;">👤 ${v}</td>
-                    <td><b>${count} trận</b></td>
-                    <td><span class="${rawMoney >= 0 ? 'win' : 'lose'}">${rawMoney > 0 ? '+' : ''}${rawMoney} K</span></td>
-                    <td>${eligible ? `<span class="win">+${finalMoney} K (Đủ ĐK)</span>` : (count < 4 && rawMoney > 0 ? `<span style="color:#d97706; font-weight: bold;">Thiếu trận (${count}/4)</span>` : `<span class="lose">${finalMoney} K</span>`)}</td>
+                    <td><b>${count}</b></td>
+                    <td><span class="${sumPlus > 0 ? 'win' : ''}">${sumPlus > 0 ? sumPlus : ''}</span></td>
+                    <td><span class="${sumMinus < 0 ? 'lose' : ''}">${sumMinus < 0 ? sumMinus : ''}</span></td>
+                    <td><span class="${carryHomeMoney > 0 ? 'win' : ''}">${carryHomeMoney > 0 ? carryHomeMoney : ''}</span></td>
+                    <td><span class="${colOMoney > 0 ? 'win' : (colOMoney < 0 ? 'lose' : '')}">${colOMoney !== 0 ? colOMoney : '0'}</span></td>
                     <td><input type="checkbox" class="checkbox-cell" ${isPaid ? 'checked' : ''} onchange="togglePayment('${payKey}')"></td>
-                    <td>${isPaid ? `<b style="color:var(--win-color)">✅ Đã nộp</b>` : (finalMoney < 0 ? `<b style="color:var(--lose-color)">⏳ Cần thu ${Math.abs(finalMoney)}K</b>` : '🎉 Không nộp')}</td>
+                    <td>
+                        ${needToPay > 0 
+                            ? (isPaid 
+                                ? `<b style="color:var(--win-color)">✅ Đã nộp ${needToPay}K</b>` 
+                                : `<b style="color:var(--lose-color)">Chưa nộp</b>`)
+                            : (carryHomeMoney > 0 ? `<b style="color:var(--win-color)">${isPaid ? '✅ Đã nhận' : 'Chưa nhận'}</b>` : '')}
+                    </td>
                 </tr>
             `;
         });
@@ -469,15 +498,15 @@
         return `
             <div class="card" style="border-top: 4px solid var(--accent-color);">
                 <div class="card-header">
-                    <h3 class="card-title">📊 Tổng Hợp Thu Chi - Ngày ${date}</h3>
+                    <h3 class="card-title">📊 Pick Thủ - Thành Tiền - Ngày ${date}</h3>
                 </div>
                 <div class="summary-dashboard">
                     <div class="stat-card" style="border-left-color: var(--win-color);">
-                        <div class="title">💵 BTC đã thu (${date})</div>
+                        <div class="title">💵 BTC Đã Thu (${date})</div>
                         <div class="value" style="color: var(--win-color);">${btcCollected} K</div>
                     </div>
                     <div class="stat-card" style="border-left-color: var(--lose-color);">
-                        <div class="title">📌 Còn phải thu (${date})</div>
+                        <div class="title">📌 BTC Còn Phải Thu (${date})</div>
                         <div class="value" style="color: var(--lose-color);">${btcRemaining} K</div>
                     </div>
                 </div>
@@ -485,15 +514,25 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>VĐV Tham Gia</th>
-                                <th>Số Trận</th>
-                                <th>Tiền Tích Lũy</th>
-                                <th>Thành Tiền</th>
-                                <th>Đã Nộp</th>
-                                <th>Trạng Thái</th>
+                                <th>Pick Thủ</th>
+                                <th>Số trận đánh</th>
+                                <th>Thắng/K</th>
+                                <th>Thua/K</th>
+                                <th>Tiền mang về</th>
+                                <th>Tổng</th>
+                                <th>Thực Tế</th>
+                                <th>Note</th>
                             </tr>
                         </thead>
-                        <tbody>${rowsHtml || '<tr><td colspan="6" style="padding:10px; color:#94a3b8;">Chưa có dữ liệu ngày này</td></tr>'}</tbody>
+                        <tbody>
+                            ${rowsHtml || '<tr><td colspan="8" style="padding:10px; color:#94a3b8;">Chưa có dữ liệu ngày này</td></tr>'}
+                            <tr class="total-row">
+                                <td style="text-align: left; padding-left: 8px; color: var(--primary-color);" colspan="5"><b>Tổng Cột TỔNG</b></td>
+                                <td style="color: ${grandTotalColumnSum >= 0 ? 'var(--win-color)' : 'var(--lose-color)'}; font-size: 16px;"><b>${grandTotalColumnSum}</b></td>
+                                <td style="color: var(--win-color); font-size: 14px;"><b>${btcCollected}</b></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -536,9 +575,7 @@
             let dateCellsHtml = dates.map(d => {
                 let data = playerStats[v][d];
                 let count = data.count;
-                let rawMoney = data.rawMoney;
-                let eligible = (count >= 4 && rawMoney > 0);
-                let finalMoney = eligible ? rawMoney : (rawMoney <= 0 ? rawMoney : 0);
+                let finalMoney = data.rawMoney;
                 
                 totalAllDays += finalMoney;
                 dayTotals[d] += finalMoney;
@@ -597,7 +634,7 @@
     function exportToExcel() {
         let wb = XLSX.utils.book_new();
         dates.forEach(d => {
-            let sheetData = [["STT", "Pick 1 - VĐV 1", "Pick 1 - VĐV 2", "Pick 2 - VĐV 1", "Pick 2 - VĐV 2", "Tỷ Số 1", "Tỷ Số 2", "Kèo Pick 1", "Kèo Pick 2"]];
+            let sheetData = [["STT", "Pick Thủ - Cặp 1", "Pick Thủ - Cặp 1", "Pick Thủ - Cặp 2", "Pick Thủ - Cặp 2", "Tỷ Số 1", "Tỷ Số 2", "Kèo Pick 1", "Kèo Pick 2"]];
             if (matchesData[d]) {
                 matchesData[d].forEach(m => {
                     let res = calculateMatchResult(m.score1, m.score2);

@@ -648,6 +648,7 @@
     }
 
 // Mật khẩu Admin do bạn tự đặt
+    <script>
 const ADMIN_PASSCODE = "123456";
 let isAdminVerified = false;
 
@@ -671,11 +672,14 @@ function togglePayment(payKey) {
   paymentStatus[payKey] = !paymentStatus[payKey];
   saveDataToFirestore();
 }
+<script>
     
 <!-- Cột Thực tế / Đã thanh toán -->
+    <script>
 <input 
   type="checkbox" 
   class="checkbox-cell" 
   ${isPaid ? 'checked' : ''} 
   onclick="togglePayment('${payKey}')"
 />
+<script>

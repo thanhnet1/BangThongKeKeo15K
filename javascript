@@ -1,45 +1,38 @@
-// Đặt mật khẩu Admin của bạn ở đây (Ví dụ: 123456)
-const ADMIN_PASSCODE = "123456"; 
+// 1. Đặt mật khẩu Admin của bạn ở đây
+const PASSCODE_ADMIN = "123456"; 
+let daXacNhanAdmin = false;
 
-// Biến lưu trạng thái đã xác thực mật khẩu trong phiên làm việc (giúp không phải nhập lại nhiều lần)
-let isPasscodeVerified = false;
+// 2. Hàm bắt buộc nhập mật khẩu khi bấm vào cột Thực Tế
+function checkAdminThucTe(event, docId, isChecked, checkboxElem) {
+  // Nếu chưa xác thực mật khẩu Admin trước đó trong phiên làm việc
+  if (!daXacNhanAdmin) {
+    event.preventDefault(); // Ngăn không cho ô tự động tích/bỏ tích
 
-// Hàm xử lý khi bấm vào ô checkbox cột "THỰC TẾ"
-async function handleThucTeChange(event, docId, newValue) {
-  // 1. Nếu chưa xác thực mật khẩu Admin trong phiên này
-  if (!isPasscodeVerified) {
-    // Ngăn không cho tích chọn ngay lập tức
-    event.preventDefault(); 
+    const input = prompt("🔑 Nhập mật khẩu Admin để thay đổi cột THỰC TẾ:");
     
-    // Hiện hộp thoại yêu cầu nhập mật khẩu
-    const inputPass = prompt("🔑 Nhập mật khẩu Admin để thay đổi cột Thực tế:");
-    
-    if (inputPass === ADMIN_PASSCODE) {
-      isPasscodeVerified = true; // Lưu lại trạng thái đúng mật khẩu
-      alert("Đã mở khóa quyền Admin!");
-      // Thực hiện tích chọn ô checkbox
-      event.target.checked = newValue;
-    } else if (inputPass !== null) {
-      alert("❌ Mật khẩu không chính xác! Bạn không có quyền sửa cột này.");
-      return; // Dừng lại, không cho sửa
-    } else {
-      return; // Người dùng bấm Hủy (Cancel)
+    if (input === PASSCODE_ADMIN) {
+      daXacNhanAdmin = true;
+      alert("✅ Xác thực Admin thành công!");
+      
+      // Đổi trạng thái ô checkbox và lưu
+      checkboxElem.checked = !isChecked;
+      luuDatabaseThucTe(docId, checkboxElem.checked);
+    } else if (input !== null) {
+      alert("❌ Mật khẩu không đúng! Bạn không có quyền chỉnh sửa cột này.");
     }
-  }
-
-  // 2. Cập nhật dữ liệu lên Cloud Firestore khi mật khẩu hợp lệ
-  try {
-    await db.collection('thong_ke_keo').doc(docId).update({
-      thucTe: event.target.checked
-    });
-    console.log("Cập nhật thành công!");
-  } catch (error) {
-    alert("Lỗi khi lưu dữ liệu: " + error.message);
+  } else {
+    // Nếu đã nhập đúng mật khẩu rồi thì cho tích và lưu trực tiếp
+    luuDatabaseThucTe(docId, isChecked);
   }
 }
-<!-- Ví dụ thẻ input ô checkbox cột THỰC TẾ -->
-<input 
-  type="checkbox" 
-  ${item.thucTe ? 'checked' : ''} 
-  onclick="handleThucTeChange(event, '${item.id}', this.checked)"
-/>
+
+// 3. Hàm đẩy trạng thái lên Firebase Firestore
+function luuDatabaseThucTe(docId, status) {
+  db.collection('thong_ke_keo').doc(docId).update({
+    thucTe: status
+  }).then(() => {
+    console.log("Đã cập nhật trạng thái Thực tế!");
+  }).catch((err) => {
+    alert("Lỗi lưu dữ liệu: " + err.message);
+  });
+}

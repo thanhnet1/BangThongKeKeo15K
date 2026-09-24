@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Thi Đấu Minigame Team A & Team B</title>
+    <style>
+        :root {
+            --primary-bg: #1e3a5f;
+            --header-bg: #0d233a;
+            --row-even: #d2e8d4;
+            --row-odd: #ffffff;
+            --border-color: #888888;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            border-radius: 8px;
+        }
+
+        h2 {
+            text-align: center;
+            background-color: var(--primary-bg);
+            color: white;
+            padding: 12px;
+            margin-top: 0;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            background: #eef2f5;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .form-container input, .form-container select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-add {
+            grid-column: span 2;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .btn-add:hover { background-color: #219150; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+        }
+
+        th {
+            background-color: var(--header-bg);
+            color: white;
+            font-weight: bold;
+        }
+
+        tbody tr:nth-child(even) { background-color: var(--row-even); }
+        tbody tr:nth-child(odd) { background-color: var(--row-odd); }
+
+        .vs-cell { font-weight: bold; color: #d32f2f; }
+        .win-team { font-weight: bold; color: #1b5e20; }
+        
+        .action-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        /* Bảng tổng kết */
+        .summary-table {
+            width: 50%;
+            margin-top: 25px;
+            float: left;
+        }
+
+        .summary-table th { background-color: var(--primary-bg); }
+
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Lịch Thi Đấu Team A & Team B</h2>
+
+    <!-- Form Thêm Trận Đấu -->
+    <div class="form-container">
+        <select id="noiDung">
+            <option value="Đôi nam">Đôi nam</option>
+            <option value="Đôi nữ">Đôi nữ</option>
+            <option value="Đôi nam nữ">Đôi nam nữ</option>
+        </select>
+        <input type="text" id="teamA" placeholder="TEAM A (VD: Tiến Thọ + Thanh Đàm)">
+        <input type="number" id="tySoA" placeholder="Tỷ số A" min="0">
+        <input type="number" id="tySoB" placeholder="Tỷ số B" min="0">
+        <input type="text" id="teamB" placeholder="TEAM B (VD: Trí Đô + Long Diễn)">
+        <button class="btn-add" onclick="addMatch()">➕ Thêm Trận Đấu</button>
+    </div>
+
+    <!-- Bảng Thi Đấu -->
+    <table id="matchTable">
+        <thead>
+            <tr>
+                <th>Trận</th>
+                <th>Nội dung</th>
+                <th>TEAM A</th>
+                <th>Tỷ số A</th>
+                <th>VS</th>
+                <th>Tỷ số B</th>
+                <th>TEAM B</th>
+                <th>Kết quả</th>
+                <th>Điểm</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody id="matchList">
+            <!-- Dữ liệu trận đấu hiển thị ở đây -->
+        </tbody>
+    </table>
+
+    <!-- Bảng Tổng Kết Điểm -->
+    <div class="clearfix">
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>TEAM</th>
+                    <th>Tổng điểm (Điểm số)</th>
+                    <th>KẾT QUẢ CHUNG CUỘC</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>Team A</b></td>
+                    <td id="scoreA">0</td>
+                    <td id="resultA" class="win-team">-</td>
+                </tr>
+                <tr>
+                    <td><b>Team B</b></td>
+                    <td id="scoreB">0</td>
+                    <td id="resultB" class="win-team">-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Dữ liệu ban đầu
+    let matches = [
+        { noiDung: "Đôi nam", teamA: "Tiến Thọ + Thanh Đàm", tySoA: 8, tySoB: 11, teamB: "Trí Đô + Long Diễn" },
+        { noiDung: "Đôi nam", teamA: "Thanh Đàm + Thành Sóc", tySoA: 5, tySoB: 11, teamB: "Long Diễn + Châu Sĩ" },
+        { noiDung: "Đôi nam", teamA: "Thành Sóc + Minh Vượng", tySoA: 13, tySoB: 11, teamB: "Châu Sĩ + Minh Hạnh" }
+    ];
+
+    function renderMatches() {
+        const tbody = document.getElementById("matchList");
+        tbody.innerHTML = "";
+
+        let totalA = 0;
+        let totalB = 0;
+
+        matches.forEach((m, index) => {
+            let ketQua = "";
+            let diem = 1;
+
+            if (m.tySoA > m.tySoB) {
+                ketQua = "TEAM A";
+                totalA += 1;
+            } else if (m.tySoB > m.tySoA) {
+                ketQua = "TEAM B";
+                totalB += 1;
+            } else {
+                ketQua = "HÒA";
+                diem = 0;
+            }
+
+            const row = `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${m.noiDung}</td>
+                    <td>${m.teamA}</td>
+                    <td><input type="number" value="${m.tySoA}" style="width:45px; text-align:center" onchange="updateScore(${index}, 'A', this.value)"></td>
+                    <td class="vs-cell">VS</td>
+                    <td><input type="number" value="${m.tySoB}" style="width:45px; text-align:center" onchange="updateScore(${index}, 'B', this.value)"></td>
+                    <td>${m.teamB}</td>
+                    <td class="win-team">${ketQua}</td>
+                    <td>${diem}</td>
+                    <td><button class="action-btn" onclick="deleteMatch(${index})">Xóa</button></td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        // Cập nhật bảng tổng hợp
+        document.getElementById("scoreA").innerText = totalA;
+        document.getElementById("scoreB").innerText = totalB;
+
+        if (totalA > totalB) {
+            document.getElementById("resultA").innerText = "THẮNG";
+            document.getElementById("resultB").innerText = "THUA";
+        } else if (totalB > totalA) {
+            document.getElementById("resultA").innerText = "THUA";
+            document.getElementById("resultB").innerText = "THẮNG";
+        } else {
+            document.getElementById("resultA").innerText = "HÒA";
+            document.getElementById("resultB").innerText = "HÒA";
+        }
+    }
+
+    function addMatch() {
+        const noiDung = document.getElementById("noiDung").value;
+        const teamA = document.getElementById("teamA").value.trim();
+        const tySoA = parseInt(document.getElementById("tySoA").value) || 0;
+        const tySoB = parseInt(document.getElementById("tySoB").value) || 0;
+        const teamB = document.getElementById("teamB").value.trim();
+
+        if (!teamA || !teamB) {
+            alert("Vui lòng nhập tên VĐV cho cả 2 Team!");
+            return;
+        }
+
+        matches.push({ noiDung, teamA, tySoA, tySoB, teamB });
+        renderMatches();
+
+        // Clear input
+        document.getElementById("teamA").value = "";
+        document.getElementById("teamB").value = "";
+        document.getElementById("tySoA").value = "";
+        document.getElementById("tySoB").value = "";
+    }
+
+    function updateScore(index, team, val) {
+        val = parseInt(val) || 0;
+        if (team === 'A') matches[index].tySoA = val;
+        if (team === 'B') matches[index].tySoB = val;
+        renderMatches();
+    }
+
+    function deleteMatch(index) {
+        if (confirm("Bạn có chắc muốn xóa trận này?")) {
+            matches.splice(index, 1);
+            renderMatches();
+        }
+    }
+
+    // Khởi tạo bảng ban đầu
+    renderMatches();
+</script>
+
+</body>
+</html>

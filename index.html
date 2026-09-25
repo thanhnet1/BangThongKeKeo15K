@@ -49,7 +49,7 @@
       flex-direction: column;
       gap: 14px;
       position: relative;
-      z-index: 500; /* Ưu tiên hiển thị header cao hơn nội dung phía dưới */
+      z-index: 500;
     }
 
     .header-top {
@@ -106,7 +106,7 @@
       box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
     }
     
-    /* DROPDOWN MENU - SỬA LỖI BỊ BẢNG CHE (Z-INDEX CAO) */
+    /* DROPDOWN MENU */
     .dropdown-menu {
       display: none;
       position: absolute;
@@ -117,7 +117,7 @@
       border-radius: 10px;
       box-shadow: 0 15px 35px rgba(0,0,0,0.4);
       border: 1px solid var(--border-color);
-      z-index: 9999 !important; /* Xử lý lỗi menu bị che */
+      z-index: 9999 !important;
       padding: 6px 0;
       color: var(--text-main);
       animation: fadeIn 0.2s ease;
@@ -143,37 +143,6 @@
     .cloud-status { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold; margin-left: auto; }
     .cloud-online { background-color: #10b981; color: white; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
     .cloud-syncing { background-color: #f59e0b; color: white; }
-    
-    /* BANNER PICKLEBALL */
-    .pickleball-banner {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      border-left: 5px solid #38bdf8;
-      border-radius: 10px;
-      padding: 12px 18px;
-      margin-bottom: 15px;
-      color: #f8fafc;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      position: relative;
-      z-index: 10;
-    }
-    .banner-content { display: flex; align-items: center; gap: 12px; }
-    .banner-icon { font-size: 28px; }
-    .banner-text { font-size: 12px; line-height: 1.5; }
-    .banner-text strong { color: #38bdf8; }
-    .banner-tag {
-      background: rgba(56, 189, 248, 0.15);
-      border: 1px solid #38bdf8;
-      color: #38bdf8;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: bold;
-    }
 
     /* VĐV SEARCH LIST IN MENU */
     .vdv-container { padding: 8px; width: 260px; }
@@ -210,12 +179,7 @@
     }
     .card-title { font-size: 16px; font-weight: 800; color: var(--primary-color); margin: 0; text-transform: uppercase; }
     
-    /* CỤM NÚT NGOÀI BẢNG */
-    .table-actions-toolbar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .table-actions-toolbar { display: flex; align-items: center; gap: 8px; }
 
     .table-responsive {
       overflow-x: auto;
@@ -224,7 +188,6 @@
       border: 1px solid #cbd5e1;
     }
     
-    /* CĂN CHỈNH BẢNG CÂN ĐỐI */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -239,7 +202,6 @@
     .th-pick2 { background-color: #fee2e2; color: #991b1b; }
     .th-money { background-color: #fef3c7; color: #92400e; }
     
-    /* SELECTS VỚI MÀU TỪNG VĐV */
     select {
       width: 100%;
       padding: 5px;
@@ -267,117 +229,109 @@
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; }
     .modal.show { display: flex; }
     .modal-content { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+
+    /* STYLES CHO MINIGAME TAB */
+    .mg-container {
+      max-width: 1100px;
+      margin: 10px auto;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .mg-header-title {
+      background-color: #1e3a5f;
+      color: #ffffff;
+      text-align: center;
+      padding: 10px;
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .mg-add-bar {
+      display: flex;
+      gap: 8px;
+      background: #eef2f5;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-bottom: none;
+      flex-wrap: wrap;
+    }
+
+    .mg-add-bar input, .mg-add-bar select {
+      padding: 6px 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .mg-add-bar input[type="text"] { flex: 2; min-width: 180px; }
+    .mg-add-bar input[type="number"] { width: 65px; }
+
+    .mg-table-wrapper {
+      max-height: 520px;
+      overflow-y: auto;
+      border: 1px solid #334155;
+      border-radius: 0 0 6px 6px;
+    }
+
+    .mg-table, .mg-summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: center;
+      background-color: #fff;
+    }
+
+    .mg-table th, .mg-summary-table th {
+      background-color: #0d233a;
+      color: #ffffff;
+      padding: 8px 4px;
+      border: 1px solid #334155;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .mg-table td, .mg-summary-table td {
+      border: 1px solid #94a3b8;
+      padding: 5px 4px;
+      color: #0f172a;
+    }
+
+    .mg-table tbody tr:nth-child(odd) { background-color: #f8fafc; }
+    .mg-table tbody tr:nth-child(even) { background-color: #ffffff; }
+
+    .score-in {
+      width: 42px;
+      text-align: center;
+      font-weight: 800;
+      border: 1px solid #a855f7;
+      border-radius: 4px;
+      padding: 2px;
+      background: #fff;
+    }
+
+    .btn-del {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 2px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .mg-summary-table {
+      margin-top: 15px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .mg-summary-table th { background-color: #1e3a5f; }
+    .mg-result-text { font-weight: 800; color: #16a34a; }
   </style>
-  ...
-/* Các đoạn CSS cũ phía trên của bạn */
-.th-money { background-color: #fef3c7; color: #92400e; }
-
-
-/* --- DÁN ĐOẠN MÃ CSS MỚI VÀO ĐÂY --- */
-.mg-container {
-    max-width: 1100px;
-    margin: 10px auto;
-    font-family: 'Roboto', sans-serif;
-}
-
-.mg-header-title {
-    background-color: #1e3a5f;
-    color: #ffffff;
-    text-align: center;
-    padding: 10px;
-    font-size: 18px;
-    font-weight: 800;
-    text-transform: uppercase;
-    border-radius: 8px 8px 0 0;
-}
-
-.mg-add-bar {
-    display: flex;
-    gap: 8px;
-    background: #eef2f5;
-    padding: 10px;
-    border: 1px solid #cbd5e1;
-    border-bottom: none;
-    flex-wrap: wrap;
-}
-
-.mg-add-bar input, .mg-add-bar select {
-    padding: 6px 8px;
-    border: 1px solid #cbd5e1;
-    border-radius: 4px;
-    font-size: 12px;
-}
-
-.mg-add-bar input[type="text"] { flex: 2; min-width: 180px; }
-.mg-add-bar input[type="number"] { width: 65px; }
-
-.mg-table-wrapper {
-    max-height: 520px;
-    overflow-y: auto;
-    border: 1px solid #334155;
-    border-radius: 0 0 6px 6px;
-}
-
-.mg-table, .mg-summary-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    text-align: center;
-    background-color: #fff;
-}
-
-.mg-table th, .mg-summary-table th {
-    background-color: #0d233a;
-    color: #ffffff;
-    padding: 8px 4px;
-    border: 1px solid #334155;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-}
-
-.mg-table td, .mg-summary-table td {
-    border: 1px solid #94a3b8;
-    padding: 5px 4px;
-    color: #0f172a;
-}
-
-.mg-table tbody tr:nth-child(odd) { background-color: #d2e8d4; }
-.mg-table tbody tr:nth-child(even) { background-color: #ffffff; }
-
-.score-in {
-    width: 42px;
-    text-align: center;
-    font-weight: 800;
-    border: 1px solid #a855f7;
-    border-radius: 4px;
-    padding: 2px;
-    background: #fff;
-}
-
-.btn-del {
-    background: #ef4444;
-    color: white;
-    border: none;
-    padding: 2px 6px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.mg-summary-table {
-    margin-top: 15px;
-    width: 420px;
-    float: left;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.mg-summary-table th { background-color: #1e3a5f; }
-.mg-result-text { font-weight: 800; color: #16a34a; }
-/* --- HẾT ĐOẠN CSS MỚI --- */
-
-</style>
-</head>
 </head>
 <body>
   <div class="container">
@@ -438,263 +392,12 @@
           </div>
         </div>
 
-        <!-- KHU VỰC TAB MINI GAME 1 -->
-        <!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minigame Dashboard</title>
-  <style>
-    /* Reset & cơ bản */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: #f4f6f9;
-      padding: 20px;
-    }
-
-    /* Container cho Minigame 1 */
-    .minigame-wrapper {
-      max-width: 800px;
-      margin: 0 auto;
-      background: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      overflow: hidden;
-      border: 1px solid #e1e4e8;
-    }
-
-    /* Nút kích hoạt Minigame 1 */
-    .minigame-btn {
-      width: 100%;
-      padding: 16px 20px;
-      background-color: #2b579a;
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 600;
-      border: none;
-      text-align: left;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: background-color 0.2s ease;
-    }
-
-    .minigame-btn:hover {
-      background-color: #1e3d6b;
-    }
-
-    .minigame-btn .arrow-icon {
-      transition: transform 0.3s ease;
-    }
-
-    /* Đổi hướng mũi tên khi mở */
-    .minigame-wrapper.active .arrow-icon {
-      transform: rotate(180deg);
-    }
-
-    /* Vùng chứa nội dung giao diện bên trong nút Minigame 1 */
-    .minigame-content {
-      display: none; /* Mặc định ẩn */
-      padding: 20px;
-      border-top: 1px solid #e1e4e8;
-      background-color: #fafafa;
-    }
-
-    /* Bật hiển thị khi wrapper active */
-    .minigame-wrapper.active .minigame-content {
-      display: block;
-    }
-
-    /* Bảng dữ liệu giao diện minigame */
-    .minigame-table-container {
-      width: 100%;
-      overflow-x: auto;
-      background: #ffffff;
-      border-radius: 6px;
-      border: 1px solid #e1e4e8;
-    }
-
-    .minigame-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 14px;
-    }
-
-    .minigame-table th, 
-    .minigame-table td {
-      padding: 12px 16px;
-      border-bottom: 1px solid #e1e4e8;
-    }
-
-    .minigame-table th {
-      background-color: #f1f3f5;
-      color: #333;
-      font-weight: 600;
-    }
-
-    .minigame-table tr:hover {
-      background-color: #f8f9fa;
-    }
-
-    /* Nút thao tác trong bảng */
-    .action-btn {
-      padding: 6px 12px;
-      background-color: #107c41;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .action-btn:hover {
-      background-color: #0b5a2f;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- MINIGAME 1 CONTAINER -->
-  <div class="minigame-wrapper" id="minigame1-wrapper">
-    
-    <!-- Nút bấm Minigame 1 -->
-    <button class="minigame-btn" id="minigame1-btn" onclick="toggleMinigame('minigame1-wrapper')">
-      <span>🎮 Minigame 1: Bảng Quản Lý & Thống Kê</span>
-      <span class="arrow-icon">▼</span>
-    </button>
-
-    <!-- Toàn bộ giao diện nội dung của Minigame 1 -->
-    <div class="minigame-content">
-      <div class="minigame-table-container">
-        <table class="minigame-table">
-          <thead>
-            <tr>
-              <th>STT</th>
-              <th>Người chơi / Đội</th>
-              <th>Điểm số</th>
-              <th>Trạng thái</th>
-              <th>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Nguyễn Văn A</td>
-              <td>1,250</td>
-              <td><span style="color: green; font-weight: bold;">Hoàn thành</span></td>
-              <td><button class="action-btn" onclick="alert('Xem chi tiết người chơi 1')">Chi tiết</button></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Trần Thị B</td>
-              <td>980</td>
-              <td><span style="color: orange; font-weight: bold;">Đang chơi</span></td>
-              <td><button class="action-btn" onclick="alert('Xem chi tiết người chơi 2')">Chi tiết</button></td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Lê Hoàng C</td>
-              <td>1,540</td>
-              <td><span style="color: green; font-weight: bold;">Hoàn thành</span></td>
-              <td><button class="action-btn" onclick="alert('Xem chi tiết người chơi 3')">Chi tiết</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </div>
-
-  <script>
-    // Hàm ẩn / hiện nội dung minigame khi bấm vào nút
-    function toggleMinigame(wrapperId) {
-      const wrapper = document.getElementById(wrapperId);
-      if (wrapper) {
-        wrapper.classList.toggle('active');
-      }
-    }
-  </script>
-</body>
-</html>
-<div id="tabMinigame1" class="tab-content">
-    <div class="mg-container">
-        <div class="mg-header-title">Lịch Thi Đấu Team A & Team B</div>
-
-        <!-- Thanh Thêm Trận Mới -->
-        <div class="mg-add-bar">
-            <select id="mg-noiDung">
-                <option value="Đôi nam">Đôi nam</option>
-                <option value="Đôi nữ">Đôi nữ</option>
-                <option value="Đôi nam nữ">Đôi nam nữ</option>
-            </select>
-            <input type="text" id="mg-teamA" placeholder="TEAM A (VD: Tiến Thọ + Thanh Đàm)">
-            <input type="number" id="mg-scoreA" placeholder="Tỷ số A" min="0">
-            <input type="number" id="mg-scoreB" placeholder="Tỷ số B" min="0">
-            <input type="text" id="mg-teamB" placeholder="TEAM B (VD: Trí Đô + Long Diễn)">
-            <button class="btn btn-green" onclick="addNewMatch()">➕ Thêm Trận</button>
-        </div>
-
-        <!-- Bảng Thi Đấu 24 Trận -->
-        <div class="mg-table-wrapper">
-            <table class="mg-table">
-                <thead>
-                    <tr>
-                        <th style="width: 45px;">Trận</th>
-                        <th style="width: 110px;">Nội dung</th>
-                        <th>TEAM A</th>
-                        <th style="width: 60px;">Tỷ số A</th>
-                        <th style="width: 40px;">VS</th>
-                        <th style="width: 60px;">Tỷ số B</th>
-                        <th>TEAM B</th>
-                        <th style="width: 90px;">Kết quả</th>
-                        <th style="width: 50px;">Điểm</th>
-                        <th style="width: 45px;">Xóa</th>
-                    </tr>
-                </thead>
-                <tbody id="mg-match-list">
-                    <!-- Dữ liệu 24 trận tự động nạp ở đây -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Bảng Tổng Kết Điểm -->
-        <table class="mg-summary-table">
-            <thead>
-                <tr>
-                    <th>TEAM</th>
-                    <th>Tổng điểm (Điểm số)</th>
-                    <th>KẾT QUẢ CHUNG CUỘC</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><b>Team A</b></td>
-                    <td id="mg-sum-scoreA">0</td>
-                    <td id="mg-sum-resA" class="mg-result-text">-</td>
-                </tr>
-                <tr>
-                    <td><b>Team B</b></td>
-                    <td id="mg-sum-scoreB">0</td>
-                    <td id="mg-sum-resB" class="mg-result-text">-</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+        <!-- MENU 4: MINI GAME 1 -->
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuMini1', event)">🎮 MINI GAME 1 ▾</button>
           <div class="dropdown-menu" id="menuMini1">
-            <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Nội Dung Game 1</div>
-            <div class="dropdown-item" onclick="alert('Đang mở Mini Game 1...')">▶️ Chơi Game 1</div>
+            <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Thể Lệ</div>
+            <div class="dropdown-item" onclick="switchTab('minigame1')">▶️ Lịch Thi Đấu & Thống Kê</div>
           </div>
         </div>
 
@@ -702,13 +405,14 @@
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuMini2', event)">🎯 MINI GAME 2 ▾</button>
           <div class="dropdown-menu right-align" id="menuMini2">
-            <div class="dropdown-item" onclick="openGameModal(2)">⚙️ Chỉnh Sửa Nội Dung Game 2</div>
-            <div class="dropdown-item" onclick="alert('Đang mở Mini Game 2...')">▶️ Chơi Game 2</div>
+            <div class="dropdown-item" onclick="openGameModal(2)">⚙️ Chỉnh Sửa Nội Dung</div>
+            <div class="dropdown-item" onclick="alert(miniGame2Content)">▶️ Xem Thể Lệ Game 2</div>
           </div>
         </div>
       </div>
     </div>
-    
+
+    <!-- KHU VỰC HIỂN THỊ NỘI DUNG DỘNG -->
     <div id="tabContent"></div>
   </div>
 
@@ -740,24 +444,21 @@
     const db = firebase.firestore();
     const docRef = db.collection("clubs").doc("cmtd_main_data");
 
-    // MẢNG MÀU SẮC ĐA DẠNG DÀNH CHO CÁC PICK THỦ
     const VDV_COLORS = [
       "#2563eb", "#d97706", "#059669", "#dc2626", "#7c3aed", 
       "#db2777", "#0284c7", "#15803d", "#b45309", "#4338ca",
-      "#c026d3", "#0d9488", "#ea580c", "#4f46e5", "#059669"
+      "#c026d3", "#0d9488", "#ea580c", "#4f46e5"
     ];
 
     let vdvs = [];
     let dates = [];
     let matchesData = {};
     let paymentStatus = {};
+    let mgMatches = [];
     let miniGame1Content = "Thể lệ Mini Game 1...";
     let miniGame2Content = "Thể lệ Mini Game 2...";
     let currentTab = "";
     let activeGameEditing = 1;
-
-    const ADMIN_PASSCODE = "123456";
-    let isAdminVerified = false;
 
     window.onload = function() {
       document.addEventListener('click', closeAllDropdowns);
@@ -773,10 +474,11 @@
           dates = data.dates || ["3/9/26"];
           matchesData = data.matchesData || {};
           paymentStatus = data.paymentStatus || {};
+          mgMatches = data.mgMatches || [];
           miniGame1Content = data.miniGame1Content || miniGame1Content;
           miniGame2Content = data.miniGame2Content || miniGame2Content;
           
-          if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop")) {
+          if (!currentTab) {
             currentTab = dates[0] || "tonghop";
           }
           statusEl.className = "cloud-status cloud-online";
@@ -794,7 +496,7 @@
     }
 
     function initDefaultFirestore() {
-      vdvs = ["Vân Đình", "Trí Đỏ", "Phú Mỗ", "Tiến Thọ", "Tuấn La", "Lợi Trí", "Long Diễn", "Hà Giấy", "Thành Sóc", "Thanh Đàm", "Điền Chèm", "Dũng Ngạc", "Huyền Béo", "Châu Sĩ", "Gà Tre", "Khách 1", "Khách 2"];
+      vdvs = ["Vân Đình", "Trí Đỏ", "Phú Mỗ", "Tiến Thọ", "Tuấn La", "Lợi Trí", "Long Diễn", "Hà Giấy", "Thành Sóc", "Thanh Đàm", "Điền Chèm", "Dũng Ngạc", "Huyền Béo", "Châu Sĩ", "Gà Tre"];
       dates = ["3/9/26", "10/9/26", "24/9/26"];
       matchesData = {};
       dates.forEach(d => {
@@ -802,6 +504,7 @@
           id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
         }));
       });
+      mgMatches = [];
       saveDataToFirestore();
     }
 
@@ -809,19 +512,14 @@
       const statusEl = document.getElementById("cloudStatus");
       statusEl.className = "cloud-status cloud-syncing";
       statusEl.innerHTML = "⏳ Đang lưu...";
-      docRef.set({ vdvs, dates, matchesData, paymentStatus, miniGame1Content, miniGame2Content }, { merge: true });
+      docRef.set({ vdvs, dates, matchesData, paymentStatus, mgMatches, miniGame1Content, miniGame2Content }, { merge: true });
     }
 
-    /* NÚT HOME */
     function goHome() {
-      if (dates.length > 0) {
-        switchTab(dates[0]);
-      } else {
-        switchTab('tonghop');
-      }
+      if (dates.length > 0) switchTab(dates[0]);
+      else switchTab('tonghop');
     }
 
-    /* DROPDOWN MENU MANAGEMENT */
     function toggleMenu(menuId, e) {
       e.stopPropagation();
       const targetMenu = document.getElementById(menuId);
@@ -853,7 +551,6 @@
       renderCurrentTab();
     }
 
-    /* VĐV MANAGEMENT */
     function addVDV() {
       const input = document.getElementById("newVdvInput");
       const name = input.value.trim();
@@ -875,8 +572,7 @@
 
     function filterVDVList() {
       const query = document.getElementById("searchVdvInput").value.toLowerCase();
-      const filtered = vdvs.filter(v => v.toLowerCase().includes(query));
-      renderVDVItems(filtered);
+      renderVDVItems(vdvs.filter(v => v.toLowerCase().includes(query)));
     }
 
     function renderVDVItems(list) {
@@ -894,7 +590,6 @@
       }).join('');
     }
 
-    /* DATE & MATCH MANAGEMENT */
     function addDateTab() {
       closeAllDropdowns();
       const dateStr = prompt("Nhập ngày đấu mới (VD: 8/10/26):");
@@ -910,32 +605,19 @@
 
     function renameCurrentDate() {
       closeAllDropdowns();
-      if (currentTab === "tonghop") {
-        alert("⚠️ Không thể đổi tên tab Tổng Hợp!");
+      if (currentTab === "tonghop" || currentTab === "minigame1") {
+        alert("⚠️ Không thể đổi tên tab hệ thống!");
         return;
       }
       const oldDate = currentTab;
       const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
       if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
         const trimmed = newDate.trim();
-        if (dates.includes(trimmed)) {
-          alert("⚠️ Tên ngày này đã tồn tại!");
-          return;
-        }
+        if (dates.includes(trimmed)) return alert("⚠️ Tên ngày này đã tồn tại!");
         const idx = dates.indexOf(oldDate);
         if (idx !== -1) dates[idx] = trimmed;
-
         matchesData[trimmed] = matchesData[oldDate];
         delete matchesData[oldDate];
-
-        Object.keys(paymentStatus).forEach(key => {
-          if (key.startsWith(`${oldDate}_`)) {
-            const vdvName = key.split('_')[1];
-            paymentStatus[`${trimmed}_${vdvName}`] = paymentStatus[key];
-            delete paymentStatus[key];
-          }
-        });
-
         currentTab = trimmed;
         saveDataToFirestore();
       }
@@ -943,74 +625,72 @@
 
     function deleteCurrentDate() {
       closeAllDropdowns();
-      if (currentTab === "tonghop") {
-        alert("⚠️ Không thể xóa tab Tổng Hợp!");
-        return;
-      }
-      const dateToDelete = currentTab;
-      if (confirm(`❌ Bạn có chắc chắn muốn XÓA TOÀN BỘ dữ liệu của ngày "${dateToDelete}"?`)) {
-        dates = dates.filter(d => d !== dateToDelete);
-        delete matchesData[dateToDelete];
-
-        Object.keys(paymentStatus).forEach(key => {
-          if (key.startsWith(`${dateToDelete}_`)) {
-            delete paymentStatus[key];
-          }
-        });
-
+      if (currentTab === "tonghop" || currentTab === "minigame1") return alert("⚠️ Không thể xóa tab hệ thống!");
+      if (confirm(`❌ Xóa toàn bộ dữ liệu ngày "${currentTab}"?`)) {
+        delete matchesData[currentTab];
+        dates = dates.filter(d => d !== currentTab);
         currentTab = dates.length > 0 ? dates[0] : "tonghop";
         saveDataToFirestore();
       }
     }
 
-    /* NGOÀI BẢNG: THÊM TRẬN & XÓA TRẬN CUỐI */
     function addMatch(dateStr) {
       if (!matchesData[dateStr]) matchesData[dateStr] = [];
-      const newId = matchesData[dateStr].length + 1;
       matchesData[dateStr].push({
-        id: newId, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
+        id: matchesData[dateStr].length + 1,
+        c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
       });
       saveDataToFirestore();
     }
 
-    function removeLastMatch(dateStr) {
+    function deleteLastMatch(dateStr) {
       if (matchesData[dateStr] && matchesData[dateStr].length > 0) {
-        if (confirm(`Xóa trận đấu cuối cùng (Trận ${matchesData[dateStr].length})?`)) {
-          matchesData[dateStr].pop();
-          saveDataToFirestore();
-        }
+        matchesData[dateStr].pop();
+        saveDataToFirestore();
       }
     }
 
-    function updateMatch(dateStr, matchIndex, field, value) {
-      matchesData[dateStr][matchIndex][field] = value;
-      saveDataToFirestore();
-    }
-
-    function togglePayment(payKey) {
-      if (!isAdminVerified) {
-        const inputPass = prompt("🔑 Nhập mật khẩu Quản trị viên để thay đổi cột THỰC TẾ:");
-        if (inputPass === ADMIN_PASSCODE) {
-          isAdminVerified = true;
-          alert("✅ Xác thực thành công!");
-        } else if (inputPass !== null) {
-          alert("❌ Mật khẩu không đúng!");
-          return;
-        } else {
-          return;
-        }
+    function updateMatch(dateStr, index, field, value) {
+      if (matchesData[dateStr] && matchesData[dateStr][index]) {
+        matchesData[dateStr][index][field] = value;
+        saveDataToFirestore();
       }
+    }
 
-      paymentStatus[payKey] = !paymentStatus[payKey];
+    function updatePayment(dateStr, vdvName, checked) {
+      paymentStatus[`${dateStr}_${vdvName}`] = checked;
       saveDataToFirestore();
     }
 
-    /* MINI GAME MODAL HANDLERS */
-    function openGameModal(gameId) {
+    /* MINIGAME FUNCTIONS */
+    function addNewMatch() {
+      const noiDung = document.getElementById("mg-noiDung").value;
+      const teamA = document.getElementById("mg-teamA").value.trim();
+      const scoreA = document.getElementById("mg-scoreA").value;
+      const scoreB = document.getElementById("mg-scoreB").value;
+      const teamB = document.getElementById("mg-teamB").value.trim();
+
+      if (!teamA || !teamB) return alert("Vui lòng nhập tên Team A và Team B!");
+
+      mgMatches.push({ id: mgMatches.length + 1, noiDung, teamA, scoreA, scoreB, teamB });
+      document.getElementById("mg-teamA").value = "";
+      document.getElementById("mg-teamB").value = "";
+      document.getElementById("mg-scoreA").value = "";
+      document.getElementById("mg-scoreB").value = "";
+      saveDataToFirestore();
+    }
+
+    function deleteMgMatch(index) {
+      mgMatches.splice(index, 1);
+      mgMatches.forEach((m, i) => m.id = i + 1);
+      saveDataToFirestore();
+    }
+
+    function openGameModal(gameNum) {
       closeAllDropdowns();
-      activeGameEditing = gameId;
-      document.getElementById("gameModalTitle").innerText = `Chỉnh Sửa Mini Game ${gameId}`;
-      document.getElementById("gameContentInput").value = gameId === 1 ? miniGame1Content : miniGame2Content;
+      activeGameEditing = gameNum;
+      document.getElementById("gameModalTitle").innerText = `Chỉnh Sửa Mini Game ${gameNum}`;
+      document.getElementById("gameContentInput").value = gameNum === 1 ? miniGame1Content : miniGame2Content;
       document.getElementById("gameModal").classList.add("show");
     }
 
@@ -1022,580 +702,402 @@
       const val = document.getElementById("gameContentInput").value;
       if (activeGameEditing === 1) miniGame1Content = val;
       else miniGame2Content = val;
-      saveDataToFirestore();
       closeGameModal();
-      alert(`✅ Đã cập nhật nội dung Mini Game ${activeGameEditing}`);
+      saveDataToFirestore();
     }
 
-    /* RENDER TAB CONTENTS */
+    /* RENDER LOGIC */
     function renderCurrentTab() {
-      const content = document.getElementById("tabContent");
+      const container = document.getElementById("tabContent");
       if (currentTab === "tonghop") {
-        renderTongHopTab(content);
+        renderTongHopTab(container);
+      } else if (currentTab === "minigame1") {
+        renderMiniGame1Tab(container);
       } else {
-        renderSingleDayTab(content, currentTab);
+        renderDateMatchesTab(container, currentTab);
       }
     }
 
-    // TẠO OPTIONS CÓ MÀU SẮC DÀNH CHO CÁC THẺ SELECT
-    function generateVdvOptionsHtml(selectedValue) {
-      return vdvs.map((v, i) => {
-        const color = VDV_COLORS[i % VDV_COLORS.length];
-        const isSelected = selectedValue === v ? 'selected' : '';
-        return `<option value="${v}" ${isSelected} style="color: ${color}; font-weight: bold;">${v}</option>`;
-      }).join('');
-    }
+    function renderDateMatchesTab(container, dateStr) {
+      const list = matchesData[dateStr] || [];
+      const stats = calculateDayStats(dateStr);
 
-    function renderSingleDayTab(container, dateStr) {
-      const matches = matchesData[dateStr] || [];
       let html = `
-        <div class="pickleball-banner">
-          <div class="banner-content">
-            <span class="banner-icon">🏆</span>
-            <div class="banner-text">
-              <strong>QUY TẮC TÍNH KÈO PICKLEBALL CMTD:</strong><br>
-              • Thắng kèo: Nhập tiền thắng sau trừ 10K cho BTC (+5K nếu kèo 15K).<br>
-              • Thua kèo: Nhập dấu trừ (-) trước số tiền thua (-15K nếu kèo 15K).<br>
-              • Tỷ số 0 là <strong>HẦM</strong> (Kèo x2: Thắng +10K, Thua -30K).
-            </div>
-          </div>
-          <div class="banner-tag">OFFICIAL MATCH</div>
-        </div>
-
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">BẢNG THỐNG KÊ TRẬN PICK - NGÀY ${dateStr}</h2>
-            
-            <!-- ĐƯA NÚT THÊM/XÓA TRẬN RA NGOÀI BẢNG NGAY TRÊN CỘT STT -->
+            <h2 class="card-title">📅 BẢNG THI ĐẤU NGÀY ${dateStr}</h2>
             <div class="table-actions-toolbar">
               <button class="btn btn-green" onclick="addMatch('${dateStr}')">➕ Thêm Trận</button>
-              <button class="btn btn-red" onclick="removeLastMatch('${dateStr}')">🗑️ Xóa Trận Cuối</button>
+              <button class="btn btn-red" onclick="deleteLastMatch('${dateStr}')">➖ Xóa Trận Cuối</button>
             </div>
           </div>
-
           <div class="table-responsive">
             <table>
-              <colgroup>
-                <col style="width: 70px;">
-                <col style="width: 19%;">
-                <col style="width: 19%;">
-                <col style="width: 19%;">
-                <col style="width: 19%;">
-                <col style="width: 90px;">
-                <col style="width: 45px;">
-                <col style="width: 45px;">
-              </colgroup>
               <thead>
                 <tr>
-                  <th>STT</th>
-                  <th colspan="2" class="th-pick1">CẶP PICK 1</th>
-                  <th colspan="2" class="th-pick2">CẶP PICK 2</th>
-                  <th>TỶ SỐ</th>
-                  <th colspan="2" class="th-money">KÈO</th>
+                  <th style="width:45px;">Trận</th>
+                  <th class="th-pick1" colspan="2">Cặp Pickle 1</th>
+                  <th style="width:100px;">Tỷ Số</th>
+                  <th class="th-pick2" colspan="2">Cặp Pickle 2</th>
+                  <th>Cặp Thắng</th>
+                  <th>Cặp Thua</th>
+                  <th>Thua Đậm (&lt;6)</th>
                 </tr>
               </thead>
               <tbody>
       `;
 
-      matches.forEach((m, idx) => {
-        const s1 = parseInt(m.score1);
-        const s2 = parseInt(m.score2);
-        
-        let keo1 = "";
-        let keo2 = "";
+      list.forEach((m, idx) => {
+        const s1 = parseInt(m.score1) || 0;
+        const s2 = parseInt(m.score2) || 0;
+        let winText = "", loseText = "", isHam = false;
 
-        if (!isNaN(s1) && !isNaN(s2)) {
-          let isHam = (s1 === 0 || s2 === 0);
-          let winVal = isHam ? 10 : 5;
-          let loseVal = isHam ? -30 : -15;
-
+        if (m.score1 !== "" && m.score2 !== "") {
           if (s1 > s2) {
-            keo1 = winVal;
-            keo2 = loseVal;
+            winText = `${m.c1_p1} + ${m.c1_p2}`;
+            loseText = `${m.c2_p1} + ${m.c2_p2}`;
+            if (s2 < 6) isHam = true;
           } else if (s2 > s1) {
-            keo1 = loseVal;
-            keo2 = winVal;
-          } else {
-            keo1 = 0;
-            keo2 = 0;
+            winText = `${m.c2_p1} + ${m.c2_p2}`;
+            loseText = `${m.c1_p1} + ${m.c1_p2}`;
+            if (s1 < 6) isHam = true;
           }
         }
 
-        const score1Display = (!isNaN(s1) && s1 === 0) ? `<span class="ham-badge">HẦM</span>` : "";
-        const score2Display = (!isNaN(s2) && s2 === 0) ? `<span class="ham-badge">HẦM</span>` : "";
+        html += `
+          <tr>
+            <td><b>${m.id}</b></td>
+            <td class="th-pick1">${renderVdvSelect(dateStr, idx, 'c1_p1', m.c1_p1)}</td>
+            <td class="th-pick1">${renderVdvSelect(dateStr, idx, 'c1_p2', m.c1_p2)}</td>
+            <td>
+              <input type="number" class="score-input" value="${m.score1}" onchange="updateMatch('${dateStr}', ${idx}, 'score1', this.value)"> - 
+              <input type="number" class="score-input" value="${m.score2}" onchange="updateMatch('${dateStr}', ${idx}, 'score2', this.value)">
+            </td>
+            <td class="th-pick2">${renderVdvSelect(dateStr, idx, 'c2_p1', m.c2_p1)}</td>
+            <td class="th-pick2">${renderVdvSelect(dateStr, idx, 'c2_p2', m.c2_p2)}</td>
+            <td class="txt-win">${winText}</td>
+            <td class="txt-lose">${loseText}</td>
+            <td>${isHam ? '<span class="ham-badge">BỊ HĂM</span>' : ''}</td>
+          </tr>
+        `;
+      });
 
-        // Tìm màu gán cho từng ô select đang được chọn
-        const c1_p1_color = m.c1_p1 ? VDV_COLORS[vdvs.indexOf(m.c1_p1) % VDV_COLORS.length] : "#334155";
-        const c1_p2_color = m.c1_p2 ? VDV_COLORS[vdvs.indexOf(m.c1_p2) % VDV_COLORS.length] : "#334155";
-        const c2_p1_color = m.c2_p1 ? VDV_COLORS[vdvs.indexOf(m.c2_p1) % VDV_COLORS.length] : "#334155";
-        const c2_p2_color = m.c2_p2 ? VDV_COLORS[vdvs.indexOf(m.c2_p2) % VDV_COLORS.length] : "#334155";
+      html += `</tbody></table></div></div>`;
+
+      // Bảng Tổng Hợp Tiền Trong Ngày
+      html += `
+        <div class="card">
+          <h2 class="card-title" style="margin-bottom:10px;">💰 THỐNG KÊ TIỀN SÂN & PHẠT NGÀY ${dateStr}</h2>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>VĐV</th>
+                  <th>Trận Tham Gia</th>
+                  <th>Thắng</th>
+                  <th>Thua</th>
+                  <th>Bị Hăm</th>
+                  <th class="th-money">Phạt Hăm (10k)</th>
+                  <th class="th-money">Tiền Sân (20k)</th>
+                  <th class="th-money">TỔNG CỘNG</th>
+                  <th>Đã Nộp</th>
+                  <th>Ghi Chú</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+
+      let sumSan = 0, sumHam = 0, sumTong = 0;
+      stats.forEach(st => {
+        const key = `${dateStr}_${st.name}`;
+        const isPaid = !!paymentStatus[key];
+        sumSan += st.tienSan;
+        sumHam += st.tienHam;
+        sumTong += st.tongTien;
 
         html += `
           <tr>
-            <td><strong>Trận ${m.id}</strong></td>
-            <td>
-              <select style="color: ${c1_p1_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c1_p1', this.value)">
-                <option value="">-- VĐV 1 --</option>
-                ${generateVdvOptionsHtml(m.c1_p1)}
-              </select>
-            </td>
-            <td>
-              <select style="color: ${c1_p2_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c1_p2', this.value)">
-                <option value="">-- VĐV 2 --</option>
-                ${generateVdvOptionsHtml(m.c1_p2)}
-              </select>
-            </td>
-            <td>
-              <select style="color: ${c2_p1_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c2_p1', this.value)">
-                <option value="">-- VĐV 1 --</option>
-                ${generateVdvOptionsHtml(m.c2_p1)}
-              </select>
-            </td>
-            <td>
-              <select style="color: ${c2_p2_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c2_p2', this.value)">
-                <option value="">-- VĐV 2 --</option>
-                ${generateVdvOptionsHtml(m.c2_p2)}
-              </select>
-            </td>
-            <td>
-              <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                <input type="text" class="score-input" value="${m.score1}" onchange="updateMatch('${dateStr}', ${idx}, 'score1', this.value)">
-                <span>-</span>
-                <input type="text" class="score-input" value="${m.score2}" onchange="updateMatch('${dateStr}', ${idx}, 'score2', this.value)">
-              </div>
-              <div style="font-size:9px; margin-top:1px;">${score1Display} ${score2Display}</div>
-            </td>
-            <td class="${keo1 > 0 ? 'txt-win' : (keo1 < 0 ? 'txt-lose' : '')}">${keo1}</td>
-            <td class="${keo2 > 0 ? 'txt-win' : (keo2 < 0 ? 'txt-lose' : '')}">${keo2}</td>
+            <td><b>${st.name}</b></td>
+            <td>${st.totalMatches}</td>
+            <td class="txt-win">${st.wins}</td>
+            <td class="txt-lose">${st.loses}</td>
+            <td>${st.hams}</td>
+            <td>${st.tienHam.toLocaleString()}đ</td>
+            <td>${st.tienSan.toLocaleString()}đ</td>
+            <td style="font-weight:bold; color:#b45309;">${st.tongTien.toLocaleString()}đ</td>
+            <td><input type="checkbox" class="checkbox-cell" ${isPaid ? 'checked' : ''} onchange="updatePayment('${dateStr}', '${st.name}', this.checked)"></td>
+            <td class="${isPaid ? 'note-paid' : 'note-unpaid'}">${isPaid ? 'Đã Nộp' : 'Chưa Nộp'}</td>
           </tr>
         `;
       });
 
       html += `
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-
-      renderSingleDaySummaryTable(dateStr, html, container);
-    }
-
-    function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
-      const matches = matchesData[dateStr] || [];
-      let stats = {};
-
-      vdvs.forEach(v => {
-        stats[v] = { played: 0, winK: 0, loseK: 0, total: 0 };
-      });
-
-      matches.forEach(m => {
-        const s1 = parseInt(m.score1);
-        const s2 = parseInt(m.score2);
-
-        if (!isNaN(s1) && !isNaN(s2)) {
-          const pair1 = [m.c1_p1, m.c1_p2].filter(Boolean);
-          const pair2 = [m.c2_p1, m.c2_p2].filter(Boolean);
-
-          let isHam = (s1 === 0 || s2 === 0);
-          let winAmount = isHam ? 10 : 5;
-          let loseAmount = isHam ? -30 : -15;
-
-          if (s1 > s2) {
-            pair1.forEach(v => {
-              if (stats[v]) {
-                stats[v].played++;
-                stats[v].winK += winAmount;
-                stats[v].total += winAmount;
-              }
-            });
-            pair2.forEach(v => {
-              if (stats[v]) {
-                stats[v].played++;
-                stats[v].loseK += loseAmount;
-                stats[v].total += loseAmount;
-              }
-            });
-          } else if (s2 > s1) {
-            pair2.forEach(v => {
-              if (stats[v]) {
-                stats[v].played++;
-                stats[v].winK += winAmount;
-                stats[v].total += winAmount;
-              }
-            });
-            pair1.forEach(v => {
-              if (stats[v]) {
-                stats[v].played++;
-                stats[v].loseK += loseAmount;
-                stats[v].total += loseAmount;
-              }
-            });
-          }
-        }
-      });
-
-      let sumBringBack = 0;
-      let sumThucThu = 0;
-      let sumAmThucTe = 0;
-
-      let summaryRowsHtml = "";
-
-      vdvs.forEach((v) => {
-        const st = stats[v];
-        if (st.played > 0) {
-          const payKey = `${dateStr}_${v}`;
-          const isPaid = paymentStatus[payKey] || false;
-          const vIndex = vdvs.indexOf(v);
-          const vColor = VDV_COLORS[vIndex % VDV_COLORS.length];
-
-          let bringBack = 0;
-          if (st.played >= 4 && st.total > 0) {
-            bringBack = st.total;
-            sumBringBack += bringBack;
-          }
-
-          if (st.total < 0) {
-            sumAmThucTe += st.total;
-            if (isPaid) {
-              sumThucThu += Math.abs(st.total);
-            }
-          }
-
-          let noteText = "";
-          if (st.total < 0) {
-            noteText = isPaid ? `<span class="note-paid">Đã nộp</span>` : `<span class="note-unpaid">Chưa nộp</span>`;
-          } else if (st.total > 0) {
-            noteText = isPaid ? `<span class="note-paid">Đã nhận</span>` : `<span class="note-unpaid">Chưa nhận</span>`;
-          }
-
-          summaryRowsHtml += `
-            <tr>
-              <td style="color: ${vColor}; font-weight: 800; text-align: left; padding-left: 12px;">${v}</td>
-              <td>${st.played}</td>
-              <td class="txt-win">${st.winK > 0 ? st.winK : ''}</td>
-              <td class="txt-lose">${st.loseK < 0 ? st.loseK : ''}</td>
-              <td style="color:#2563eb; font-weight:bold;">${bringBack > 0 ? bringBack : ''}</td>
-              <td class="${st.total < 0 ? 'txt-lose' : (st.total > 0 ? 'txt-win' : '')}"><strong>${st.total}</strong></td>
-              <td>
-                <input type="checkbox" class="checkbox-cell" ${isPaid ? 'checked' : ''} onclick="togglePayment('${payKey}')">
-              </td>
-              <td>${noteText}</td>
-            </tr>
-          `;
-        }
-      });
-
-      let btcThuVeCalculated = sumAmThucTe + sumBringBack; 
-      let quyCon = sumThucThu - Math.abs(btcThuVeCalculated);
-
-      let summaryTableHtml = `
-        <div class="card">
-          <div class="card-header-flex">
-            <h2 class="card-title">BẢNG TỔNG HỢP THÀNH TIỀN & THU CHI</h2>
-          </div>
-          <div class="table-responsive">
-            <table>
-              <colgroup>
-                <col style="width: 18%;">
-                <col style="width: 10%;">
-                <col style="width: 10%;">
-                <col style="width: 10%;">
-                <col style="width: 14%;">
-                <col style="width: 10%;">
-                <col style="width: 8%;">
-                <col style="width: 20%;">
-              </colgroup>
-              <thead>
-                <tr>
-                  <th>Pick Thủ</th>
-                  <th>Số trận</th>
-                  <th>Thắng/K</th>
-                  <th>Thua/K</th>
-                  <th>Mang về</th>
-                  <th>Tổng</th>
-                  <th>Thực Tế</th>
-                  <th>Note</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${summaryRowsHtml}
-                <tr class="total-summary-row">
-                  <td style="color: red; text-align: left;"><strong>Tổng Tiền BTC Thu Về</strong></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td style="color: blue;">${sumBringBack}</td>
-                  <td style="color: red;">${btcThuVeCalculated}</td>
-                  <td style="color: blue;">${sumThucThu}</td>
-                  <td></td>
-                </tr>
-                <tr class="total-summary-row">
-                  <td style="color: red; text-align: left;" colspan="4"><strong>Quỹ Còn</strong></td>
-                  <td colspan="2" style="color: red; font-size: 15px;"><strong>${quyCon}</strong></td>
-                  <td colspan="2"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-
-      container.innerHTML = matchesHtml + summaryTableHtml;
-    }
-
-    /* BẢNG TỔNG HỢP VỚI MỖI PICK THỦ 1 MÀU KHÁC NHAU */
-    function renderTongHopTab(container) {
-      let vdvDayTotals = {};
-      vdvs.forEach(v => {
-        vdvDayTotals[v] = {};
-        dates.forEach(d => { vdvDayTotals[v][d] = 0; });
-      });
-
-      let dayTotalsSum = {};
-      dates.forEach(d => { dayTotalsSum[d] = 0; });
-
-      dates.forEach(d => {
-        const matches = matchesData[d] || [];
-        matches.forEach(m => {
-          const s1 = parseInt(m.score1);
-          const s2 = parseInt(m.score2);
-
-          if (!isNaN(s1) && !isNaN(s2)) {
-            const pair1 = [m.c1_p1, m.c1_p2].filter(Boolean);
-            const pair2 = [m.c2_p1, m.c2_p2].filter(Boolean);
-
-            let isHam = (s1 === 0 || s2 === 0);
-            let winAmt = isHam ? 10 : 5;
-            let loseAmt = isHam ? -30 : -15;
-
-            if (s1 > s2) {
-              pair1.forEach(v => { if (vdvDayTotals[v]) vdvDayTotals[v][d] += winAmt; });
-              pair2.forEach(v => { if (vdvDayTotals[v]) vdvDayTotals[v][d] += loseAmt; });
-            } else if (s2 > s1) {
-              pair2.forEach(v => { if (vdvDayTotals[v]) vdvDayTotals[v][d] += winAmt; });
-              pair1.forEach(v => { if (vdvDayTotals[v]) vdvDayTotals[v][d] += loseAmt; });
-            }
-          }
-        });
-
-        vdvs.forEach(v => {
-          dayTotalsSum[d] += vdvDayTotals[v][d];
-        });
-      });
-
-      let grandTotalAllDays = 0;
-
-      let html = `
-        <div class="card">
-          <div class="card-header-flex">
-            <h2 class="card-title">BẢNG TỔNG HỢP TỪNG NGÀY</h2>
-          </div>
-          <div class="table-responsive">
-            <table>
-              <thead>
-                <tr>
-                  <th style="width: 160px;">VĐV (PICK THỦ)</th>
-                  ${dates.map(d => `<th>NGÀY ${d}</th>`).join('')}
-                  <th style="background-color: #fef08a; color: #854d0e;">TỔNG KÈO</th>
-                </tr>
-              </thead>
-              <tbody>
-      `;
-
-      vdvs.forEach((v, index) => {
-        let rowSum = 0;
-        let dayCells = dates.map(d => {
-          let val = vdvDayTotals[v][d];
-          rowSum += val;
-          let cls = val > 0 ? 'txt-win' : (val < 0 ? 'txt-lose' : '');
-          return `<td class="${cls}">${val !== 0 ? (val > 0 ? '+' + val + 'K' : val + 'K') : '-'}</td>`;
-        }).join('');
-
-        grandTotalAllDays += rowSum;
-        let totalCls = rowSum > 0 ? 'txt-win' : (rowSum < 0 ? 'txt-lose' : '');
-        
-        // Gán màu sắc nổi bật cho tên từng Pick Thủ
-        let vdvColor = VDV_COLORS[index % VDV_COLORS.length];
-
-        html += `
-          <tr>
-            <td style="color: ${vdvColor}; font-weight: 800; font-size: 13px; text-align: left; padding-left: 12px;">
-              <span style="display:inline-block; width:8px; height:8px; background-color:${vdvColor}; border-radius:50%; margin-right:6px;"></span>
-              ${v}
-            </td>
-            ${dayCells}
-            <td class="${totalCls}" style="background-color: #fef9c3;"><strong>${rowSum > 0 ? '+' + rowSum + 'K' : rowSum + 'K'}</strong></td>
-          </tr>
-        `;
-      });
-
-      let daySumCells = dates.map(d => {
-        let val = dayTotalsSum[d];
-        let cls = val > 0 ? 'txt-win' : (val < 0 ? 'txt-lose' : '');
-        return `<td class="${cls}"><strong>${val > 0 ? '+' + val + 'K' : val + 'K'}</strong></td>`;
-      }).join('');
-
-      let grandTotalCls = grandTotalAllDays > 0 ? 'txt-win' : (grandTotalAllDays < 0 ? 'txt-lose' : '');
-
-      html += `
-                <tr class="total-summary-row">
-                  <td style="color: red; text-align: center;"><strong>TỔNG</strong></td>
-                  ${daySumCells}
-                  <td class="${grandTotalCls}" style="background-color: #fef08a;"><strong>${grandTotalAllDays > 0 ? '+' + grandTotalAllDays + 'K' : grandTotalAllDays + 'K'}</strong></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <tr class="total-summary-row">
+          <td colspan="5">TỔNG CỘNG HỆ THỐNG</td>
+          <td>${sumHam.toLocaleString()}đ</td>
+          <td>${sumSan.toLocaleString()}đ</td>
+          <td style="color:red; font-size:13px;">${sumTong.toLocaleString()}đ</td>
+          <td colspan="2"></td>
+        </tr>
+        </tbody></table></div></div>
       `;
 
       container.innerHTML = html;
     }
 
-    function exportToExcel() {
-      closeAllDropdowns();
-      const wb = XLSX.utils.book_new();
+    function renderVdvSelect(dateStr, matchIdx, field, currentVal) {
+      let opts = `<option value="">--Chọn--</option>`;
+      vdvs.forEach(v => {
+        opts += `<option value="${v}" ${v === currentVal ? 'selected' : ''}>${v}</option>`;
+      });
+      return `<select onchange="updateMatch('${dateStr}', ${matchIdx}, '${field}', this.value)">${opts}</select>`;
+    }
+
+    function calculateDayStats(dateStr) {
+      const list = matchesData[dateStr] || [];
+      const map = {};
+
+      vdvs.forEach(v => {
+        map[v] = { name: v, totalMatches: 0, wins: 0, loses: 0, hams: 0, tienSan: 0, tienHam: 0, tongTien: 0 };
+      });
+
+      list.forEach(m => {
+        const s1 = parseInt(m.score1) || 0;
+        const s2 = parseInt(m.score2) || 0;
+        if (m.score1 === "" || m.score2 === "") return;
+
+        const team1 = [m.c1_p1, m.c1_p2].filter(Boolean);
+        const team2 = [m.c2_p1, m.c2_p2].filter(Boolean);
+
+        team1.concat(team2).forEach(v => {
+          if (map[v]) map[v].totalMatches++;
+        });
+
+        if (s1 > s2) {
+          team1.forEach(v => { if (map[v]) map[v].wins++; });
+          team2.forEach(v => {
+            if (map[v]) {
+              map[v].loses++;
+              if (s2 < 6) { map[v].hams++; map[v].tienHam += 10000; }
+            }
+          });
+        } else if (s2 > s1) {
+          team2.forEach(v => { if (map[v]) map[v].wins++; });
+          team1.forEach(v => {
+            if (map[v]) {
+              map[v].loses++;
+              if (s1 < 6) { map[v].hams++; map[v].tienHam += 10000; }
+            }
+          });
+        }
+      });
+
+      return Object.values(map).filter(st => st.totalMatches > 0).map(st => {
+        st.tienSan = st.totalMatches * 20000;
+        st.tongTien = st.tienSan + st.tienHam;
+        return st;
+      });
+    }
+
+    function renderTongHopTab(container) {
+      const globalStats = {};
+      vdvs.forEach(v => {
+        globalStats[v] = { name: v, daysCount: 0, totalMatches: 0, wins: 0, loses: 0, hams: 0, tienSan: 0, tienHam: 0, tongTien: 0 };
+      });
+
       dates.forEach(d => {
-        const matches = matchesData[d] || [];
-        const data = matches.map(m => ({
-          "Trận": m.id,
-          "Cặp Pick 1 - VĐV 1": m.c1_p1,
-          "Cặp Pick 1 - VĐV 2": m.c1_p2,
-          "Cặp Pick 2 - VĐV 1": m.c2_p1,
-          "Cặp Pick 2 - VĐV 2": m.c2_p2,
-          "Tỷ số 1": m.score1,
-          "Tỷ số 2": m.score2
+        const st = calculateDayStats(d);
+        st.forEach(s => {
+          if (globalStats[s.name]) {
+            globalStats[s.name].daysCount++;
+            globalStats[s.name].totalMatches += s.totalMatches;
+            globalStats[s.name].wins += s.wins;
+            globalStats[s.name].loses += s.loses;
+            globalStats[s.name].hams += s.hams;
+            globalStats[s.name].tienSan += s.tienSan;
+            globalStats[s.name].tienHam += s.tienHam;
+            globalStats[s.name].tongTien += s.tongTien;
+          }
+        });
+      });
+
+      const list = Object.values(globalStats).filter(st => st.totalMatches > 0);
+
+      let html = `
+        <div class="card">
+          <h2 class="card-title" style="margin-bottom:12px;">📊 BẢNG TỔNG HỢP TẤT CẢ CÁC NGÀY ĐẤU</h2>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>VĐV</th>
+                  <th>Số Buổi Tham Gia</th>
+                  <th>Tổng Trận</th>
+                  <th>Thắng</th>
+                  <th>Thua</th>
+                  <th>Tỷ Lệ Thắng</th>
+                  <th>Bị Hăm</th>
+                  <th class="th-money">Tổng Tiền Hăm</th>
+                  <th class="th-money">Tổng Tiền Sân</th>
+                  <th class="th-money">TỔNG TIỀN PHẢI NỘP</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+
+      list.forEach(st => {
+        const winRate = st.totalMatches > 0 ? ((st.wins / st.totalMatches) * 100).toFixed(1) : 0;
+        html += `
+          <tr>
+            <td><b>${st.name}</b></td>
+            <td>${st.daysCount} buổi</td>
+            <td>${st.totalMatches}</td>
+            <td class="txt-win">${st.wins}</td>
+            <td class="txt-lose">${st.loses}</td>
+            <td><b>${winRate}%</b></td>
+            <td>${st.hams}</td>
+            <td>${st.tienHam.toLocaleString()}đ</td>
+            <td>${st.tienSan.toLocaleString()}đ</td>
+            <td style="font-weight:900; color:#b45309;">${st.tongTien.toLocaleString()}đ</td>
+          </tr>
+        `;
+      });
+
+      html += `</tbody></table></div></div>`;
+      container.innerHTML = html;
+    }
+
+    function renderMiniGame1Tab(container) {
+      let sumA = 0, sumB = 0;
+
+      let rowsHtml = mgMatches.map((m, idx) => {
+        const sA = parseInt(m.scoreA) || 0;
+        const sB = parseInt(m.scoreB) || 0;
+        sumA += sA;
+        sumB += sB;
+
+        let resText = "-", scoreDiff = 0;
+        if (m.scoreA !== "" && m.scoreB !== "") {
+          if (sA > sB) {
+            resText = "<span class='txt-win'>Team A Thắng</span>";
+            scoreDiff = sA - sB;
+          } else if (sB > sA) {
+            resText = "<span class='txt-lose'>Team B Thắng</span>";
+            scoreDiff = sB - sA;
+          } else {
+            resText = "Hòa";
+          }
+        }
+
+        return `
+          <tr>
+            <td><b>${m.id}</b></td>
+            <td>${m.noiDung}</td>
+            <td>${m.teamA}</td>
+            <td><input type="number" class="score-in" value="${m.scoreA}" onchange="updateMgScore(${idx}, 'scoreA', this.value)"></td>
+            <td>VS</td>
+            <td><input type="number" class="score-in" value="${m.scoreB}" onchange="updateMgScore(${idx}, 'scoreB', this.value)"></td>
+            <td>${m.teamB}</td>
+            <td>${resText}</td>
+            <td><b>${scoreDiff}</b></td>
+            <td><button class="btn-del" onclick="deleteMgMatch(${idx})">✕</button></td>
+          </tr>
+        `;
+      }).join('');
+
+      let resA = "HÒA", resB = "HÒA";
+      if (sumA > sumB) { resA = "THẮNG CHUNG CUỘC 🎉"; resB = "THUA"; }
+      else if (sumB > sumA) { resB = "THẮNG CHUNG CUỘC 🎉"; resA = "THUA"; }
+
+      container.innerHTML = `
+        <div class="mg-container">
+          <div class="mg-header-title">🎮 MINI GAME 1 - LỊCH THI ĐẤU TEAM A & TEAM B</div>
+          
+          <div class="mg-add-bar">
+            <select id="mg-noiDung">
+              <option value="Đôi nam">Đôi nam</option>
+              <option value="Đôi nữ">Đôi nữ</option>
+              <option value="Đôi nam nữ">Đôi nam nữ</option>
+            </select>
+            <input type="text" id="mg-teamA" placeholder="TEAM A (VD: Tiến Thọ + Thanh Đàm)">
+            <input type="number" id="mg-scoreA" placeholder="Tỷ số A" min="0">
+            <input type="number" id="mg-scoreB" placeholder="Tỷ số B" min="0">
+            <input type="text" id="mg-teamB" placeholder="TEAM B (VD: Trí Đô + Long Diễn)">
+            <button class="btn btn-green" onclick="addNewMatch()">➕ Thêm Trận</button>
+          </div>
+
+          <div class="mg-table-wrapper">
+            <table class="mg-table">
+              <thead>
+                <tr>
+                  <th style="width: 45px;">Trận</th>
+                  <th style="width: 110px;">Nội dung</th>
+                  <th>TEAM A</th>
+                  <th style="width: 60px;">Tỷ số A</th>
+                  <th style="width: 40px;">VS</th>
+                  <th style="width: 60px;">Tỷ số B</th>
+                  <th>TEAM B</th>
+                  <th style="width: 100px;">Kết quả</th>
+                  <th style="width: 50px;">Điểm</th>
+                  <th style="width: 45px;">Xóa</th>
+                </tr>
+              </thead>
+              <tbody>${rowsHtml}</tbody>
+            </table>
+          </div>
+
+          <table class="mg-summary-table">
+            <thead>
+              <tr>
+                <th>TEAM</th>
+                <th>Tổng Điểm Số</th>
+                <th>KẾT QUẢ CHUNG CUỘC</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Team A</b></td>
+                <td><b>${sumA}</b></td>
+                <td class="mg-result-text">${resA}</td>
+              </tr>
+              <tr>
+                <td><b>Team B</b></td>
+                <td><b>${sumB}</b></td>
+                <td class="mg-result-text">${resB}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function updateMgScore(idx, field, val) {
+      if (mgMatches[idx]) {
+        mgMatches[idx][field] = val;
+        saveDataToFirestore();
+      }
+    }
+
+    function exportToExcel() {
+      const wb = XLSX.utils.book_new();
+      
+      dates.forEach(d => {
+        const list = matchesData[d] || [];
+        const data = list.map(m => ({
+          'Trận': m.id,
+          'Pickle 1 - VĐV 1': m.c1_p1,
+          'Pickle 1 - VĐV 2': m.c1_p2,
+          'Điểm Team 1': m.score1,
+          'Điểm Team 2': m.score2,
+          'Pickle 2 - VĐV 1': m.c2_p1,
+          'Pickle 2 - VĐV 2': m.c2_p2
         }));
         const ws = XLSX.utils.json_to_sheet(data);
         XLSX.utils.book_append_sheet(wb, ws, `Ngay_${d.replace(/\//g, '-')}`);
       });
-      XLSX.writeFile(wb, "Pickleball_CMTD_ThongKe.xlsx");
+
+      XLSX.writeFile(wb, "Pickleball_CMTD_Data.xlsx");
     }
   </script>
-
-// Dữ liệu ban đầu 24 trận theo đúng mẫu hình ảnh
-let minigameData = [
-    { type: "Đôi nam", teamA: "Tiến Thọ + Thanh Đàm", scoreA: 8, scoreB: 11, teamB: "Trí Đô + Long Diễn" },
-    { type: "Đôi nam", teamA: "Thanh Đàm + Thành Sóc", scoreA: 5, scoreB: 11, teamB: "Long Diễn + Châu Sĩ" },
-    { type: "Đôi nam", teamA: "Hà Giấy + Thành Sóc", scoreA: 6, scoreB: 11, teamB: "Lợi Trí + Châu Sĩ" },
-    { type: "Đôi nam", teamA: "Thành Sóc + Minh Vượng", scoreA: 13, scoreB: 11, teamB: "Châu Sĩ + Minh Hạnh" },
-    { type: "Đôi nam", teamA: "Thanh Đàm + Phú Mỗ", scoreA: 11, scoreB: 9, teamB: "Long Diễn + Dũng Ngạc" },
-    { type: "Đôi nam", teamA: "Tiến Thọ + Hà Giấy", scoreA: 11, scoreB: 9, teamB: "Trí Đô + Lợi Trí" },
-    { type: "Đôi nam", teamA: "Thanh Đàm + Điền Chèm", scoreA: 5, scoreB: 11, teamB: "Long Diễn + Tuấn La" },
-    { type: "Đôi nam", teamA: "Phú Mỗ + Hà Giấy", scoreA: 11, scoreB: 9, teamB: "Dũng Ngạc + Lợi Trí" },
-    { type: "Đôi nam", teamA: "Hà Giấy + Điền Chèm", scoreA: 11, scoreB: 7, teamB: "Lợi Trí + Tuấn La" },
-    { type: "Đôi nữ", teamA: "Điền Chèm + Thành Sóc", scoreA: 11, scoreB: 6, teamB: "Tuấn La + Châu Sĩ" },
-    { type: "Đôi nam nữ", teamA: "Thanh Đàm + Hải Hà", scoreA: 11, scoreB: 6, teamB: "Long Diễn + Vân Đình" },
-    { type: "Đôi nam", teamA: "Tiến Thọ + Phú Mỗ", scoreA: 5, scoreB: 11, teamB: "Trí Đô + Dũng Ngạc" },
-    { type: "Đôi nam", teamA: "Thanh Đàm + Hà Giấy", scoreA: 12, scoreB: 10, teamB: "Long Diễn + Lợi Trí" },
-    { type: "Đôi nữ", teamA: "Quỳnh Cool + Hải Hà", scoreA: 11, scoreB: 7, teamB: "Cẩm Ly + Vân Đình" },
-    { type: "Đôi nam", teamA: "Tiến Thọ + Điền Chèm", scoreA: 5, scoreB: 11, teamB: "Trí Đô + Tuấn La" },
-    { type: "Đôi nữ", teamA: "Quỳnh Cool + Minh Vượng", scoreA: 11, scoreB: 8, teamB: "Cẩm Ly + Minh Hạnh" },
-    { type: "Đôi nam", teamA: "Tiến Thọ + Thành Sóc", scoreA: 9, scoreB: 11, teamB: "Trí Đô + Châu Sĩ" },
-    { type: "Đôi nam", teamA: "Phú Mỗ + Thành Sóc", scoreA: 7, scoreB: 11, teamB: "Dũng Ngạc + Châu Sĩ" },
-    { type: "Đôi nam", teamA: "Phú Mỗ + Điền Chèm", scoreA: 8, scoreB: 11, teamB: "Dũng Ngạc + Tuấn La" },
-    { type: "Đôi nam nữ", teamA: "Hải Hà + Minh Vượng", scoreA: 13, scoreB: 11, teamB: "Vân Đình + Minh Hạnh" },
-    { type: "Đôi nam nữ", teamA: "Tiến Thọ + Quỳnh Cool", scoreA: 11, scoreB: 4, teamB: "Trí Đô + Cẩm Ly" },
-    { type: "Đôi nam nữ", teamA: "Phú Mỗ + Minh Vượng", scoreA: 8, scoreB: 11, teamB: "Dũng Ngạc + Minh Hạnh" },
-    { type: "Đôi nam nữ", teamA: "Hà Giấy + Quỳnh Cool", scoreA: 3, scoreB: 11, teamB: "Lợi Trí + Cẩm Ly" },
-    { type: "Đôi nam nữ", teamA: "Điền Chèm + Hải Hà", scoreA: 5, scoreB: 11, teamB: "Tuấn La + Vân Đình" }
-];
-
-// Hàm hiển thị danh sách trận và tính tổng điểm
-function renderMinigame() {
-    let tbody = document.getElementById('mg-match-list');
-    if(!tbody) return;
-    tbody.innerHTML = '';
-
-    let sumA = 0;
-    let sumB = 0;
-
-    minigameData.forEach((m, idx) => {
-        let win = '';
-        let point = 1;
-
-        if (m.scoreA > m.scoreB) {
-            win = 'TEAM A';
-            sumA += 1;
-        } else if (m.scoreB > m.scoreA) {
-            win = 'TEAM B';
-            sumB += 1;
-        } else {
-            win = 'HÒA';
-            point = 0;
-        }
-
-        let tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td><b>${idx + 1}</b></td>
-            <td>${m.type}</td>
-            <td><b>${m.teamA}</b></td>
-            <td><input type="number" class="score-in" value="${m.scoreA}" onchange="updateMgScore(${idx}, 'A', this.value)"></td>
-            <td style="font-weight:bold; color:#dc2626;">VS</td>
-            <td><input type="number" class="score-in" value="${m.scoreB}" onchange="updateMgScore(${idx}, 'B', this.value)"></td>
-            <td><b>${m.teamB}</b></td>
-            <td style="font-weight:bold; color:#16a34a;">${win}</td>
-            <td><b>${point}</b></td>
-            <td><button class="btn-del" onclick="deleteMgMatch(${idx})">✕</button></td>
-        `;
-        tbody.appendChild(tr);
-    });
-
-    // Cập nhật bảng tổng kết điểm
-    document.getElementById('mg-sum-scoreA').innerText = sumA;
-    document.getElementById('mg-sum-scoreB').innerText = sumB;
-
-    let resA = "HÒA", resB = "HÒA";
-    if (sumA > sumB) { resA = "THẮNG"; resB = "THUA"; }
-    else if (sumB > sumA) { resA = "THUA"; resB = "THẮNG"; }
-
-    document.getElementById('mg-sum-resA').innerText = resA;
-    document.getElementById('mg-sum-resB').innerText = resB;
-}
-
-// Cập nhật tỷ số trực tiếp
-function updateMgScore(index, team, val) {
-    let score = parseInt(val) || 0;
-    if (team === 'A') minigameData[index].scoreA = score;
-    if (team === 'B') minigameData[index].scoreB = score;
-    renderMinigame();
-}
-
-// Thêm trận đấu mới
-function addNewMatch() {
-    let type = document.getElementById('mg-noiDung').value;
-    let teamA = document.getElementById('mg-teamA').value.trim();
-    let scoreA = parseInt(document.getElementById('mg-scoreA').value) || 0;
-    let scoreB = parseInt(document.getElementById('mg-scoreB').value) || 0;
-    let teamB = document.getElementById('mg-teamB').value.trim();
-
-    if (!teamA || !teamB) {
-        alert('Vui lòng nhập tên VĐV cho 2 đội!');
-        return;
-    }
-
-    minigameData.push({ type, teamA, scoreA, scoreB, teamB });
-    renderMinigame();
-
-    // Reset input
-    document.getElementById('mg-teamA').value = '';
-    document.getElementById('mg-teamB').value = '';
-    document.getElementById('mg-scoreA').value = '';
-    document.getElementById('mg-scoreB').value = '';
-}
-
-// Xóa trận đấu
-function deleteMgMatch(index) {
-    if (confirm("Bạn muốn xóa trận này?")) {
-        minigameData.splice(index, 1);
-        renderMinigame();
-    }
-}
-
-// Tự động tải bảng khi tải trang
-document.addEventListener('DOMContentLoaded', () => {
-    renderMinigame();
-});
-  </body>
+</body>
 </html>

@@ -268,6 +268,116 @@
     .modal.show { display: flex; }
     .modal-content { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
   </style>
+  ...
+/* Các đoạn CSS cũ phía trên của bạn */
+.th-money { background-color: #fef3c7; color: #92400e; }
+
+
+/* --- DÁN ĐOẠN MÃ CSS MỚI VÀO ĐÂY --- */
+.mg-container {
+    max-width: 1100px;
+    margin: 10px auto;
+    font-family: 'Roboto', sans-serif;
+}
+
+.mg-header-title {
+    background-color: #1e3a5f;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 800;
+    text-transform: uppercase;
+    border-radius: 8px 8px 0 0;
+}
+
+.mg-add-bar {
+    display: flex;
+    gap: 8px;
+    background: #eef2f5;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-bottom: none;
+    flex-wrap: wrap;
+}
+
+.mg-add-bar input, .mg-add-bar select {
+    padding: 6px 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.mg-add-bar input[type="text"] { flex: 2; min-width: 180px; }
+.mg-add-bar input[type="number"] { width: 65px; }
+
+.mg-table-wrapper {
+    max-height: 520px;
+    overflow-y: auto;
+    border: 1px solid #334155;
+    border-radius: 0 0 6px 6px;
+}
+
+.mg-table, .mg-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    text-align: center;
+    background-color: #fff;
+}
+
+.mg-table th, .mg-summary-table th {
+    background-color: #0d233a;
+    color: #ffffff;
+    padding: 8px 4px;
+    border: 1px solid #334155;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.mg-table td, .mg-summary-table td {
+    border: 1px solid #94a3b8;
+    padding: 5px 4px;
+    color: #0f172a;
+}
+
+.mg-table tbody tr:nth-child(odd) { background-color: #d2e8d4; }
+.mg-table tbody tr:nth-child(even) { background-color: #ffffff; }
+
+.score-in {
+    width: 42px;
+    text-align: center;
+    font-weight: 800;
+    border: 1px solid #a855f7;
+    border-radius: 4px;
+    padding: 2px;
+    background: #fff;
+}
+
+.btn-del {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.mg-summary-table {
+    margin-top: 15px;
+    width: 420px;
+    float: left;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.mg-summary-table th { background-color: #1e3a5f; }
+.mg-result-text { font-weight: 800; color: #16a34a; }
+/* --- HẾT ĐOẠN CSS MỚI --- */
+
+</style>
+</head>
 </head>
 <body>
   <div class="container">
@@ -328,7 +438,72 @@
           </div>
         </div>
 
-        <!-- MENU 4: MINI GAME 1 -->
+        <!-- KHU VỰC TAB MINI GAME 1 -->
+<div id="tabMinigame1" class="tab-content">
+    <div class="mg-container">
+        <div class="mg-header-title">Lịch Thi Đấu Team A & Team B</div>
+
+        <!-- Thanh Thêm Trận Mới -->
+        <div class="mg-add-bar">
+            <select id="mg-noiDung">
+                <option value="Đôi nam">Đôi nam</option>
+                <option value="Đôi nữ">Đôi nữ</option>
+                <option value="Đôi nam nữ">Đôi nam nữ</option>
+            </select>
+            <input type="text" id="mg-teamA" placeholder="TEAM A (VD: Tiến Thọ + Thanh Đàm)">
+            <input type="number" id="mg-scoreA" placeholder="Tỷ số A" min="0">
+            <input type="number" id="mg-scoreB" placeholder="Tỷ số B" min="0">
+            <input type="text" id="mg-teamB" placeholder="TEAM B (VD: Trí Đô + Long Diễn)">
+            <button class="btn btn-green" onclick="addNewMatch()">➕ Thêm Trận</button>
+        </div>
+
+        <!-- Bảng Thi Đấu 24 Trận -->
+        <div class="mg-table-wrapper">
+            <table class="mg-table">
+                <thead>
+                    <tr>
+                        <th style="width: 45px;">Trận</th>
+                        <th style="width: 110px;">Nội dung</th>
+                        <th>TEAM A</th>
+                        <th style="width: 60px;">Tỷ số A</th>
+                        <th style="width: 40px;">VS</th>
+                        <th style="width: 60px;">Tỷ số B</th>
+                        <th>TEAM B</th>
+                        <th style="width: 90px;">Kết quả</th>
+                        <th style="width: 50px;">Điểm</th>
+                        <th style="width: 45px;">Xóa</th>
+                    </tr>
+                </thead>
+                <tbody id="mg-match-list">
+                    <!-- Dữ liệu 24 trận tự động nạp ở đây -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Bảng Tổng Kết Điểm -->
+        <table class="mg-summary-table">
+            <thead>
+                <tr>
+                    <th>TEAM</th>
+                    <th>Tổng điểm (Điểm số)</th>
+                    <th>KẾT QUẢ CHUNG CUỘC</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>Team A</b></td>
+                    <td id="mg-sum-scoreA">0</td>
+                    <td id="mg-sum-resA" class="mg-result-text">-</td>
+                </tr>
+                <tr>
+                    <td><b>Team B</b></td>
+                    <td id="mg-sum-scoreB">0</td>
+                    <td id="mg-sum-resB" class="mg-result-text">-</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuMini1', event)">🎮 MINI GAME 1 ▾</button>
           <div class="dropdown-menu" id="menuMini1">
@@ -1112,5 +1287,129 @@
       XLSX.writeFile(wb, "Pickleball_CMTD_ThongKe.xlsx");
     }
   </script>
-</body>
+
+// Dữ liệu ban đầu 24 trận theo đúng mẫu hình ảnh
+let minigameData = [
+    { type: "Đôi nam", teamA: "Tiến Thọ + Thanh Đàm", scoreA: 8, scoreB: 11, teamB: "Trí Đô + Long Diễn" },
+    { type: "Đôi nam", teamA: "Thanh Đàm + Thành Sóc", scoreA: 5, scoreB: 11, teamB: "Long Diễn + Châu Sĩ" },
+    { type: "Đôi nam", teamA: "Hà Giấy + Thành Sóc", scoreA: 6, scoreB: 11, teamB: "Lợi Trí + Châu Sĩ" },
+    { type: "Đôi nam", teamA: "Thành Sóc + Minh Vượng", scoreA: 13, scoreB: 11, teamB: "Châu Sĩ + Minh Hạnh" },
+    { type: "Đôi nam", teamA: "Thanh Đàm + Phú Mỗ", scoreA: 11, scoreB: 9, teamB: "Long Diễn + Dũng Ngạc" },
+    { type: "Đôi nam", teamA: "Tiến Thọ + Hà Giấy", scoreA: 11, scoreB: 9, teamB: "Trí Đô + Lợi Trí" },
+    { type: "Đôi nam", teamA: "Thanh Đàm + Điền Chèm", scoreA: 5, scoreB: 11, teamB: "Long Diễn + Tuấn La" },
+    { type: "Đôi nam", teamA: "Phú Mỗ + Hà Giấy", scoreA: 11, scoreB: 9, teamB: "Dũng Ngạc + Lợi Trí" },
+    { type: "Đôi nam", teamA: "Hà Giấy + Điền Chèm", scoreA: 11, scoreB: 7, teamB: "Lợi Trí + Tuấn La" },
+    { type: "Đôi nữ", teamA: "Điền Chèm + Thành Sóc", scoreA: 11, scoreB: 6, teamB: "Tuấn La + Châu Sĩ" },
+    { type: "Đôi nam nữ", teamA: "Thanh Đàm + Hải Hà", scoreA: 11, scoreB: 6, teamB: "Long Diễn + Vân Đình" },
+    { type: "Đôi nam", teamA: "Tiến Thọ + Phú Mỗ", scoreA: 5, scoreB: 11, teamB: "Trí Đô + Dũng Ngạc" },
+    { type: "Đôi nam", teamA: "Thanh Đàm + Hà Giấy", scoreA: 12, scoreB: 10, teamB: "Long Diễn + Lợi Trí" },
+    { type: "Đôi nữ", teamA: "Quỳnh Cool + Hải Hà", scoreA: 11, scoreB: 7, teamB: "Cẩm Ly + Vân Đình" },
+    { type: "Đôi nam", teamA: "Tiến Thọ + Điền Chèm", scoreA: 5, scoreB: 11, teamB: "Trí Đô + Tuấn La" },
+    { type: "Đôi nữ", teamA: "Quỳnh Cool + Minh Vượng", scoreA: 11, scoreB: 8, teamB: "Cẩm Ly + Minh Hạnh" },
+    { type: "Đôi nam", teamA: "Tiến Thọ + Thành Sóc", scoreA: 9, scoreB: 11, teamB: "Trí Đô + Châu Sĩ" },
+    { type: "Đôi nam", teamA: "Phú Mỗ + Thành Sóc", scoreA: 7, scoreB: 11, teamB: "Dũng Ngạc + Châu Sĩ" },
+    { type: "Đôi nam", teamA: "Phú Mỗ + Điền Chèm", scoreA: 8, scoreB: 11, teamB: "Dũng Ngạc + Tuấn La" },
+    { type: "Đôi nam nữ", teamA: "Hải Hà + Minh Vượng", scoreA: 13, scoreB: 11, teamB: "Vân Đình + Minh Hạnh" },
+    { type: "Đôi nam nữ", teamA: "Tiến Thọ + Quỳnh Cool", scoreA: 11, scoreB: 4, teamB: "Trí Đô + Cẩm Ly" },
+    { type: "Đôi nam nữ", teamA: "Phú Mỗ + Minh Vượng", scoreA: 8, scoreB: 11, teamB: "Dũng Ngạc + Minh Hạnh" },
+    { type: "Đôi nam nữ", teamA: "Hà Giấy + Quỳnh Cool", scoreA: 3, scoreB: 11, teamB: "Lợi Trí + Cẩm Ly" },
+    { type: "Đôi nam nữ", teamA: "Điền Chèm + Hải Hà", scoreA: 5, scoreB: 11, teamB: "Tuấn La + Vân Đình" }
+];
+
+// Hàm hiển thị danh sách trận và tính tổng điểm
+function renderMinigame() {
+    let tbody = document.getElementById('mg-match-list');
+    if(!tbody) return;
+    tbody.innerHTML = '';
+
+    let sumA = 0;
+    let sumB = 0;
+
+    minigameData.forEach((m, idx) => {
+        let win = '';
+        let point = 1;
+
+        if (m.scoreA > m.scoreB) {
+            win = 'TEAM A';
+            sumA += 1;
+        } else if (m.scoreB > m.scoreA) {
+            win = 'TEAM B';
+            sumB += 1;
+        } else {
+            win = 'HÒA';
+            point = 0;
+        }
+
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><b>${idx + 1}</b></td>
+            <td>${m.type}</td>
+            <td><b>${m.teamA}</b></td>
+            <td><input type="number" class="score-in" value="${m.scoreA}" onchange="updateMgScore(${idx}, 'A', this.value)"></td>
+            <td style="font-weight:bold; color:#dc2626;">VS</td>
+            <td><input type="number" class="score-in" value="${m.scoreB}" onchange="updateMgScore(${idx}, 'B', this.value)"></td>
+            <td><b>${m.teamB}</b></td>
+            <td style="font-weight:bold; color:#16a34a;">${win}</td>
+            <td><b>${point}</b></td>
+            <td><button class="btn-del" onclick="deleteMgMatch(${idx})">✕</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    // Cập nhật bảng tổng kết điểm
+    document.getElementById('mg-sum-scoreA').innerText = sumA;
+    document.getElementById('mg-sum-scoreB').innerText = sumB;
+
+    let resA = "HÒA", resB = "HÒA";
+    if (sumA > sumB) { resA = "THẮNG"; resB = "THUA"; }
+    else if (sumB > sumA) { resA = "THUA"; resB = "THẮNG"; }
+
+    document.getElementById('mg-sum-resA').innerText = resA;
+    document.getElementById('mg-sum-resB').innerText = resB;
+}
+
+// Cập nhật tỷ số trực tiếp
+function updateMgScore(index, team, val) {
+    let score = parseInt(val) || 0;
+    if (team === 'A') minigameData[index].scoreA = score;
+    if (team === 'B') minigameData[index].scoreB = score;
+    renderMinigame();
+}
+
+// Thêm trận đấu mới
+function addNewMatch() {
+    let type = document.getElementById('mg-noiDung').value;
+    let teamA = document.getElementById('mg-teamA').value.trim();
+    let scoreA = parseInt(document.getElementById('mg-scoreA').value) || 0;
+    let scoreB = parseInt(document.getElementById('mg-scoreB').value) || 0;
+    let teamB = document.getElementById('mg-teamB').value.trim();
+
+    if (!teamA || !teamB) {
+        alert('Vui lòng nhập tên VĐV cho 2 đội!');
+        return;
+    }
+
+    minigameData.push({ type, teamA, scoreA, scoreB, teamB });
+    renderMinigame();
+
+    // Reset input
+    document.getElementById('mg-teamA').value = '';
+    document.getElementById('mg-teamB').value = '';
+    document.getElementById('mg-scoreA').value = '';
+    document.getElementById('mg-scoreB').value = '';
+}
+
+// Xóa trận đấu
+function deleteMgMatch(index) {
+    if (confirm("Bạn muốn xóa trận này?")) {
+        minigameData.splice(index, 1);
+        renderMinigame();
+    }
+}
+
+// Tự động tải bảng khi tải trang
+document.addEventListener('DOMContentLoaded', () => {
+    renderMinigame();
+});
+  </body>
 </html>

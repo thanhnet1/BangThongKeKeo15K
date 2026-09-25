@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CLB PICKLEBALL - CMTD | Thống Kê Cloud Firestore</title>
+  <title>CLB PICKLEBALL - CMTD | Quản Lý & Thống Kê</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
   <!-- Thư viện SheetJS xuất Excel -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -16,7 +16,7 @@
       --primary-color: #0f172a;
       --accent-color: #2563eb;
       --score-border: #a855f7;
-      --card-bg: rgba(255, 255, 255, 0.96);
+      --card-bg: #ffffff;
       --border-color: #cbd5e1;
       --text-main: #1e293b;
     }
@@ -24,9 +24,7 @@
     
     body {
       font-family: 'Roboto', sans-serif;
-      background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.75)), 
-                  url('https://images.unsplash.com/photo-1599586120429-48281b6a0eca?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
-      background-size: cover;
+      background-color: #f1f5f9;
       color: var(--text-main);
       margin: 0;
       padding: 15px 10px;
@@ -37,13 +35,13 @@
     
     /* HEADER SECTION */
     .header-section {
-      background: rgba(15, 23, 42, 0.9);
-      backdrop-filter: blur(8px);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: white;
       padding: 16px 20px;
       border-radius: 14px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
       margin-bottom: 16px;
       display: flex;
       flex-direction: column;
@@ -57,22 +55,29 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
     }
 
-    .brand-title { display: flex; align-items: center; gap: 12px; }
-    .brand-title h1 {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 900;
-      background: linear-gradient(90deg, #38bdf8, #818cf8, #f43f5e);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 0.5px;
+    .brand-title { 
+      display: flex; 
+      align-items: center; 
+      max-width: 100%;
     }
-    .brand-title .subtitle { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+    
+    .app-banner-img {
+      max-height: 80px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 8px;
+    }
 
-    /* MENU HÀNG NGANG */
+    @media (max-width: 768px) {
+      .app-banner-img {
+        max-height: 50px;
+      }
+    }
+
+    /* MENU THANH ĐIỀU HƯỚNG */
     .top-nav {
       display: flex;
       align-items: center;
@@ -103,7 +108,6 @@
       background-color: var(--accent-color);
       border-color: var(--accent-color);
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
     }
     
     /* DROPDOWN MENU */
@@ -115,14 +119,12 @@
       min-width: 240px;
       background: #ffffff;
       border-radius: 10px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
       border: 1px solid var(--border-color);
       z-index: 9999 !important;
       padding: 6px 0;
       color: var(--text-main);
-      animation: fadeIn 0.2s ease;
     }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
     .dropdown-menu.right-align { left: auto; right: 0; }
     .dropdown-menu.show { display: block; }
@@ -141,17 +143,17 @@
     .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 4px 0; }
     
     .cloud-status { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold; margin-left: auto; }
-    .cloud-online { background-color: #10b981; color: white; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+    .cloud-online { background-color: #10b981; color: white; }
     .cloud-syncing { background-color: #f59e0b; color: white; }
-
-    /* VĐV SEARCH LIST IN MENU */
+    
+    /* TÌM KIẾM PICK THỦ */
     .vdv-container { padding: 8px; width: 260px; }
     .vdv-scroll-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
     .vdv-item { background: #f8fafc; padding: 5px 8px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
 
     /* BUTTONS */
     .btn { background-color: var(--accent-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; }
-    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn:hover { opacity: 0.9; }
     .btn-sm { padding: 5px 10px; font-size: 11px; }
     .btn-green { background-color: #10b981; }
     .btn-red { background-color: #ef4444; }
@@ -159,13 +161,13 @@
     /* CARDS & TABLES */
     .card {
       background: var(--card-bg);
-      backdrop-filter: blur(10px);
       padding: 16px;
       border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-      margin-bottom: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
       position: relative;
       z-index: 10;
+      border: 1px solid #e2e8f0;
     }
     .card-header-flex {
       display: flex;
@@ -177,9 +179,13 @@
       flex-wrap: wrap;
       gap: 10px;
     }
-    .card-title { font-size: 16px; font-weight: 800; color: var(--primary-color); margin: 0; text-transform: uppercase; }
+    .card-title { font-size: 15px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; }
     
-    .table-actions-toolbar { display: flex; align-items: center; gap: 8px; }
+    .table-actions-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
     .table-responsive {
       overflow-x: auto;
@@ -192,11 +198,11 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 12px;
-      min-width: 800px;
+      min-width: 850px;
       table-layout: fixed;
     }
-    th, td { border: 1px solid #cbd5e1; padding: 6px 4px; text-align: center; vertical-align: middle; word-wrap: break-word; }
-    th { background-color: #f1f5f9; color: #334155; font-weight: 800; font-size: 11px; text-transform: uppercase; }
+    th, td { border: 1px solid #cbd5e1; padding: 7px 4px; text-align: center; vertical-align: middle; word-wrap: break-word; }
+    th { background-color: #f8fafc; color: #334155; font-weight: 800; font-size: 11px; text-transform: uppercase; }
     
     .th-pick1 { background-color: #dcfce7; color: #166534; }
     .th-pick2 { background-color: #fee2e2; color: #991b1b; }
@@ -206,7 +212,7 @@
       width: 100%;
       padding: 5px;
       border: 1px solid #cbd5e1;
-      border-radius: 5px;
+      border-radius: 6px;
       font-size: 11px;
       font-weight: 700;
       background: #fff;
@@ -215,9 +221,35 @@
     }
     input[type="text"] { width: 100%; padding: 5px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 11px; background: #fff; }
 
-    .score-input { width: 38px !important; padding: 3px !important; font-weight: 800; text-align: center; font-size: 12px; border: 2px solid var(--score-border) !important; border-radius: 5px; background: #faf5ff; }
+    /* Ô NHẬP TỶ SỐ CÓ CHỨA CHỮ HẦM */
+    .score-input { 
+      width: 48px !important; 
+      height: 28px;
+      padding: 2px !important; 
+      font-weight: 800; 
+      text-align: center; 
+      font-size: 12px; 
+      border: 1.5px solid var(--score-border) !important; 
+      border-radius: 6px; 
+      background: #ffffff; 
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ham-text {
+      background-color: #ef4444;
+      color: white;
+      font-weight: 900;
+      font-size: 10px;
+      padding: 2px 4px;
+      border-radius: 4px;
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      line-height: 1.2;
+    }
     
-    .ham-badge { background-color: #dc2626; color: white; padding: 2px 5px; border-radius: 4px; font-weight: 900; font-size: 10px; }
     .txt-win { color: #16a34a; font-weight: 800; }
     .txt-lose { color: #dc2626; font-weight: 800; }
     .note-paid { color: #2563eb; font-weight: 800; }
@@ -225,112 +257,10 @@
     .checkbox-cell { transform: scale(1.2); cursor: pointer; }
     .total-summary-row { background-color: #f8fafc; font-weight: 800; }
 
-    /* MODAL */
+    /* MODAL CHỈNH SỬA MINI GAME */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; }
     .modal.show { display: flex; }
     .modal-content { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
-
-    /* STYLES CHO MINIGAME TAB */
-    .mg-container {
-      max-width: 1100px;
-      margin: 10px auto;
-      font-family: 'Roboto', sans-serif;
-    }
-
-    .mg-header-title {
-      background-color: #1e3a5f;
-      color: #ffffff;
-      text-align: center;
-      padding: 10px;
-      font-size: 18px;
-      font-weight: 800;
-      text-transform: uppercase;
-      border-radius: 8px 8px 0 0;
-    }
-
-    .mg-add-bar {
-      display: flex;
-      gap: 8px;
-      background: #eef2f5;
-      padding: 10px;
-      border: 1px solid #cbd5e1;
-      border-bottom: none;
-      flex-wrap: wrap;
-    }
-
-    .mg-add-bar input, .mg-add-bar select {
-      padding: 6px 8px;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
-      font-size: 12px;
-    }
-
-    .mg-add-bar input[type="text"] { flex: 2; min-width: 180px; }
-    .mg-add-bar input[type="number"] { width: 65px; }
-
-    .mg-table-wrapper {
-      max-height: 520px;
-      overflow-y: auto;
-      border: 1px solid #334155;
-      border-radius: 0 0 6px 6px;
-    }
-
-    .mg-table, .mg-summary-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-      text-align: center;
-      background-color: #fff;
-    }
-
-    .mg-table th, .mg-summary-table th {
-      background-color: #0d233a;
-      color: #ffffff;
-      padding: 8px 4px;
-      border: 1px solid #334155;
-      position: sticky;
-      top: 0;
-      z-index: 2;
-    }
-
-    .mg-table td, .mg-summary-table td {
-      border: 1px solid #94a3b8;
-      padding: 5px 4px;
-      color: #0f172a;
-    }
-
-    .mg-table tbody tr:nth-child(odd) { background-color: #f8fafc; }
-    .mg-table tbody tr:nth-child(even) { background-color: #ffffff; }
-
-    .score-in {
-      width: 42px;
-      text-align: center;
-      font-weight: 800;
-      border: 1px solid #a855f7;
-      border-radius: 4px;
-      padding: 2px;
-      background: #fff;
-    }
-
-    .btn-del {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 2px 6px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .mg-summary-table {
-      margin-top: 15px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    .mg-summary-table th { background-color: #1e3a5f; }
-    .mg-result-text { font-weight: 800; color: #16a34a; }
   </style>
 </head>
 <body>
@@ -339,16 +269,13 @@
     <div class="header-section">
       <div class="header-top">
         <div class="brand-title">
-          <span style="font-size: 32px;">🏓</span>
-          <div>
-            <h1>CLB PICKLEBALL - CMTD</h1>
-            <div class="subtitle">Hệ Thống Thống Kê & Bảng Đấu Pickleball Chuyên Nghiệp</div>
-          </div>
+          <img src="banner.png" alt="CLB PICKLEBALL CMTD" class="app-banner-img" onerror="this.style.display='none'; document.getElementById('altBrandText').style.display='block';">
+          <h2 id="altBrandText" style="display:none; margin:0; font-weight:900; color:#fff; font-size:20px;">CLB PICKLEBALL - CMTD</h2>
         </div>
         <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối...</div>
       </div>
 
-      <!-- NAVBAR MENU HÀNG NGANG -->
+      <!-- NAVBAR MENU -->
       <div class="top-nav">
         <div class="nav-item">
           <button class="nav-btn" onclick="goHome()">🏠 HOME</button>
@@ -396,8 +323,8 @@
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuMini1', event)">🎮 MINI GAME 1 ▾</button>
           <div class="dropdown-menu" id="menuMini1">
-            <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Thể Lệ</div>
-            <div class="dropdown-item" onclick="switchTab('minigame1')">▶️ Lịch Thi Đấu & Thống Kê</div>
+            <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Nội Dung Game 1</div>
+            <div class="dropdown-item" onclick="alert('Đang mở Mini Game 1...')">▶️ Chơi Game 1</div>
           </div>
         </div>
 
@@ -405,22 +332,21 @@
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuMini2', event)">🎯 MINI GAME 2 ▾</button>
           <div class="dropdown-menu right-align" id="menuMini2">
-            <div class="dropdown-item" onclick="openGameModal(2)">⚙️ Chỉnh Sửa Nội Dung</div>
-            <div class="dropdown-item" onclick="alert(miniGame2Content)">▶️ Xem Thể Lệ Game 2</div>
+            <div class="dropdown-item" onclick="openGameModal(2)">⚙️ Chỉnh Sửa Nội Dung Game 2</div>
+            <div class="dropdown-item" onclick="alert('Đang mở Mini Game 2...')">▶️ Chơi Game 2</div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- KHU VỰC HIỂN THỊ NỘI DUNG DỘNG -->
+    
     <div id="tabContent"></div>
   </div>
 
-  <!-- MODAL CHỈNH SỬA MINI GAME -->
+  <!-- MODAL CHỈNH SỬA GAME -->
   <div class="modal" id="gameModal">
     <div class="modal-content">
       <h3 style="margin-top:0;" id="gameModalTitle">Chỉnh Sửa Mini Game</h3>
-      <textarea id="gameContentInput" rows="6" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;" placeholder="Nhập nội dung/thể lệ game..."></textarea>
+      <textarea id="gameContentInput" rows="6" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;" placeholder="Nhập thể lệ trò chơi..."></textarea>
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
         <button class="btn" style="background-color:#64748b;" onclick="closeGameModal()">Hủy</button>
         <button class="btn btn-green" onclick="saveGameContent()">Lưu Thay Đổi</button>
@@ -429,7 +355,7 @@
   </div>
 
   <script>
-    // CẤU HÌNH FIREBASE
+    // CẤU HÌNH FIREBASE CLOUD
     const firebaseConfig = {
       apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
       authDomain: "pickleball-cmtd.firebaseapp.com",
@@ -445,7 +371,7 @@
     const docRef = db.collection("clubs").doc("cmtd_main_data");
 
     const VDV_COLORS = [
-      "#2563eb", "#d97706", "#059669", "#dc2626", "#7c3aed", 
+      "#d97706", "#2563eb", "#059669", "#dc2626", "#7c3aed", 
       "#db2777", "#0284c7", "#15803d", "#b45309", "#4338ca",
       "#c026d3", "#0d9488", "#ea580c", "#4f46e5"
     ];
@@ -454,11 +380,13 @@
     let dates = [];
     let matchesData = {};
     let paymentStatus = {};
-    let mgMatches = [];
     let miniGame1Content = "Thể lệ Mini Game 1...";
     let miniGame2Content = "Thể lệ Mini Game 2...";
     let currentTab = "";
     let activeGameEditing = 1;
+
+    const ADMIN_PASSCODE = "123456";
+    let isAdminVerified = false;
 
     window.onload = function() {
       document.addEventListener('click', closeAllDropdowns);
@@ -471,14 +399,13 @@
         if (doc.exists) {
           const data = doc.data();
           vdvs = data.vdvs || [];
-          dates = data.dates || ["3/9/26"];
+          dates = data.dates || ["24/9/26"];
           matchesData = data.matchesData || {};
           paymentStatus = data.paymentStatus || {};
-          mgMatches = data.mgMatches || [];
           miniGame1Content = data.miniGame1Content || miniGame1Content;
           miniGame2Content = data.miniGame2Content || miniGame2Content;
           
-          if (!currentTab) {
+          if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop")) {
             currentTab = dates[0] || "tonghop";
           }
           statusEl.className = "cloud-status cloud-online";
@@ -496,15 +423,18 @@
     }
 
     function initDefaultFirestore() {
-      vdvs = ["Vân Đình", "Trí Đỏ", "Phú Mỗ", "Tiến Thọ", "Tuấn La", "Lợi Trí", "Long Diễn", "Hà Giấy", "Thành Sóc", "Thanh Đàm", "Điền Chèm", "Dũng Ngạc", "Huyền Béo", "Châu Sĩ", "Gà Tre"];
-      dates = ["3/9/26", "10/9/26", "24/9/26"];
+      vdvs = ["Trí Đỏ", "Long Diễn", "Lợi Trí", "Hà Giấy", "Tuấn La", "Gà Tre", "Dũng Ngạc", "Thành Sóc", "Vân Đình"];
+      dates = ["24/9/26"];
       matchesData = {};
       dates.forEach(d => {
-        matchesData[d] = Array.from({ length: 15 }, (_, i) => ({
-          id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
-        }));
+        matchesData[d] = [
+          { id: 1, c1_p1: "Trí Đỏ", c1_p2: "Gà Tre", c2_p1: "Tuấn La", c2_p2: "Thành Sóc", score1: "11", score2: "9" },
+          { id: 2, c1_p1: "Hà Giấy", c1_p2: "Lợi Trí", c2_p1: "Thành Sóc", c2_p2: "Tuấn La", score1: "11", score2: "5" },
+          { id: 3, c1_p1: "Trí Đỏ", c1_p2: "Vân Đình", c2_p1: "Dũng Ngạc", c2_p2: "Gà Tre", score1: "", score2: "" },
+          { id: 4, c1_p1: "Hà Giấy", c1_p2: "Lợi Trí", c2_p1: "Thành Sóc", c2_p2: "Tuấn La", score1: "11", score2: "3" },
+          { id: 5, c1_p1: "Long Diễn", c1_p2: "Lợi Trí", c2_p1: "Dũng Ngạc", c2_p2: "Tuấn La", score1: "11", score2: "7" }
+        ];
       });
-      mgMatches = [];
       saveDataToFirestore();
     }
 
@@ -512,7 +442,7 @@
       const statusEl = document.getElementById("cloudStatus");
       statusEl.className = "cloud-status cloud-syncing";
       statusEl.innerHTML = "⏳ Đang lưu...";
-      docRef.set({ vdvs, dates, matchesData, paymentStatus, mgMatches, miniGame1Content, miniGame2Content }, { merge: true });
+      docRef.set({ vdvs, dates, matchesData, paymentStatus, miniGame1Content, miniGame2Content }, { merge: true });
     }
 
     function goHome() {
@@ -572,7 +502,8 @@
 
     function filterVDVList() {
       const query = document.getElementById("searchVdvInput").value.toLowerCase();
-      renderVDVItems(vdvs.filter(v => v.toLowerCase().includes(query)));
+      const filtered = vdvs.filter(v => v.toLowerCase().includes(query));
+      renderVDVItems(filtered);
     }
 
     function renderVDVItems(list) {
@@ -592,10 +523,10 @@
 
     function addDateTab() {
       closeAllDropdowns();
-      const dateStr = prompt("Nhập ngày đấu mới (VD: 8/10/26):");
+      const dateStr = prompt("Nhập ngày đấu mới (VD: 25/9/26):");
       if (dateStr && !dates.includes(dateStr)) {
         dates.push(dateStr);
-        matchesData[dateStr] = Array.from({ length: 15 }, (_, i) => ({
+        matchesData[dateStr] = Array.from({ length: 5 }, (_, i) => ({
           id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
         }));
         currentTab = dateStr;
@@ -605,10 +536,7 @@
 
     function renameCurrentDate() {
       closeAllDropdowns();
-      if (currentTab === "tonghop" || currentTab === "minigame1") {
-        alert("⚠️ Không thể đổi tên tab hệ thống!");
-        return;
-      }
+      if (currentTab === "tonghop") return alert("⚠️ Không thể đổi tên tab Tổng Hợp!");
       const oldDate = currentTab;
       const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
       if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
@@ -625,10 +553,11 @@
 
     function deleteCurrentDate() {
       closeAllDropdowns();
-      if (currentTab === "tonghop" || currentTab === "minigame1") return alert("⚠️ Không thể xóa tab hệ thống!");
-      if (confirm(`❌ Xóa toàn bộ dữ liệu ngày "${currentTab}"?`)) {
-        delete matchesData[currentTab];
-        dates = dates.filter(d => d !== currentTab);
+      if (currentTab === "tonghop") return alert("⚠️ Không thể xóa tab Tổng Hợp!");
+      const dateToDelete = currentTab;
+      if (confirm(`❌ Bạn có chắc chắn muốn XÓA TOÀN BỘ dữ liệu ngày "${dateToDelete}"?`)) {
+        dates = dates.filter(d => d !== dateToDelete);
+        delete matchesData[dateToDelete];
         currentTab = dates.length > 0 ? dates[0] : "tonghop";
         saveDataToFirestore();
       }
@@ -636,61 +565,48 @@
 
     function addMatch(dateStr) {
       if (!matchesData[dateStr]) matchesData[dateStr] = [];
+      const newId = matchesData[dateStr].length + 1;
       matchesData[dateStr].push({
-        id: matchesData[dateStr].length + 1,
-        c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
+        id: newId, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: ""
       });
       saveDataToFirestore();
     }
 
-    function deleteLastMatch(dateStr) {
+    function removeLastMatch(dateStr) {
       if (matchesData[dateStr] && matchesData[dateStr].length > 0) {
-        matchesData[dateStr].pop();
-        saveDataToFirestore();
+        if (confirm(`Xóa trận đấu cuối cùng (Trận ${matchesData[dateStr].length})?`)) {
+          matchesData[dateStr].pop();
+          saveDataToFirestore();
+        }
       }
     }
 
-    function updateMatch(dateStr, index, field, value) {
-      if (matchesData[dateStr] && matchesData[dateStr][index]) {
-        matchesData[dateStr][index][field] = value;
-        saveDataToFirestore();
+    function updateMatch(dateStr, matchIndex, field, value) {
+      matchesData[dateStr][matchIndex][field] = value;
+      saveDataToFirestore();
+    }
+
+    function togglePayment(payKey) {
+      if (!isAdminVerified) {
+        const inputPass = prompt("🔑 Nhập mật khẩu Quản trị viên:");
+        if (inputPass === ADMIN_PASSCODE) {
+          isAdminVerified = true;
+        } else if (inputPass !== null) {
+          alert("❌ Mật khẩu không đúng!");
+          return;
+        } else {
+          return;
+        }
       }
-    }
-
-    function updatePayment(dateStr, vdvName, checked) {
-      paymentStatus[`${dateStr}_${vdvName}`] = checked;
+      paymentStatus[payKey] = !paymentStatus[payKey];
       saveDataToFirestore();
     }
 
-    /* MINIGAME FUNCTIONS */
-    function addNewMatch() {
-      const noiDung = document.getElementById("mg-noiDung").value;
-      const teamA = document.getElementById("mg-teamA").value.trim();
-      const scoreA = document.getElementById("mg-scoreA").value;
-      const scoreB = document.getElementById("mg-scoreB").value;
-      const teamB = document.getElementById("mg-teamB").value.trim();
-
-      if (!teamA || !teamB) return alert("Vui lòng nhập tên Team A và Team B!");
-
-      mgMatches.push({ id: mgMatches.length + 1, noiDung, teamA, scoreA, scoreB, teamB });
-      document.getElementById("mg-teamA").value = "";
-      document.getElementById("mg-teamB").value = "";
-      document.getElementById("mg-scoreA").value = "";
-      document.getElementById("mg-scoreB").value = "";
-      saveDataToFirestore();
-    }
-
-    function deleteMgMatch(index) {
-      mgMatches.splice(index, 1);
-      mgMatches.forEach((m, i) => m.id = i + 1);
-      saveDataToFirestore();
-    }
-
-    function openGameModal(gameNum) {
+    function openGameModal(gameId) {
       closeAllDropdowns();
-      activeGameEditing = gameNum;
-      document.getElementById("gameModalTitle").innerText = `Chỉnh Sửa Mini Game ${gameNum}`;
-      document.getElementById("gameContentInput").value = gameNum === 1 ? miniGame1Content : miniGame2Content;
+      activeGameEditing = gameId;
+      document.getElementById("gameModalTitle").innerText = `Chỉnh Sửa Mini Game ${gameId}`;
+      document.getElementById("gameContentInput").value = gameId === 1 ? miniGame1Content : miniGame2Content;
       document.getElementById("gameModal").classList.add("show");
     }
 
@@ -702,401 +618,436 @@
       const val = document.getElementById("gameContentInput").value;
       if (activeGameEditing === 1) miniGame1Content = val;
       else miniGame2Content = val;
-      closeGameModal();
       saveDataToFirestore();
+      closeGameModal();
     }
 
-    /* RENDER LOGIC */
     function renderCurrentTab() {
-      const container = document.getElementById("tabContent");
+      const content = document.getElementById("tabContent");
       if (currentTab === "tonghop") {
-        renderTongHopTab(container);
-      } else if (currentTab === "minigame1") {
-        renderMiniGame1Tab(container);
+        renderTongHopTab(content);
       } else {
-        renderDateMatchesTab(container, currentTab);
+        renderSingleDayTab(content, currentTab);
       }
     }
 
-    function renderDateMatchesTab(container, dateStr) {
-      const list = matchesData[dateStr] || [];
-      const stats = calculateDayStats(dateStr);
+    function generateVdvOptionsHtml(selectedValue) {
+      return vdvs.map((v, i) => {
+        const color = VDV_COLORS[i % VDV_COLORS.length];
+        const isSelected = selectedValue === v ? 'selected' : '';
+        return `<option value="${v}" ${isSelected} style="color: ${color}; font-weight: bold;">${v}</option>`;
+      }).join('');
+    }
+
+    function renderSingleDayTab(container, dateStr) {
+      const matches = matchesData[dateStr] || [];
+      let html = `
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">BẢNG THỐNG KÊ TRẬN PICK - NGÀY ${dateStr}</h2>
+            <div class="table-actions-toolbar">
+              <button class="btn btn-green" onclick="addMatch('${dateStr}')">➕ Thêm Trận</button>
+              <button class="btn btn-red" onclick="removeLastMatch('${dateStr}')">🗑️ Xóa Trận Cuối</button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table>
+              <colgroup>
+                <col style="width: 70px;">
+                <col style="width: 20%;">
+                <col style="width: 20%;">
+                <col style="width: 20%;">
+                <col style="width: 20%;">
+                <col style="width: 120px;">
+                <col style="width: 50px;">
+                <col style="width: 50px;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th colspan="2" class="th-pick1">CẶP PICK 1</th>
+                  <th colspan="2" class="th-pick2">CẶP PICK 2</th>
+                  <th>TỶ SỐ</th>
+                  <th colspan="2" class="th-money">KÈO</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+
+      matches.forEach((m, idx) => {
+        const val1 = (m.score1 || "").toString().trim();
+        const val2 = (m.score2 || "").toString().trim();
+
+        const s1 = parseInt(val1);
+        const s2 = parseInt(val2);
+        
+        let keo1 = "";
+        let keo2 = "";
+
+        if (!isNaN(s1) && !isNaN(s2)) {
+          let isHam = (s1 === 0 || s2 === 0);
+          let winVal = isHam ? 10 : 5;
+          let loseVal = isHam ? -30 : -15;
+
+          if (s1 > s2) { keo1 = winVal; keo2 = loseVal; } 
+          else if (s2 > s1) { keo1 = loseVal; keo2 = winVal; } 
+          else { keo1 = 0; keo2 = 0; }
+        }
+
+        // XỬ LÝ NỔI BẬT CHỮ HẦM KHI BẰNG 0 HOẶC GÕ CHỮ "0"
+        const isScore1Zero = (val1 === "0" || s1 === 0);
+        const isScore2Zero = (val2 === "0" || s2 === 0);
+
+        const score1Inner = isScore1Zero 
+          ? `<span class="ham-text">HẦM</span>` 
+          : `<input type="text" class="score-input" value="${m.score1}" onchange="updateMatch('${dateStr}', ${idx}, 'score1', this.value)">`;
+
+        const score2Inner = isScore2Zero 
+          ? `<span class="ham-text">HẦM</span>` 
+          : `<input type="text" class="score-input" value="${m.score2}" onchange="updateMatch('${dateStr}', ${idx}, 'score2', this.value)">`;
+
+        const c1_p1_color = m.c1_p1 ? VDV_COLORS[vdvs.indexOf(m.c1_p1) % VDV_COLORS.length] : "#334155";
+        const c1_p2_color = m.c1_p2 ? VDV_COLORS[vdvs.indexOf(m.c1_p2) % VDV_COLORS.length] : "#334155";
+        const c2_p1_color = m.c2_p1 ? VDV_COLORS[vdvs.indexOf(m.c2_p1) % VDV_COLORS.length] : "#334155";
+        const c2_p2_color = m.c2_p2 ? VDV_COLORS[vdvs.indexOf(m.c2_p2) % VDV_COLORS.length] : "#334155";
+
+        html += `
+          <tr>
+            <td><strong>Trận ${m.id}</strong></td>
+            <td>
+              <select style="color: ${c1_p1_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c1_p1', this.value)">
+                <option value="">-- Select --</option>
+                ${generateVdvOptionsHtml(m.c1_p1)}
+              </select>
+            </td>
+            <td>
+              <select style="color: ${c1_p2_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c1_p2', this.value)">
+                <option value="">-- Select --</option>
+                ${generateVdvOptionsHtml(m.c1_p2)}
+              </select>
+            </td>
+            <td>
+              <select style="color: ${c2_p1_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c2_p1', this.value)">
+                <option value="">-- Select --</option>
+                ${generateVdvOptionsHtml(m.c2_p1)}
+              </select>
+            </td>
+            <td>
+              <select style="color: ${c2_p2_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c2_p2', this.value)">
+                <option value="">-- Select --</option>
+                ${generateVdvOptionsHtml(m.c2_p2)}
+              </select>
+            </td>
+            <td>
+              <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
+                <div class="score-input" onclick="if(${isScore1Zero}) updateMatch('${dateStr}', ${idx}, 'score1', '')">${score1Inner}</div>
+                <span style="font-weight:bold;">-</span>
+                <div class="score-input" onclick="if(${isScore2Zero}) updateMatch('${dateStr}', ${idx}, 'score2', '')">${score2Inner}</div>
+              </div>
+            </td>
+            <td class="${keo1 > 0 ? 'txt-win' : (keo1 < 0 ? 'txt-lose' : '')}">${keo1}</td>
+            <td class="${keo2 > 0 ? 'txt-win' : (keo2 < 0 ? 'txt-lose' : '')}">${keo2}</td>
+          </tr>
+        `;
+      });
+
+      html += `
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      renderSingleDaySummaryTable(dateStr, html, container);
+    }
+
+    function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
+      const matches = matchesData[dateStr] || [];
+      let stats = {};
+
+      vdvs.forEach(v => {
+        stats[v] = { played: 0, winK: 0, loseK: 0, total: 0 };
+      });
+
+      matches.forEach(m => {
+        const s1 = parseInt(m.score1);
+        const s2 = parseInt(m.score2);
+
+        if (!isNaN(s1) && !isNaN(s2)) {
+          const pair1 = [m.c1_p1, m.c1_p2].filter(Boolean);
+          const pair2 = [m.c2_p1, m.c2_p2].filter(Boolean);
+
+          let isHam = (s1 === 0 || s2 === 0);
+          let winAmount = isHam ? 10 : 5;
+          let loseAmount = isHam ? -30 : -15;
+
+          if (s1 > s2) {
+            pair1.forEach(v => {
+              if (stats[v]) {
+                stats[v].played++;
+                stats[v].winK += winAmount;
+                stats[v].total += winAmount;
+              }
+            });
+            pair2.forEach(v => {
+              if (stats[v]) {
+                stats[v].played++;
+                stats[v].loseK += loseAmount;
+                stats[v].total += loseAmount;
+              }
+            });
+          } else if (s2 > s1) {
+            pair2.forEach(v => {
+              if (stats[v]) {
+                stats[v].played++;
+                stats[v].winK += winAmount;
+                stats[v].total += winAmount;
+              }
+            });
+            pair1.forEach(v => {
+              if (stats[v]) {
+                stats[v].played++;
+                stats[v].loseK += loseAmount;
+                stats[v].total += loseAmount;
+              }
+            });
+          }
+        }
+      });
+
+      let sumBringBack = 0;
+      let sumThucThu = 0;
+      let sumAmThucTe = 0;
+
+      let summaryRowsHtml = "";
+
+      vdvs.forEach((v) => {
+        const st = stats[v];
+        if (st.played > 0) {
+          const payKey = `${dateStr}_${v}`;
+          const isPaid = paymentStatus[payKey] || false;
+          const vIndex = vdvs.indexOf(v);
+          const vColor = VDV_COLORS[vIndex % VDV_COLORS.length];
+
+          let bringBack = 0;
+          if (st.played >= 4 && st.total > 0) {
+            bringBack = st.total;
+            sumBringBack += bringBack;
+          }
+
+          if (st.total < 0) {
+            sumAmThucTe += st.total;
+            if (isPaid) {
+              sumThucThu += Math.abs(st.total);
+            }
+          }
+
+          let noteText = "";
+          if (st.total < 0) {
+            noteText = isPaid ? `<span class="note-paid">Đã nộp</span>` : `<span class="note-unpaid">Chưa nộp</span>`;
+          } else if (st.total > 0) {
+            noteText = isPaid ? `<span class="note-paid">Đã nhận</span>` : `<span class="note-unpaid">Chưa nhận</span>`;
+          }
+
+          summaryRowsHtml += `
+            <tr>
+              <td style="color: ${vColor}; font-weight: 800; text-align: left; padding-left: 12px;">${v}</td>
+              <td>${st.played}</td>
+              <td class="txt-win">${st.winK > 0 ? st.winK : ''}</td>
+              <td class="txt-lose">${st.loseK < 0 ? st.loseK : ''}</td>
+              <td style="color:#2563eb; font-weight:bold;">${bringBack > 0 ? bringBack : ''}</td>
+              <td class="${st.total < 0 ? 'txt-lose' : (st.total > 0 ? 'txt-win' : '')}"><strong>${st.total}</strong></td>
+              <td>
+                <input type="checkbox" class="checkbox-cell" ${isPaid ? 'checked' : ''} onclick="togglePayment('${payKey}')">
+              </td>
+              <td>${noteText}</td>
+            </tr>
+          `;
+        }
+      });
+
+      let btcThuVeCalculated = sumAmThucTe + sumBringBack; 
+      let quyCon = sumThucThu - Math.abs(btcThuVeCalculated);
+
+      let summaryTableHtml = `
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">BẢNG TỔNG HỢP THÀNH TIỀN & THU CHI</h2>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <colgroup>
+                <col style="width: 18%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
+                <col style="width: 14%;">
+                <col style="width: 10%;">
+                <col style="width: 8%;">
+                <col style="width: 20%;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>PICK THỦ</th>
+                  <th>SỐ TRẬN</th>
+                  <th>THẮNG/K</th>
+                  <th>THUA/K</th>
+                  <th>MANG VỀ</th>
+                  <th>TỔNG</th>
+                  <th>THỰC TẾ</th>
+                  <th>NOTE</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${summaryRowsHtml}
+                <tr class="total-summary-row">
+                  <td style="color: red; text-align: left;"><strong>Tổng Tiền BTC Thu Về</strong></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td style="color: blue;"><strong>${sumBringBack}</strong></td>
+                  <td style="color: red;"><strong>${btcThuVeCalculated}</strong></td>
+                  <td style="color: blue;"><strong>${sumThucThu}</strong></td>
+                  <td></td>
+                </tr>
+                <tr class="total-summary-row">
+                  <td style="color: red; text-align: left;" colspan="4"><strong>Quỹ Còn</strong></td>
+                  <td colspan="2" style="color: red; font-size: 15px;"><strong>${quyCon}</strong></td>
+                  <td colspan="2"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = matchesHtml + summaryTableHtml;
+    }
+
+    function renderTongHopTab(container) {
+      let vdvDayTotals = {};
+      vdvs.forEach(v => {
+        vdvDayTotals[v] = {};
+        dates.forEach(d => { vdvDayTotals[v][d] = 0; });
+      });
+
+      let dayTotalsSum = {};
+      dates.forEach(d => { dayTotalsSum[d] = 0; });
+
+      dates.forEach(d => {
+        const matches = matchesData[d] || [];
+        matches.forEach(m => {
+          const s1 = parseInt(m.score1);
+          const s2 = parseInt(m.score2);
+
+          if (!isNaN(s1) && !isNaN(s2)) {
+            const pair1 = [m.c1_p1, m.c1_p2].filter(Boolean);
+            const pair2 = [m.c2_p1, m.c2_p2].filter(Boolean);
+
+            let isHam = (s1 === 0 || s2 === 0);
+            let winAmt = isHam ? 10 : 5;
+            let loseAmt = isHam ? -30 : -15;
+
+            if (s1 > s2) {
+              pair1.forEach(v => { if (vdvDayTotals[v]) vdvDayTotals[v][d] += winAmt; });
+              pair2.forEach(v => { if (vdvDayTotals[v]) vdvDayTotals[v][d] += loseAmt; });
+            } else if (s2 > s1) {
+              pair2.forEach(v => { if (vdvDayTotals[v]) vdvDayTotals[v][d] += winAmt; });
+              pair1.forEach(v => { if (vdvDayTotals[v]) vdvDayTotals[v][d] += loseAmt; });
+            }
+          }
+        });
+
+        vdvs.forEach(v => {
+          dayTotalsSum[d] += vdvDayTotals[v][d];
+        });
+      });
+
+      let grandTotalAllDays = 0;
 
       let html = `
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">📅 BẢNG THI ĐẤU NGÀY ${dateStr}</h2>
-            <div class="table-actions-toolbar">
-              <button class="btn btn-green" onclick="addMatch('${dateStr}')">➕ Thêm Trận</button>
-              <button class="btn btn-red" onclick="deleteLastMatch('${dateStr}')">➖ Xóa Trận Cuối</button>
-            </div>
+            <h2 class="card-title">BẢNG TỔNG HỢP TỪNG NGÀY</h2>
           </div>
           <div class="table-responsive">
             <table>
               <thead>
                 <tr>
-                  <th style="width:45px;">Trận</th>
-                  <th class="th-pick1" colspan="2">Cặp Pickle 1</th>
-                  <th style="width:100px;">Tỷ Số</th>
-                  <th class="th-pick2" colspan="2">Cặp Pickle 2</th>
-                  <th>Cặp Thắng</th>
-                  <th>Cặp Thua</th>
-                  <th>Thua Đậm (&lt;6)</th>
+                  <th style="width: 160px;">VĐV (PICK THỦ)</th>
+                  ${dates.map(d => `<th>NGÀY ${d}</th>`).join('')}
+                  <th style="background-color: #fef08a; color: #854d0e;">TỔNG KÈO</th>
                 </tr>
               </thead>
               <tbody>
       `;
 
-      list.forEach((m, idx) => {
-        const s1 = parseInt(m.score1) || 0;
-        const s2 = parseInt(m.score2) || 0;
-        let winText = "", loseText = "", isHam = false;
+      vdvs.forEach((v, index) => {
+        let rowSum = 0;
+        let dayCells = dates.map(d => {
+          let val = vdvDayTotals[v][d];
+          rowSum += val;
+          let cls = val > 0 ? 'txt-win' : (val < 0 ? 'txt-lose' : '');
+          return `<td class="${cls}">${val !== 0 ? (val > 0 ? '+' + val + 'K' : val + 'K') : '-'}</td>`;
+        }).join('');
 
-        if (m.score1 !== "" && m.score2 !== "") {
-          if (s1 > s2) {
-            winText = `${m.c1_p1} + ${m.c1_p2}`;
-            loseText = `${m.c2_p1} + ${m.c2_p2}`;
-            if (s2 < 6) isHam = true;
-          } else if (s2 > s1) {
-            winText = `${m.c2_p1} + ${m.c2_p2}`;
-            loseText = `${m.c1_p1} + ${m.c1_p2}`;
-            if (s1 < 6) isHam = true;
-          }
-        }
+        grandTotalAllDays += rowSum;
+        let totalCls = rowSum > 0 ? 'txt-win' : (rowSum < 0 ? 'txt-lose' : '');
+        let vdvColor = VDV_COLORS[index % VDV_COLORS.length];
 
         html += `
           <tr>
-            <td><b>${m.id}</b></td>
-            <td class="th-pick1">${renderVdvSelect(dateStr, idx, 'c1_p1', m.c1_p1)}</td>
-            <td class="th-pick1">${renderVdvSelect(dateStr, idx, 'c1_p2', m.c1_p2)}</td>
-            <td>
-              <input type="number" class="score-input" value="${m.score1}" onchange="updateMatch('${dateStr}', ${idx}, 'score1', this.value)"> - 
-              <input type="number" class="score-input" value="${m.score2}" onchange="updateMatch('${dateStr}', ${idx}, 'score2', this.value)">
+            <td style="color: ${vdvColor}; font-weight: 800; font-size: 13px; text-align: left; padding-left: 12px;">
+              ${v}
             </td>
-            <td class="th-pick2">${renderVdvSelect(dateStr, idx, 'c2_p1', m.c2_p1)}</td>
-            <td class="th-pick2">${renderVdvSelect(dateStr, idx, 'c2_p2', m.c2_p2)}</td>
-            <td class="txt-win">${winText}</td>
-            <td class="txt-lose">${loseText}</td>
-            <td>${isHam ? '<span class="ham-badge">BỊ HĂM</span>' : ''}</td>
+            ${dayCells}
+            <td class="${totalCls}" style="background-color: #fef9c3;"><strong>${rowSum > 0 ? '+' + rowSum + 'K' : rowSum + 'K'}</strong></td>
           </tr>
         `;
       });
 
-      html += `</tbody></table></div></div>`;
-
-      // Bảng Tổng Hợp Tiền Trong Ngày
-      html += `
-        <div class="card">
-          <h2 class="card-title" style="margin-bottom:10px;">💰 THỐNG KÊ TIỀN SÂN & PHẠT NGÀY ${dateStr}</h2>
-          <div class="table-responsive">
-            <table>
-              <thead>
-                <tr>
-                  <th>VĐV</th>
-                  <th>Trận Tham Gia</th>
-                  <th>Thắng</th>
-                  <th>Thua</th>
-                  <th>Bị Hăm</th>
-                  <th class="th-money">Phạt Hăm (10k)</th>
-                  <th class="th-money">Tiền Sân (20k)</th>
-                  <th class="th-money">TỔNG CỘNG</th>
-                  <th>Đã Nộp</th>
-                  <th>Ghi Chú</th>
-                </tr>
-              </thead>
-              <tbody>
-      `;
-
-      let sumSan = 0, sumHam = 0, sumTong = 0;
-      stats.forEach(st => {
-        const key = `${dateStr}_${st.name}`;
-        const isPaid = !!paymentStatus[key];
-        sumSan += st.tienSan;
-        sumHam += st.tienHam;
-        sumTong += st.tongTien;
-
-        html += `
-          <tr>
-            <td><b>${st.name}</b></td>
-            <td>${st.totalMatches}</td>
-            <td class="txt-win">${st.wins}</td>
-            <td class="txt-lose">${st.loses}</td>
-            <td>${st.hams}</td>
-            <td>${st.tienHam.toLocaleString()}đ</td>
-            <td>${st.tienSan.toLocaleString()}đ</td>
-            <td style="font-weight:bold; color:#b45309;">${st.tongTien.toLocaleString()}đ</td>
-            <td><input type="checkbox" class="checkbox-cell" ${isPaid ? 'checked' : ''} onchange="updatePayment('${dateStr}', '${st.name}', this.checked)"></td>
-            <td class="${isPaid ? 'note-paid' : 'note-unpaid'}">${isPaid ? 'Đã Nộp' : 'Chưa Nộp'}</td>
-          </tr>
-        `;
-      });
-
-      html += `
-        <tr class="total-summary-row">
-          <td colspan="5">TỔNG CỘNG HỆ THỐNG</td>
-          <td>${sumHam.toLocaleString()}đ</td>
-          <td>${sumSan.toLocaleString()}đ</td>
-          <td style="color:red; font-size:13px;">${sumTong.toLocaleString()}đ</td>
-          <td colspan="2"></td>
-        </tr>
-        </tbody></table></div></div>
-      `;
-
-      container.innerHTML = html;
-    }
-
-    function renderVdvSelect(dateStr, matchIdx, field, currentVal) {
-      let opts = `<option value="">--Chọn--</option>`;
-      vdvs.forEach(v => {
-        opts += `<option value="${v}" ${v === currentVal ? 'selected' : ''}>${v}</option>`;
-      });
-      return `<select onchange="updateMatch('${dateStr}', ${matchIdx}, '${field}', this.value)">${opts}</select>`;
-    }
-
-    function calculateDayStats(dateStr) {
-      const list = matchesData[dateStr] || [];
-      const map = {};
-
-      vdvs.forEach(v => {
-        map[v] = { name: v, totalMatches: 0, wins: 0, loses: 0, hams: 0, tienSan: 0, tienHam: 0, tongTien: 0 };
-      });
-
-      list.forEach(m => {
-        const s1 = parseInt(m.score1) || 0;
-        const s2 = parseInt(m.score2) || 0;
-        if (m.score1 === "" || m.score2 === "") return;
-
-        const team1 = [m.c1_p1, m.c1_p2].filter(Boolean);
-        const team2 = [m.c2_p1, m.c2_p2].filter(Boolean);
-
-        team1.concat(team2).forEach(v => {
-          if (map[v]) map[v].totalMatches++;
-        });
-
-        if (s1 > s2) {
-          team1.forEach(v => { if (map[v]) map[v].wins++; });
-          team2.forEach(v => {
-            if (map[v]) {
-              map[v].loses++;
-              if (s2 < 6) { map[v].hams++; map[v].tienHam += 10000; }
-            }
-          });
-        } else if (s2 > s1) {
-          team2.forEach(v => { if (map[v]) map[v].wins++; });
-          team1.forEach(v => {
-            if (map[v]) {
-              map[v].loses++;
-              if (s1 < 6) { map[v].hams++; map[v].tienHam += 10000; }
-            }
-          });
-        }
-      });
-
-      return Object.values(map).filter(st => st.totalMatches > 0).map(st => {
-        st.tienSan = st.totalMatches * 20000;
-        st.tongTien = st.tienSan + st.tienHam;
-        return st;
-      });
-    }
-
-    function renderTongHopTab(container) {
-      const globalStats = {};
-      vdvs.forEach(v => {
-        globalStats[v] = { name: v, daysCount: 0, totalMatches: 0, wins: 0, loses: 0, hams: 0, tienSan: 0, tienHam: 0, tongTien: 0 };
-      });
-
-      dates.forEach(d => {
-        const st = calculateDayStats(d);
-        st.forEach(s => {
-          if (globalStats[s.name]) {
-            globalStats[s.name].daysCount++;
-            globalStats[s.name].totalMatches += s.totalMatches;
-            globalStats[s.name].wins += s.wins;
-            globalStats[s.name].loses += s.loses;
-            globalStats[s.name].hams += s.hams;
-            globalStats[s.name].tienSan += s.tienSan;
-            globalStats[s.name].tienHam += s.tienHam;
-            globalStats[s.name].tongTien += s.tongTien;
-          }
-        });
-      });
-
-      const list = Object.values(globalStats).filter(st => st.totalMatches > 0);
-
-      let html = `
-        <div class="card">
-          <h2 class="card-title" style="margin-bottom:12px;">📊 BẢNG TỔNG HỢP TẤT CẢ CÁC NGÀY ĐẤU</h2>
-          <div class="table-responsive">
-            <table>
-              <thead>
-                <tr>
-                  <th>VĐV</th>
-                  <th>Số Buổi Tham Gia</th>
-                  <th>Tổng Trận</th>
-                  <th>Thắng</th>
-                  <th>Thua</th>
-                  <th>Tỷ Lệ Thắng</th>
-                  <th>Bị Hăm</th>
-                  <th class="th-money">Tổng Tiền Hăm</th>
-                  <th class="th-money">Tổng Tiền Sân</th>
-                  <th class="th-money">TỔNG TIỀN PHẢI NỘP</th>
-                </tr>
-              </thead>
-              <tbody>
-      `;
-
-      list.forEach(st => {
-        const winRate = st.totalMatches > 0 ? ((st.wins / st.totalMatches) * 100).toFixed(1) : 0;
-        html += `
-          <tr>
-            <td><b>${st.name}</b></td>
-            <td>${st.daysCount} buổi</td>
-            <td>${st.totalMatches}</td>
-            <td class="txt-win">${st.wins}</td>
-            <td class="txt-lose">${st.loses}</td>
-            <td><b>${winRate}%</b></td>
-            <td>${st.hams}</td>
-            <td>${st.tienHam.toLocaleString()}đ</td>
-            <td>${st.tienSan.toLocaleString()}đ</td>
-            <td style="font-weight:900; color:#b45309;">${st.tongTien.toLocaleString()}đ</td>
-          </tr>
-        `;
-      });
-
-      html += `</tbody></table></div></div>`;
-      container.innerHTML = html;
-    }
-
-    function renderMiniGame1Tab(container) {
-      let sumA = 0, sumB = 0;
-
-      let rowsHtml = mgMatches.map((m, idx) => {
-        const sA = parseInt(m.scoreA) || 0;
-        const sB = parseInt(m.scoreB) || 0;
-        sumA += sA;
-        sumB += sB;
-
-        let resText = "-", scoreDiff = 0;
-        if (m.scoreA !== "" && m.scoreB !== "") {
-          if (sA > sB) {
-            resText = "<span class='txt-win'>Team A Thắng</span>";
-            scoreDiff = sA - sB;
-          } else if (sB > sA) {
-            resText = "<span class='txt-lose'>Team B Thắng</span>";
-            scoreDiff = sB - sA;
-          } else {
-            resText = "Hòa";
-          }
-        }
-
-        return `
-          <tr>
-            <td><b>${m.id}</b></td>
-            <td>${m.noiDung}</td>
-            <td>${m.teamA}</td>
-            <td><input type="number" class="score-in" value="${m.scoreA}" onchange="updateMgScore(${idx}, 'scoreA', this.value)"></td>
-            <td>VS</td>
-            <td><input type="number" class="score-in" value="${m.scoreB}" onchange="updateMgScore(${idx}, 'scoreB', this.value)"></td>
-            <td>${m.teamB}</td>
-            <td>${resText}</td>
-            <td><b>${scoreDiff}</b></td>
-            <td><button class="btn-del" onclick="deleteMgMatch(${idx})">✕</button></td>
-          </tr>
-        `;
+      let daySumCells = dates.map(d => {
+        let val = dayTotalsSum[d];
+        let cls = val > 0 ? 'txt-win' : (val < 0 ? 'txt-lose' : '');
+        return `<td class="${cls}"><strong>${val > 0 ? '+' + val + 'K' : val + 'K'}</strong></td>`;
       }).join('');
 
-      let resA = "HÒA", resB = "HÒA";
-      if (sumA > sumB) { resA = "THẮNG CHUNG CUỘC 🎉"; resB = "THUA"; }
-      else if (sumB > sumA) { resB = "THẮNG CHUNG CUỘC 🎉"; resA = "THUA"; }
+      let grandTotalCls = grandTotalAllDays > 0 ? 'txt-win' : (grandTotalAllDays < 0 ? 'txt-lose' : '');
 
-      container.innerHTML = `
-        <div class="mg-container">
-          <div class="mg-header-title">🎮 MINI GAME 1 - LỊCH THI ĐẤU TEAM A & TEAM B</div>
-          
-          <div class="mg-add-bar">
-            <select id="mg-noiDung">
-              <option value="Đôi nam">Đôi nam</option>
-              <option value="Đôi nữ">Đôi nữ</option>
-              <option value="Đôi nam nữ">Đôi nam nữ</option>
-            </select>
-            <input type="text" id="mg-teamA" placeholder="TEAM A (VD: Tiến Thọ + Thanh Đàm)">
-            <input type="number" id="mg-scoreA" placeholder="Tỷ số A" min="0">
-            <input type="number" id="mg-scoreB" placeholder="Tỷ số B" min="0">
-            <input type="text" id="mg-teamB" placeholder="TEAM B (VD: Trí Đô + Long Diễn)">
-            <button class="btn btn-green" onclick="addNewMatch()">➕ Thêm Trận</button>
-          </div>
-
-          <div class="mg-table-wrapper">
-            <table class="mg-table">
-              <thead>
-                <tr>
-                  <th style="width: 45px;">Trận</th>
-                  <th style="width: 110px;">Nội dung</th>
-                  <th>TEAM A</th>
-                  <th style="width: 60px;">Tỷ số A</th>
-                  <th style="width: 40px;">VS</th>
-                  <th style="width: 60px;">Tỷ số B</th>
-                  <th>TEAM B</th>
-                  <th style="width: 100px;">Kết quả</th>
-                  <th style="width: 50px;">Điểm</th>
-                  <th style="width: 45px;">Xóa</th>
+      html += `
+                <tr class="total-summary-row">
+                  <td style="color: red; text-align: center;"><strong>TỔNG</strong></td>
+                  ${daySumCells}
+                  <td class="${grandTotalCls}" style="background-color: #fef08a;"><strong>${grandTotalAllDays > 0 ? '+' + grandTotalAllDays + 'K' : grandTotalAllDays + 'K'}</strong></td>
                 </tr>
-              </thead>
-              <tbody>${rowsHtml}</tbody>
+              </tbody>
             </table>
           </div>
-
-          <table class="mg-summary-table">
-            <thead>
-              <tr>
-                <th>TEAM</th>
-                <th>Tổng Điểm Số</th>
-                <th>KẾT QUẢ CHUNG CUỘC</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><b>Team A</b></td>
-                <td><b>${sumA}</b></td>
-                <td class="mg-result-text">${resA}</td>
-              </tr>
-              <tr>
-                <td><b>Team B</b></td>
-                <td><b>${sumB}</b></td>
-                <td class="mg-result-text">${resB}</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       `;
-    }
 
-    function updateMgScore(idx, field, val) {
-      if (mgMatches[idx]) {
-        mgMatches[idx][field] = val;
-        saveDataToFirestore();
-      }
+      container.innerHTML = html;
     }
 
     function exportToExcel() {
+      closeAllDropdowns();
       const wb = XLSX.utils.book_new();
-      
       dates.forEach(d => {
-        const list = matchesData[d] || [];
-        const data = list.map(m => ({
-          'Trận': m.id,
-          'Pickle 1 - VĐV 1': m.c1_p1,
-          'Pickle 1 - VĐV 2': m.c1_p2,
-          'Điểm Team 1': m.score1,
-          'Điểm Team 2': m.score2,
-          'Pickle 2 - VĐV 1': m.c2_p1,
-          'Pickle 2 - VĐV 2': m.c2_p2
+        const matches = matchesData[d] || [];
+        const data = matches.map(m => ({
+          "Trận": m.id,
+          "Cặp Pick 1 - VĐV 1": m.c1_p1,
+          "Cặp Pick 1 - VĐV 2": m.c1_p2,
+          "Cặp Pick 2 - VĐV 1": m.c2_p1,
+          "Cặp Pick 2 - VĐV 2": m.c2_p2,
+          "Tỷ số 1": m.score1,
+          "Tỷ số 2": m.score2
         }));
         const ws = XLSX.utils.json_to_sheet(data);
         XLSX.utils.book_append_sheet(wb, ws, `Ngay_${d.replace(/\//g, '-')}`);
       });
-
-      XLSX.writeFile(wb, "Pickleball_CMTD_Data.xlsx");
+      XLSX.writeFile(wb, "Pickleball_CMTD_ThongKe.xlsx");
     }
   </script>
 </body>

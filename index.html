@@ -439,6 +439,192 @@
         </div>
 
         <!-- KHU VỰC TAB MINI GAME 1 -->
+        <!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minigame Dashboard</title>
+  <style>
+    /* Reset & cơ bản */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f4f6f9;
+      padding: 20px;
+    }
+
+    /* Container cho Minigame 1 */
+    .minigame-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      border: 1px solid #e1e4e8;
+    }
+
+    /* Nút kích hoạt Minigame 1 */
+    .minigame-btn {
+      width: 100%;
+      padding: 16px 20px;
+      background-color: #2b579a;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.2s ease;
+    }
+
+    .minigame-btn:hover {
+      background-color: #1e3d6b;
+    }
+
+    .minigame-btn .arrow-icon {
+      transition: transform 0.3s ease;
+    }
+
+    /* Đổi hướng mũi tên khi mở */
+    .minigame-wrapper.active .arrow-icon {
+      transform: rotate(180deg);
+    }
+
+    /* Vùng chứa nội dung giao diện bên trong nút Minigame 1 */
+    .minigame-content {
+      display: none; /* Mặc định ẩn */
+      padding: 20px;
+      border-top: 1px solid #e1e4e8;
+      background-color: #fafafa;
+    }
+
+    /* Bật hiển thị khi wrapper active */
+    .minigame-wrapper.active .minigame-content {
+      display: block;
+    }
+
+    /* Bảng dữ liệu giao diện minigame */
+    .minigame-table-container {
+      width: 100%;
+      overflow-x: auto;
+      background: #ffffff;
+      border-radius: 6px;
+      border: 1px solid #e1e4e8;
+    }
+
+    .minigame-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .minigame-table th, 
+    .minigame-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e1e4e8;
+    }
+
+    .minigame-table th {
+      background-color: #f1f3f5;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .minigame-table tr:hover {
+      background-color: #f8f9fa;
+    }
+
+    /* Nút thao tác trong bảng */
+    .action-btn {
+      padding: 6px 12px;
+      background-color: #107c41;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .action-btn:hover {
+      background-color: #0b5a2f;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MINIGAME 1 CONTAINER -->
+  <div class="minigame-wrapper" id="minigame1-wrapper">
+    
+    <!-- Nút bấm Minigame 1 -->
+    <button class="minigame-btn" id="minigame1-btn" onclick="toggleMinigame('minigame1-wrapper')">
+      <span>🎮 Minigame 1: Bảng Quản Lý & Thống Kê</span>
+      <span class="arrow-icon">▼</span>
+    </button>
+
+    <!-- Toàn bộ giao diện nội dung của Minigame 1 -->
+    <div class="minigame-content">
+      <div class="minigame-table-container">
+        <table class="minigame-table">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Người chơi / Đội</th>
+              <th>Điểm số</th>
+              <th>Trạng thái</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Nguyễn Văn A</td>
+              <td>1,250</td>
+              <td><span style="color: green; font-weight: bold;">Hoàn thành</span></td>
+              <td><button class="action-btn" onclick="alert('Xem chi tiết người chơi 1')">Chi tiết</button></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Trần Thị B</td>
+              <td>980</td>
+              <td><span style="color: orange; font-weight: bold;">Đang chơi</span></td>
+              <td><button class="action-btn" onclick="alert('Xem chi tiết người chơi 2')">Chi tiết</button></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Lê Hoàng C</td>
+              <td>1,540</td>
+              <td><span style="color: green; font-weight: bold;">Hoàn thành</span></td>
+              <td><button class="action-btn" onclick="alert('Xem chi tiết người chơi 3')">Chi tiết</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Hàm ẩn / hiện nội dung minigame khi bấm vào nút
+    function toggleMinigame(wrapperId) {
+      const wrapper = document.getElementById(wrapperId);
+      if (wrapper) {
+        wrapper.classList.toggle('active');
+      }
+    }
+  </script>
+</body>
+</html>
 <div id="tabMinigame1" class="tab-content">
     <div class="mg-container">
         <div class="mg-header-title">Lịch Thi Đấu Team A & Team B</div>

@@ -200,8 +200,8 @@
     th, td { border: 1px solid #cbd5e1; padding: 5px 2px; text-align: center; vertical-align: middle; word-wrap: break-word; }
     th { background-color: #f8fafc; color: #334155; font-weight: 800; font-size: 10px; text-transform: uppercase; }
     
-    .th-team-a { background-color: #15803d; color: #ffffff; }
-    .th-team-b { background-color: #0369a1; color: #ffffff; }
+    .th-team-a { background-color: #15803d; color: #ffffff !important; }
+    .th-team-b { background-color: #0369a1; color: #ffffff !important; }
     .th-pick1 { background-color: #dcfce7; color: #166534; }
     .th-pick2 { background-color: #fee2e2; color: #991b1b; }
     .th-money { background-color: #fef3c7; color: #92400e; }
@@ -219,7 +219,6 @@
     }
     input[type="text"] { width: 100%; padding: 3px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px; background: #fff; text-align: center; }
 
-    /* Ô NHẬP TỶ SỐ CÂN ĐỐI CHỨA VỪA VẶN CHỮ HẦM */
     .score-input { 
       width: 36px !important; 
       height: 24px; 
@@ -257,7 +256,7 @@
     .checkbox-cell { transform: scale(1.15); cursor: pointer; }
     .total-summary-row { background-color: #f8fafc; font-weight: 800; }
 
-    /* BẢNG KẾT QUẢ TỔNG TỐI ƯU MOBILE */
+    /* BẢNG KẾT QUẢ TỔNG MINIGAME 1 TỐI ƯU MOBILE */
     .summary-result-box {
       margin-top: 12px;
       width: 100%;
@@ -311,7 +310,7 @@
 </head>
 <body>
   <div class="container">
-    <!-- HERO BANNER -->
+    <!-- HERO BANNER & LOGO -->
     <div class="hero-banner">
       <img src="logo1.png" alt="Logo Pickleball CMTD" class="logo-img">
     </div>
@@ -676,7 +675,6 @@
       saveDataToFirestore();
     }
 
-    /* CHỈNH SỬA & TỰ ĐỘNG CẬP NHẬT DANH SÁCH BẢNG CHIA TEAM */
     function updateTeamMember(team, index, value) {
       if (team === 'A') teamA_members[index] = value;
       else teamB_members[index] = value;
@@ -693,7 +691,6 @@
         if (team === 'A') teamA_members[index] = trimmed;
         else teamB_members[index] = trimmed;
         
-        // Tự động đồng bộ đổi tên trong các trận lịch thi đấu
         miniGame1Matches.forEach(m => {
           if (team === 'A') {
             if (m.a1 === currentVal) m.a1 = trimmed;
@@ -775,7 +772,6 @@
       }
     }
 
-    /* DROPDOWN DÀNH RIÊNG BẢNG CHIA TEAM: KHÓA BỎ VĐV Ở TEAM ĐỐI DIỆN */
     function generateTeamOptionsHtml(selectedValue, filterOutList) {
       return vdvs.map((v, i) => {
         if (filterOutList.includes(v) && v !== selectedValue) return ''; 
@@ -785,7 +781,6 @@
       }).join('');
     }
 
-    /* DROPDOWN BẢNG LỊCH THI ĐẤU: CHỈ HIỂN THỊ ĐÚNG DANH SÁCH THÀNH VIÊN CỦA TEAM ĐÓ */
     function generateSpecificTeamListOptionsHtml(selectedValue, teamMemberList) {
       const validMembers = teamMemberList.filter(Boolean);
       return validMembers.map(v => {
@@ -804,9 +799,8 @@
       }).join('');
     }
 
-    /* GIAO DIỆN MINIGAME 1 ĐỒNG BỘ TUYỆT ĐỐI */
+    /* GIAO DIỆN MINIGAME 1 VỚI CHỮ TIÊU ĐỀ MÀU TRẮNG */
     function renderMiniGame1Tab(container) {
-      // 1. BẢNG CHIA TEAM A & TEAM B
       let maxLen = Math.max(teamA_members.length, teamB_members.length);
       let teamAssignmentRowsHtml = "";
 
@@ -860,9 +854,9 @@
               </colgroup>
               <thead>
                 <tr>
-                  <th style="background:#0f4c81;">STT</th>
-                  <th class="th-team-a">TEAM A</th>
-                  <th class="th-team-b">TEAM B</th>
+                  <th style="background:#0f4c81; color:#ffffff !important;">STT</th>
+                  <th class="th-team-a" style="color:#ffffff !important;">TEAM A</th>
+                  <th class="th-team-b" style="color:#ffffff !important;">TEAM B</th>
                 </tr>
               </thead>
               <tbody>
@@ -872,9 +866,9 @@
           </div>
         </div>
 
-        <!-- BẢNG LỊCH THI ĐẤU 24 TRẬN -->
+        <!-- BẢNG LỊCH THI ĐẤU 24 TRẬN - TIÊU ĐỀ CHỮ TRẮNG DỄ NHÌN -->
         <div class="card">
-          <div style="background-color:#0f4c81; color:white; padding:8px; border-radius:6px; text-align:center; font-weight:900; font-size:14px; margin-bottom:10px;">
+          <div style="background-color:#0f4c81; color:#ffffff; padding:8px; border-radius:6px; text-align:center; font-weight:900; font-size:14px; margin-bottom:10px;">
             Lịch Thi Đấu Team A & Team B (24 Trận)
           </div>
           <div class="table-responsive">
@@ -894,15 +888,15 @@
               </colgroup>
               <thead>
                 <tr>
-                  <th style="background:#0f4c81;">Trận</th>
-                  <th style="background:#0f4c81;">Nội dung</th>
-                  <th colspan="2" class="th-team-a">TEAM A</th>
-                  <th style="background:#0f4c81;">Tỷ số A</th>
-                  <th style="background:#0f4c81;">VS</th>
-                  <th style="background:#0f4c81;">Tỷ số B</th>
-                  <th colspan="2" class="th-team-b">TEAM B</th>
-                  <th style="background:#0f4c81;">Kết quả</th>
-                  <th style="background:#0f4c81;">Điểm</th>
+                  <th style="background:#0f4c81; color:#ffffff !important;">Trận</th>
+                  <th style="background:#0f4c81; color:#ffffff !important;">Nội dung</th>
+                  <th colspan="2" class="th-team-a" style="color:#ffffff !important;">TEAM A</th>
+                  <th style="background:#0f4c81; color:#ffffff !important;">Tỷ số A</th>
+                  <th style="background:#0f4c81; color:#ffffff !important;">VS</th>
+                  <th style="background:#0f4c81; color:#ffffff !important;">Tỷ số B</th>
+                  <th colspan="2" class="th-team-b" style="color:#ffffff !important;">TEAM B</th>
+                  <th style="background:#0f4c81; color:#ffffff !important;">Kết quả</th>
+                  <th style="background:#0f4c81; color:#ffffff !important;">Điểm</th>
                 </tr>
               </thead>
               <tbody>
@@ -1014,14 +1008,14 @@
             </table>
           </div>
 
-          <!-- BẢNG TỔNG KẾT KẾT QUẢ HIỆN TẠI / CHUNG CUỘC -->
+          <!-- BẢNG TỔNG KẾT KẾT QUẢ HIỆN TẠI - CHỮ TIÊU ĐỀ MÀU TRẮNG -->
           <div class="summary-result-box">
             <table class="summary-table-mobile">
               <thead>
                 <tr>
-                  <th>ĐỘI PHÂN TRANH</th>
-                  <th>TỔNG ĐIỂM</th>
-                  <th>KẾT QUẢ HIỆN TẠI</th>
+                  <th style="color:#ffffff !important;">ĐỘI PHÂN TRANH</th>
+                  <th style="color:#ffffff !important;">TỔNG ĐIỂM</th>
+                  <th style="color:#ffffff !important;">KẾT QUẢ HIỆN TẠI</th>
                 </tr>
               </thead>
               <tbody>
@@ -1291,6 +1285,7 @@
       container.innerHTML = matchesHtml + summaryTableHtml;
     }
 
+    /* BẢNG TỔNG HỢP TỪNG NGÀY - TÍNH THEO TỔNG GIÁ TRỊ ÂM TRỪ ĐI TIỀN MANG VỀ */
     function renderTongHopTab(container) {
       let vdvDayTotals = {};
       vdvs.forEach(v => {
@@ -1303,6 +1298,9 @@
 
       dates.forEach(d => {
         const matches = matchesData[d] || [];
+        let statsDay = {};
+        vdvs.forEach(v => { statsDay[v] = { played: 0, loseK: 0, total: 0 }; });
+
         matches.forEach(m => {
           const s1 = parseInt(m.score1);
           const s2 = parseInt(m.score2);
@@ -1316,16 +1314,23 @@
             let loseAmt = isHam ? -30 : -15;
 
             if (s1 > s2) {
-              pair1.forEach(v => { if (vdvDayTotals[v]) vdvDayTotals[v][d] += winAmt; });
-              pair2.forEach(v => { if (vdvDayTotals[v]) vdvDayTotals[v][d] += loseAmt; });
+              pair1.forEach(v => { if (statsDay[v]) { statsDay[v].played++; statsDay[v].total += winAmt; } });
+              pair2.forEach(v => { if (statsDay[v]) { statsDay[v].played++; statsDay[v].loseK += loseAmt; statsDay[v].total += loseAmt; } });
             } else if (s2 > s1) {
-              pair2.forEach(v => { if (vdvDayTotals[v]) vdvDayTotals[v][d] += winAmt; });
-              pair1.forEach(v => { if (vdvDayTotals[v]) vdvDayTotals[v][d] += loseAmt; });
+              pair2.forEach(v => { if (statsDay[v]) { statsDay[v].played++; statsDay[v].total += winAmt; } });
+              pair1.forEach(v => { if (statsDay[v]) { statsDay[v].played++; statsDay[v].loseK += loseAmt; statsDay[v].total += loseAmt; } });
             }
           }
         });
 
-        vdvs.forEach(v => { dayTotalsSum[d] += vdvDayTotals[v][d]; });
+        // TÍNH LẠI GIÁ TRỊ: TỔNG ÂM TRỪ ĐI TIỀN MANG VỀ NẾU CÓ
+        vdvs.forEach(v => {
+          let st = statsDay[v];
+          let bringBack = (st.played >= 4 && st.total > 0) ? st.total : 0;
+          let calculatedVal = st.loseK - bringBack; // Tổng giá trị âm trừ đi tiền mang về
+          vdvDayTotals[v][d] = calculatedVal;
+          dayTotalsSum[d] += calculatedVal;
+        });
       });
 
       let grandTotalAllDays = 0;
@@ -1353,7 +1358,7 @@
           let val = vdvDayTotals[v][d];
           rowSum += val;
           let cls = val > 0 ? 'txt-win' : (val < 0 ? 'txt-lose' : '');
-          return `<td class="${cls}">${val !== 0 ? (val > 0 ? '+' + val + 'K' : val + 'K') : '-'}</td>`;
+          return `<td class="${cls}">${val !== 0 ? val + 'K' : '-'}</td>`;
         }).join('');
 
         grandTotalAllDays += rowSum;
@@ -1364,7 +1369,7 @@
           <tr>
             <td style="color: ${vdvColor}; font-weight: 800; font-size: 11px; text-align: left; padding-left: 8px;">${v}</td>
             ${dayCells}
-            <td class="${totalCls}" style="background-color: #fef9c3;"><strong>${rowSum > 0 ? '+' + rowSum + 'K' : rowSum + 'K'}</strong></td>
+            <td class="${totalCls}" style="background-color: #fef9c3;"><strong>${rowSum !== 0 ? rowSum + 'K' : '0K'}</strong></td>
           </tr>
         `;
       });
@@ -1372,7 +1377,7 @@
       let daySumCells = dates.map(d => {
         let val = dayTotalsSum[d];
         let cls = val > 0 ? 'txt-win' : (val < 0 ? 'txt-lose' : '');
-        return `<td class="${cls}"><strong>${val > 0 ? '+' + val + 'K' : val + 'K'}</strong></td>`;
+        return `<td class="${cls}"><strong>${val !== 0 ? val + 'K' : '0K'}</strong></td>`;
       }).join('');
 
       let grandTotalCls = grandTotalAllDays > 0 ? 'txt-win' : (grandTotalAllDays < 0 ? 'txt-lose' : '');
@@ -1381,7 +1386,7 @@
                 <tr class="total-summary-row">
                   <td style="color: red; text-align: center;"><strong>TỔNG</strong></td>
                   ${daySumCells}
-                  <td class="${grandTotalCls}" style="background-color: #fef08a;"><strong>${grandTotalAllDays > 0 ? '+' + grandTotalAllDays + 'K' : grandTotalAllDays + 'K'}</strong></td>
+                  <td class="${grandTotalCls}" style="background-color: #fef08a;"><strong>${grandTotalAllDays !== 0 ? grandTotalAllDays + 'K' : '0K'}</strong></td>
                 </tr>
               </tbody>
             </table>

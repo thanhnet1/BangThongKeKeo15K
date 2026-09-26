@@ -152,11 +152,12 @@
 
     /* BUTTONS */
     .btn { background-color: var(--accent-color); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; }
-    .btn-sm { padding: 4px 8px; font-size: 10px; }
+    .btn-sm { padding: 3px 6px; font-size: 10px; }
     .btn-green { background-color: #10b981; }
     .btn-red { background-color: #ef4444; }
-    
-    /* CARDS & TABLES - TỐI ƯU CĂN CHỈNH MOBILE */
+    .btn-icon { background: none; border: none; cursor: pointer; font-size: 12px; padding: 2px 3px; }
+
+    /* CARDS & TABLES */
     .card {
       background: var(--card-bg);
       padding: 10px 8px;
@@ -218,6 +219,7 @@
     }
     input[type="text"] { width: 100%; padding: 3px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px; background: #fff; text-align: center; }
 
+    /* Ô NHẬP TỶ SỐ CÂN ĐỐI CHỨA VỪA VẶN CHỮ HẦM */
     .score-input { 
       width: 36px !important; 
       height: 24px; 
@@ -249,11 +251,44 @@
     .txt-win { color: #16a34a; font-weight: 800; }
     .txt-lose { color: #dc2626; font-weight: 800; }
     
-    .note-paid { color: #16a34a; font-weight: 800; }   /* XANH KHI ĐÃ NỘP / ĐÃ NHẬN */
-    .note-unpaid { color: #ef4444; font-weight: 800; } /* ĐỎ KHI CHƯA NỘP / CHƯA NHẬN */
+    .note-paid { color: #16a34a; font-weight: 800; }   
+    .note-unpaid { color: #ef4444; font-weight: 800; } 
     
     .checkbox-cell { transform: scale(1.15); cursor: pointer; }
     .total-summary-row { background-color: #f8fafc; font-weight: 800; }
+
+    /* STYLE BẢNG KẾT QUẢ TỔNG MINIGAME 1 TỐI ƯU MOBILE */
+    .summary-result-box {
+      margin-top: 12px;
+      width: 100%;
+      background: #ffffff;
+      border: 2px solid #0f4c81;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    .summary-table-mobile {
+      width: 100% !important;
+      min-width: 100% !important;
+      table-layout: auto !important;
+    }
+    
+    .summary-table-mobile th {
+      background-color: #0f4c81 !important;
+      color: #ffffff !important;
+      font-size: 11px;
+      padding: 6px 4px;
+    }
+
+    .summary-table-mobile td {
+      padding: 8px 4px;
+      font-size: 11px;
+    }
+
+    .status-leading { color: #16a34a; font-weight: 900; }
+    .status-losing { color: #dc2626; font-weight: 900; }
+    .status-draw { color: #d97706; font-weight: 900; }
 
     /* MODAL */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; }
@@ -389,10 +424,9 @@
     let dates = [];
     let matchesData = {};
     let paymentStatus = {};
-    let miniGame1Content = "Thủ tục Lịch Thi Đấu Team A & Team B 24 Trận.";
+    let miniGame1Content = "Lịch Thi Đấu Team A & Team B 24 Trận.";
     let miniGame2Content = "Thể lệ Mini Game 2...";
     
-    // DANH SÁCH THÀNH VIÊN TEAM A VÀ TEAM B TRONG MINIGAME 1
     let teamA_members = ["Tiến Thọ", "Thanh Đàm", "Thành Sóc", "Hà Giấy", "Minh Vượng", "Phú Mỗ", "Điền Chèm", "Hải Hà", "Quỳnh Cool"];
     let teamB_members = ["Trí Đỏ", "Long Diễn", "Châu Sĩ", "Minh Hạnh", "Dũng Ngạc", "Lợi Trí", "Tuấn La", "Vân Đình", "Cẩm Ly"];
 
@@ -403,7 +437,6 @@
     const ADMIN_PASSCODE = "123456";
     let isAdminVerified = false;
 
-    // DỮ LIỆU MẪU CHUẨN CHO 24 TRẬN ĐẤU
     const DEFAULT_MINI1_DATA = [
       { id: 1, category: "Đôi nam", a1: "Tiến Thọ", a2: "Thanh Đàm", scoreA: "8", scoreB: "11", b1: "Trí Đỏ", b2: "Long Diễn" },
       { id: 2, category: "Đôi nam", a1: "Thanh Đàm", a2: "Thành Sóc", scoreA: "5", scoreB: "11", b1: "Long Diễn", b2: "Châu Sĩ" },
@@ -643,22 +676,37 @@
       saveDataToFirestore();
     }
 
-    /* CẬP NHẬT CHIA THÀNH VIÊN TEAM A VÀ TEAM B */
+    /* QUẢN LÝ THAY ĐỔI / CHỈNH SỬA / THÊM MỚI VĐV TRONG BẢNG CHIA TEAM */
     function updateTeamMember(team, index, value) {
-      if (team === 'A') {
-        teamA_members[index] = value;
-      } else {
-        teamB_members[index] = value;
-      }
+      if (team === 'A') teamA_members[index] = value;
+      else teamB_members[index] = value;
       saveDataToFirestore();
       renderCurrentTab();
     }
 
-    function addTeamMember(team) {
-      if (team === 'A') teamA_members.push("");
-      else teamB_members.push("");
-      saveDataToFirestore();
-      renderCurrentTab();
+    function editTeamMemberName(team, index) {
+      let currentVal = team === 'A' ? teamA_members[index] : teamB_members[index];
+      let newName = prompt("✏️ Chỉnh sửa tên VĐV:", currentVal);
+      if (newName && newName.trim() !== "") {
+        let trimmed = newName.trim();
+        if (!vdvs.includes(trimmed)) vdvs.push(trimmed);
+        if (team === 'A') teamA_members[index] = trimmed;
+        else teamB_members[index] = trimmed;
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function addNewMemberToTeam(team) {
+      let newName = prompt(`➕ Nhập tên VĐV mới cho Team ${team}:`);
+      if (newName && newName.trim() !== "") {
+        let trimmed = newName.trim();
+        if (!vdvs.includes(trimmed)) vdvs.push(trimmed);
+        if (team === 'A') teamA_members.push(trimmed);
+        else teamB_members.push(trimmed);
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
     }
 
     function removeTeamMember(team, index) {
@@ -715,10 +763,10 @@
       }
     }
 
-    /* TẠO DANH SÁCH DROPDOWN BỎ QUA VĐV Ở TEAM ĐỐI DIỆN */
+    /* DROPDOWN CHỌN VĐV - BỎ QUA VĐV ĐÃ CÓ MẶT Ở TEAM KIA */
     function generateTeamOptionsHtml(selectedValue, filterOutList) {
       return vdvs.map((v, i) => {
-        if (filterOutList.includes(v) && v !== selectedValue) return ''; // Khóa không hiển thị nếu đã ở team kia
+        if (filterOutList.includes(v) && v !== selectedValue) return ''; // Khóa VĐV ở team đối diện
         const color = VDV_COLORS[i % VDV_COLORS.length];
         const isSelected = selectedValue === v ? 'selected' : '';
         return `<option value="${v}" ${isSelected} style="color: ${color}; font-weight: bold;">${v}</option>`;
@@ -733,9 +781,9 @@
       }).join('');
     }
 
-    /* CẤU TRÚC TAB MINIGAME 1 ĐẦY ĐỦ VỚI BẢNG CHIA TEAM VÀ LỊCH 24 TRẬN */
+    /* GIAO DIỆN MINIGAME 1 HOÀN CHỈNH */
     function renderMiniGame1Tab(container) {
-      // BẢNG CHIA THÀNH VIÊN TEAM A VÀ TEAM B
+      // 1. BẢNG CHIA TEAM A & TEAM B VỚI NÚT ✏️ VÀ THÊM MỚI
       let maxLen = Math.max(teamA_members.length, teamB_members.length);
       let teamAssignmentRowsHtml = "";
 
@@ -752,6 +800,7 @@
                   <option value="">- Chọn VĐV Team A -</option>
                   ${generateTeamOptionsHtml(valA, teamB_members.filter(Boolean))}
                 </select>
+                ${valA ? `<button class="btn-icon" title="Sửa tên VĐV" onclick="editTeamMemberName('A', ${i})">✏️</button>` : ''}
                 ${valA ? `<button class="btn btn-red btn-sm" style="padding:1px 4px;" onclick="removeTeamMember('A', ${i})">✕</button>` : ''}
               </div>
             </td>
@@ -761,6 +810,7 @@
                   <option value="">- Chọn VĐV Team B -</option>
                   ${generateTeamOptionsHtml(valB, teamA_members.filter(Boolean))}
                 </select>
+                ${valB ? `<button class="btn-icon" title="Sửa tên VĐV" onclick="editTeamMemberName('B', ${i})">✏️</button>` : ''}
                 ${valB ? `<button class="btn btn-red btn-sm" style="padding:1px 4px;" onclick="removeTeamMember('B', ${i})">✕</button>` : ''}
               </div>
             </td>
@@ -769,27 +819,27 @@
       }
 
       let html = `
-        <!-- BẢNG CHIA TEAM A & TEAM B -->
+        <!-- BẢNG CHIA TEAM A & B -->
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">👥 CHIA DANH SÁCH TEAM A & TEAM B</h2>
+            <h2 class="card-title">👥 DANH SÁCH CHIA TEAM A & TEAM B</h2>
             <div class="table-actions-toolbar">
-              <button class="btn btn-green btn-sm" onclick="addTeamMember('A')">➕ Thêm VĐV Team A</button>
-              <button class="btn btn-green btn-sm" onclick="addTeamMember('B')">➕ Thêm VĐV Team B</button>
+              <button class="btn btn-green btn-sm" onclick="addNewMemberToTeam('A')">➕ Thêm VĐV Team A</button>
+              <button class="btn btn-green btn-sm" onclick="addNewMemberToTeam('B')">➕ Thêm VĐV Team B</button>
             </div>
           </div>
-          <div class="table-responsive" style="max-width: 600px; margin: 0 auto;">
+          <div class="table-responsive" style="max-width: 650px; margin: 0 auto;">
             <table>
               <colgroup>
-                <col style="width: 40px;">
+                <col style="width: 35px;">
                 <col style="width: 48%;">
                 <col style="width: 48%;">
               </colgroup>
               <thead>
                 <tr>
                   <th style="background:#0f4c81;">STT</th>
-                  <th class="th-team-a">DANH SÁCH TEAM A</th>
-                  <th class="th-team-b">DANH SÁCH TEAM B</th>
+                  <th class="th-team-a">TEAM A</th>
+                  <th class="th-team-b">TEAM B</th>
                 </tr>
               </thead>
               <tbody>
@@ -837,6 +887,7 @@
 
       let totalA = 0;
       let totalB = 0;
+      let playedMatchesCount = 0;
 
       miniGame1Matches.forEach((m, idx) => {
         const sA = parseInt(m.scoreA);
@@ -845,6 +896,7 @@
         let pts = "";
 
         if (!isNaN(sA) && !isNaN(sB)) {
+          playedMatchesCount++;
           if (sA > sB) {
             result = "TEAM A";
             pts = "1";
@@ -906,34 +958,60 @@
         `;
       });
 
-      let overallResult = "HÒA";
-      if (totalA > totalB) overallResult = "TEAM A THẮNG";
-      else if (totalB > totalA) overallResult = "TEAM B THẮNG";
+      // XỬ LÝ TRẠNG THÁI KẾT QUẢ DẪN TRƯỚC / THẮNG CHUNG CUỘC
+      let statusTextA = "";
+      let statusTextB = "";
+      let isCompleted = (playedMatchesCount === 24);
+
+      if (!isCompleted) {
+        if (totalA > totalB) {
+          statusTextA = `<span class="status-leading">TẠM DẪN TRƯỚC</span>`;
+          statusTextB = `<span class="status-losing">TẠM THUA</span>`;
+        } else if (totalB > totalA) {
+          statusTextA = `<span class="status-losing">TẠM THUA</span>`;
+          statusTextB = `<span class="status-leading">TẠM DẪN TRƯỚC</span>`;
+        } else {
+          statusTextA = `<span class="status-draw">ĐANG HÒA</span>`;
+          statusTextB = `<span class="status-draw">ĐANG HÒA</span>`;
+        }
+      } else {
+        if (totalA > totalB) {
+          statusTextA = `<span class="status-leading">THẮNG CHUNG CUỘC 🏆</span>`;
+          statusTextB = `<span class="status-losing">THUA CHUNG CUỘC</span>`;
+        } else if (totalB > totalA) {
+          statusTextA = `<span class="status-losing">THUA CHUNG CUỘC</span>`;
+          statusTextB = `<span class="status-leading">THẮNG CHUNG CUỘC 🏆</span>`;
+        } else {
+          statusTextA = `<span class="status-draw">HÒA CHUNG CUỘC</span>`;
+          statusTextB = `<span class="status-draw">HÒA CHUNG CUỘC</span>`;
+        }
+      }
 
       html += `
               </tbody>
             </table>
           </div>
 
-          <!-- BẢNG TỔNG ĐIỂM VÀ KẾT QUẢ CHUNG CUỘC -->
-          <div style="margin-top:10px; max-width:320px;" class="table-responsive">
-            <table>
+          <!-- BẢNG TỔNG THỐNG KÊ KẾT QUẢ CÂN ĐỐI TỐI ƯU MOBILE -->
+          <div class="summary-result-box">
+            <table class="summary-table-mobile">
               <thead>
                 <tr>
-                  <th style="background:#0f4c81;">TEAM</th>
-                  <th style="background:#0f4c81;">Tổng điểm</th>
-                  <th style="background:#0f4c81;">KẾT QUẢ CHUNG CUỘC</th>
+                  <th>ĐỘI PHÂN TRANH</th>
+                  <th>TỔNG ĐIỂM</th>
+                  <th>KẾT QUẢ HIỆN TẠI</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style="font-weight:bold; color:#15803d;">Team A</td>
-                  <td style="font-weight:bold; font-size:12px;">${totalA}</td>
-                  <td style="font-weight:bold; font-size:11px; color:#15803d;" rowspan="2">${overallResult}</td>
+                  <td style="font-weight:900; color:#15803d; font-size:12px;">TEAM A</td>
+                  <td style="font-weight:900; font-size:14px; color:#15803d;">${totalA}</td>
+                  <td>${statusTextA}</td>
                 </tr>
                 <tr>
-                  <td style="font-weight:bold; color:#0369a1;">Team B</td>
-                  <td style="font-weight:bold; font-size:12px;">${totalB}</td>
+                  <td style="font-weight:900; color:#0369a1; font-size:12px;">TEAM B</td>
+                  <td style="font-weight:900; font-size:14px; color:#0369a1;">${totalB}</td>
+                  <td>${statusTextB}</td>
                 </tr>
               </tbody>
             </table>

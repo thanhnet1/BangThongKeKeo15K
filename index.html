@@ -33,7 +33,7 @@
 
     .container { max-width: 1600px; margin: 0 auto; position: relative; }
     
-    /* HERO BANNER & LOGO */
+    /* HERO BANNER & LOGO (ĐƯỜNG DẪN CÙNG THƯ MỤC BANNER2.JPG VÀ LOGO1.PNG) */
     .hero-banner {
       background-image: linear-gradient(rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.65)), url('banner2.jpg');
       background-size: cover;
@@ -799,7 +799,7 @@
       }).join('');
     }
 
-    /* GIAO DIỆN MINIGAME 1 VỚI CHỮ TIÊU ĐỀ MÀU TRẮNG */
+    /* GIAO DIỆN MINIGAME 1 VỚI CHỮ TIÊU ĐỀ MÀU TRẮNG DỄ NHÌN */
     function renderMiniGame1Tab(container) {
       let maxLen = Math.max(teamA_members.length, teamB_members.length);
       let teamAssignmentRowsHtml = "";
@@ -866,7 +866,7 @@
           </div>
         </div>
 
-        <!-- BẢNG LỊCH THI ĐẤU 24 TRẬN - TIÊU ĐỀ CHỮ TRẮNG DỄ NHÌN -->
+        <!-- BẢNG LỊCH THI ĐẤU 24 TRẬN - TIÊU ĐỀ CHỮ TRẮNG -->
         <div class="card">
           <div style="background-color:#0f4c81; color:#ffffff; padding:8px; border-radius:6px; text-align:center; font-weight:900; font-size:14px; margin-bottom:10px;">
             Lịch Thi Đấu Team A & Team B (24 Trận)
@@ -1285,7 +1285,7 @@
       container.innerHTML = matchesHtml + summaryTableHtml;
     }
 
-    /* BẢNG TỔNG HỢP TỪNG NGÀY - TÍNH THEO TỔNG GIÁ TRỊ ÂM TRỪ ĐI TIỀN MANG VỀ */
+    /* BẢNG TỔNG HỢP TỪNG NGÀY - TÍNH TỔNG GIÁ TRỊ ÂM TRỪ ĐI TIỀN MANG VỀ */
     function renderTongHopTab(container) {
       let vdvDayTotals = {};
       vdvs.forEach(v => {
@@ -1323,11 +1323,10 @@
           }
         });
 
-        // TÍNH LẠI GIÁ TRỊ: TỔNG ÂM TRỪ ĐI TIỀN MANG VỀ NẾU CÓ
         vdvs.forEach(v => {
           let st = statsDay[v];
           let bringBack = (st.played >= 4 && st.total > 0) ? st.total : 0;
-          let calculatedVal = st.loseK - bringBack; // Tổng giá trị âm trừ đi tiền mang về
+          let calculatedVal = st.loseK - bringBack; 
           vdvDayTotals[v][d] = calculatedVal;
           dayTotalsSum[d] += calculatedVal;
         });

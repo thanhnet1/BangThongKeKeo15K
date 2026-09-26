@@ -1,24 +1,26 @@
-// Đặt mật khẩu Admin tùy chọn
-const ADMIN_PASSCODE = "123456";
-let isAdminVerified = false;
+<!-- Chèn Logo -->
+<header>
+  <a href="index.html">
+    <img src="images/logo.png" alt="Logo trang web" width="120">
+  </a>
+</header>
+<!-- Cách 1: Dùng thẻ img cho banner -->
+<div class="banner-container">
+  <img src="images/banner.jpg" alt="Banner quảng cáo" style="width: 100%; height: auto;">
+</div>
 
-function togglePayment(payKey) {
-  // 1. Kiểm tra xác thực Admin
-  if (!isAdminVerified) {
-    const inputPass = prompt("🔑 Nhập mật khẩu Admin để thay đổi cột THỰC TẾ:");
-    
-    if (inputPass === ADMIN_PASSCODE) {
-      isAdminVerified = true;
-      alert("✅ Xác thực Admin thành công!");
-    } else if (inputPass !== null) {
-      alert("❌ Mật khẩu không đúng! Bạn không có quyền đổi trạng thái cột này.");
-      return; // Dừng lại không cho tích
-    } else {
-      return; // Bấm Hủy (Cancel)
-    }
-  }
+<!-- Cách 2: Dùng CSS làm ảnh nền (Background) -->
+<div class="hero-banner">
+  <h1>Chào mừng bạn đến với trang web</h1>
+</div>
 
-  // 2. Cập nhật trạng thái và lưu lên Firestore
-  paymentStatus[payKey] = !paymentStatus[payKey];
-  saveDataToFirestore();
+<style>
+.hero-banner {
+  background-image: url('images/banner.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 400px;
+  color: white;
+  text-align: center;
 }
+</style>

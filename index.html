@@ -38,7 +38,7 @@
       background-image: linear-gradient(rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.65)), url('banner (2).jpg');
       background-size: cover;
       background-position: center;
-      height: 220px;
+      height: 200px;
       border-radius: 14px;
       margin-bottom: 12px;
       display: flex;
@@ -199,6 +199,8 @@
     th, td { border: 1px solid #cbd5e1; padding: 5px 2px; text-align: center; vertical-align: middle; word-wrap: break-word; }
     th { background-color: #f8fafc; color: #334155; font-weight: 800; font-size: 10px; text-transform: uppercase; }
     
+    .th-team-a { background-color: #15803d; color: #ffffff; }
+    .th-team-b { background-color: #0369a1; color: #ffffff; }
     .th-pick1 { background-color: #dcfce7; color: #166534; }
     .th-pick2 { background-color: #fee2e2; color: #991b1b; }
     .th-money { background-color: #fef3c7; color: #92400e; }
@@ -216,7 +218,6 @@
     }
     input[type="text"] { width: 100%; padding: 3px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px; background: #fff; text-align: center; }
 
-    /* Ô NHẬP TỶ SỐ CÂN ĐỐI CHỨA VỪA VẶN CHỮ HẦM */
     .score-input { 
       width: 36px !important; 
       height: 24px; 
@@ -248,7 +249,6 @@
     .txt-win { color: #16a34a; font-weight: 800; }
     .txt-lose { color: #dc2626; font-weight: 800; }
     
-    /* MÀU SẮC CỘT NOTE CHUẨN XÁC THEO YÊU CẦU */
     .note-paid { color: #16a34a; font-weight: 800; }   /* XANH KHI ĐÃ NỘP / ĐÃ NHẬN */
     .note-unpaid { color: #ef4444; font-weight: 800; } /* ĐỎ KHI CHƯA NỘP / CHƯA NHẬN */
     
@@ -262,8 +262,8 @@
 
     @media (max-width: 600px) {
       body { padding: 4px 2px; }
-      .hero-banner { height: 150px; }
-      .logo-img { max-height: 65px; }
+      .hero-banner { height: 140px; }
+      .logo-img { max-height: 60px; }
       .card { padding: 6px 4px; }
       .card-title { font-size: 11px; }
       .nav-btn { font-size: 10px; padding: 4px 6px; }
@@ -334,8 +334,8 @@
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuMini1', event)">🎮 MINI GAME 1 ▾</button>
           <div class="dropdown-menu" id="menuMini1">
+            <div class="dropdown-item" onclick="switchTab('minigame1')">▶️ Lịch Thi Đấu Team A & B (24 Trận)</div>
             <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Nội Dung Game 1</div>
-            <div class="dropdown-item" onclick="alert('Đang mở Mini Game 1...')">▶️ Chơi Game 1</div>
           </div>
         </div>
 
@@ -389,13 +389,47 @@
     let dates = [];
     let matchesData = {};
     let paymentStatus = {};
-    let miniGame1Content = "Thể lệ Mini Game 1...";
+    let miniGame1Content = "Thủ tục Lịch Thi Đấu Team A & Team B 24 Trận.";
     let miniGame2Content = "Thể lệ Mini Game 2...";
+    
+    // DANH SÁCH THÀNH VIÊN TEAM A VÀ TEAM B TRONG MINIGAME 1
+    let teamA_members = ["Tiến Thọ", "Thanh Đàm", "Thành Sóc", "Hà Giấy", "Minh Vượng", "Phú Mỗ", "Điền Chèm", "Hải Hà", "Quỳnh Cool"];
+    let teamB_members = ["Trí Đỏ", "Long Diễn", "Châu Sĩ", "Minh Hạnh", "Dũng Ngạc", "Lợi Trí", "Tuấn La", "Vân Đình", "Cẩm Ly"];
+
+    let miniGame1Matches = [];
     let currentTab = "";
     let activeGameEditing = 1;
 
     const ADMIN_PASSCODE = "123456";
     let isAdminVerified = false;
+
+    // DỮ LIỆU MẪU CHUẨN CHO 24 TRẬN ĐẤU
+    const DEFAULT_MINI1_DATA = [
+      { id: 1, category: "Đôi nam", a1: "Tiến Thọ", a2: "Thanh Đàm", scoreA: "8", scoreB: "11", b1: "Trí Đỏ", b2: "Long Diễn" },
+      { id: 2, category: "Đôi nam", a1: "Thanh Đàm", a2: "Thành Sóc", scoreA: "5", scoreB: "11", b1: "Long Diễn", b2: "Châu Sĩ" },
+      { id: 3, category: "Đôi nam", a1: "Hà Giấy", a2: "Thành Sóc", scoreA: "6", scoreB: "11", b1: "Lợi Trí", b2: "Châu Sĩ" },
+      { id: 4, category: "Đôi nam", a1: "Thành Sóc", a2: "Minh Vượng", scoreA: "13", scoreB: "11", b1: "Châu Sĩ", b2: "Minh Hạnh" },
+      { id: 5, category: "Đôi nam", a1: "Thanh Đàm", a2: "Phú Mỗ", scoreA: "11", scoreB: "9", b1: "Long Diễn", b2: "Dũng Ngạc" },
+      { id: 6, category: "Đôi nam", a1: "Tiến Thọ", a2: "Hà Giấy", scoreA: "11", scoreB: "9", b1: "Trí Đỏ", b2: "Lợi Trí" },
+      { id: 7, category: "Đôi nam", a1: "Thanh Đàm", a2: "Điền Chèm", scoreA: "5", scoreB: "11", b1: "Long Diễn", b2: "Tuấn La" },
+      { id: 8, category: "Đôi nam", a1: "Phú Mỗ", a2: "Hà Giấy", scoreA: "11", scoreB: "9", b1: "Dũng Ngạc", b2: "Lợi Trí" },
+      { id: 9, category: "Đôi nam", a1: "Hà Giấy", a2: "Điền Chèm", scoreA: "11", scoreB: "7", b1: "Lợi Trí", b2: "Tuấn La" },
+      { id: 10, category: "Đôi nữ", a1: "Điền Chèm", a2: "Thành Sóc", scoreA: "11", scoreB: "6", b1: "Tuấn La", b2: "Châu Sĩ" },
+      { id: 11, category: "Đôi nam nữ", a1: "Thanh Đàm", a2: "Hải Hà", scoreA: "11", scoreB: "6", b1: "Long Diễn", b2: "Vân Đình" },
+      { id: 12, category: "Đôi nam", a1: "Tiến Thọ", a2: "Phú Mỗ", scoreA: "5", scoreB: "11", b1: "Trí Đỏ", b2: "Dũng Ngạc" },
+      { id: 13, category: "Đôi nam", a1: "Thanh Đàm", a2: "Hà Giấy", scoreA: "12", scoreB: "10", b1: "Long Diễn", b2: "Lợi Trí" },
+      { id: 14, category: "Đôi nữ", a1: "Quỳnh Cool", a2: "Hải Hà", scoreA: "11", scoreB: "7", b1: "Cẩm Ly", b2: "Vân Đình" },
+      { id: 15, category: "Đôi nam", a1: "Tiến Thọ", a2: "Điền Chèm", scoreA: "5", scoreB: "11", b1: "Trí Đỏ", b2: "Tuấn La" },
+      { id: 16, category: "Đôi nữ", a1: "Quỳnh Cool", a2: "Minh Vượng", scoreA: "11", scoreB: "8", b1: "Cẩm Ly", b2: "Minh Hạnh" },
+      { id: 17, category: "Đôi nam", a1: "Tiến Thọ", a2: "Thành Sóc", scoreA: "9", scoreB: "11", b1: "Trí Đỏ", b2: "Châu Sĩ" },
+      { id: 18, category: "Đôi nam", a1: "Phú Mỗ", a2: "Thành Sóc", scoreA: "7", scoreB: "11", b1: "Dũng Ngạc", b2: "Châu Sĩ" },
+      { id: 19, category: "Đôi nam", a1: "Phú Mỗ", a2: "Điền Chèm", scoreA: "8", scoreB: "11", b1: "Dũng Ngạc", b2: "Tuấn La" },
+      { id: 20, category: "Đôi nam nữ", a1: "Hải Hà", a2: "Minh Vượng", scoreA: "13", scoreB: "11", b1: "Vân Đình", b2: "Minh Hạnh" },
+      { id: 21, category: "Đôi nam nữ", a1: "Tiến Thọ", a2: "Quỳnh Cool", scoreA: "11", scoreB: "4", b1: "Trí Đỏ", b2: "Cẩm Ly" },
+      { id: 22, category: "Đôi nam nữ", a1: "Phú Mỗ", a2: "Minh Vượng", scoreA: "8", scoreB: "11", b1: "Dũng Ngạc", b2: "Minh Hạnh" },
+      { id: 23, category: "Đôi nam nữ", a1: "Hà Giấy", a2: "Quỳnh Cool", scoreA: "3", scoreB: "11", b1: "Lợi Trí", b2: "Cẩm Ly" },
+      { id: 24, category: "Đôi nam nữ", a1: "Điền Chèm", a2: "Hải Hà", scoreA: "5", scoreB: "11", b1: "Tuấn La", b2: "Vân Đình" }
+    ];
 
     window.onload = function() {
       document.addEventListener('click', closeAllDropdowns);
@@ -414,7 +448,16 @@
           miniGame1Content = data.miniGame1Content || miniGame1Content;
           miniGame2Content = data.miniGame2Content || miniGame2Content;
           
-          if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop")) {
+          if (data.teamA_members) teamA_members = data.teamA_members;
+          if (data.teamB_members) teamB_members = data.teamB_members;
+
+          if (data.miniGame1Matches && data.miniGame1Matches.length === 24) {
+            miniGame1Matches = data.miniGame1Matches;
+          } else {
+            miniGame1Matches = DEFAULT_MINI1_DATA;
+          }
+
+          if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop" && currentTab !== "minigame1")) {
             currentTab = dates[0] || "tonghop";
           }
           statusEl.className = "cloud-status cloud-online";
@@ -432,18 +475,16 @@
     }
 
     function initDefaultFirestore() {
-      vdvs = ["Trí Đỏ", "Long Diễn", "Lợi Trí", "Hà Giấy", "Tuấn La", "Gà Tre", "Dũng Ngạc", "Thành Sóc", "Vân Đình"];
+      vdvs = ["Tiến Thọ", "Thanh Đàm", "Thành Sóc", "Hà Giấy", "Minh Vượng", "Phú Mỗ", "Điền Chèm", "Hải Hà", "Quỳnh Cool", "Trí Đỏ", "Long Diễn", "Châu Sĩ", "Minh Hạnh", "Dũng Ngạc", "Lợi Trí", "Tuấn La", "Vân Đình", "Cẩm Ly"];
       dates = ["24/9/26"];
       matchesData = {};
       dates.forEach(d => {
         matchesData[d] = [
-          { id: 1, c1_p1: "Trí Đỏ", c1_p2: "Gà Tre", c2_p1: "Tuấn La", c2_p2: "Thành Sóc", score1: "11", score2: "9" },
-          { id: 2, c1_p1: "Hà Giấy", c1_p2: "Lợi Trí", c2_p1: "Thành Sóc", c2_p2: "Tuấn La", score1: "11", score2: "5" },
-          { id: 3, c1_p1: "Trí Đỏ", c1_p2: "Vân Đình", c2_p1: "Dũng Ngạc", c2_p2: "Gà Tre", score1: "", score2: "" },
-          { id: 4, c1_p1: "Hà Giấy", c1_p2: "Lợi Trí", c2_p1: "Thành Sóc", c2_p2: "Tuấn La", score1: "11", score2: "3" },
-          { id: 5, c1_p1: "Long Diễn", c1_p2: "Lợi Trí", c2_p1: "Dũng Ngạc", c2_p2: "Tuấn La", score1: "11", score2: "7" }
+          { id: 1, c1_p1: "Trí Đỏ", c1_p2: "Long Diễn", c2_p1: "Tuấn La", c2_p2: "Thành Sóc", score1: "11", score2: "9" }
         ];
       });
+
+      miniGame1Matches = DEFAULT_MINI1_DATA;
       saveDataToFirestore();
     }
 
@@ -451,7 +492,7 @@
       const statusEl = document.getElementById("cloudStatus");
       statusEl.className = "cloud-status cloud-syncing";
       statusEl.innerHTML = "⏳ Đang lưu...";
-      docRef.set({ vdvs, dates, matchesData, paymentStatus, miniGame1Content, miniGame2Content }, { merge: true });
+      docRef.set({ vdvs, dates, matchesData, paymentStatus, miniGame1Content, miniGame2Content, miniGame1Matches, teamA_members, teamB_members }, { merge: true });
     }
 
     function goHome() {
@@ -504,6 +545,8 @@
     function deleteVDV(name) {
       if (confirm(`Bạn có chắc muốn xóa VĐV ${name}?`)) {
         vdvs = vdvs.filter(v => v !== name);
+        teamA_members = teamA_members.filter(v => v !== name);
+        teamB_members = teamB_members.filter(v => v !== name);
         renderVDVItems(vdvs);
         saveDataToFirestore();
       }
@@ -545,7 +588,7 @@
 
     function renameCurrentDate() {
       closeAllDropdowns();
-      if (currentTab === "tonghop") return alert("⚠️ Không thể đổi tên tab Tổng Hợp!");
+      if (currentTab === "tonghop" || currentTab === "minigame1") return alert("⚠️ Không thể đổi tên tab này!");
       const oldDate = currentTab;
       const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
       if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
@@ -562,7 +605,7 @@
 
     function deleteCurrentDate() {
       closeAllDropdowns();
-      if (currentTab === "tonghop") return alert("⚠️ Không thể xóa tab Tổng Hợp!");
+      if (currentTab === "tonghop" || currentTab === "minigame1") return alert("⚠️ Không thể xóa tab này!");
       const dateToDelete = currentTab;
       if (confirm(`❌ Bạn có chắc chắn muốn XÓA TOÀN BỘ dữ liệu ngày "${dateToDelete}"?`)) {
         dates = dates.filter(d => d !== dateToDelete);
@@ -593,6 +636,36 @@
     function updateMatch(dateStr, matchIndex, field, value) {
       matchesData[dateStr][matchIndex][field] = value;
       saveDataToFirestore();
+    }
+
+    function updateMiniGame1Row(index, field, value) {
+      miniGame1Matches[index][field] = value;
+      saveDataToFirestore();
+    }
+
+    /* CẬP NHẬT CHIA THÀNH VIÊN TEAM A VÀ TEAM B */
+    function updateTeamMember(team, index, value) {
+      if (team === 'A') {
+        teamA_members[index] = value;
+      } else {
+        teamB_members[index] = value;
+      }
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function addTeamMember(team) {
+      if (team === 'A') teamA_members.push("");
+      else teamB_members.push("");
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function removeTeamMember(team, index) {
+      if (team === 'A') teamA_members.splice(index, 1);
+      else teamB_members.splice(index, 1);
+      saveDataToFirestore();
+      renderCurrentTab();
     }
 
     function togglePayment(payKey) {
@@ -635,9 +708,21 @@
       const content = document.getElementById("tabContent");
       if (currentTab === "tonghop") {
         renderTongHopTab(content);
+      } else if (currentTab === "minigame1") {
+        renderMiniGame1Tab(content);
       } else {
         renderSingleDayTab(content, currentTab);
       }
+    }
+
+    /* TẠO DANH SÁCH DROPDOWN BỎ QUA VĐV Ở TEAM ĐỐI DIỆN */
+    function generateTeamOptionsHtml(selectedValue, filterOutList) {
+      return vdvs.map((v, i) => {
+        if (filterOutList.includes(v) && v !== selectedValue) return ''; // Khóa không hiển thị nếu đã ở team kia
+        const color = VDV_COLORS[i % VDV_COLORS.length];
+        const isSelected = selectedValue === v ? 'selected' : '';
+        return `<option value="${v}" ${isSelected} style="color: ${color}; font-weight: bold;">${v}</option>`;
+      }).join('');
     }
 
     function generateVdvOptionsHtml(selectedValue) {
@@ -646,6 +731,217 @@
         const isSelected = selectedValue === v ? 'selected' : '';
         return `<option value="${v}" ${isSelected} style="color: ${color}; font-weight: bold;">${v}</option>`;
       }).join('');
+    }
+
+    /* CẤU TRÚC TAB MINIGAME 1 ĐẦY ĐỦ VỚI BẢNG CHIA TEAM VÀ LỊCH 24 TRẬN */
+    function renderMiniGame1Tab(container) {
+      // BẢNG CHIA THÀNH VIÊN TEAM A VÀ TEAM B
+      let maxLen = Math.max(teamA_members.length, teamB_members.length);
+      let teamAssignmentRowsHtml = "";
+
+      for (let i = 0; i < maxLen; i++) {
+        let valA = teamA_members[i] || "";
+        let valB = teamB_members[i] || "";
+
+        teamAssignmentRowsHtml += `
+          <tr>
+            <td><strong>${i + 1}</strong></td>
+            <td>
+              <div style="display:flex; gap:2px; align-items:center;">
+                <select onchange="updateTeamMember('A', ${i}, this.value)">
+                  <option value="">- Chọn VĐV Team A -</option>
+                  ${generateTeamOptionsHtml(valA, teamB_members.filter(Boolean))}
+                </select>
+                ${valA ? `<button class="btn btn-red btn-sm" style="padding:1px 4px;" onclick="removeTeamMember('A', ${i})">✕</button>` : ''}
+              </div>
+            </td>
+            <td>
+              <div style="display:flex; gap:2px; align-items:center;">
+                <select onchange="updateTeamMember('B', ${i}, this.value)">
+                  <option value="">- Chọn VĐV Team B -</option>
+                  ${generateTeamOptionsHtml(valB, teamA_members.filter(Boolean))}
+                </select>
+                ${valB ? `<button class="btn btn-red btn-sm" style="padding:1px 4px;" onclick="removeTeamMember('B', ${i})">✕</button>` : ''}
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+
+      let html = `
+        <!-- BẢNG CHIA TEAM A & TEAM B -->
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">👥 CHIA DANH SÁCH TEAM A & TEAM B</h2>
+            <div class="table-actions-toolbar">
+              <button class="btn btn-green btn-sm" onclick="addTeamMember('A')">➕ Thêm VĐV Team A</button>
+              <button class="btn btn-green btn-sm" onclick="addTeamMember('B')">➕ Thêm VĐV Team B</button>
+            </div>
+          </div>
+          <div class="table-responsive" style="max-width: 600px; margin: 0 auto;">
+            <table>
+              <colgroup>
+                <col style="width: 40px;">
+                <col style="width: 48%;">
+                <col style="width: 48%;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th style="background:#0f4c81;">STT</th>
+                  <th class="th-team-a">DANH SÁCH TEAM A</th>
+                  <th class="th-team-b">DANH SÁCH TEAM B</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${teamAssignmentRowsHtml}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- BẢNG LỊCH THI ĐẤU 24 TRẬN -->
+        <div class="card">
+          <div style="background-color:#0f4c81; color:white; padding:8px; border-radius:6px; text-align:center; font-weight:900; font-size:14px; margin-bottom:10px;">
+            Lịch Thi Đấu Team A & Team B (24 Trận)
+          </div>
+          <div class="table-responsive">
+            <table>
+              <colgroup>
+                <col style="width: 38px;">
+                <col style="width: 75px;">
+                <col style="width: 14%;">
+                <col style="width: 14%;">
+                <col style="width: 32px;">
+                <col style="width: 25px;">
+                <col style="width: 32px;">
+                <col style="width: 14%;">
+                <col style="width: 14%;">
+                <col style="width: 65px;">
+                <col style="width: 38px;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th style="background:#0f4c81;">Trận</th>
+                  <th style="background:#0f4c81;">Nội dung</th>
+                  <th colspan="2" class="th-team-a">TEAM A</th>
+                  <th style="background:#0f4c81;">Tỷ số A</th>
+                  <th style="background:#0f4c81;">VS</th>
+                  <th style="background:#0f4c81;">Tỷ số B</th>
+                  <th colspan="2" class="th-team-b">TEAM B</th>
+                  <th style="background:#0f4c81;">Kết quả</th>
+                  <th style="background:#0f4c81;">Điểm</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+
+      let totalA = 0;
+      let totalB = 0;
+
+      miniGame1Matches.forEach((m, idx) => {
+        const sA = parseInt(m.scoreA);
+        const sB = parseInt(m.scoreB);
+        let result = "";
+        let pts = "";
+
+        if (!isNaN(sA) && !isNaN(sB)) {
+          if (sA > sB) {
+            result = "TEAM A";
+            pts = "1";
+            totalA += 1;
+          } else if (sB > sA) {
+            result = "TEAM B";
+            pts = "1";
+            totalB += 1;
+          } else {
+            result = "HÒA";
+            pts = "0";
+          }
+        }
+
+        html += `
+          <tr>
+            <td><strong>${m.id}</strong></td>
+            <td>
+              <select onchange="updateMiniGame1Row(${idx}, 'category', this.value)">
+                <option value="Đôi nam" ${m.category === 'Đôi nam' ? 'selected' : ''}>Đôi nam</option>
+                <option value="Đôi nữ" ${m.category === 'Đôi nữ' ? 'selected' : ''}>Đôi nữ</option>
+                <option value="Đôi nam nữ" ${m.category === 'Đôi nam nữ' ? 'selected' : ''}>Đôi nam nữ</option>
+              </select>
+            </td>
+            <td>
+              <select onchange="updateMiniGame1Row(${idx}, 'a1', this.value)">
+                <option value="">- VĐV 1 -</option>
+                ${generateTeamOptionsHtml(m.a1, teamB_members.filter(Boolean))}
+              </select>
+            </td>
+            <td>
+              <select onchange="updateMiniGame1Row(${idx}, 'a2', this.value)">
+                <option value="">- VĐV 2 -</option>
+                ${generateTeamOptionsHtml(m.a2, teamB_members.filter(Boolean))}
+              </select>
+            </td>
+            <td>
+              <input type="text" class="score-input" value="${m.scoreA || ''}" onchange="updateMiniGame1Row(${idx}, 'scoreA', this.value)">
+            </td>
+            <td style="font-weight:bold; color:#64748b; font-size:9px;">VS</td>
+            <td>
+              <input type="text" class="score-input" value="${m.scoreB || ''}" onchange="updateMiniGame1Row(${idx}, 'scoreB', this.value)">
+            </td>
+            <td>
+              <select onchange="updateMiniGame1Row(${idx}, 'b1', this.value)">
+                <option value="">- VĐV 1 -</option>
+                ${generateTeamOptionsHtml(m.b1, teamA_members.filter(Boolean))}
+              </select>
+            </td>
+            <td>
+              <select onchange="updateMiniGame1Row(${idx}, 'b2', this.value)">
+                <option value="">- VĐV 2 -</option>
+                ${generateTeamOptionsHtml(m.b2, teamA_members.filter(Boolean))}
+              </select>
+            </td>
+            <td style="font-weight:bold; color:${result === 'TEAM A' ? '#15803d' : (result === 'TEAM B' ? '#0369a1' : '#64748b')}">${result}</td>
+            <td><strong>${pts}</strong></td>
+          </tr>
+        `;
+      });
+
+      let overallResult = "HÒA";
+      if (totalA > totalB) overallResult = "TEAM A THẮNG";
+      else if (totalB > totalA) overallResult = "TEAM B THẮNG";
+
+      html += `
+              </tbody>
+            </table>
+          </div>
+
+          <!-- BẢNG TỔNG ĐIỂM VÀ KẾT QUẢ CHUNG CUỘC -->
+          <div style="margin-top:10px; max-width:320px;" class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th style="background:#0f4c81;">TEAM</th>
+                  <th style="background:#0f4c81;">Tổng điểm</th>
+                  <th style="background:#0f4c81;">KẾT QUẢ CHUNG CUỘC</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight:bold; color:#15803d;">Team A</td>
+                  <td style="font-weight:bold; font-size:12px;">${totalA}</td>
+                  <td style="font-weight:bold; font-size:11px; color:#15803d;" rowspan="2">${overallResult}</td>
+                </tr>
+                <tr>
+                  <td style="font-weight:bold; color:#0369a1;">Team B</td>
+                  <td style="font-weight:bold; font-size:12px;">${totalB}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = html;
     }
 
     function renderSingleDayTab(container, dateStr) {
@@ -815,7 +1111,6 @@
           if (st.played >= 4 && st.total > 0) { bringBack = st.total; sumBringBack += bringBack; }
           if (st.total < 0) { sumAmThucTe += st.total; if (isPaid) sumThucThu += Math.abs(st.total); }
 
-          /* XỬ LÝ ĐỔI MÀU NOTE THEO TICK THỰC TẾ: ĐÃ NỘP/NHẬN (XANH), CHƯA NỘP/NHẬN (ĐỎ) */
           let noteText = "";
           if (st.total < 0) {
             noteText = isPaid ? `<span class="note-paid">Đã nộp</span>` : `<span class="note-unpaid">Chưa nộp</span>`;

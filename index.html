@@ -257,7 +257,7 @@
     .checkbox-cell { transform: scale(1.15); cursor: pointer; }
     .total-summary-row { background-color: #f8fafc; font-weight: 800; }
 
-    /* STYLE BẢNG KẾT QUẢ TỔNG MINIGAME 1 TỐI ƯU MOBILE */
+    /* BẢNG KẾT QUẢ TỔNG TỐI ƯU MOBILE */
     .summary-result-box {
       margin-top: 12px;
       width: 100%;
@@ -676,7 +676,7 @@
       saveDataToFirestore();
     }
 
-    /* QUẢN LÝ THAY ĐỔI / CHỈNH SỬA / THÊM MỚI VĐV TRONG BẢNG CHIA TEAM */
+    /* CHỈNH SỬA & TỰ ĐỘNG CẬP NHẬT DANH SÁCH BẢNG CHIA TEAM */
     function updateTeamMember(team, index, value) {
       if (team === 'A') teamA_members[index] = value;
       else teamB_members[index] = value;
@@ -692,6 +692,18 @@
         if (!vdvs.includes(trimmed)) vdvs.push(trimmed);
         if (team === 'A') teamA_members[index] = trimmed;
         else teamB_members[index] = trimmed;
+        
+        // Tự động đồng bộ đổi tên trong các trận lịch thi đấu
+        miniGame1Matches.forEach(m => {
+          if (team === 'A') {
+            if (m.a1 === currentVal) m.a1 = trimmed;
+            if (m.a2 === currentVal) m.a2 = trimmed;
+          } else {
+            if (m.b1 === currentVal) m.b1 = trimmed;
+            if (m.b2 === currentVal) m.b2 = trimmed;
+          }
+        });
+
         saveDataToFirestore();
         renderCurrentTab();
       }
@@ -763,11 +775,22 @@
       }
     }
 
-    /* DROPDOWN CHỌN VĐV - BỎ QUA VĐV ĐÃ CÓ MẶT Ở TEAM KIA */
+    /* DROPDOWN DÀNH RIÊNG BẢNG CHIA TEAM: KHÓA BỎ VĐV Ở TEAM ĐỐI DIỆN */
     function generateTeamOptionsHtml(selectedValue, filterOutList) {
       return vdvs.map((v, i) => {
-        if (filterOutList.includes(v) && v !== selectedValue) return ''; // Khóa VĐV ở team đối diện
+        if (filterOutList.includes(v) && v !== selectedValue) return ''; 
         const color = VDV_COLORS[i % VDV_COLORS.length];
+        const isSelected = selectedValue === v ? 'selected' : '';
+        return `<option value="${v}" ${isSelected} style="color: ${color}; font-weight: bold;">${v}</option>`;
+      }).join('');
+    }
+
+    /* DROPDOWN BẢNG LỊCH THI ĐẤU: CHỈ HIỂN THỊ ĐÚNG DANH SÁCH THÀNH VIÊN CỦA TEAM ĐÓ */
+    function generateSpecificTeamListOptionsHtml(selectedValue, teamMemberList) {
+      const validMembers = teamMemberList.filter(Boolean);
+      return validMembers.map(v => {
+        const vIndex = vdvs.indexOf(v);
+        const color = VDV_COLORS[(vIndex >= 0 ? vIndex : 0) % VDV_COLORS.length];
         const isSelected = selectedValue === v ? 'selected' : '';
         return `<option value="${v}" ${isSelected} style="color: ${color}; font-weight: bold;">${v}</option>`;
       }).join('');
@@ -781,9 +804,9 @@
       }).join('');
     }
 
-    /* GIAO DIỆN MINIGAME 1 HOÀN CHỈNH */
+    /* GIAO DIỆN MINIGAME 1 ĐỒNG BỘ TUYỆT ĐỐI */
     function renderMiniGame1Tab(container) {
-      // 1. BẢNG CHIA TEAM A & TEAM B VỚI NÚT ✏️ VÀ THÊM MỚI
+      // 1. BẢNG CHIA TEAM A & TEAM B
       let maxLen = Math.max(teamA_members.length, teamB_members.length);
       let teamAssignmentRowsHtml = "";
 
@@ -924,13 +947,13 @@
             <td>
               <select onchange="updateMiniGame1Row(${idx}, 'a1', this.value)">
                 <option value="">- VĐV 1 -</option>
-                ${generateTeamOptionsHtml(m.a1, teamB_members.filter(Boolean))}
+                ${generateSpecificTeamListOptionsHtml(m.a1, teamA_members)}
               </select>
             </td>
             <td>
               <select onchange="updateMiniGame1Row(${idx}, 'a2', this.value)">
                 <option value="">- VĐV 2 -</option>
-                ${generateTeamOptionsHtml(m.a2, teamB_members.filter(Boolean))}
+                ${generateSpecificTeamListOptionsHtml(m.a2, teamA_members)}
               </select>
             </td>
             <td>
@@ -943,13 +966,13 @@
             <td>
               <select onchange="updateMiniGame1Row(${idx}, 'b1', this.value)">
                 <option value="">- VĐV 1 -</option>
-                ${generateTeamOptionsHtml(m.b1, teamA_members.filter(Boolean))}
+                ${generateSpecificTeamListOptionsHtml(m.b1, teamB_members)}
               </select>
             </td>
             <td>
               <select onchange="updateMiniGame1Row(${idx}, 'b2', this.value)">
                 <option value="">- VĐV 2 -</option>
-                ${generateTeamOptionsHtml(m.b2, teamA_members.filter(Boolean))}
+                ${generateSpecificTeamListOptionsHtml(m.b2, teamB_members)}
               </select>
             </td>
             <td style="font-weight:bold; color:${result === 'TEAM A' ? '#15803d' : (result === 'TEAM B' ? '#0369a1' : '#64748b')}">${result}</td>
@@ -958,7 +981,6 @@
         `;
       });
 
-      // XỬ LÝ TRẠNG THÁI KẾT QUẢ DẪN TRƯỚC / THẮNG CHUNG CUỘC
       let statusTextA = "";
       let statusTextB = "";
       let isCompleted = (playedMatchesCount === 24);
@@ -992,7 +1014,7 @@
             </table>
           </div>
 
-          <!-- BẢNG TỔNG THỐNG KÊ KẾT QUẢ CÂN ĐỐI TỐI ƯU MOBILE -->
+          <!-- BẢNG TỔNG KẾT KẾT QUẢ HIỆN TẠI / CHUNG CUỘC -->
           <div class="summary-result-box">
             <table class="summary-table-mobile">
               <thead>

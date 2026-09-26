@@ -1245,11 +1245,17 @@
       container.innerHTML = matchesHtml + summaryTableHtml;
     }
 
-    /* BẢNG TỔNG HỢP CÁC NGÀY - TÍNH THEO GIÁ TRỊ CỘT TỔNG (TỔNG GIÁ TRỊ ÂM TRỪ ĐI TIỀN MANG VỀ) */
+    /* BẢNG TỔNG HỢP CÁC NGÀY - TÍNH CHÍNH XÁC THEO ẢNH:
+       1. CHUYỂN NGUYÊN VẸN GIÁ TRỊ CỘT TỔNG (CẢ ÂM VÀ DƯƠNG) SANG CÁC Ô NGÀY CỦA VĐV
+       2. TỔNG NGÀY & TỔNG KÈO = (TỔNG CÁC GIÁ TRỊ ÂM) - (GIÁ TRỊ MANG VỀ NẾU CÓ)
+    */
     function renderTongHopTab(container) {
       let vdvDayTotals = {};
+      let vdvRowKeoSum = {};
+      
       vdvs.forEach(v => {
         vdvDayTotals[v] = {};
+        vdvRowKeoSum[v] = 0;
         dates.forEach(d => { vdvDayTotals[v][d] = 0; });
       });
 
@@ -1259,7 +1265,7 @@
       dates.forEach(d => {
         const matches = matchesData[d] || [];
         let statsDay = {};
-        vdvs.forEach(v => { statsDay[v] = { played: 0, loseK: 0, total: 0 }; });
+        vdvs.forEach(v => { statsDay[v] = { played: 0, total: 0 }; });
 
         matches.forEach(m => {
           const s1 = parseInt(m.score1);
@@ -1275,22 +1281,35 @@
 
             if (s1 > s2) {
               pair1.forEach(v => { if (statsDay[v]) { statsDay[v].played++; statsDay[v].total += winAmt; } });
-              pair2.forEach(v => { if (statsDay[v]) { statsDay[v].played++; statsDay[v].loseK += loseAmt; statsDay[v].total += loseAmt; } });
+              pair2.forEach(v => { if (statsDay[v]) { statsDay[v].played++; statsDay[v].total += loseAmt; } });
             } else if (s2 > s1) {
               pair2.forEach(v => { if (statsDay[v]) { statsDay[v].played++; statsDay[v].total += winAmt; } });
-              pair1.forEach(v => { if (statsDay[v]) { statsDay[v].played++; statsDay[v].loseK += loseAmt; statsDay[v].total += loseAmt; } });
+              pair1.forEach(v => { if (statsDay[v]) { statsDay[v].played++; statsDay[v].total += loseAmt; } });
             }
           }
         });
 
-        // GIÁ TRỊ MỖI NGÀY = TỔNG CÁC GIÁ TRỊ ÂM - TIỀN MANG VỀ NẾU CÓ
+        let sumAmDay = 0;
+        let sumBringBackDay = 0;
+
         vdvs.forEach(v => {
           let st = statsDay[v];
-          let bringBack = (st.played >= 4 && st.total > 0) ? st.total : 0;
-          let calculatedVal = st.loseK - bringBack; 
-          vdvDayTotals[v][d] = calculatedVal;
-          dayTotalsSum[d] += calculatedVal;
+          // Chuyển toàn bộ giá trị cột TỔNG (thắng / thua) vào ô của VĐV trong ngày
+          if (st.played > 0) {
+            vdvDayTotals[v][d] = st.total;
+            vdvRowKeoSum[v] += st.total;
+
+            // Tính các khoản để xác định TỔNG NGÀY
+            if (st.total < 0) {
+              sumAmDay += st.total;
+            } else if (st.played >= 4 && st.total > 0) {
+              sumBringBackDay += st.total;
+            }
+          }
         });
+
+        // Tổng ngày = (Tổng các giá trị âm) - (Tiền mang về nếu có)
+        dayTotalsSum[d] = sumAmDay - sumBringBackDay;
       });
 
       let grandTotalAllDays = 0;
@@ -1298,7 +1317,7 @@
       let html = `
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">BẢNG TỔNG HỢP TỪNG NGÀY</h2>
+            <h2 class="card-title">BẢNG TỔNG HỢP CÁC NGÀY</h2>
           </div>
           <div class="table-responsive">
             <table>
@@ -1313,15 +1332,13 @@
       `;
 
       vdvs.forEach((v, index) => {
-        let rowSum = 0;
         let dayCells = dates.map(d => {
           let val = vdvDayTotals[v][d];
-          rowSum += val;
           let cls = val > 0 ? 'txt-win' : (val < 0 ? 'txt-lose' : '');
-          return `<td class="${cls}">${val !== 0 ? val + 'K' : '-'}</td>`;
+          return `<td class="${cls}">${val !== 0 ? (val > 0 ? '+' + val + 'K' : val + 'K') : '-'}</td>`;
         }).join('');
 
-        grandTotalAllDays += rowSum;
+        let rowSum = vdvRowKeoSum[v];
         let totalCls = rowSum > 0 ? 'txt-win' : (rowSum < 0 ? 'txt-lose' : '');
         let vdvColor = VDV_COLORS[index % VDV_COLORS.length];
 
@@ -1329,22 +1346,23 @@
           <tr>
             <td style="color: ${vdvColor}; font-weight: 800; font-size: 11px; text-align: left; padding-left: 8px;">${v}</td>
             ${dayCells}
-            <td class="${totalCls}" style="background-color: #fef9c3;"><strong>${rowSum !== 0 ? rowSum + 'K' : '0K'}</strong></td>
+            <td class="${totalCls}" style="background-color: #fef9c3;"><strong>${rowSum !== 0 ? (rowSum > 0 ? '+' + rowSum + 'K' : rowSum + 'K') : '0K'}</strong></td>
           </tr>
         `;
       });
 
       let daySumCells = dates.map(d => {
         let val = dayTotalsSum[d];
-        let cls = val > 0 ? 'txt-win' : (val < 0 ? 'txt-lose' : '');
+        grandTotalAllDays += val;
+        let cls = val < 0 ? 'txt-lose' : (val > 0 ? 'txt-win' : '');
         return `<td class="${cls}"><strong>${val !== 0 ? val + 'K' : '0K'}</strong></td>`;
       }).join('');
 
-      let grandTotalCls = grandTotalAllDays > 0 ? 'txt-win' : (grandTotalAllDays < 0 ? 'txt-lose' : '');
+      let grandTotalCls = grandTotalAllDays < 0 ? 'txt-lose' : (grandTotalAllDays > 0 ? 'txt-win' : '');
 
       html += `
                 <tr class="total-summary-row">
-                  <td style="color: red; text-align: center;"><strong>TỔNG</strong></td>
+                  <td style="color: red; text-align: center;"><strong>TỔNG NGÀY</strong></td>
                   ${daySumCells}
                   <td class="${grandTotalCls}" style="background-color: #fef08a;"><strong>${grandTotalAllDays !== 0 ? grandTotalAllDays + 'K' : '0K'}</strong></td>
                 </tr>

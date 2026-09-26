@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CLB PICKLEBALL - CMTD | Quản Lý & Mini Game</title>
+  <title>CLB PICKLEBALL - CMTD | Quản Lý & Lịch Đấu</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
   <!-- Thư viện SheetJS xuất Excel -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -27,10 +27,20 @@
       background-color: #f1f5f9;
       color: var(--text-main);
       margin: 0;
-      padding: 15px 10px;
+      padding: 8px 4px;
       min-height: 100vh;
     }
     
+    /* CLASS HERO BANNER THEO YÊU CẦU */
+    .hero-banner {
+      background-image: url('images/banner.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 400px;
+      color: white;
+      text-align: center;
+    }
+
     .container { max-width: 1600px; margin: 0 auto; position: relative; }
     
     /* HEADER SECTION */
@@ -39,13 +49,13 @@
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: white;
-      padding: 16px 20px;
-      border-radius: 14px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-      margin-bottom: 16px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      margin-bottom: 12px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 10px;
       position: relative;
       z-index: 500;
     }
@@ -55,20 +65,20 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 8px;
     }
 
     .brand-title { display: flex; align-items: center; max-width: 100%; }
-    .app-banner-img { max-height: 80px; width: auto; object-fit: contain; border-radius: 8px; }
+    .app-banner-img { max-height: 65px; width: auto; object-fit: contain; border-radius: 6px; }
 
     /* MENU THANH ĐIỀU HƯỚNG */
     .top-nav {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 5px;
       flex-wrap: wrap;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 12px;
+      padding-top: 8px;
       position: relative;
     }
     
@@ -77,16 +87,16 @@
       background: rgba(51, 65, 85, 0.9);
       color: white;
       border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 8px 14px;
-      border-radius: 8px;
+      padding: 6px 10px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: 700;
-      font-size: 12px;
-      transition: all 0.25s ease;
+      font-size: 11px;
+      transition: all 0.2s ease;
       white-space: nowrap;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }
     .nav-btn:hover { background-color: var(--accent-color); border-color: var(--accent-color); }
     
@@ -96,55 +106,53 @@
       position: absolute;
       top: 115%;
       left: 0;
-      min-width: 240px;
+      min-width: 220px;
       background: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
       border: 1px solid var(--border-color);
       z-index: 9999 !important;
-      padding: 6px 0;
+      padding: 4px 0;
       color: var(--text-main);
     }
 
     .dropdown-menu.right-align { left: auto; right: 0; }
     .dropdown-menu.show { display: block; }
     .dropdown-item {
-      padding: 9px 14px;
-      font-size: 12px;
+      padding: 8px 12px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       color: #334155;
-      transition: background 0.15s;
     }
     .dropdown-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
-    .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 4px 0; }
+    .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 3px 0; }
     
-    .cloud-status { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold; margin-left: auto; }
+    .cloud-status { font-size: 10px; padding: 3px 8px; border-radius: 15px; font-weight: bold; margin-left: auto; }
     .cloud-online { background-color: #10b981; color: white; }
     .cloud-syncing { background-color: #f59e0b; color: white; }
     
     /* VĐV CONTAINER */
-    .vdv-container { padding: 8px; width: 260px; }
-    .vdv-scroll-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
-    .vdv-item { background: #f8fafc; padding: 5px 8px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+    .vdv-container { padding: 8px; width: 240px; }
+    .vdv-scroll-list { max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+    .vdv-item { background: #f8fafc; padding: 4px 6px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
 
     /* BUTTONS */
-    .btn { background-color: var(--accent-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; }
-    .btn:hover { opacity: 0.9; }
-    .btn-sm { padding: 5px 10px; font-size: 11px; }
+    .btn { background-color: var(--accent-color); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; }
+    .btn-sm { padding: 4px 8px; font-size: 10px; }
     .btn-green { background-color: #10b981; }
     .btn-red { background-color: #ef4444; }
     
-    /* CARDS & TABLES */
+    /* CARDS & TABLES - TỐI ƯU CĂN CHỈNH MOBILE KÔNG BỊ TRƯỢT NGANG */
     .card {
       background: var(--card-bg);
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      margin-bottom: 20px;
+      padding: 10px 6px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 12px;
       position: relative;
       z-index: 10;
       border: 1px solid #e2e8f0;
@@ -153,55 +161,85 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 10px;
+      padding-bottom: 6px;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 6px;
     }
-    .card-title { font-size: 15px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; }
+    .card-title { font-size: 13px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; }
     
-    .table-actions-toolbar { display: flex; align-items: center; gap: 8px; }
-    .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #cbd5e1; }
+    .table-actions-toolbar { display: flex; align-items: center; gap: 6px; }
     
-    table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 850px; table-layout: fixed; }
-    th, td { border: 1px solid #cbd5e1; padding: 7px 4px; text-align: center; vertical-align: middle; word-wrap: break-word; }
-    th { background-color: #f8fafc; color: #334155; font-weight: 800; font-size: 11px; text-transform: uppercase; }
+    .table-responsive { 
+      width: 100%;
+      overflow-x: auto; 
+      -webkit-overflow-scrolling: touch; 
+      border-radius: 6px; 
+      border: 1px solid #cbd5e1; 
+    }
     
-    .th-pick1 { background-color: #dcfce7; color: #166534; }
-    .th-pick2 { background-color: #fee2e2; color: #991b1b; }
-    .th-money { background-color: #fef3c7; color: #92400e; }
+    /* BẢNG MOBILE DÙNG VỪA VẶN MÀN HÌNH */
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      font-size: 10px; 
+      min-width: 650px; 
+      table-layout: fixed; 
+    }
+    th, td { border: 1px solid #cbd5e1; padding: 4px 2px; text-align: center; vertical-align: middle; word-wrap: break-word; }
+    th { background-color: #003366; color: #ffffff; font-weight: 800; font-size: 10px; text-transform: uppercase; }
     
-    select { width: 100%; padding: 5px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 11px; font-weight: 700; background: #fff; text-overflow: ellipsis; cursor: pointer; }
-    input[type="text"] { width: 100%; padding: 5px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 11px; background: #fff; }
+    .th-team-a { background-color: #15803d; color: #ffffff; }
+    .th-team-b { background-color: #0369a1; color: #ffffff; }
+    
+    select { 
+      width: 100%; 
+      padding: 2px 1px; 
+      border: 1px solid #cbd5e1; 
+      border-radius: 4px; 
+      font-size: 10px; 
+      font-weight: 700; 
+      background: #fff; 
+      text-overflow: ellipsis; 
+      cursor: pointer; 
+    }
+    input[type="text"] { width: 100%; padding: 2px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px; background: #fff; text-align: center; }
 
     .score-input { 
-      width: 48px !important; 
-      height: 28px;
-      padding: 2px !important; 
+      width: 28px !important; 
+      height: 22px; 
+      padding: 1px !important; 
       font-weight: 800; 
       text-align: center; 
-      font-size: 12px; 
-      border: 1.5px solid var(--score-border) !important; 
-      border-radius: 6px; 
+      font-size: 10px; 
+      border: 1px solid var(--score-border) !important; 
+      border-radius: 4px; 
       background: #ffffff; 
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
     }
 
-    .ham-text { background-color: #ef4444; color: white; font-weight: 900; font-size: 10px; padding: 2px 4px; border-radius: 4px; display: inline-block; width: 100%; text-align: center; }
+    .ham-text { background-color: #ef4444; color: white; font-weight: 900; font-size: 9px; padding: 1px 2px; border-radius: 3px; display: inline-block; width: 100%; text-align: center; }
     .txt-win { color: #16a34a; font-weight: 800; }
     .txt-lose { color: #dc2626; font-weight: 800; }
-    .note-paid { color: #2563eb; font-weight: 800; }
-    .note-unpaid { color: #dc2626; font-weight: 800; }
-    .checkbox-cell { transform: scale(1.2); cursor: pointer; }
+    .checkbox-cell { transform: scale(1.1); cursor: pointer; }
     .total-summary-row { background-color: #f8fafc; font-weight: 800; }
 
     /* MODAL */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; }
     .modal.show { display: flex; }
-    .modal-content { background: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+    .modal-content { background: white; padding: 16px; border-radius: 10px; width: 92%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+
+    /* TOÀN BỘ CSS TỐI ƯU GIAO DIỆN DI ĐỘNG */
+    @media (max-width: 600px) {
+      body { padding: 4px 2px; }
+      .card { padding: 6px 3px; }
+      .card-title { font-size: 11px; }
+      .nav-btn { font-size: 10px; padding: 5px 7px; }
+      table { min-width: 580px; font-size: 9px; }
+      th, td { padding: 3px 1px; }
+      select { font-size: 9px; padding: 1px 0; }
+      .score-input { width: 24px !important; height: 20px; font-size: 9px; }
+    }
   </style>
 </head>
 <body>
@@ -211,7 +249,7 @@
       <div class="header-top">
         <div class="brand-title">
           <img src="banner.png" alt="CLB PICKLEBALL CMTD" class="app-banner-img" onerror="this.style.display='none'; document.getElementById('altBrandText').style.display='block';">
-          <h2 id="altBrandText" style="display:none; margin:0; font-weight:900; color:#fff; font-size:20px;">CLB PICKLEBALL - CMTD</h2>
+          <h2 id="altBrandText" style="display:none; margin:0; font-weight:900; color:#fff; font-size:18px;">CLB PICKLEBALL - CMTD</h2>
         </div>
         <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối...</div>
       </div>
@@ -226,12 +264,12 @@
           <button class="nav-btn" onclick="toggleMenu('menuVdv', event)">👥 PICK THỦ (<span id="vdvCountBtn">0</span>) ▾</button>
           <div class="dropdown-menu" id="menuVdv">
             <div class="vdv-container">
-              <div style="font-weight: 800; font-size: 12px; margin-bottom: 6px;">Danh Sách VĐV</div>
-              <div style="display: flex; gap: 4px; margin-bottom: 6px;">
+              <div style="font-weight: 800; font-size: 11px; margin-bottom: 4px;">Danh Sách VĐV</div>
+              <div style="display: flex; gap: 4px; margin-bottom: 4px;">
                 <input type="text" id="newVdvInput" placeholder="Tên VĐV mới...">
                 <button class="btn btn-green btn-sm" onclick="addVDV()">Thêm</button>
               </div>
-              <input type="text" id="searchVdvInput" placeholder="🔍 Tìm VĐV..." onkeyup="filterVDVList()" style="margin-bottom: 6px;">
+              <input type="text" id="searchVdvInput" placeholder="🔍 Tìm VĐV..." onkeyup="filterVDVList()" style="margin-bottom: 4px;">
               <div class="vdv-scroll-list" id="vdvListContainer"></div>
             </div>
           </div>
@@ -257,11 +295,11 @@
           </div>
         </div>
 
-        <!-- MENU MINI GAME 1 ĐÃ SỬA LỖI -->
+        <!-- MENU MINI GAME 1 -->
         <div class="nav-item">
-          <button class="nav-btn" onclick="toggleMenu('menuMini1', event)">🎮 MINI GAME 1 (24 TRẬN) ▾</button>
+          <button class="nav-btn" onclick="toggleMenu('menuMini1', event)">🎮 MINI GAME 1 ▾</button>
           <div class="dropdown-menu" id="menuMini1">
-            <div class="dropdown-item" onclick="switchTab('minigame1')">▶️ Xem Bảng Lịch Đấu 24 Trận</div>
+            <div class="dropdown-item" onclick="switchTab('minigame1')">▶️ Lịch Thi Đấu Team A & Team B (24 Trận)</div>
             <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Nội Dung Game 1</div>
           </div>
         </div>
@@ -282,9 +320,9 @@
   <!-- MODAL CHỈNH SỬA GAME -->
   <div class="modal" id="gameModal">
     <div class="modal-content">
-      <h3 style="margin-top:0;" id="gameModalTitle">Chỉnh Sửa Mini Game</h3>
-      <textarea id="gameContentInput" rows="6" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px;" placeholder="Nhập thể lệ trò chơi..."></textarea>
-      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+      <h3 style="margin-top:0; font-size:14px;" id="gameModalTitle">Chỉnh Sửa Mini Game</h3>
+      <textarea id="gameContentInput" rows="5" style="width:100%; padding:6px; border:1px solid #cbd5e1; border-radius:4px; font-size:11px;" placeholder="Nhập thể lệ trò chơi..."></textarea>
+      <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:10px;">
         <button class="btn" style="background-color:#64748b;" onclick="closeGameModal()">Hủy</button>
         <button class="btn btn-green" onclick="saveGameContent()">Lưu Thay Đổi</button>
       </div>
@@ -315,15 +353,43 @@
     let vdvs = [];
     let dates = [];
     let matchesData = {};
-    let miniGame1Matches = []; // DỮ LIỆU 24 TRẬN MINI GAME 1
+    let miniGame1Matches = []; // DỮ LIỆU 24 TRẬN DẠNG LỊCH THI ĐẤU TEAM A & TEAM B
     let paymentStatus = {};
-    let miniGame1Content = "Thắng = 1 điểm, Thua = 0 điểm. Chọn Team Thắng để cộng điểm.";
+    let miniGame1Content = "Giải đấu Lịch Thi Đấu Team A & Team B 24 Trận.";
     let miniGame2Content = "Thể lệ Mini Game 2...";
     let currentTab = "";
     let activeGameEditing = 1;
 
     const ADMIN_PASSCODE = "123456";
     let isAdminVerified = false;
+
+    // DỮ LIỆU CHUẨN MẪU CHO 24 TRẬN ĐẤU TEAM A & B
+    const DEFAULT_MINI1_DATA = [
+      { id: 1, category: "Đôi nam", a1: "Tiến Thọ", a2: "Thanh Đàm", scoreA: "8", scoreB: "11", b1: "Trí Đỏ", b2: "Long Diễn" },
+      { id: 2, category: "Đôi nam", a1: "Thanh Đàm", a2: "Thành Sóc", scoreA: "5", scoreB: "11", b1: "Long Diễn", b2: "Châu Sĩ" },
+      { id: 3, category: "Đôi nam", a1: "Hà Giấy", a2: "Thành Sóc", scoreA: "6", scoreB: "11", b1: "Lợi Trí", b2: "Châu Sĩ" },
+      { id: 4, category: "Đôi nam", a1: "Thành Sóc", a2: "Minh Vượng", scoreA: "13", scoreB: "11", b1: "Châu Sĩ", b2: "Minh Hạnh" },
+      { id: 5, category: "Đôi nam", a1: "Thanh Đàm", a2: "Phú Mỗ", scoreA: "11", scoreB: "9", b1: "Long Diễn", b2: "Dũng Ngạc" },
+      { id: 6, category: "Đôi nam", a1: "Tiến Thọ", a2: "Hà Giấy", scoreA: "11", scoreB: "9", b1: "Trí Đỏ", b2: "Lợi Trí" },
+      { id: 7, category: "Đôi nam", a1: "Thanh Đàm", a2: "Điền Chèm", scoreA: "5", scoreB: "11", b1: "Long Diễn", b2: "Tuấn La" },
+      { id: 8, category: "Đôi nam", a1: "Phú Mỗ", a2: "Hà Giấy", scoreA: "11", scoreB: "9", b1: "Dũng Ngạc", b2: "Lợi Trí" },
+      { id: 9, category: "Đôi nam", a1: "Hà Giấy", a2: "Điền Chèm", scoreA: "11", scoreB: "7", b1: "Lợi Trí", b2: "Tuấn La" },
+      { id: 10, category: "Đôi nữ", a1: "Điền Chèm", a2: "Thành Sóc", scoreA: "11", scoreB: "6", b1: "Tuấn La", b2: "Châu Sĩ" },
+      { id: 11, category: "Đôi nam nữ", a1: "Thanh Đàm", a2: "Hải Hà", scoreA: "11", scoreB: "6", b1: "Long Diễn", b2: "Vân Đình" },
+      { id: 12, category: "Đôi nam", a1: "Tiến Thọ", a2: "Phú Mỗ", scoreA: "5", scoreB: "11", b1: "Trí Đỏ", b2: "Dũng Ngạc" },
+      { id: 13, category: "Đôi nam", a1: "Thanh Đàm", a2: "Hà Giấy", scoreA: "12", scoreB: "10", b1: "Long Diễn", b2: "Lợi Trí" },
+      { id: 14, category: "Đôi nữ", a1: "Quỳnh Cool", a2: "Hải Hà", scoreA: "11", scoreB: "7", b1: "Cẩm Ly", b2: "Vân Đình" },
+      { id: 15, category: "Đôi nam", a1: "Tiến Thọ", a2: "Điền Chèm", scoreA: "5", scoreB: "11", b1: "Trí Đỏ", b2: "Tuấn La" },
+      { id: 16, category: "Đôi nữ", a1: "Quỳnh Cool", a2: "Minh Vượng", scoreA: "11", scoreB: "8", b1: "Cẩm Ly", b2: "Minh Hạnh" },
+      { id: 17, category: "Đôi nam", a1: "Tiến Thọ", a2: "Thành Sóc", scoreA: "9", scoreB: "11", b1: "Trí Đỏ", b2: "Châu Sĩ" },
+      { id: 18, category: "Đôi nam", a1: "Phú Mỗ", a2: "Thành Sóc", scoreA: "7", scoreB: "11", b1: "Dũng Ngạc", b2: "Châu Sĩ" },
+      { id: 19, category: "Đôi nam", a1: "Phú Mỗ", a2: "Điền Chèm", scoreA: "8", scoreB: "11", b1: "Dũng Ngạc", b2: "Tuấn La" },
+      { id: 20, category: "Đôi nam nữ", a1: "Hải Hà", a2: "Minh Vượng", scoreA: "13", scoreB: "11", b1: "Vân Đình", b2: "Minh Hạnh" },
+      { id: 21, category: "Đôi nam nữ", a1: "Tiến Thọ", a2: "Quỳnh Cool", scoreA: "11", scoreB: "4", b1: "Trí Đỏ", b2: "Cẩm Ly" },
+      { id: 22, category: "Đôi nam nữ", a1: "Phú Mỗ", a2: "Minh Vượng", scoreA: "8", scoreB: "11", b1: "Dũng Ngạc", b2: "Minh Hạnh" },
+      { id: 23, category: "Đôi nam nữ", a1: "Hà Giấy", a2: "Quỳnh Cool", scoreA: "3", scoreB: "11", b1: "Lợi Trí", b2: "Cẩm Ly" },
+      { id: 24, category: "Đôi nam nữ", a1: "Điền Chèm", a2: "Hải Hà", scoreA: "5", scoreB: "11", b1: "Tuấn La", b2: "Vân Đình" }
+    ];
 
     window.onload = function() {
       document.addEventListener('click', closeAllDropdowns);
@@ -342,13 +408,10 @@
           miniGame1Content = data.miniGame1Content || miniGame1Content;
           miniGame2Content = data.miniGame2Content || miniGame2Content;
           
-          // Khởi tạo 24 trận đấu cho Mini Game 1 nếu chưa có
           if (data.miniGame1Matches && data.miniGame1Matches.length === 24) {
             miniGame1Matches = data.miniGame1Matches;
           } else {
-            miniGame1Matches = Array.from({ length: 24 }, (_, i) => ({
-              id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", winner: "", score1: "", score2: ""
-            }));
+            miniGame1Matches = DEFAULT_MINI1_DATA;
           }
 
           if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop" && currentTab !== "minigame1")) {
@@ -369,23 +432,16 @@
     }
 
     function initDefaultFirestore() {
-      vdvs = ["Trí Đỏ", "Long Diễn", "Lợi Trí", "Hà Giấy", "Tuấn La", "Gà Tre", "Dũng Ngạc", "Thành Sóc", "Vân Đình"];
+      vdvs = ["Tiến Thọ", "Thanh Đàm", "Thành Sóc", "Hà Giấy", "Minh Vượng", "Phú Mỗ", "Điền Chèm", "Hải Hà", "Quỳnh Cool", "Trí Đỏ", "Long Diễn", "Châu Sĩ", "Minh Hạnh", "Dũng Ngạc", "Lợi Trí", "Tuấn La", "Vân Đình", "Cẩm Ly"];
       dates = ["24/9/26"];
       matchesData = {};
       dates.forEach(d => {
         matchesData[d] = [
-          { id: 1, c1_p1: "Trí Đỏ", c1_p2: "Gà Tre", c2_p1: "Tuấn La", c2_p2: "Thành Sóc", score1: "11", score2: "9" },
-          { id: 2, c1_p1: "Hà Giấy", c1_p2: "Lợi Trí", c2_p1: "Thành Sóc", c2_p2: "Tuấn La", score1: "11", score2: "5" },
-          { id: 3, c1_p1: "Trí Đỏ", c1_p2: "Vân Đình", c2_p1: "Dũng Ngạc", c2_p2: "Gà Tre", score1: "", score2: "" },
-          { id: 4, c1_p1: "Hà Giấy", c1_p2: "Lợi Trí", c2_p1: "Thành Sóc", c2_p2: "Tuấn La", score1: "11", score2: "3" },
-          { id: 5, c1_p1: "Long Diễn", c1_p2: "Lợi Trí", c2_p1: "Dũng Ngạc", c2_p2: "Tuấn La", score1: "11", score2: "7" }
+          { id: 1, c1_p1: "Trí Đỏ", c1_p2: "Long Diễn", c2_p1: "Tuấn La", c2_p2: "Thành Sóc", score1: "11", score2: "9" }
         ];
       });
 
-      miniGame1Matches = Array.from({ length: 24 }, (_, i) => ({
-        id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", winner: "", score1: "", score2: ""
-      }));
-
+      miniGame1Matches = DEFAULT_MINI1_DATA;
       saveDataToFirestore();
     }
 
@@ -537,8 +593,8 @@
       saveDataToFirestore();
     }
 
-    function updateMiniGame1Match(matchIndex, field, value) {
-      miniGame1Matches[matchIndex][field] = value;
+    function updateMiniGame1Row(index, field, value) {
+      miniGame1Matches[index][field] = value;
       saveDataToFirestore();
     }
 
@@ -581,144 +637,144 @@
       }).join('');
     }
 
-    /* MINI GAME 1: HIỂN THỊ LỊCH ĐẤU 24 TRẬN + BẢNG TỔNG ĐIỂM SỐ */
+    /* BẢNG LỊCH THI ĐẤU TEAM A & TEAM B TRONG MINIGAME 1 CHUẨN XÁC THEO ẢNH MẪU */
     function renderMiniGame1Tab(container) {
       let html = `
         <div class="card">
-          <div class="card-header-flex">
-            <h2 class="card-title">🎮 BẢNG LỊCH THI ĐẤU 24 TRẬN - MINI GAME 1</h2>
-            <div style="font-size:12px; font-weight:bold; color:#16a34a;">Quy tắc: Thắng = 1 điểm, Thua = 0 điểm</div>
+          <div style="background-color:#0f4c81; color:white; padding:8px; border-radius:6px; text-align:center; font-weight:900; font-size:14px; margin-bottom:10px;">
+            Lịch Thi Đấu Team A & Team B
           </div>
-          <p style="font-size:12px; color:#475569; margin-top:0;">Quy định Mini Game: ${miniGame1Content}</p>
           <div class="table-responsive">
             <table>
               <colgroup>
-                <col style="width: 60px;">
-                <col style="width: 18%;">
-                <col style="width: 18%;">
-                <col style="width: 18%;">
-                <col style="width: 18%;">
-                <col style="width: 130px;">
-                <col style="width: 90px;">
+                <col style="width: 38px;">
+                <col style="width: 75px;">
+                <col style="width: 14%;">
+                <col style="width: 14%;">
+                <col style="width: 32px;">
+                <col style="width: 25px;">
+                <col style="width: 32px;">
+                <col style="width: 14%;">
+                <col style="width: 14%;">
+                <col style="width: 65px;">
+                <col style="width: 38px;">
               </colgroup>
               <thead>
                 <tr>
-                  <th>TRẬN</th>
-                  <th colspan="2" class="th-pick1">CẶP PICK 1</th>
-                  <th colspan="2" class="th-pick2">CẶP PICK 2</th>
-                  <th>CHỌN TEAM THẮNG</th>
-                  <th class="th-money">ĐIỂM SỐ</th>
+                  <th style="background:#0f4c81;">Trận</th>
+                  <th style="background:#0f4c81;">Nội dung</th>
+                  <th colspan="2" class="th-team-a">TEAM A</th>
+                  <th style="background:#0f4c81;">Tỷ số A</th>
+                  <th style="background:#0f4c81;">VS</th>
+                  <th style="background:#0f4c81;">Tỷ số B</th>
+                  <th colspan="2" class="th-team-b">TEAM B</th>
+                  <th style="background:#0f4c81;">Kết quả</th>
+                  <th style="background:#0f4c81;">Điểm</th>
                 </tr>
               </thead>
               <tbody>
       `;
 
-      let vdvScores = {};
-      vdvs.forEach(v => vdvScores[v] = { played: 0, win: 0, points: 0 });
+      let totalA = 0;
+      let totalB = 0;
 
       miniGame1Matches.forEach((m, idx) => {
-        let p1_1 = m.c1_p1, p1_2 = m.c1_p2, p2_1 = m.c2_p1, p2_2 = m.c2_p2;
-        let winner = m.winner; // "cap1" hoac "cap2"
+        const sA = parseInt(m.scoreA);
+        const sB = parseInt(m.scoreB);
+        let result = "";
+        let pts = "";
 
-        // Tính điểm
-        let pts1 = 0, pts2 = 0;
-        if (winner === "cap1") { pts1 = 1; pts2 = 0; }
-        else if (winner === "cap2") { pts1 = 0; pts2 = 1; }
-
-        if (winner) {
-          [p1_1, p1_2].filter(Boolean).forEach(v => {
-            if (vdvScores[v]) { vdvScores[v].played++; if (winner === "cap1") { vdvScores[v].win++; vdvScores[v].points += 1; } }
-          });
-          [p2_1, p2_2].filter(Boolean).forEach(v => {
-            if (vdvScores[v]) { vdvScores[v].played++; if (winner === "cap2") { vdvScores[v].win++; vdvScores[v].points += 1; } }
-          });
+        if (!isNaN(sA) && !isNaN(sB)) {
+          if (sA > sB) {
+            result = "TEAM A";
+            pts = "1";
+            totalA += 1;
+          } else if (sB > sA) {
+            result = "TEAM B";
+            pts = "1";
+            totalB += 1;
+          } else {
+            result = "HÒA";
+            pts = "0";
+          }
         }
 
         html += `
           <tr>
-            <td><strong>Trận ${m.id}</strong></td>
+            <td><strong>${m.id}</strong></td>
             <td>
-              <select onchange="updateMiniGame1Match(${idx}, 'c1_p1', this.value)">
-                <option value="">-- VĐV 1 --</option>
-                ${generateVdvOptionsHtml(m.c1_p1)}
+              <select onchange="updateMiniGame1Row(${idx}, 'category', this.value)">
+                <option value="Đôi nam" ${m.category === 'Đôi nam' ? 'selected' : ''}>Đôi nam</option>
+                <option value="Đôi nữ" ${m.category === 'Đôi nữ' ? 'selected' : ''}>Đôi nữ</option>
+                <option value="Đôi nam nữ" ${m.category === 'Đôi nam nữ' ? 'selected' : ''}>Đôi nam nữ</option>
               </select>
             </td>
             <td>
-              <select onchange="updateMiniGame1Match(${idx}, 'c1_p2', this.value)">
-                <option value="">-- VĐV 2 --</option>
-                ${generateVdvOptionsHtml(m.c1_p2)}
+              <select onchange="updateMiniGame1Row(${idx}, 'a1', this.value)">
+                <option value="">- VĐV 1 -</option>
+                ${generateVdvOptionsHtml(m.a1)}
               </select>
             </td>
             <td>
-              <select onchange="updateMiniGame1Match(${idx}, 'c2_p1', this.value)">
-                <option value="">-- VĐV 1 --</option>
-                ${generateVdvOptionsHtml(m.c2_p1)}
+              <select onchange="updateMiniGame1Row(${idx}, 'a2', this.value)">
+                <option value="">- VĐV 2 -</option>
+                ${generateVdvOptionsHtml(m.a2)}
               </select>
             </td>
             <td>
-              <select onchange="updateMiniGame1Match(${idx}, 'c2_p2', this.value)">
-                <option value="">-- VĐV 2 --</option>
-                ${generateVdvOptionsHtml(m.c2_p2)}
+              <input type="text" class="score-input" value="${m.scoreA || ''}" onchange="updateMiniGame1Row(${idx}, 'scoreA', this.value)">
+            </td>
+            <td style="font-weight:bold; color:#64748b; font-size:9px;">VS</td>
+            <td>
+              <input type="text" class="score-input" value="${m.scoreB || ''}" onchange="updateMiniGame1Row(${idx}, 'scoreB', this.value)">
+            </td>
+            <td>
+              <select onchange="updateMiniGame1Row(${idx}, 'b1', this.value)">
+                <option value="">- VĐV 1 -</option>
+                ${generateVdvOptionsHtml(m.b1)}
               </select>
             </td>
             <td>
-              <select onchange="updateMiniGame1Match(${idx}, 'winner', this.value)">
-                <option value="">-- Chọn Thắng --</option>
-                <option value="cap1" ${winner === 'cap1' ? 'selected' : ''}>🏆 Cặp Pick 1 Thắng</option>
-                <option value="cap2" ${winner === 'cap2' ? 'selected' : ''}>🏆 Cặp Pick 2 Thắng</option>
+              <select onchange="updateMiniGame1Row(${idx}, 'b2', this.value)">
+                <option value="">- VĐV 2 -</option>
+                ${generateVdvOptionsHtml(m.b2)}
               </select>
             </td>
-            <td>
-              <strong>${winner ? (winner === 'cap1' ? '1 - 0' : '0 - 1') : '-'}</strong>
-            </td>
+            <td style="font-weight:bold; color:${result === 'TEAM A' ? '#15803d' : (result === 'TEAM B' ? '#0369a1' : '#64748b')}">${result}</td>
+            <td><strong>${pts}</strong></td>
           </tr>
         `;
       });
+
+      let overallResult = "HÒA";
+      if (totalA > totalB) overallResult = "TEAM A THẮNG";
+      else if (totalB > totalA) overallResult = "TEAM B THẮNG";
 
       html += `
               </tbody>
             </table>
           </div>
-        </div>
 
-        <!-- BẢNG XẾP HẠNG TỔNG ĐIỂM MINI GAME 1 -->
-        <div class="card">
-          <div class="card-header-flex">
-            <h2 class="card-title">🏆 BẢNG XẾP HẠNG TỔNG ĐIỂM (THẮNG 1 ĐIỂM - THUA 0 ĐIỂM)</h2>
-          </div>
-          <div class="table-responsive">
+          <!-- BẢNG CỘNG TỔNG ĐIỂM CHUNG CUỘC BAN ĐẦU CỦA TEAM A & B -->
+          <div style="margin-top:10px; max-width:320px;" class="table-responsive">
             <table>
               <thead>
                 <tr>
-                  <th>VĐV (PICK THỦ)</th>
-                  <th>SỐ TRẬN ĐÃ ĐẤU</th>
-                  <th>SỐ TRẬN THẮNG</th>
-                  <th>SỐ TRẬN THUA</th>
-                  <th style="background-color: #fef08a; color: #854d0e;">TỔNG ĐIỂM</th>
+                  <th style="background:#0f4c81;">TEAM</th>
+                  <th style="background:#0f4c81;">Tổng điểm (Điểm số)</th>
+                  <th style="background:#0f4c81;">KẾT QUẢ CHUNG CUỘC</th>
                 </tr>
               </thead>
               <tbody>
-      `;
-
-      let sortedVdvs = vdvs.slice().sort((a,b) => (vdvScores[b]?.points || 0) - (vdvScores[a]?.points || 0));
-
-      sortedVdvs.forEach((v, index) => {
-        let st = vdvScores[v] || { played: 0, win: 0, points: 0 };
-        let lose = st.played - st.win;
-        let vColor = VDV_COLORS[vdvs.indexOf(v) % VDV_COLORS.length];
-
-        html += `
-          <tr>
-            <td style="color: ${vColor}; font-weight: 800; text-align: left; padding-left: 15px;">${v}</td>
-            <td>${st.played}</td>
-            <td class="txt-win">${st.win}</td>
-            <td class="txt-lose">${lose > 0 ? lose : 0}</td>
-            <td style="background-color: #fef9c3; font-weight:900; font-size:14px; color:#16a34a;">${st.points} Điểm</td>
-          </tr>
-        `;
-      });
-
-      html += `
+                <tr>
+                  <td style="font-weight:bold; color:#15803d;">Team A</td>
+                  <td style="font-weight:bold; font-size:12px;">${totalA}</td>
+                  <td style="font-weight:bold; font-size:11px; color:#15803d;" rowspan="2">${overallResult}</td>
+                </tr>
+                <tr>
+                  <td style="font-weight:bold; color:#0369a1;">Team B</td>
+                  <td style="font-weight:bold; font-size:12px;">${totalB}</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -743,14 +799,14 @@
           <div class="table-responsive">
             <table>
               <colgroup>
-                <col style="width: 70px;">
-                <col style="width: 20%;">
-                <col style="width: 20%;">
-                <col style="width: 20%;">
-                <col style="width: 20%;">
-                <col style="width: 120px;">
                 <col style="width: 50px;">
-                <col style="width: 50px;">
+                <col style="width: 22%;">
+                <col style="width: 22%;">
+                <col style="width: 22%;">
+                <col style="width: 22%;">
+                <col style="width: 80px;">
+                <col style="width: 35px;">
+                <col style="width: 35px;">
               </colgroup>
               <thead>
                 <tr>
@@ -828,7 +884,7 @@
               </select>
             </td>
             <td>
-              <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
+              <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
                 <div class="score-input" onclick="if(${isScore1Zero}) updateMatch('${dateStr}', ${idx}, 'score1', '')">${score1Inner}</div>
                 <span style="font-weight:bold;">-</span>
                 <div class="score-input" onclick="if(${isScore2Zero}) updateMatch('${dateStr}', ${idx}, 'score2', '')">${score2Inner}</div>
@@ -901,7 +957,7 @@
 
           summaryRowsHtml += `
             <tr>
-              <td style="color: ${vColor}; font-weight: 800; text-align: left; padding-left: 12px;">${v}</td>
+              <td style="color: ${vColor}; font-weight: 800; text-align: left; padding-left: 8px;">${v}</td>
               <td>${st.played}</td>
               <td class="txt-win">${st.winK > 0 ? st.winK : ''}</td>
               <td class="txt-lose">${st.loseK < 0 ? st.loseK : ''}</td>
@@ -925,14 +981,14 @@
           <div class="table-responsive">
             <table>
               <colgroup>
-                <col style="width: 18%;">
+                <col style="width: 20%;">
                 <col style="width: 10%;">
                 <col style="width: 10%;">
                 <col style="width: 10%;">
                 <col style="width: 14%;">
                 <col style="width: 10%;">
                 <col style="width: 8%;">
-                <col style="width: 20%;">
+                <col style="width: 18%;">
               </colgroup>
               <thead>
                 <tr>
@@ -960,7 +1016,7 @@
                 </tr>
                 <tr class="total-summary-row">
                   <td style="color: red; text-align: left;" colspan="4"><strong>Quỹ Còn</strong></td>
-                  <td colspan="2" style="color: red; font-size: 15px;"><strong>${quyCon}</strong></td>
+                  <td colspan="2" style="color: red; font-size: 13px;"><strong>${quyCon}</strong></td>
                   <td colspan="2"></td>
                 </tr>
               </tbody>
@@ -1020,7 +1076,7 @@
             <table>
               <thead>
                 <tr>
-                  <th style="width: 160px;">VĐV (PICK THỦ)</th>
+                  <th style="width: 140px;">VĐV (PICK THỦ)</th>
                   ${dates.map(d => `<th>NGÀY ${d}</th>`).join('')}
                   <th style="background-color: #fef08a; color: #854d0e;">TỔNG KÈO</th>
                 </tr>
@@ -1043,7 +1099,7 @@
 
         html += `
           <tr>
-            <td style="color: ${vdvColor}; font-weight: 800; font-size: 13px; text-align: left; padding-left: 12px;">${v}</td>
+            <td style="color: ${vdvColor}; font-weight: 800; font-size: 11px; text-align: left; padding-left: 8px;">${v}</td>
             ${dayCells}
             <td class="${totalCls}" style="background-color: #fef9c3;"><strong>${rowSum > 0 ? '+' + rowSum + 'K' : rowSum + 'K'}</strong></td>
           </tr>

@@ -33,7 +33,7 @@
 
     .container { max-width: 1600px; margin: 0 auto; position: relative; }
     
-    /* HERO BANNER & LOGO (ĐƯỜNG DẪN CÙNG THƯ MỤC BANNER2.JPG VÀ LOGO1.PNG) */
+    /* HERO BANNER & LOGO */
     .hero-banner {
       background-image: linear-gradient(rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.65)), url('banner2.jpg');
       background-size: cover;
@@ -311,8 +311,8 @@
 <body>
   <div class="container">
     <!-- HERO BANNER & LOGO -->
-    <div class="hero-banner">
-      <img src="logo1.png" alt="Logo Pickleball CMTD" class="logo-img">
+    <div class="hero-banner" id="heroBanner">
+      <img src="logo1.png" id="mainLogo" alt="Logo Pickleball CMTD" class="logo-img" onerror="handleLogoError(this)">
     </div>
 
     <!-- HEADER SECTION -->
@@ -399,6 +399,21 @@
   </div>
 
   <script>
+    /* KHẮC PHỤC LỖI TẢI ẢNH BANNER & LOGO TỰ ĐỘNG */
+    function checkBannerImg() {
+      var img = new Image();
+      img.onerror = function() {
+        document.getElementById('heroBanner').style.backgroundImage = "linear-gradient(rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.65)), url('logo1.png')";
+      };
+      img.src = 'banner2.jpg';
+    }
+    checkBannerImg();
+
+    function handleLogoError(el) {
+      el.onerror = null;
+      el.src = 'logo1.png';
+    }
+
     const firebaseConfig = {
       apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
       authDomain: "pickleball-cmtd.firebaseapp.com",

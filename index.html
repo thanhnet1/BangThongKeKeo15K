@@ -32,7 +32,7 @@
     .container { max-width: 1600px; margin: 0 auto; position: relative; }
     
     .hero-banner {
-      background-image: url('banner.jpg');
+      background-image: url('banner2.jpg');
       background-size: 100% 100%;
       background-position: center;
       background-repeat: no-repeat;
@@ -150,7 +150,6 @@
     .btn-sm { padding: 3px 6px; font-size: 10px; }
     .btn-green { background-color: #10b981; }
     .btn-red { background-color: #ef4444; }
-    .btn-orange { background-color: #f59e0b; color: white; }
     .btn-icon { background: none; border: none; cursor: pointer; font-size: 12px; padding: 2px 3px; }
 
     .card {
@@ -248,30 +247,12 @@
     .checkbox-cell { transform: scale(1.15); cursor: pointer; }
     .total-summary-row { background-color: #f8fafc; font-weight: 800; }
 
-    .summary-result-box {
-      margin-top: 12px;
-      width: 100%;
-      background: #ffffff;
-      border: 2px solid #0f4c81;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-    
-    .summary-table-mobile { width: 100% !important; min-width: 100% !important; table-layout: auto !important; }
-    .summary-table-mobile th { background-color: #0f4c81 !important; color: #ffffff !important; font-size: 11px; padding: 6px 4px; }
-    .summary-table-mobile td { padding: 8px 4px; font-size: 11px; }
-
-    .status-leading { color: #16a34a; font-weight: 900; }
-    .status-losing { color: #dc2626; font-weight: 900; }
-    .status-draw { color: #d97706; font-weight: 900; }
+    .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 900px) { .grid-2col { grid-template-columns: 1fr; } }
 
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; }
     .modal.show { display: flex; }
     .modal-content { background: white; padding: 16px; border-radius: 10px; width: 92%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-
-    .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    @media (max-width: 900px) { .grid-2col { grid-template-columns: 1fr; } }
 
     @media (max-width: 600px) {
       body { padding: 4px 2px; }
@@ -404,9 +385,20 @@
 
     let miniGame1Matches = [];
 
-    // Dữ liệu Mini Game 2
-    let mini2PairsA = ["Đôi a", "Đôi b", "Đôi c", "Đôi d"];
-    let mini2PairsB = ["Đôi e", "Đôi f", "Đôi g", "Đôi h"];
+    // Cặp VĐV Mini Game 2 - Cấu trúc ghép 2 VĐV dạng đối tượng {p1, p2}
+    let mini2PairsA = [
+      { p1: "Tiến Thọ", p2: "Thanh Đàm" },
+      { p1: "Thành Sóc", p2: "Hà Giấy" },
+      { p1: "Minh Vượng", p2: "Phú Mỗ" },
+      { p1: "Điền Chèm", p2: "Hải Hà" }
+    ];
+    let mini2PairsB = [
+      { p1: "Trí Đỏ", p2: "Long Diễn" },
+      { p1: "Châu Sĩ", p2: "Minh Hạnh" },
+      { p1: "Dũng Ngạc", p2: "Lợi Trí" },
+      { p1: "Tuấn La", p2: "Vân Đình" }
+    ];
+
     let mini2MatchesA = [];
     let mini2MatchesB = [];
     let mini2Knockout = {
@@ -422,33 +414,6 @@
     const ADMIN_PASSCODE = "123456";
     let isAdminVerified = false;
 
-    const DEFAULT_MINI1_DATA = [
-      { id: 1, category: "Đôi nam", a1: "Tiến Thọ", a2: "Thanh Đàm", scoreA: "8", scoreB: "11", b1: "Trí Đỏ", b2: "Long Diễn" },
-      { id: 2, category: "Đôi nam", a1: "Thanh Đàm", a2: "Thành Sóc", scoreA: "5", scoreB: "11", b1: "Long Diễn", b2: "Châu Sĩ" },
-      { id: 3, category: "Đôi nam", a1: "Hà Giấy", a2: "Thành Sóc", scoreA: "6", scoreB: "11", b1: "Lợi Trí", b2: "Châu Sĩ" },
-      { id: 4, category: "Đôi nam", a1: "Thành Sóc", a2: "Minh Vượng", scoreA: "13", scoreB: "11", b1: "Châu Sĩ", b2: "Minh Hạnh" },
-      { id: 5, category: "Đôi nam", a1: "Thanh Đàm", a2: "Phú Mỗ", scoreA: "11", scoreB: "9", b1: "Long Diễn", b2: "Dũng Ngạc" },
-      { id: 6, category: "Đôi nam", a1: "Tiến Thọ", a2: "Hà Giấy", scoreA: "11", scoreB: "9", b1: "Trí Đỏ", b2: "Lợi Trí" },
-      { id: 7, category: "Đôi nam", a1: "Thanh Đàm", a2: "Điền Chèm", scoreA: "5", scoreB: "11", b1: "Long Diễn", b2: "Tuấn La" },
-      { id: 8, category: "Đôi nam", a1: "Phú Mỗ", a2: "Hà Giấy", scoreA: "11", scoreB: "9", b1: "Dũng Ngạc", b2: "Lợi Trí" },
-      { id: 9, category: "Đôi nam", a1: "Hà Giấy", a2: "Điền Chèm", scoreA: "11", scoreB: "7", b1: "Lợi Trí", b2: "Tuấn La" },
-      { id: 10, category: "Đôi nữ", a1: "Điền Chèm", a2: "Thành Sóc", scoreA: "11", scoreB: "6", b1: "Tuấn La", b2: "Châu Sĩ" },
-      { id: 11, category: "Đôi nam nữ", a1: "Thanh Đàm", a2: "Hải Hà", scoreA: "11", scoreB: "6", b1: "Long Diễn", b2: "Vân Đình" },
-      { id: 12, category: "Đôi nam", a1: "Tiến Thọ", a2: "Phú Mỗ", scoreA: "5", scoreB: "11", b1: "Trí Đỏ", b2: "Dũng Ngạc" },
-      { id: 13, category: "Đôi nam", a1: "Thanh Đàm", a2: "Hà Giấy", scoreA: "12", scoreB: "10", b1: "Long Diễn", b2: "Lợi Trí" },
-      { id: 14, category: "Đôi nữ", a1: "Quỳnh Cool", a2: "Hải Hà", scoreA: "11", scoreB: "7", b1: "Cẩm Ly", b2: "Vân Đình" },
-      { id: 15, category: "Đôi nam", a1: "Tiến Thọ", a2: "Điền Chèm", scoreA: "5", scoreB: "11", b1: "Trí Đỏ", b2: "Tuấn La" },
-      { id: 16, category: "Đôi nữ", a1: "Quỳnh Cool", a2: "Minh Vượng", scoreA: "11", scoreB: "8", b1: "Cẩm Ly", b2: "Minh Hạnh" },
-      { id: 17, category: "Đôi nam", a1: "Tiến Thọ", a2: "Thành Sóc", scoreA: "9", scoreB: "11", b1: "Trí Đỏ", b2: "Châu Sĩ" },
-      { id: 18, category: "Đôi nam", a1: "Phú Mỗ", a2: "Thành Sóc", scoreA: "7", scoreB: "11", b1: "Dũng Ngạc", b2: "Châu Sĩ" },
-      { id: 19, category: "Đôi nam", a1: "Phú Mỗ", a2: "Điền Chèm", scoreA: "8", scoreB: "11", b1: "Dũng Ngạc", b2: "Tuấn La" },
-      { id: 20, category: "Đôi nam nữ", a1: "Hải Hà", a2: "Minh Vượng", scoreA: "13", scoreB: "11", b1: "Vân Đình", b2: "Minh Hạnh" },
-      { id: 21, category: "Đôi nam nữ", a1: "Tiến Thọ", a2: "Quỳnh Cool", scoreA: "11", scoreB: "4", b1: "Trí Đỏ", b2: "Cẩm Ly" },
-      { id: 22, category: "Đôi nam nữ", a1: "Phú Mỗ", a2: "Minh Vượng", scoreA: "8", scoreB: "11", b1: "Dũng Ngạc", b2: "Minh Hạnh" },
-      { id: 23, category: "Đôi nam nữ", a1: "Hà Giấy", a2: "Quỳnh Cool", scoreA: "3", scoreB: "11", b1: "Lợi Trí", b2: "Cẩm Ly" },
-      { id: 24, category: "Đôi nam nữ", a1: "Điền Chèm", a2: "Hải Hà", scoreA: "5", scoreB: "11", b1: "Tuấn La", b2: "Vân Đình" }
-    ];
-
     window.onload = function() {
       document.addEventListener('click', closeAllDropdowns);
       listenToFirestore();
@@ -460,7 +425,7 @@
         if (doc.exists) {
           const data = doc.data();
           vdvs = data.vdvs || [];
-          dates = data.dates || ["24/9/26"];
+          dates = data.dates || ["28/9/26"];
           matchesData = data.matchesData || {};
           dateKeoMode = data.dateKeoMode || {};
           paymentStatus = data.paymentStatus || {};
@@ -470,20 +435,15 @@
           if (data.teamA_members) teamA_members = data.teamA_members;
           if (data.teamB_members) teamB_members = data.teamB_members;
 
-          if (data.miniGame1Matches && data.miniGame1Matches.length === 24) {
-            miniGame1Matches = data.miniGame1Matches;
-          } else {
-            miniGame1Matches = DEFAULT_MINI1_DATA;
-          }
-
           if (data.mini2PairsA) mini2PairsA = data.mini2PairsA;
           if (data.mini2PairsB) mini2PairsB = data.mini2PairsB;
           if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
           if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
           if (data.mini2Knockout) mini2Knockout = data.mini2Knockout;
 
+          // Tự động tìm ngày hiện tại hoặc ngày gần nhất với thời điểm hiện tại
           if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop" && currentTab !== "minigame1" && currentTab !== "minigame2")) {
-            currentTab = dates[0] || "tonghop";
+            currentTab = getClosestOrCurrentDate(dates);
           }
           statusEl.className = "cloud-status cloud-online";
           statusEl.innerHTML = "☁️ Firestore Online";
@@ -499,9 +459,41 @@
       });
     }
 
+    /* HÀM TÌM NGÀY HIỆN TẠI HOẶC GẦN NGÀY HIỆN TẠI NHẤT */
+    function getClosestOrCurrentDate(dateArray) {
+      if (!dateArray || dateArray.length === 0) return "tonghop";
+      
+      const now = new Date();
+      let closestDate = dateArray[0];
+      let minDiff = Infinity;
+
+      const parseDateStr = (str) => {
+        const parts = str.split('/');
+        if (parts.length === 3) {
+          let day = parseInt(parts[0], 10);
+          let month = parseInt(parts[1], 10) - 1;
+          let year = parseInt(parts[2], 10);
+          if (year < 100) year += 2000;
+          return new Date(year, month, day);
+        }
+        return new Date(0);
+      };
+
+      dateArray.forEach(dStr => {
+        const dObj = parseDateStr(dStr);
+        const diff = Math.abs(now - dObj);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestDate = dStr;
+        }
+      });
+
+      return closestDate;
+    }
+
     function initDefaultFirestore() {
       vdvs = ["Tiến Thọ", "Thanh Đàm", "Thành Sóc", "Hà Giấy", "Minh Vượng", "Phú Mỗ", "Điền Chèm", "Hải Hà", "Quỳnh Cool", "Trí Đỏ", "Long Diễn", "Châu Sĩ", "Minh Hạnh", "Dũng Ngạc", "Lợi Trí", "Tuấn La", "Vân Đình", "Cẩm Ly"];
-      dates = ["24/9/26"];
+      dates = ["28/9/26"];
       matchesData = {};
       dates.forEach(d => {
         matchesData[d] = [
@@ -510,7 +502,6 @@
         dateKeoMode[d] = "default";
       });
 
-      miniGame1Matches = DEFAULT_MINI1_DATA;
       generateMini2Matches();
       saveDataToFirestore();
     }
@@ -526,8 +517,8 @@
     }
 
     function goHome() {
-      if (dates.length > 0) switchTab(dates[0]);
-      else switchTab('tonghop');
+      currentTab = getClosestOrCurrentDate(dates);
+      renderCurrentTab();
     }
 
     function toggleMenu(menuId, e) {
@@ -575,8 +566,6 @@
     function deleteVDV(name) {
       if (confirm(`Bạn có chắc muốn xóa VĐV ${name}?`)) {
         vdvs = vdvs.filter(v => v !== name);
-        teamA_members = teamA_members.filter(v => v !== name);
-        teamB_members = teamB_members.filter(v => v !== name);
         renderVDVItems(vdvs);
         saveDataToFirestore();
       }
@@ -605,7 +594,7 @@
 
     function addDateTab() {
       closeAllDropdowns();
-      const dateStr = prompt("Nhập ngày đấu mới (VD: 25/9/26):");
+      const dateStr = prompt("Nhập ngày đấu mới (VD: 28/9/26):");
       if (dateStr && !dates.includes(dateStr)) {
         dates.push(dateStr);
         matchesData[dateStr] = Array.from({ length: 5 }, (_, i) => ({
@@ -644,7 +633,7 @@
         dates = dates.filter(d => d !== dateToDelete);
         delete matchesData[dateToDelete];
         delete dateKeoMode[dateToDelete];
-        currentTab = dates.length > 0 ? dates[0] : "tonghop";
+        currentTab = getClosestOrCurrentDate(dates);
         saveDataToFirestore();
       }
     }
@@ -736,15 +725,11 @@
     }
 
     /* -------------------------------------------------------------
-       XỬ LÝ TAB SINGLE DAY & CHẾ ĐỘ KÈO
+       XỬ LÝ BẢNG TỪNG NGÀY THI ĐẤU
     ------------------------------------------------------------- */
     function renderSingleDayTab(container, dateStr) {
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
-
-      let modeTitle = "Kèo Mặc Định (+5k / -15k)";
-      if (currentMode === "k25") modeTitle = "Kèo 25k (0k / -25k)";
-      if (currentMode === "free") modeTitle = "Kèo Tự Do (Tùy chỉnh mỗi trận)";
 
       let html = `
         <div class="card">
@@ -788,10 +773,8 @@
         let winAmt = 5;
         let loseAmt = -15;
 
-        if (currentMode === "k25") {
-          winAmt = 0;
-          loseAmt = -25;
-        } else if (currentMode === "free") {
+        if (currentMode === "k25") { winAmt = 0; loseAmt = -25; } 
+        else if (currentMode === "free") {
           winAmt = m.customWin !== undefined ? parseInt(m.customWin) : 5;
           loseAmt = m.customLose !== undefined ? parseInt(m.customLose) : -15;
         }
@@ -890,9 +873,7 @@
       const currentMode = dateKeoMode[dateStr] || "default";
       let stats = {};
 
-      vdvs.forEach(v => {
-        stats[v] = { played: 0, winK: 0, loseK: 0, total: 0 };
-      });
+      vdvs.forEach(v => { stats[v] = { played: 0, winK: 0, loseK: 0, total: 0 }; });
 
       matches.forEach(m => {
         const s1 = parseInt(m.score1);
@@ -1148,7 +1129,7 @@
     }
 
     /* -------------------------------------------------------------
-       MINI GAME 1 (TEAM A VS TEAM B - 24 TRẬN)
+       MINI GAME 1 (TEAM A VS TEAM B)
     ------------------------------------------------------------- */
     function renderMiniGame1Tab(container) {
       let maxLen = Math.max(teamA_members.length, teamB_members.length);
@@ -1223,45 +1204,61 @@
     }
 
     /* -------------------------------------------------------------
-       MINI GAME 2 (GIẢI ĐẤU 2 BẢNG A & B + VÒNG KNOCKOUT - ĐÚNG ẢNH MẪU)
+       MINI GAME 2 (GHÉP CẶP VĐV SỔ XUỐNG & XOAY VÒNG TỰ ĐỘNG)
     ------------------------------------------------------------- */
+    function getPairDisplayName(pairObj) {
+      if (!pairObj) return "Chưa chọn";
+      let name1 = pairObj.p1 || "";
+      let name2 = pairObj.p2 || "";
+      if (!name1 && !name2) return "Trống";
+      return `${name1} - ${name2}`;
+    }
+
     function generateMini2Matches() {
-      // Tự động tạo các trận đấu xoay vòng cho Bảng A
+      // Tự động sinh lịch xoay vòng 1 lượt cho Bảng A
       mini2MatchesA = [];
       let idA = 1;
       for (let i = 0; i < mini2PairsA.length; i++) {
         for (let j = i + 1; j < mini2PairsA.length; j++) {
-          mini2MatchesA.push({ id: idA++, p1: mini2PairsA[i], p2: mini2PairsA[j], s1: "", s2: "" });
+          mini2MatchesA.push({ 
+            id: idA++, 
+            pairIndex1: i, 
+            pairIndex2: j, 
+            s1: "", 
+            s2: "" 
+          });
         }
       }
 
-      // Tự động tạo các trận đấu xoay vòng cho Bảng B
+      // Tự động sinh lịch xoay vòng 1 lượt cho Bảng B
       mini2MatchesB = [];
       let idB = 1;
       for (let i = 0; i < mini2PairsB.length; i++) {
         for (let j = i + 1; j < mini2PairsB.length; j++) {
-          mini2MatchesB.push({ id: idB++, p1: mini2PairsB[i], p2: mini2PairsB[j], s1: "", s2: "" });
+          mini2MatchesB.push({ 
+            id: idB++, 
+            pairIndex1: i, 
+            pairIndex2: j, 
+            s1: "", 
+            s2: "" 
+          });
         }
       }
     }
 
-    function updateMini2Pair(group, index, val) {
-      if (group === 'A') mini2PairsA[index] = val;
-      else mini2PairsB[index] = val;
-      generateMini2Matches();
+    function updateMini2PairVdv(group, pairIndex, vdvPos, val) {
+      if (group === 'A') mini2PairsA[pairIndex][vdvPos] = val;
+      else mini2PairsB[pairIndex][vdvPos] = val;
       saveDataToFirestore();
       renderCurrentTab();
     }
 
     function addMini2Pair(group) {
-      let name = prompt(`➕ Nhập tên Cặp VĐV mới cho Bảng ${group}:`);
-      if (name && name.trim() !== "") {
-        if (group === 'A') mini2PairsA.push(name.trim());
-        else mini2PairsB.push(name.trim());
-        generateMini2Matches();
-        saveDataToFirestore();
-        renderCurrentTab();
-      }
+      if (group === 'A') mini2PairsA.push({ p1: "", p2: "" });
+      else mini2PairsB.push({ p1: "", p2: "" });
+      generateMini2Matches();
+      saveDataToFirestore();
+      renderCurrentTab();
     }
 
     function removeMini2Pair(group, index) {
@@ -1286,56 +1283,79 @@
     }
 
     function computeGroupStandings(pairs, matches) {
-      let stats = {};
-      pairs.forEach(p => { stats[p] = { name: p, points: 0, diff: 0 }; });
+      let stats = pairs.map((p, idx) => ({
+        index: idx,
+        name: getPairDisplayName(p),
+        points: 0,
+        diff: 0
+      }));
 
       matches.forEach(m => {
         let s1 = parseInt(m.s1);
         let s2 = parseInt(m.s2);
-        if (!isNaN(s1) && !isNaN(s2) && stats[m.p1] && stats[m.p2]) {
-          stats[m.p1].diff += (s1 - s2);
-          stats[m.p2].diff += (s2 - s1);
-          if (s1 > s2) stats[m.p1].points += 1;
-          else if (s2 > s1) stats[m.p2].points += 1;
+        if (!isNaN(s1) && !isNaN(s2) && stats[m.pairIndex1] && stats[m.pairIndex2]) {
+          stats[m.pairIndex1].diff += (s1 - s2);
+          stats[m.pairIndex2].diff += (s2 - s1);
+          if (s1 > s2) stats[m.pairIndex1].points += 1;
+          else if (s2 > s1) stats[m.pairIndex2].points += 1;
         }
       });
 
-      let list = Object.values(stats);
-      list.sort((a, b) => b.points - a.points || b.diff - a.diff);
-      return list;
+      stats.sort((a, b) => b.points - a.points || b.diff - a.diff);
+      return stats;
     }
 
     function renderMiniGame2Tab(container) {
+      if (!mini2MatchesA || mini2MatchesA.length === 0) generateMini2Matches();
+
       const standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
       const standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
 
-      // Render Cặp VĐV Bảng A & B
       let html = `
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">⚙️ TÙY CHỈNH DANH SÁCH CẶP VĐV (BẢNG A & BẢNG B)</h2>
+            <h2 class="card-title">⚙️ CHỌN CẶP VĐV CHO TỪNG BẢNG (SỔ XUỐNG DẠNG VĐV1 - VĐV2)</h2>
           </div>
           <div class="grid-2col">
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                <strong>🟢 Bảng A (${mini2PairsA.length} cặp)</strong>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <strong>🟢 Bảng A (${mini2PairsA.length} Cặp VĐV)</strong>
                 <button class="btn btn-green btn-sm" onclick="addMini2Pair('A')">➕ Thêm Cặp A</button>
               </div>
               ${mini2PairsA.map((p, i) => `
-                <div style="display:flex; gap:4px; margin-bottom:3px;">
-                  <input type="text" value="${p}" onchange="updateMini2Pair('A', ${i}, this.value)">
+                <div style="display:flex; gap:4px; margin-bottom:6px; align-items:center;">
+                  <span style="font-weight:bold; font-size:10px; width:45px;">Đôi ${i + 1}:</span>
+                  <select onchange="updateMini2PairVdv('A', ${i}, 'p1', this.value)">
+                    <option value="">- Chọn VĐV 1 -</option>
+                    ${generateVdvOptionsHtml(p.p1)}
+                  </select>
+                  <span>-</span>
+                  <select onchange="updateMini2PairVdv('A', ${i}, 'p2', this.value)">
+                    <option value="">- Chọn VĐV 2 -</option>
+                    ${generateVdvOptionsHtml(p.p2)}
+                  </select>
                   <button class="btn btn-red btn-sm" onclick="removeMini2Pair('A', ${i})">✕</button>
                 </div>
               `).join('')}
             </div>
+
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                <strong>🔵 Bảng B (${mini2PairsB.length} cặp)</strong>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <strong>🔵 Bảng B (${mini2PairsB.length} Cặp VĐV)</strong>
                 <button class="btn btn-green btn-sm" onclick="addMini2Pair('B')">➕ Thêm Cặp B</button>
               </div>
               ${mini2PairsB.map((p, i) => `
-                <div style="display:flex; gap:4px; margin-bottom:3px;">
-                  <input type="text" value="${p}" onchange="updateMini2Pair('B', ${i}, this.value)">
+                <div style="display:flex; gap:4px; margin-bottom:6px; align-items:center;">
+                  <span style="font-weight:bold; font-size:10px; width:45px;">Đôi ${i + 1}:</span>
+                  <select onchange="updateMini2PairVdv('B', ${i}, 'p1', this.value)">
+                    <option value="">- Chọn VĐV 1 -</option>
+                    ${generateVdvOptionsHtml(p.p1)}
+                  </select>
+                  <span>-</span>
+                  <select onchange="updateMini2PairVdv('B', ${i}, 'p2', this.value)">
+                    <option value="">- Chọn VĐV 2 -</option>
+                    ${generateVdvOptionsHtml(p.p2)}
+                  </select>
                   <button class="btn btn-red btn-sm" onclick="removeMini2Pair('B', ${i})">✕</button>
                 </div>
               `).join('')}
@@ -1361,7 +1381,7 @@
                   ${standingsA.map((st, i) => `
                     <tr>
                       <td>${i + 1}</td>
-                      <td style="font-weight:bold; color:#2563eb;">${st.name}</td>
+                      <td style="font-weight:bold; color:#2563eb; text-align:left; padding-left:6px;">${st.name}</td>
                       <td><strong>${st.points}</strong></td>
                       <td>${st.diff}</td>
                     </tr>
@@ -1371,27 +1391,31 @@
             </div>
 
             <div>
-              <div style="background:#ea580c; color:#fff; padding:6px; font-weight:bold; text-align:center;">Lịch Thi Đấu Bảng A</div>
+              <div style="background:#ea580c; color:#fff; padding:6px; font-weight:bold; text-align:center;">Lịch Thi Đấu Bảng A (Vòng Tròn ${mini2MatchesA.length} Trận)</div>
               <table>
                 <thead>
                   <tr>
                     <th>Trận</th>
-                    <th>Đội 1</th>
+                    <th>Đôi 1</th>
                     <th>KQ 1</th>
                     <th>KQ 2</th>
-                    <th>Đội 2</th>
+                    <th>Đôi 2</th>
                   </tr>
                 </thead>
                 <tbody>
-                  ${mini2MatchesA.map((m, i) => `
-                    <tr>
-                      <td>${m.id}</td>
-                      <td style="font-weight:bold;">${m.p1}</td>
-                      <td><input type="text" class="score-input" value="${m.s1}" onchange="updateMini2MatchScore('A', ${i}, 's1', this.value)"></td>
-                      <td><input type="text" class="score-input" value="${m.s2}" onchange="updateMini2MatchScore('A', ${i}, 's2', this.value)"></td>
-                      <td style="font-weight:bold;">${m.p2}</td>
-                    </tr>
-                  `).join('')}
+                  ${mini2MatchesA.map((m, i) => {
+                    let pair1Str = getPairDisplayName(mini2PairsA[m.pairIndex1]);
+                    let pair2Str = getPairDisplayName(mini2PairsA[m.pairIndex2]);
+                    return `
+                      <tr>
+                        <td>${m.id}</td>
+                        <td style="font-weight:bold; font-size:10px;">${pair1Str}</td>
+                        <td><input type="text" class="score-input" value="${m.s1}" onchange="updateMini2MatchScore('A', ${i}, 's1', this.value)"></td>
+                        <td><input type="text" class="score-input" value="${m.s2}" onchange="updateMini2MatchScore('A', ${i}, 's2', this.value)"></td>
+                        <td style="font-weight:bold; font-size:10px;">${pair2Str}</td>
+                      </tr>
+                    `;
+                  }).join('')}
                 </tbody>
               </table>
             </div>
@@ -1416,7 +1440,7 @@
                   ${standingsB.map((st, i) => `
                     <tr>
                       <td>${i + 1}</td>
-                      <td style="font-weight:bold; color:#059669;">${st.name}</td>
+                      <td style="font-weight:bold; color:#059669; text-align:left; padding-left:6px;">${st.name}</td>
                       <td><strong>${st.points}</strong></td>
                       <td>${st.diff}</td>
                     </tr>
@@ -1426,27 +1450,31 @@
             </div>
 
             <div>
-              <div style="background:#ea580c; color:#fff; padding:6px; font-weight:bold; text-align:center;">Lịch Thi Đấu Bảng B</div>
+              <div style="background:#ea580c; color:#fff; padding:6px; font-weight:bold; text-align:center;">Lịch Thi Đấu Bảng B (Vòng Tròn ${mini2MatchesB.length} Trận)</div>
               <table>
                 <thead>
                   <tr>
                     <th>Trận</th>
-                    <th>Đội 1</th>
+                    <th>Đôi 1</th>
                     <th>KQ 1</th>
                     <th>KQ 2</th>
-                    <th>Đội 2</th>
+                    <th>Đôi 2</th>
                   </tr>
                 </thead>
                 <tbody>
-                  ${mini2MatchesB.map((m, i) => `
-                    <tr>
-                      <td>${m.id}</td>
-                      <td style="font-weight:bold;">${m.p1}</td>
-                      <td><input type="text" class="score-input" value="${m.s1}" onchange="updateMini2MatchScore('B', ${i}, 's1', this.value)"></td>
-                      <td><input type="text" class="score-input" value="${m.s2}" onchange="updateMini2MatchScore('B', ${i}, 's2', this.value)"></td>
-                      <td style="font-weight:bold;">${m.p2}</td>
-                    </tr>
-                  `).join('')}
+                  ${mini2MatchesB.map((m, i) => {
+                    let pair1Str = getPairDisplayName(mini2PairsB[m.pairIndex1]);
+                    let pair2Str = getPairDisplayName(mini2PairsB[m.pairIndex2]);
+                    return `
+                      <tr>
+                        <td>${m.id}</td>
+                        <td style="font-weight:bold; font-size:10px;">${pair1Str}</td>
+                        <td><input type="text" class="score-input" value="${m.s1}" onchange="updateMini2MatchScore('B', ${i}, 's1', this.value)"></td>
+                        <td><input type="text" class="score-input" value="${m.s2}" onchange="updateMini2MatchScore('B', ${i}, 's2', this.value)"></td>
+                        <td style="font-weight:bold; font-size:10px;">${pair2Str}</td>
+                      </tr>
+                    `;
+                  }).join('')}
                 </tbody>
               </table>
             </div>
@@ -1458,7 +1486,7 @@
           <div style="background:#0f4c81; color:#fff; padding:8px; font-weight:bold; text-align:center; font-size:13px; border-radius:6px; margin-bottom:8px;">
             VÒNG BÁN KẾT & CHUNG KẾT
           </div>
-          <div style="max-width:600px; margin:0 auto;">
+          <div style="max-width:650px; margin:0 auto;">
             <!-- BÁN KẾT 1 -->
             <div style="font-weight:bold; background:#e0f2fe; padding:4px; text-align:center;">VÒNG BÁN KẾT C1</div>
             <table>
@@ -1509,9 +1537,9 @@
 
             <!-- VINH DANH -->
             <div style="margin-top:12px; background:#fef9c3; border:1px solid #fde047; padding:8px; border-radius:6px;">
-              <div style="margin-bottom:4px;"><strong>🥇 Đội Vô Địch:</strong> <input type="text" style="width:200px; font-weight:bold; color:#15803d;" id="vodech_input" value="${computeChampion()}" placeholder="Tên Đội Vô Địch"></div>
-              <div style="margin-bottom:4px;"><strong>🥈 Đội Nhì:</strong> <input type="text" style="width:200px; font-weight:bold; color:#0369a1;" id="doinhi_input" value="${computeRunnerUp()}" placeholder="Tên Đội Nhì"></div>
-              <div><strong>🥉 Đội về 3:</strong> <input type="text" style="width:200px; font-weight:bold; color:#b45309;" id="doiba_input" value="${computeThirdPlace()}" placeholder="Tên Đội về 3"></div>
+              <div style="margin-bottom:4px;"><strong>🥇 Đội Vô Địch:</strong> <input type="text" style="width:220px; font-weight:bold; color:#15803d;" id="vodech_input" value="${computeChampion()}" placeholder="Tên Đội Vô Địch"></div>
+              <div style="margin-bottom:4px;"><strong>🥈 Đội Nhì:</strong> <input type="text" style="width:220px; font-weight:bold; color:#0369a1;" id="doinhi_input" value="${computeRunnerUp()}" placeholder="Tên Đội Nhì"></div>
+              <div><strong>🥉 Đội về 3:</strong> <input type="text" style="width:220px; font-weight:bold; color:#b45309;" id="doiba_input" value="${computeThirdPlace()}" placeholder="Tên Đội về 3"></div>
             </div>
           </div>
         </div>

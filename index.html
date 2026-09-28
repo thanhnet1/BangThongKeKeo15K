@@ -150,7 +150,7 @@
     .btn-sm { padding: 3px 6px; font-size: 10px; }
     .btn-green { background-color: #10b981; }
     .btn-red { background-color: #ef4444; }
-    .btn-icon { background: none; border: none; cursor: pointer; font-size: 12px; padding: 2px 3px; }
+    .btn-orange { background-color: #f59e0b; color: white; }
 
     .card {
       background: var(--card-bg);
@@ -254,6 +254,14 @@
     .modal.show { display: flex; }
     .modal-content { background: white; padding: 16px; border-radius: 10px; width: 92%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
 
+    .vdv-mgr-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 8px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
     @media (max-width: 600px) {
       body { padding: 4px 2px; }
       .hero-banner { aspect-ratio: 16 / 7; }
@@ -288,7 +296,7 @@
           <button class="nav-btn" onclick="toggleMenu('menuVdv', event)">👥 PICK THỦ (<span id="vdvCountBtn">0</span>) ▾</button>
           <div class="dropdown-menu" id="menuVdv">
             <div class="vdv-container">
-              <div style="font-weight: 800; font-size: 11px; margin-bottom: 4px;">Danh Sách VĐV</div>
+              <div style="font-weight: 800; font-size: 11px; margin-bottom: 4px;">Danh Sách VĐV CLB</div>
               <div style="display: flex; gap: 4px; margin-bottom: 4px;">
                 <input type="text" id="newVdvInput" placeholder="Tên VĐV mới...">
                 <button class="btn btn-green btn-sm" onclick="addVDV()">Thêm</button>
@@ -372,7 +380,7 @@
       "#c026d3", "#0d9488", "#ea580c", "#4f46e5"
     ];
 
-    let vdvs = [];
+    let vdvs = ["a", "b", "c", "d", "e", "f", "g", "h", "Tiến Thọ", "Thanh Đàm", "Thành Sóc", "Hà Giấy", "Minh Vượng", "Phú Mỗ", "Điền Chèm", "Hải Hà", "Quỳnh Cool", "Trí Đỏ", "Long Diễn", "Châu Sĩ", "Minh Hạnh", "Dũng Ngạc", "Lợi Trí", "Tuấn La", "Vân Đình", "Cẩm Ly"];
     let dates = [];
     let matchesData = {};
     let dateKeoMode = {}; 
@@ -385,27 +393,27 @@
 
     let miniGame1Matches = [];
 
-    // Cặp VĐV Mini Game 2 - Cấu trúc ghép 2 VĐV dạng đối tượng {p1, p2}
+    // Cặp VĐV Bảng A & B của Mini Game 2
     let mini2PairsA = [
-      { p1: "Tiến Thọ", p2: "Thanh Đàm" },
-      { p1: "Thành Sóc", p2: "Hà Giấy" },
-      { p1: "Minh Vượng", p2: "Phú Mỗ" },
-      { p1: "Điền Chèm", p2: "Hải Hà" }
+      { p1: "a", p2: "" },
+      { p1: "b", p2: "" },
+      { p1: "c", p2: "" },
+      { p1: "d", p2: "" }
     ];
     let mini2PairsB = [
-      { p1: "Trí Đỏ", p2: "Long Diễn" },
-      { p1: "Châu Sĩ", p2: "Minh Hạnh" },
-      { p1: "Dũng Ngạc", p2: "Lợi Trí" },
-      { p1: "Tuấn La", p2: "Vân Đình" }
+      { p1: "e", p2: "" },
+      { p1: "f", p2: "" },
+      { p1: "g", p2: "" },
+      { p1: "h", p2: "" }
     ];
 
     let mini2MatchesA = [];
     let mini2MatchesB = [];
     let mini2Knockout = {
-      bkc1: { p1: "Nhất A", p2: "Nhì B", s1: "", s2: "" },
-      bkc2: { p1: "Nhất B", p2: "Nhì A", s1: "", s2: "" },
-      rank34: { p1: "Thua BKC1", p2: "Thua BKC2", s1: "", s2: "" },
-      final: { p1: "Thắng BKC1", p2: "Thắng BKC2", s1: "", s2: "" }
+      bkc1: { p1: "b", p2: "g", s1: "11", s2: "6" },
+      bkc2: { p1: "d", p2: "h", s1: "11", s2: "9" },
+      rank34: { p1: "g", p2: "h", s1: "8", s2: "11" },
+      final: { p1: "b", p2: "d", s1: "11", s2: "7" }
     };
 
     let currentTab = "";
@@ -424,7 +432,7 @@
         const statusEl = document.getElementById("cloudStatus");
         if (doc.exists) {
           const data = doc.data();
-          vdvs = data.vdvs || [];
+          if (data.vdvs && data.vdvs.length > 0) vdvs = data.vdvs;
           dates = data.dates || ["28/9/26"];
           matchesData = data.matchesData || {};
           dateKeoMode = data.dateKeoMode || {};
@@ -441,7 +449,6 @@
           if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
           if (data.mini2Knockout) mini2Knockout = data.mini2Knockout;
 
-          // Tự động tìm ngày hiện tại hoặc ngày gần nhất với thời điểm hiện tại
           if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop" && currentTab !== "minigame1" && currentTab !== "minigame2")) {
             currentTab = getClosestOrCurrentDate(dates);
           }
@@ -459,10 +466,8 @@
       });
     }
 
-    /* HÀM TÌM NGÀY HIỆN TẠI HOẶC GẦN NGÀY HIỆN TẠI NHẤT */
     function getClosestOrCurrentDate(dateArray) {
       if (!dateArray || dateArray.length === 0) return "tonghop";
-      
       const now = new Date();
       let closestDate = dateArray[0];
       let minDiff = Infinity;
@@ -487,12 +492,10 @@
           closestDate = dStr;
         }
       });
-
       return closestDate;
     }
 
     function initDefaultFirestore() {
-      vdvs = ["Tiến Thọ", "Thanh Đàm", "Thành Sóc", "Hà Giấy", "Minh Vượng", "Phú Mỗ", "Điền Chèm", "Hải Hà", "Quỳnh Cool", "Trí Đỏ", "Long Diễn", "Châu Sĩ", "Minh Hạnh", "Dũng Ngạc", "Lợi Trí", "Tuấn La", "Vân Đình", "Cẩm Ly"];
       dates = ["28/9/26"];
       matchesData = {};
       dates.forEach(d => {
@@ -554,12 +557,35 @@
 
     function addVDV() {
       const input = document.getElementById("newVdvInput");
-      const name = input.value.trim();
+      const name = input ? input.value.trim() : "";
       if (name && !vdvs.includes(name)) {
         vdvs.push(name);
-        input.value = "";
+        if (input) input.value = "";
         renderVDVItems(vdvs);
         saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function editVDV(oldName) {
+      const newName = prompt(`Sửa tên VĐV "${oldName}":`, oldName);
+      if (newName && newName.trim() !== "" && newName.trim() !== oldName) {
+        const trimmed = newName.trim();
+        const index = vdvs.indexOf(oldName);
+        if (index !== -1) vdvs[index] = trimmed;
+
+        // Cập nhật tên trong Mini Game 2
+        mini2PairsA.forEach(p => {
+          if (p.p1 === oldName) p.p1 = trimmed;
+          if (p.p2 === oldName) p.p2 = trimmed;
+        });
+        mini2PairsB.forEach(p => {
+          if (p.p1 === oldName) p.p1 = trimmed;
+          if (p.p2 === oldName) p.p2 = trimmed;
+        });
+
+        saveDataToFirestore();
+        renderCurrentTab();
       }
     }
 
@@ -568,6 +594,7 @@
         vdvs = vdvs.filter(v => v !== name);
         renderVDVItems(vdvs);
         saveDataToFirestore();
+        renderCurrentTab();
       }
     }
 
@@ -580,13 +607,17 @@
     function renderVDVItems(list) {
       document.getElementById("vdvCountBtn").innerText = vdvs.length;
       const container = document.getElementById("vdvListContainer");
+      if (!container) return;
       container.innerHTML = list.map(v => {
         const vIndex = vdvs.indexOf(v);
         const color = VDV_COLORS[vIndex % VDV_COLORS.length];
         return `
           <div class="vdv-item">
             <span style="color:${color}; font-weight:bold;">${v}</span>
-            <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="deleteVDV('${v}')">✕</button>
+            <div>
+              <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:4px;" onclick="editVDV('${v}')">✏️</button>
+              <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="deleteVDV('${v}')">✕</button>
+            </div>
           </div>
         `;
       }).join('');
@@ -725,7 +756,7 @@
     }
 
     /* -------------------------------------------------------------
-       XỬ LÝ BẢNG TỪNG NGÀY THI ĐẤU
+       BẢNG THỐNG KÊ NGÀY TỰ ĐỘNG
     ------------------------------------------------------------- */
     function renderSingleDayTab(container, dateStr) {
       const matches = matchesData[dateStr] || [];
@@ -1129,7 +1160,7 @@
     }
 
     /* -------------------------------------------------------------
-       MINI GAME 1 (TEAM A VS TEAM B)
+       MINI GAME 1
     ------------------------------------------------------------- */
     function renderMiniGame1Tab(container) {
       let maxLen = Math.max(teamA_members.length, teamB_members.length);
@@ -1204,44 +1235,33 @@
     }
 
     /* -------------------------------------------------------------
-       MINI GAME 2 (GHÉP CẶP VĐV SỔ XUỐNG & XOAY VÒNG TỰ ĐỘNG)
+       MINI GAME 2 (GHÉP CẶP VĐV, THÊM SỬA XÓA & TỰ ĐỘNG THI ĐẤU)
     ------------------------------------------------------------- */
     function getPairDisplayName(pairObj) {
       if (!pairObj) return "Chưa chọn";
       let name1 = pairObj.p1 || "";
       let name2 = pairObj.p2 || "";
       if (!name1 && !name2) return "Trống";
+      if (!name2) return name1;
       return `${name1} - ${name2}`;
     }
 
     function generateMini2Matches() {
-      // Tự động sinh lịch xoay vòng 1 lượt cho Bảng A
+      // Sinh lịch xoay vòng cho Bảng A
       mini2MatchesA = [];
       let idA = 1;
       for (let i = 0; i < mini2PairsA.length; i++) {
         for (let j = i + 1; j < mini2PairsA.length; j++) {
-          mini2MatchesA.push({ 
-            id: idA++, 
-            pairIndex1: i, 
-            pairIndex2: j, 
-            s1: "", 
-            s2: "" 
-          });
+          mini2MatchesA.push({ id: idA++, pairIndex1: i, pairIndex2: j, s1: "", s2: "" });
         }
       }
 
-      // Tự động sinh lịch xoay vòng 1 lượt cho Bảng B
+      // Sinh lịch xoay vòng cho Bảng B
       mini2MatchesB = [];
       let idB = 1;
       for (let i = 0; i < mini2PairsB.length; i++) {
         for (let j = i + 1; j < mini2PairsB.length; j++) {
-          mini2MatchesB.push({ 
-            id: idB++, 
-            pairIndex1: i, 
-            pairIndex2: j, 
-            s1: "", 
-            s2: "" 
-          });
+          mini2MatchesB.push({ id: idB++, pairIndex1: i, pairIndex2: j, s1: "", s2: "" });
         }
       }
     }
@@ -1312,26 +1332,50 @@
       const standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
 
       let html = `
+        <!-- QUẢN LÝ TÊN VĐV TRONG MINI GAME 2 -->
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">⚙️ CHỌN CẶP VĐV CHO TỪNG BẢNG (SỔ XUỐNG DẠNG VĐV1 - VĐV2)</h2>
+            <h2 class="card-title">⚙️ TÍNH NĂNG QUẢN LÝ VĐV (THÊM / SỬA / XÓA TÊN VĐV)</h2>
+          </div>
+          <div class="vdv-mgr-box">
+            <div style="display:flex; gap:6px; margin-bottom:8px; align-items:center;">
+              <input type="text" id="quickAddVdvInput" placeholder="Nhập tên VĐV mới..." style="max-width:200px;">
+              <button class="btn btn-green btn-sm" onclick="let inp=document.getElementById('quickAddVdvInput'); if(inp.value.trim()){vdvs.push(inp.value.trim()); inp.value=''; saveDataToFirestore(); renderCurrentTab();}">➕ Thêm VĐV Mới</button>
+            </div>
+            <div style="font-weight:bold; font-size:11px; margin-bottom:4px;">Danh sách VĐV hiện tại (Bấm ✏️ để sửa tên, ✕ để xóa):</div>
+            <div style="display:flex; flex-wrap:wrap; gap:4px; max-height:120px; overflow-y:auto;">
+              ${vdvs.map(v => `
+                <span style="background:#fff; border:1px solid #cbd5e1; padding:2px 6px; border-radius:4px; font-size:10px; display:inline-flex; align-items:center; gap:4px;">
+                  <strong>${v}</strong>
+                  <a style="color:#2563eb; cursor:pointer;" onclick="editVDV('${v}')">✏️</a>
+                  <a style="color:red; cursor:pointer;" onclick="deleteVDV('${v}')">✕</a>
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- CHỌN CẶP VĐV CHO TỪNG BẢNG -->
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">👥 GHÉP CẶP THI ĐẤU BẢNG A & BẢNG B</h2>
           </div>
           <div class="grid-2col">
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                 <strong>🟢 Bảng A (${mini2PairsA.length} Cặp VĐV)</strong>
-                <button class="btn btn-green btn-sm" onclick="addMini2Pair('A')">➕ Thêm Cặp A</button>
+                <button class="btn btn-green btn-sm" onclick="addMini2Pair('A')">➕ Thêm Cặp Bảng A</button>
               </div>
               ${mini2PairsA.map((p, i) => `
                 <div style="display:flex; gap:4px; margin-bottom:6px; align-items:center;">
                   <span style="font-weight:bold; font-size:10px; width:45px;">Đôi ${i + 1}:</span>
                   <select onchange="updateMini2PairVdv('A', ${i}, 'p1', this.value)">
-                    <option value="">- Chọn VĐV 1 -</option>
+                    <option value="">-- VĐV 1 --</option>
                     ${generateVdvOptionsHtml(p.p1)}
                   </select>
                   <span>-</span>
                   <select onchange="updateMini2PairVdv('A', ${i}, 'p2', this.value)">
-                    <option value="">- Chọn VĐV 2 -</option>
+                    <option value="">-- VĐV 2 --</option>
                     ${generateVdvOptionsHtml(p.p2)}
                   </select>
                   <button class="btn btn-red btn-sm" onclick="removeMini2Pair('A', ${i})">✕</button>
@@ -1342,18 +1386,18 @@
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                 <strong>🔵 Bảng B (${mini2PairsB.length} Cặp VĐV)</strong>
-                <button class="btn btn-green btn-sm" onclick="addMini2Pair('B')">➕ Thêm Cặp B</button>
+                <button class="btn btn-green btn-sm" onclick="addMini2Pair('B')">➕ Thêm Cặp Bảng B</button>
               </div>
               ${mini2PairsB.map((p, i) => `
                 <div style="display:flex; gap:4px; margin-bottom:6px; align-items:center;">
                   <span style="font-weight:bold; font-size:10px; width:45px;">Đôi ${i + 1}:</span>
                   <select onchange="updateMini2PairVdv('B', ${i}, 'p1', this.value)">
-                    <option value="">- Chọn VĐV 1 -</option>
+                    <option value="">-- VĐV 1 --</option>
                     ${generateVdvOptionsHtml(p.p1)}
                   </select>
                   <span>-</span>
                   <select onchange="updateMini2PairVdv('B', ${i}, 'p2', this.value)">
-                    <option value="">- Chọn VĐV 2 -</option>
+                    <option value="">-- VĐV 2 --</option>
                     ${generateVdvOptionsHtml(p.p2)}
                   </select>
                   <button class="btn btn-red btn-sm" onclick="removeMini2Pair('B', ${i})">✕</button>
@@ -1363,7 +1407,7 @@
           </div>
         </div>
 
-        <!-- BẢNG A -->
+        <!-- BẢNG XẾP HẠNG VÀ LỊCH THI ĐẤU BẢNG A -->
         <div class="card">
           <div class="grid-2col">
             <div>
@@ -1391,15 +1435,15 @@
             </div>
 
             <div>
-              <div style="background:#ea580c; color:#fff; padding:6px; font-weight:bold; text-align:center;">Lịch Thi Đấu Bảng A (Vòng Tròn ${mini2MatchesA.length} Trận)</div>
+              <div style="background:#ea580c; color:#fff; padding:6px; font-weight:bold; text-align:center;">Lịch Thi Đấu Bảng A (Xoay Vòng ${mini2MatchesA.length} Trận)</div>
               <table>
                 <thead>
                   <tr>
                     <th>Trận</th>
-                    <th>Đôi 1</th>
+                    <th>Đội 1</th>
                     <th>KQ 1</th>
                     <th>KQ 2</th>
-                    <th>Đôi 2</th>
+                    <th>Đội 2</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1422,7 +1466,7 @@
           </div>
         </div>
 
-        <!-- BẢNG B -->
+        <!-- BẢNG XẾP HẠNG VÀ LỊCH THI ĐẤU BẢNG B -->
         <div class="card">
           <div class="grid-2col">
             <div>
@@ -1450,15 +1494,15 @@
             </div>
 
             <div>
-              <div style="background:#ea580c; color:#fff; padding:6px; font-weight:bold; text-align:center;">Lịch Thi Đấu Bảng B (Vòng Tròn ${mini2MatchesB.length} Trận)</div>
+              <div style="background:#ea580c; color:#fff; padding:6px; font-weight:bold; text-align:center;">Lịch Thi Đấu Bảng B (Xoay Vòng ${mini2MatchesB.length} Trận)</div>
               <table>
                 <thead>
                   <tr>
                     <th>Trận</th>
-                    <th>Đôi 1</th>
+                    <th>Đội 1</th>
                     <th>KQ 1</th>
                     <th>KQ 2</th>
-                    <th>Đôi 2</th>
+                    <th>Đội 2</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1487,7 +1531,6 @@
             VÒNG BÁN KẾT & CHUNG KẾT
           </div>
           <div style="max-width:650px; margin:0 auto;">
-            <!-- BÁN KẾT 1 -->
             <div style="font-weight:bold; background:#e0f2fe; padding:4px; text-align:center;">VÒNG BÁN KẾT C1</div>
             <table>
               <tr>
@@ -1499,7 +1542,6 @@
               </tr>
             </table>
 
-            <!-- BÁN KẾT 2 -->
             <div style="font-weight:bold; background:#e0f2fe; padding:4px; text-align:center; margin-top:8px;">VÒNG BÁN KẾT C2</div>
             <table>
               <tr>
@@ -1511,7 +1553,6 @@
               </tr>
             </table>
 
-            <!-- TRANH 3/4 -->
             <div style="font-weight:bold; background:#fef3c7; padding:4px; text-align:center; margin-top:8px;">TRANH 3/4</div>
             <table>
               <tr>
@@ -1523,7 +1564,6 @@
               </tr>
             </table>
 
-            <!-- CHUNG KẾT -->
             <div style="font-weight:bold; background:#dcfce7; padding:4px; text-align:center; margin-top:8px;">TRANH CHUNG KẾT</div>
             <table>
               <tr>
@@ -1535,7 +1575,6 @@
               </tr>
             </table>
 
-            <!-- VINH DANH -->
             <div style="margin-top:12px; background:#fef9c3; border:1px solid #fde047; padding:8px; border-radius:6px;">
               <div style="margin-bottom:4px;"><strong>🥇 Đội Vô Địch:</strong> <input type="text" style="width:220px; font-weight:bold; color:#15803d;" id="vodech_input" value="${computeChampion()}" placeholder="Tên Đội Vô Địch"></div>
               <div style="margin-bottom:4px;"><strong>🥈 Đội Nhì:</strong> <input type="text" style="width:220px; font-weight:bold; color:#0369a1;" id="doinhi_input" value="${computeRunnerUp()}" placeholder="Tên Đội Nhì"></div>

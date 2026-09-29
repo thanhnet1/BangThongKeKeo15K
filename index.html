@@ -258,6 +258,7 @@
   </div>
 
   <script>
+    // Cấu hình Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
       authDomain: "pickleball-cmtd.firebaseapp.com",
@@ -272,8 +273,10 @@
     }
     
     const db = firebase.firestore();
-    const docRef = db.collection("clubs").doc("cmtd_main_data");
+    // Bật lưu trữ bộ nhớ tạm (Cache) để giao diện luôn hiển thị ngay cả khi mạng chậm
+    db.settings({ experimentalAutoDetectLongPolling: true });
 
+    const docRef = db.collection("clubs").doc("cmtd_main_data");
     const VDV_COLORS = [
       "#d97706", "#2563eb", "#059669", "#dc2626", "#7c3aed", 
       "#db2777", "#0284c7", "#15803d", "#b45309", "#4338ca",

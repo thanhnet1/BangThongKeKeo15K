@@ -272,7 +272,6 @@
     }
     
     const db = firebase.firestore();
-    // Bật chế độ tự động tối ưu hóa polling kết nối
     db.settings({ experimentalAutoDetectLongPolling: true });
 
     const docRef = db.collection("clubs").doc("cmtd_main_data");
@@ -351,31 +350,50 @@
     window.onload = function() {
       document.addEventListener('click', closeAllDropdowns);
       
-      // Hạn giờ tự khôi phục dữ liệu nếu kết nối quá 3 giây bị treo
+      // Khôi phục dữ liệu cục bộ nếu chờ quá 3.5s bị kẹt mạng
       setTimeout(() => {
         const statusEl = document.getElementById("cloudStatus");
         if (statusEl && statusEl.innerText.includes("Đang kết nối")) {
           initDefaultFirestore();
         }
-      }, 3000);
+      }, 3500);
 
       listenToFirestore();
     };
+
+    // Hàm chuyển hóa ngày về đúng dạng chuỗi D/M/YY
+    function sanitizeDateStr(d) {
+      if (!d) return "";
+      let parts = d.toString().split('/');
+      if (parts.length === 3) {
+        let day = parseInt(parts[0], 10);
+        let month = parseInt(parts[1], 10);
+        let year = parts[2].toString().trim();
+        return `${day}/${month}/${year}`;
+      }
+      return d.toString().trim();
+    }
 
     function listenToFirestore() {
       docRef.onSnapshot((doc) => {
         const statusEl = document.getElementById("cloudStatus");
         if (doc.exists) {
           const data = doc.data();
+          
+          // Bổ sung thuật toán tự sửa tên trường tiếng Việt sang tiếng Anh
           if (data.vdvs && data.vdvs.length > 0) vdvs = data.vdvs;
           
           const nowObj = new Date();
           const todayStr = `${nowObj.getDate()}/${nowObj.getMonth() + 1}/${nowObj.getFullYear().toString().substr(-2)}`;
           
-          dates = data.dates || [todayStr];
+          // Kiểm tra gán từ trường "dates" hoặc "ngày tháng"
+          let rawDates = data.dates || data["ngày tháng"] || [todayStr];
+          let cleanDates = Array.from(new Set(rawDates.map(d => sanitizeDateStr(d))));
+          dates = cleanDates.filter(d => d !== "");
           if (!dates.includes(todayStr)) dates.unshift(todayStr);
 
-          matchesData = data.matchesData || {};
+          // Kiểm tra gán từ trường "matchesData" hoặc "dữ liệu phù hợp"
+          matchesData = data.matchesData || data["dữ liệu phù hợp"] || {};
           dateKeoMode = data.dateKeoMode || {};
           paymentStatus = data.paymentStatus || {};
           miniGame1Content = data.miniGame1Content || miniGame1Content;
@@ -468,9 +486,21 @@
         statusEl.innerHTML = "⏳ Đang lưu...";
       }
 
+      // Đảm bảo ghi dữ liệu chuẩn theo tên trường tiếng Anh không dấu
       docRef.set({ 
-        vdvs, dates, matchesData, dateKeoMode, paymentStatus, miniGame1Content, miniGame2Content, miniGame1Matches,
-        mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout
+        vdvs, 
+        dates, 
+        matchesData, 
+        dateKeoMode, 
+        paymentStatus, 
+        miniGame1Content, 
+        miniGame2Content, 
+        miniGame1Matches,
+        mini2PairsA, 
+        mini2PairsB, 
+        mini2MatchesA, 
+        mini2MatchesB, 
+        mini2Knockout
       }, { merge: true }).then(() => {
         if (statusEl) {
           statusEl.className = "cloud-status cloud-online";
@@ -583,14 +613,17 @@
     function addDateTab() {
       closeAllDropdowns();
       const dateStr = prompt("Nhập ngày đấu mới (VD: 28/9/26):");
-      if (dateStr && !dates.includes(dateStr)) {
-        dates.push(dateStr);
-        matchesData[dateStr] = Array.from({ length: 5 }, (_, i) => ({
-          id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "", customWin: 5, customLose: -15
-        }));
-        dateKeoMode[dateStr] = "default";
-        currentTab = dateStr;
-        saveDataToFirestore();
+      if (dateStr) {
+        let cleanStr = sanitizeDateStr(dateStr);
+        if (!dates.includes(cleanStr)) {
+          dates.push(cleanStr);
+          matchesData[cleanStr] = Array.from({ length: 5 }, (_, i) => ({
+            id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "", customWin: 5, customLose: -15
+          }));
+          dateKeoMode[cleanStr] = "default";
+          currentTab = cleanStr;
+          saveDataToFirestore();
+        }
       }
     }
 
@@ -600,7 +633,7 @@
       const oldDate = currentTab;
       const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
       if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
-        const trimmed = newDate.trim();
+        const trimmed = sanitizeDateStr(newDate.trim());
         if (dates.includes(trimmed)) return alert("⚠️ Tên ngày này đã tồn tại!");
         const idx = dates.indexOf(oldDate);
         if (idx !== -1) dates[idx] = trimmed;

@@ -361,55 +361,57 @@
     };
 
     function listenToFirestore() {
-      docRef.onSnapshot((doc) => {
-        const statusEl = document.getElementById("cloudStatus");
-        if (doc.exists) {
-          const data = doc.data();
-          if (data.vdvs && data.vdvs.length > 0) vdvs = data.vdvs;
-          
-          const nowObj = new Date();
-          const todayStr = `${nowObj.getDate()}/${nowObj.getMonth() + 1}/${nowObj.getFullYear().toString().substr(-2)}`;
-          
-          dates = data.dates || [todayStr];
-          if (!dates.includes(todayStr)) dates.unshift(todayStr);
+  docRef.onSnapshot((doc) => {
+    const statusEl = document.getElementById("cloudStatus");
+    if (doc.exists) {
+      const data = doc.data();
+      if (data.vdvs && data.vdvs.length > 0) vdvs = data.vdvs;
+      
+      const nowObj = new Date();
+      const todayStr = `${nowObj.getDate()}/${nowObj.getMonth() + 1}/${nowObj.getFullYear().toString().substr(-2)}`;
+      
+      dates = data.dates || [todayStr];
+      if (!dates.includes(todayStr)) dates.unshift(todayStr);
 
-          matchesData = data.matchesData || {};
-          dateKeoMode = data.dateKeoMode || {};
-          paymentStatus = data.paymentStatus || {};
-          miniGame1Content = data.miniGame1Content || miniGame1Content;
-          miniGame2Content = data.miniGame2Content || miniGame2Content;
+      matchesData = data.matchesData || {};
+      dateKeoMode = data.dateKeoMode || {};
+      paymentStatus = data.paymentStatus || {};
+      miniGame1Content = data.miniGame1Content || miniGame1Content;
+      miniGame2Content = data.miniGame2Content || miniGame2Content;
 
-          if (data.miniGame1Matches && data.miniGame1Matches.length === 24) {
-            miniGame1Matches = data.miniGame1Matches;
-          } else {
-            miniGame1Matches = DEFAULT_MINI1_DATA;
-          }
+      if (data.miniGame1Matches && data.miniGame1Matches.length === 24) {
+        miniGame1Matches = data.miniGame1Matches;
+      } else {
+        miniGame1Matches = DEFAULT_MINI1_DATA;
+      }
 
-          if (data.mini2PairsA) mini2PairsA = data.mini2PairsA;
-          if (data.mini2PairsB) mini2PairsB = data.mini2PairsB;
-          if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
-          if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
-          if (data.mini2Knockout) mini2Knockout = data.mini2Knockout;
+      if (data.mini2PairsA) mini2PairsA = data.mini2PairsA;
+      if (data.mini2PairsB) mini2PairsB = data.mini2PairsB;
+      if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
+      if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
+      if (data.mini2Knockout) mini2Knockout = data.mini2Knockout;
 
-          if (mini2MatchesA.length === 0 || mini2MatchesB.length === 0) {
-            generateMini2Matches();
-          }
+      if (mini2MatchesA.length === 0 || mini2MatchesB.length === 0) {
+        generateMini2Matches();
+      }
 
-          if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop" && currentTab !== "minigame1" && currentTab !== "minigame2")) {
-            currentTab = getClosestOrCurrentDate(dates);
-          }
-          statusEl.className = "cloud-status cloud-online";
-          statusEl.innerHTML = "☁️ Firestore Online";
-          renderDatesMenu();
-          renderCurrentTab();
-        } else {
-          initDefaultFirestore();
-        }
-      }, (error) => {
-      console.error("Firestore error:", error);
+      if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop" && currentTab !== "minigame1" && currentTab !== "minigame2")) {
+        currentTab = getClosestOrCurrentDate(dates);
+      }
+      if (statusEl) {
+        statusEl.className = "cloud-status cloud-online";
+        statusEl.innerHTML = "☁️ Firestore Online";
+      }
+      renderDatesMenu();
+      renderCurrentTab();
+    } else {
       initDefaultFirestore();
-      },
-     }
+    }
+  }, (error) => {
+    console.error("Firestore error:", error);
+    initDefaultFirestore();
+  });
+}
 
     function getClosestOrCurrentDate(dateArray) {
       if (!dateArray || dateArray.length === 0) return "tonghop";

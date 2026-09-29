@@ -6,6 +6,8 @@
   <title>CLB PICKLEBALL - CMTD | Quản Lý & Thống Kê</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Firebase SDK Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
@@ -67,73 +69,39 @@
       gap: 8px;
     }
 
-    .brand-title { 
-      display: flex; 
-      align-items: center; 
-      gap: 10px; 
-    }
+    .brand-title { display: flex; align-items: center; gap: 10px; }
 
     .title-logo-img {
-      height: 36px;
-      width: auto;
-      object-fit: contain;
+      height: 36px; width: auto; object-fit: contain;
       filter: drop-shadow(0px 2px 5px rgba(255,255,255,0.3));
     }
 
     .top-nav {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 8px;
-      position: relative;
+      padding-top: 8px; position: relative;
     }
     
     .nav-item { position: relative; }
     .nav-btn {
       background: rgba(51, 65, 85, 0.9);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 6px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 11px;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      color: white; border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 10px; border-radius: 6px; cursor: pointer;
+      font-weight: 700; font-size: 11px; transition: all 0.2s ease;
+      white-space: nowrap; display: flex; align-items: center; gap: 4px;
     }
     .nav-btn:hover { background-color: var(--accent-color); border-color: var(--accent-color); }
     
     .dropdown-menu {
-      display: none;
-      position: absolute;
-      top: 115%;
-      left: 0;
-      min-width: 220px;
-      background: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      border: 1px solid var(--border-color);
-      z-index: 9999 !important;
-      padding: 4px 0;
-      color: var(--text-main);
+      display: none; position: absolute; top: 115%; left: 0; min-width: 220px;
+      background: #ffffff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      border: 1px solid var(--border-color); z-index: 9999 !important; padding: 4px 0; color: var(--text-main);
     }
-
     .dropdown-menu.right-align { left: auto; right: 0; }
     .dropdown-menu.show { display: block; }
     .dropdown-item {
-      padding: 8px 12px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: #334155;
+      padding: 8px 12px; font-size: 11px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; color: #334155;
     }
     .dropdown-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
     .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 3px 0; }
@@ -141,6 +109,7 @@
     .cloud-status { font-size: 10px; padding: 3px 8px; border-radius: 15px; font-weight: bold; margin-left: auto; }
     .cloud-online { background-color: #10b981; color: white; }
     .cloud-syncing { background-color: #f59e0b; color: white; }
+    .cloud-error { background-color: #ef4444; color: white; }
     
     .vdv-container { padding: 8px; width: 240px; }
     .vdv-scroll-list { max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
@@ -151,44 +120,13 @@
     .btn-green { background-color: #10b981; }
     .btn-red { background-color: #ef4444; }
 
-    .card {
-      background: var(--card-bg);
-      padding: 10px 8px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      margin-bottom: 14px;
-      position: relative;
-      z-index: 10;
-      border: 1px solid #e2e8f0;
-    }
-    .card-header-flex {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 6px;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+    .card { background: var(--card-bg); padding: 10px 8px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 14px; position: relative; z-index: 10; border: 1px solid #e2e8f0; }
+    .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; flex-wrap: wrap; gap: 6px; }
     .card-title { font-size: 13px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; }
     .table-actions-toolbar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     
-    .table-responsive { 
-      width: 100%;
-      overflow-x: auto; 
-      -webkit-overflow-scrolling: touch; 
-      border-radius: 6px; 
-      border: 1px solid #cbd5e1; 
-    }
-    
-    table { 
-      width: 100%; 
-      border-collapse: collapse; 
-      font-size: 11px; 
-      min-width: 680px; 
-      table-layout: fixed; 
-    }
+    .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 6px; border: 1px solid #cbd5e1; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 680px; table-layout: fixed; }
     th, td { border: 1px solid #cbd5e1; padding: 5px 2px; text-align: center; vertical-align: middle; word-wrap: break-word; }
     th { background-color: #f8fafc; color: #334155; font-weight: 800; font-size: 10px; text-transform: uppercase; }
     
@@ -198,46 +136,11 @@
     .th-pick2 { background-color: #fee2e2; color: #991b1b; }
     .th-money { background-color: #fef3c7; color: #92400e; }
     
-    select { 
-      width: 100%; 
-      padding: 3px 1px; 
-      border: 1px solid #cbd5e1; 
-      border-radius: 4px; 
-      font-size: 10px; 
-      font-weight: 700; 
-      background: #fff; 
-      text-overflow: ellipsis; 
-      cursor: pointer; 
-    }
+    select { width: 100%; padding: 3px 1px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fff; text-overflow: ellipsis; cursor: pointer; }
     input[type="text"], input[type="number"] { width: 100%; padding: 3px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px; background: #fff; text-align: center; }
 
-    .score-input { 
-      width: 36px !important; 
-      height: 24px; 
-      padding: 0 !important; 
-      font-weight: 800; 
-      text-align: center; 
-      font-size: 11px; 
-      border: 1.5px solid var(--score-border) !important; 
-      border-radius: 4px; 
-      background: #ffffff; 
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .ham-text { 
-      background-color: #ef4444; 
-      color: white; 
-      font-weight: 900; 
-      font-size: 9px; 
-      padding: 2px 0; 
-      border-radius: 3px; 
-      display: block; 
-      width: 100%; 
-      text-align: center; 
-      line-height: 1;
-    }
+    .score-input { width: 36px !important; height: 24px; padding: 0 !important; font-weight: 800; text-align: center; font-size: 11px; border: 1.5px solid var(--score-border) !important; border-radius: 4px; background: #ffffff; display: inline-flex; align-items: center; justify-content: center; }
+    .ham-text { background-color: #ef4444; color: white; font-weight: 900; font-size: 9px; padding: 2px 0; border-radius: 3px; display: block; width: 100%; text-align: center; line-height: 1; }
 
     .txt-win { color: #16a34a; font-weight: 800; }
     .txt-lose { color: #dc2626; font-weight: 800; }
@@ -253,17 +156,7 @@
     .modal.show { display: flex; }
     .modal-content { background: white; padding: 16px; border-radius: 10px; width: 92%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
 
-    .summary-score-card {
-      background: linear-gradient(135deg, #1e293b, #0f172a);
-      color: #fff;
-      padding: 12px;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      margin-bottom: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
+    .summary-score-card { background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; padding: 12px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
     .score-box { text-align: center; }
     .score-number { font-size: 28px; font-weight: 900; }
 
@@ -365,17 +258,20 @@
   </div>
 
   <script>
+    // ⚡ CHÍNH XÁC CẤU HÌNH FIREBASE DỰ ÁN CỦA BẠN
     const firebaseConfig = {
       apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
       authDomain: "pickleball-cmtd.firebaseapp.com",
       projectId: "pickleball-cmtd",
-      storageBucket: "pickleball-cmtd.firebasestorage.app",
+      storageBucket: "pickleball-cmtd.appspot.com",
       messagingSenderId: "648591152243",
-      appId: "1:648591152243:web:3343caf2da821373070606",
-      measurementId: "G-T91KPDZFJR"
+      appId: "1:648591152243:web:3343caf2da821373070606"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    
     const db = firebase.firestore();
     const docRef = db.collection("clubs").doc("cmtd_main_data");
 
@@ -461,7 +357,15 @@
         if (doc.exists) {
           const data = doc.data();
           if (data.vdvs && data.vdvs.length > 0) vdvs = data.vdvs;
-          dates = data.dates || ["28/9/26"];
+          
+          const nowObj = new Date();
+          const todayStr = `${nowObj.getDate()}/${nowObj.getMonth() + 1}/${nowObj.getFullYear().toString().substr(-2)}`;
+          
+          dates = data.dates || [todayStr];
+          if (!dates.includes(todayStr)) {
+            dates.unshift(todayStr);
+          }
+
           matchesData = data.matchesData || {};
           dateKeoMode = data.dateKeoMode || {};
           paymentStatus = data.paymentStatus || {};
@@ -495,9 +399,10 @@
         renderDatesMenu();
         renderCurrentTab();
       }, (error) => {
+        console.error("Firestore Error:", error);
         const statusEl = document.getElementById("cloudStatus");
-        statusEl.className = "cloud-status cloud-syncing";
-        statusEl.innerHTML = "⚠️ Lỗi kết nối";
+        statusEl.className = "cloud-status cloud-error";
+        statusEl.innerHTML = "⚠️ Lỗi Rules/Kết nối";
       });
     }
 
@@ -531,14 +436,14 @@
     }
 
     function initDefaultFirestore() {
-      dates = ["28/9/26"];
+      const nowObj = new Date();
+      const todayStr = `${nowObj.getDate()}/${nowObj.getMonth() + 1}/${nowObj.getFullYear().toString().substr(-2)}`;
+      dates = [todayStr];
       matchesData = {};
-      dates.forEach(d => {
-        matchesData[d] = [
-          { id: 1, c1_p1: "Trí Đỏ", c1_p2: "Long Diễn", c2_p1: "Tuấn La", c2_p2: "Thành Sóc", score1: "11", score2: "9", customWin: 5, customLose: -15 }
-        ];
-        dateKeoMode[d] = "default";
-      });
+      matchesData[todayStr] = [
+        { id: 1, c1_p1: "Trí Đỏ", c1_p2: "Long Diễn", c2_p1: "Tuấn La", c2_p2: "Thành Sóc", score1: "11", score2: "9", customWin: 5, customLose: -15 }
+      ];
+      dateKeoMode[todayStr] = "default";
 
       miniGame1Matches = DEFAULT_MINI1_DATA;
       generateMini2Matches();
@@ -552,7 +457,14 @@
       docRef.set({ 
         vdvs, dates, matchesData, dateKeoMode, paymentStatus, miniGame1Content, miniGame2Content, miniGame1Matches,
         mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout
-      }, { merge: true });
+      }, { merge: true }).then(() => {
+        statusEl.className = "cloud-status cloud-online";
+        statusEl.innerHTML = "☁️ Firestore Online";
+      }).catch((err) => {
+        console.error("Lỗi khi ghi dữ liệu:", err);
+        statusEl.className = "cloud-status cloud-error";
+        statusEl.innerHTML = "⚠️ Chưa mở Rules!";
+      });
     }
 
     function goHome() {
@@ -780,9 +692,6 @@
       }).join('');
     }
 
-    /* -------------------------------------------------------------
-       BẢNG THỐNG KÊ NGÀY TỰ ĐỘNG & CHỌN KÈO TRÊN CỘT KÈO
-    ------------------------------------------------------------- */
     function renderSingleDayTab(container, dateStr) {
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
@@ -1050,9 +959,6 @@
       container.innerHTML = matchesHtml + summaryTableHtml;
     }
 
-    /* -------------------------------------------------------------
-       BẢNG TỔNG HỢP CÁC NGÀY
-    ------------------------------------------------------------- */
     function renderTongHopTab(container) {
       let vdvDayTotals = {};
       let vdvRowKeoSum = {};
@@ -1187,9 +1093,6 @@
       container.innerHTML = html;
     }
 
-    /* -------------------------------------------------------------
-       MINI GAME 1 (24 TRẬN + THỐNG KÊ CÁ NHÂN)
-    ------------------------------------------------------------- */
     function updateMini1Score(index, field, val) {
       miniGame1Matches[index][field] = val;
       saveDataToFirestore();
@@ -1373,9 +1276,6 @@
       container.innerHTML = html;
     }
 
-    /* -------------------------------------------------------------
-       MINI GAME 2 (GIẢI ĐẤU BẢNG A & B - XOAY VÒNG & BÁN KẾT / CHUNG KẾT)
-    ------------------------------------------------------------- */
     function getPairDisplayName(pairObj) {
       if (!pairObj) return "Chưa chọn";
       let name1 = pairObj.p1 || "";
@@ -1386,7 +1286,6 @@
     }
 
     function generateMini2Matches() {
-      // Tự động sinh lịch xoay vòng 1 lượt cho Bảng A
       mini2MatchesA = [];
       let idA = 1;
       for (let i = 0; i < mini2PairsA.length; i++) {
@@ -1395,7 +1294,6 @@
         }
       }
 
-      // Tự động sinh lịch xoay vòng 1 lượt cho Bảng B
       mini2MatchesB = [];
       let idB = 1;
       for (let i = 0; i < mini2PairsB.length; i++) {

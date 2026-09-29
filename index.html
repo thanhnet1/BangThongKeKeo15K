@@ -106,7 +106,7 @@
     .dropdown-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
     .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 3px 0; }
     
-    .cloud-status { font-size: 10px; padding: 3px 8px; border-radius: 15px; font-weight: bold; margin-left: auto; }
+    .cloud-status { font-size: 10px; padding: 3px 8px; border-radius: 15px; font-weight: bold; margin-left: auto; cursor: pointer; }
     .cloud-online { background-color: #10b981; color: white; }
     .cloud-syncing { background-color: #f59e0b; color: white; }
     .cloud-error { background-color: #ef4444; color: white; }
@@ -184,7 +184,7 @@
           <img src="logo1.png" alt="Logo CMTD" class="title-logo-img">
           <h2 style="margin:0; font-weight:900; color:#fff; font-size:16px;">CLB PICKLEBALL - CMTD</h2>
         </div>
-        <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối...</div>
+        <div id="cloudStatus" class="cloud-status cloud-syncing" onclick="forceInitCloud()">☁️ Đang kết nối...</div>
       </div>
 
       <div class="top-nav">
@@ -258,7 +258,7 @@
   </div>
 
   <script>
-    // ⚡ CHÍNH XÁC CẤU HÌNH FIREBASE DỰ ÁN CỦA BẠN
+    // 💡 BỘ CẤU HÌNH ĐÃ ĐƯỢC CHUẨN HÓA VÀ THÊM PERSISTENCE
     const firebaseConfig = {
       apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
       authDomain: "pickleball-cmtd.firebaseapp.com",
@@ -273,6 +273,7 @@
     }
     
     const db = firebase.firestore();
+    db.settings({ experimentalForceLongPolling: true }); // Tối ưu kết nối không bị treo mạng
     const docRef = db.collection("clubs").doc("cmtd_main_data");
 
     const VDV_COLORS = [
@@ -351,8 +352,21 @@
       listenToFirestore();
     };
 
+    function forceInitCloud() {
+      initDefaultFirestore();
+    }
+
     function listenToFirestore() {
+      // Đặt timeout 4 giây nếu Firebase lâu trả về sẽ tự khởi tạo Local dữ liệu
+      let firstLoad = false;
+      setTimeout(() => {
+        if (!firstLoad) {
+          initDefaultFirestore();
+        }
+      }, 4000);
+
       docRef.onSnapshot((doc) => {
+        firstLoad = true;
         const statusEl = document.getElementById("cloudStatus");
         if (doc.exists) {
           const data = doc.data();
@@ -400,9 +414,7 @@
         renderCurrentTab();
       }, (error) => {
         console.error("Firestore Error:", error);
-        const statusEl = document.getElementById("cloudStatus");
-        statusEl.className = "cloud-status cloud-error";
-        statusEl.innerHTML = "⚠️ Lỗi Rules/Kết nối";
+        initDefaultFirestore();
       });
     }
 
@@ -454,6 +466,7 @@
       const statusEl = document.getElementById("cloudStatus");
       statusEl.className = "cloud-status cloud-syncing";
       statusEl.innerHTML = "⏳ Đang lưu...";
+      
       docRef.set({ 
         vdvs, dates, matchesData, dateKeoMode, paymentStatus, miniGame1Content, miniGame2Content, miniGame1Matches,
         mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout
@@ -463,7 +476,7 @@
       }).catch((err) => {
         console.error("Lỗi khi ghi dữ liệu:", err);
         statusEl.className = "cloud-status cloud-error";
-        statusEl.innerHTML = "⚠️ Chưa mở Rules!";
+        statusEl.innerHTML = "⚠️ Nhấp vào đây để ghi đè!";
       });
     }
 

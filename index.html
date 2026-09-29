@@ -46,14 +46,7 @@
     .btn-green { background-color: #10b981; }
     .btn-red { background-color: #ef4444; }
     .card { background: var(--card-bg); padding: 10px 8px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 14px; position: relative; z-index: 10; border: 1px solid #e2e8f0; }
-    .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; flex-wrap: wrap; gap: 6px; }
     .card-title { font-size: 13px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; }
-    .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 6px; border: 1px solid #cbd5e1; }
-    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 680px; table-layout: fixed; }
-    th, td { border: 1px solid #cbd5e1; padding: 5px 2px; text-align: center; vertical-align: middle; word-wrap: break-word; }
-    th { background-color: #f8fafc; color: #334155; font-weight: 800; font-size: 10px; text-transform: uppercase; }
-    select, input[type="text"] { width: 100%; padding: 3px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px; background: #fff; text-align: center; }
-    .score-input { width: 36px !important; height: 24px; padding: 0 !important; font-weight: 800; text-align: center; font-size: 11px; border: 1.5px solid var(--score-border) !important; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; }
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; }
     .modal.show { display: flex; }
     .modal-content { background: white; padding: 16px; border-radius: 10px; width: 92%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
@@ -61,7 +54,7 @@
 </head>
 <body>
   <div class="container">
-    <div class="hero-banner">
+    <div class="hero-banner.jpg">
       <img src="logo1.png" alt="Logo Pickleball CMTD" class="logo-img">
     </div>
 
@@ -125,6 +118,17 @@
     <div id="tabContent"></div>
   </div>
 
+  <div class="modal" id="gameModal">
+    <div class="modal-content">
+      <h3 style="margin-top:0; font-size:14px;" id="gameModalTitle">Chỉnh Sửa Thể Lệ Trò Chơi</h3>
+      <textarea id="gameContentInput" rows="5" style="width:100%; padding:6px; border:1px solid #cbd5e1; border-radius:4px; font-size:11px;" placeholder="Nhập thể lệ trò chơi..."></textarea>
+      <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:10px;">
+        <button class="btn" style="background-color:#64748b;" onclick="closeGameModal()">Hủy</button>
+        <button class="btn btn-green" onclick="saveGameContent()">Lưu Thay Đổi</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
@@ -149,6 +153,7 @@
     let teamB_members = ["Trí Đỏ", "Long Diễn", "Châu Sĩ", "Minh Hạnh", "Dũng Ngạc", "Lợi Trí", "Tuấn La", "Vân Đình", "Cẩm Ly"];
     let miniGame1Matches = [];
     let currentTab = "";
+    let activeGameEditing = 1;
 
     const DEFAULT_MINI1_DATA = [
       { id: 1, category: "Đôi nam", a1: "Tiến Thọ", a2: "Thanh Đàm", scoreA: "8", scoreB: "11", b1: "Trí Đỏ", b2: "Long Diễn" },
@@ -193,6 +198,7 @@
           initDefaultFirestore();
         }
         renderDatesMenu();
+        renderVDVList();
         renderCurrentTab();
       }, (error) => {
         console.error("Firestore Error:", error);
@@ -262,13 +268,113 @@
       el.innerHTML = dates.map(d => `<div class="dropdown-item" onclick="switchTab('${d}')">📅 Ngày ${d}</div>`).join('');
     }
 
+    function renderVDVList(list = vdvs) {
+      const container = document.getElementById("vdvListContainer");
+      if (!container) return;
+      container.innerHTML = list.map((name, index) => `
+        <div class="vdv-item">
+          <span>${index + 1}. ${name}</span>
+          <button class="btn btn-red btn-sm" onclick="removeVDV('${name}')">Xóa</button>
+        </div>
+      `).join('');
+    }
+
+    function addVDV() {
+      const input = document.getElementById("newVdvInput");
+      const name = input.value.trim();
+      if (!name) return alert("Vui lòng nhập tên VĐV!");
+      if (vdvs.includes(name)) return alert("VĐV này đã tồn tại!");
+      vdvs.push(name);
+      input.value = "";
+      saveDataToFirestore();
+    }
+
+    function removeVDV(name) {
+      if (confirm(`Bạn có chắc muốn xóa VĐV ${name}?`)) {
+        vdvs = vdvs.filter(v => v !== name);
+        saveDataToFirestore();
+      }
+    }
+
+    function filterVDVList() {
+      const keyword = document.getElementById("searchVdvInput").value.toLowerCase();
+      const filtered = vdvs.filter(v => v.toLowerCase().includes(keyword));
+      renderVDVList(filtered);
+    }
+
+    function addDateTab() {
+      const newDate = prompt("Nhập ngày mới (Định dạng DD/MM/YY):", getFormattedToday());
+      if (!newDate) return;
+      if (dates.includes(newDate)) return alert("Ngày này đã tồn tại!");
+      dates.push(newDate);
+      matchesData[newDate] = [];
+      currentTab = newDate;
+      saveDataToFirestore();
+    }
+
+    function renameCurrentDate() {
+      if (currentTab === 'tonghop' || currentTab === 'minigame1') return alert("Không thể đổi tên tab này!");
+      const newName = prompt("Nhập tên ngày mới:", currentTab);
+      if (!newName || newName === currentTab) return;
+      const index = dates.indexOf(currentTab);
+      if (index !== -1) {
+        dates[index] = newName;
+        matchesData[newName] = matchesData[currentTab];
+        delete matchesData[currentTab];
+        currentTab = newName;
+        saveDataToFirestore();
+      }
+    }
+
+    function deleteCurrentDate() {
+      if (currentTab === 'tonghop' || currentTab === 'minigame1') return alert("Không thể xóa tab này!");
+      if (confirm(`Bạn có chắc muốn xóa dữ liệu ngày ${currentTab}?`)) {
+        dates = dates.filter(d => d !== currentTab);
+        delete matchesData[currentTab];
+        currentTab = dates[0] || 'tonghop';
+        saveDataToFirestore();
+      }
+    }
+
+    function exportToExcel() {
+      const wb = XLSX.utils.book_new();
+      dates.forEach(d => {
+        const wsData = (matchesData[d] || []).map(m => ({
+          "Trận": m.id,
+          "Đội 1": `${m.c1_p1} - ${m.c1_p2}`,
+          "Tỷ số": `${m.score1} - ${m.score2}`,
+          "Đội 2": `${m.c2_p1} - ${m.c2_p2}`
+        }));
+        const ws = XLSX.utils.json_to_sheet(wsData);
+        XLSX.utils.book_append_sheet(wb, ws, d.replace(/\//g, "-"));
+      });
+      XLSX.writeFile(wb, `Pickleball_CMTD_${getFormattedToday().replace(/\//g, "-")}.xlsx`);
+    }
+
+    function openGameModal(gameId) {
+      activeGameEditing = gameId;
+      document.getElementById("gameModalTitle").innerText = `Chỉnh Sửa Thể Lệ Mini Game ${gameId}`;
+      document.getElementById("gameContentInput").value = miniGame1Content;
+      document.getElementById("gameModal").classList.add("show");
+    }
+
+    function closeGameModal() {
+      document.getElementById("gameModal").classList.remove("show");
+    }
+
+    function saveGameContent() {
+      miniGame1Content = document.getElementById("gameContentInput").value;
+      closeGameModal();
+      saveDataToFirestore();
+    }
+
     function renderCurrentTab() {
       const container = document.getElementById("tabContent");
       if (!container) return;
       if (currentTab === 'tonghop') {
         container.innerHTML = `<div class="card"><h3 class="card-title">BẢNG TỔNG HỢP CÁC NGÀY</h3><p>Dữ liệu tổng hợp từ ${dates.length} ngày thi đấu.</p></div>`;
       } else if (currentTab === 'minigame1') {
-        container.innerHTML = `<div class="card"><h3 class="card-title">MINI GAME 1 - LỊCH THI ĐẤU TEAM A & B</h3></div>`;
+        container.innerHTML = `<div class="card"><h3 class="card-title">MINI GAME 1 - LỊCH THI ĐẤU TEAM A & B</h3><p>${miniGame1Content}</p></div>`;
       } else {
         container.innerHTML = `<div class="card"><h3 class="card-title">LỊCH THI ĐẤU NGÀY ${currentTab}</h3></div>`;
       }

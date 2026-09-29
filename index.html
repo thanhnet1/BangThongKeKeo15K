@@ -184,7 +184,7 @@
           <img src="logo1.png" alt="Logo CMTD" class="title-logo-img">
           <h2 style="margin:0; font-weight:900; color:#fff; font-size:16px;">CLB PICKLEBALL - CMTD</h2>
         </div>
-        <div id="cloudStatus" class="cloud-status cloud-syncing" onclick="forceInitCloud()">☁️ Đang kết nối...</div>
+        <div id="cloudStatus" class="cloud-status cloud-syncing" onclick="saveDataToFirestore()">☁️ Đang kết nối...</div>
       </div>
 
       <div class="top-nav">
@@ -258,7 +258,6 @@
   </div>
 
   <script>
-    // 💡 BỘ CẤU HÌNH ĐÃ ĐƯỢC CHUẨN HÓA VÀ THÊM PERSISTENCE
     const firebaseConfig = {
       apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
       authDomain: "pickleball-cmtd.firebaseapp.com",
@@ -273,7 +272,6 @@
     }
     
     const db = firebase.firestore();
-    db.settings({ experimentalForceLongPolling: true }); // Tối ưu kết nối không bị treo mạng
     const docRef = db.collection("clubs").doc("cmtd_main_data");
 
     const VDV_COLORS = [
@@ -352,21 +350,21 @@
       listenToFirestore();
     };
 
-    function forceInitCloud() {
-      initDefaultFirestore();
+    // Hàm hỗ trợ chuẩn hóa ngày dạng 29/9/26
+    function sanitizeDateStr(d) {
+      if (!d) return "";
+      let parts = d.toString().split('/');
+      if (parts.length === 3) {
+        let day = parseInt(parts[0], 10);
+        let month = parseInt(parts[1], 10);
+        let year = parts[2];
+        return `${day}/${month}/${year}`;
+      }
+      return d.toString().trim();
     }
 
     function listenToFirestore() {
-      // Đặt timeout 4 giây nếu Firebase lâu trả về sẽ tự khởi tạo Local dữ liệu
-      let firstLoad = false;
-      setTimeout(() => {
-        if (!firstLoad) {
-          initDefaultFirestore();
-        }
-      }, 4000);
-
       docRef.onSnapshot((doc) => {
-        firstLoad = true;
         const statusEl = document.getElementById("cloudStatus");
         if (doc.exists) {
           const data = doc.data();
@@ -375,7 +373,12 @@
           const nowObj = new Date();
           const todayStr = `${nowObj.getDate()}/${nowObj.getMonth() + 1}/${nowObj.getFullYear().toString().substr(-2)}`;
           
-          dates = data.dates || [todayStr];
+          // Lọc trùng lặp & chuẩn hóa toàn bộ mảng dates từ Firebase
+          let rawDates = data.dates || [todayStr];
+          let cleanDatesSet = new Set();
+          rawDates.forEach(d => cleanDatesSet.add(sanitizeDateStr(d)));
+          
+          dates = Array.from(cleanDatesSet);
           if (!dates.includes(todayStr)) {
             dates.unshift(todayStr);
           }
@@ -414,7 +417,9 @@
         renderCurrentTab();
       }, (error) => {
         console.error("Firestore Error:", error);
-        initDefaultFirestore();
+        const statusEl = document.getElementById("cloudStatus");
+        statusEl.className = "cloud-status cloud-error";
+        statusEl.innerHTML = "⚠️ Lỗi Tải Dữ Liệu";
       });
     }
 
@@ -467,16 +472,30 @@
       statusEl.className = "cloud-status cloud-syncing";
       statusEl.innerHTML = "⏳ Đang lưu...";
       
+      // Đồng bộ hóa danh sách ngày chuẩn hóa trước khi đẩy lên
+      let cleanDates = Array.from(new Set(dates.map(d => sanitizeDateStr(d))));
+
       docRef.set({ 
-        vdvs, dates, matchesData, dateKeoMode, paymentStatus, miniGame1Content, miniGame2Content, miniGame1Matches,
-        mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout
+        vdvs, 
+        dates: cleanDates, 
+        matchesData, 
+        dateKeoMode, 
+        paymentStatus, 
+        miniGame1Content, 
+        miniGame2Content, 
+        miniGame1Matches,
+        mini2PairsA, 
+        mini2PairsB, 
+        mini2MatchesA, 
+        mini2MatchesB, 
+        mini2Knockout
       }, { merge: true }).then(() => {
         statusEl.className = "cloud-status cloud-online";
         statusEl.innerHTML = "☁️ Firestore Online";
       }).catch((err) => {
         console.error("Lỗi khi ghi dữ liệu:", err);
         statusEl.className = "cloud-status cloud-error";
-        statusEl.innerHTML = "⚠️ Nhấp vào đây để ghi đè!";
+        statusEl.innerHTML = "⚠️ Lỗi lưu dữ liệu!";
       });
     }
 
@@ -576,14 +595,17 @@
     function addDateTab() {
       closeAllDropdowns();
       const dateStr = prompt("Nhập ngày đấu mới (VD: 28/9/26):");
-      if (dateStr && !dates.includes(dateStr)) {
-        dates.push(dateStr);
-        matchesData[dateStr] = Array.from({ length: 5 }, (_, i) => ({
-          id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "", customWin: 5, customLose: -15
-        }));
-        dateKeoMode[dateStr] = "default";
-        currentTab = dateStr;
-        saveDataToFirestore();
+      if (dateStr) {
+        let cleanStr = sanitizeDateStr(dateStr);
+        if (!dates.includes(cleanStr)) {
+          dates.push(cleanStr);
+          matchesData[cleanStr] = Array.from({ length: 5 }, (_, i) => ({
+            id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "", customWin: 5, customLose: -15
+          }));
+          dateKeoMode[cleanStr] = "default";
+          currentTab = cleanStr;
+          saveDataToFirestore();
+        }
       }
     }
 
@@ -593,7 +615,7 @@
       const oldDate = currentTab;
       const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
       if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
-        const trimmed = newDate.trim();
+        const trimmed = sanitizeDateStr(newDate.trim());
         if (dates.includes(trimmed)) return alert("⚠️ Tên ngày này đã tồn tại!");
         const idx = dates.indexOf(oldDate);
         if (idx !== -1) dates[idx] = trimmed;
@@ -644,6 +666,7 @@
     }
 
     function updateMatch(dateStr, matchIndex, field, value) {
+      if (!matchesData[dateStr]) matchesData[dateStr] = [];
       matchesData[dateStr][matchIndex][field] = value;
       saveDataToFirestore();
     }
@@ -775,11 +798,11 @@
 
         const score1Inner = isScore1Zero 
           ? `<span class="ham-text">HẦM</span>` 
-          : `<input type="text" class="score-input" value="${m.score1}" onchange="updateMatch('${dateStr}', ${idx}, 'score1', this.value)">`;
+          : `<input type="text" class="score-input" value="${m.score1 || ''}" onchange="updateMatch('${dateStr}', ${idx}, 'score1', this.value)">`;
 
         const score2Inner = isScore2Zero 
           ? `<span class="ham-text">HẦM</span>` 
-          : `<input type="text" class="score-input" value="${m.score2}" onchange="updateMatch('${dateStr}', ${idx}, 'score2', this.value)">`;
+          : `<input type="text" class="score-input" value="${m.score2 || ''}" onchange="updateMatch('${dateStr}', ${idx}, 'score2', this.value)">`;
 
         const c1_p1_color = m.c1_p1 ? VDV_COLORS[vdvs.indexOf(m.c1_p1) % VDV_COLORS.length] : "#334155";
         const c1_p2_color = m.c1_p2 ? VDV_COLORS[vdvs.indexOf(m.c1_p2) % VDV_COLORS.length] : "#334155";
@@ -1477,8 +1500,8 @@
                       <tr>
                         <td>${m.id}</td>
                         <td style="font-weight:bold; font-size:10px;">${pair1Str}</td>
-                        <td><input type="text" class="score-input" value="${m.s1}" onchange="updateMini2MatchScore('A', ${i}, 's1', this.value)"></td>
-                        <td><input type="text" class="score-input" value="${m.s2}" onchange="updateMini2MatchScore('A', ${i}, 's2', this.value)"></td>
+                        <td><input type="text" class="score-input" value="${m.s1 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('A', ${i}, 's1', this.value)"></td>
+                        <td><input type="text" class="score-input" value="${m.s2 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('A', ${i}, 's2', this.value)"></td>
                         <td style="font-weight:bold; font-size:10px;">${pair2Str}</td>
                       </tr>
                     `;
@@ -1535,8 +1558,8 @@
                       <tr>
                         <td>${m.id}</td>
                         <td style="font-weight:bold; font-size:10px;">${pair1Str}</td>
-                        <td><input type="text" class="score-input" value="${m.s1}" onchange="updateMini2MatchScore('B', ${i}, 's1', this.value)"></td>
-                        <td><input type="text" class="score-input" value="${m.s2}" onchange="updateMini2MatchScore('B', ${i}, 's2', this.value)"></td>
+                        <td><input type="text" class="score-input" value="${m.s1 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('B', ${i}, 's1', this.value)"></td>
+                        <td><input type="text" class="score-input" value="${m.s2 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('B', ${i}, 's2', this.value)"></td>
                         <td style="font-weight:bold; font-size:10px;">${pair2Str}</td>
                       </tr>
                     `;
@@ -1556,10 +1579,10 @@
             <table>
               <tr>
                 <td style="width:70px;"><strong>BKC1-1</strong></td>
-                <td><input type="text" value="${mini2Knockout.bkc1.p1}" onchange="updateMini2Knockout('bkc1', 'p1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.bkc1.s1}" onchange="updateMini2Knockout('bkc1', 's1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.bkc1.s2}" onchange="updateMini2Knockout('bkc1', 's2', this.value)"></td>
-                <td><input type="text" value="${mini2Knockout.bkc1.p2}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
+                <td><input type="text" value="${mini2Knockout.bkc1.p1 || ''}" onchange="updateMini2Knockout('bkc1', 'p1', this.value)"></td>
+                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.bkc1.s1 || ''}" onchange="updateMini2Knockout('bkc1', 's1', this.value)"></td>
+                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.bkc1.s2 || ''}" onchange="updateMini2Knockout('bkc1', 's2', this.value)"></td>
+                <td><input type="text" value="${mini2Knockout.bkc1.p2 || ''}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
               </tr>
             </table>
 
@@ -1567,10 +1590,10 @@
             <table>
               <tr>
                 <td style="width:70px;"><strong>BKC1-2</strong></td>
-                <td><input type="text" value="${mini2Knockout.bkc2.p1}" onchange="updateMini2Knockout('bkc2', 'p1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.bkc2.s1}" onchange="updateMini2Knockout('bkc2', 's1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.bkc2.s2}" onchange="updateMini2Knockout('bkc2', 's2', this.value)"></td>
-                <td><input type="text" value="${mini2Knockout.bkc2.p2}" onchange="updateMini2Knockout('bkc2', 'p2', this.value)"></td>
+                <td><input type="text" value="${mini2Knockout.bkc2.p1 || ''}" onchange="updateMini2Knockout('bkc2', 'p1', this.value)"></td>
+                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.bkc2.s1 || ''}" onchange="updateMini2Knockout('bkc2', 's1', this.value)"></td>
+                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.bkc2.s2 || ''}" onchange="updateMini2Knockout('bkc2', 's2', this.value)"></td>
+                <td><input type="text" value="${mini2Knockout.bkc2.p2 || ''}" onchange="updateMini2Knockout('bkc2', 'p2', this.value)"></td>
               </tr>
             </table>
 
@@ -1578,10 +1601,10 @@
             <table>
               <tr>
                 <td style="width:70px;"><strong>3/4</strong></td>
-                <td><input type="text" value="${mini2Knockout.rank34.p1}" onchange="updateMini2Knockout('rank34', 'p1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.rank34.s1}" onchange="updateMini2Knockout('rank34', 's1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.rank34.s2}" onchange="updateMini2Knockout('rank34', 's2', this.value)"></td>
-                <td><input type="text" value="${mini2Knockout.rank34.p2}" onchange="updateMini2Knockout('rank34', 'p2', this.value)"></td>
+                <td><input type="text" value="${mini2Knockout.rank34.p1 || ''}" onchange="updateMini2Knockout('rank34', 'p1', this.value)"></td>
+                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.rank34.s1 || ''}" onchange="updateMini2Knockout('rank34', 's1', this.value)"></td>
+                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.rank34.s2 || ''}" onchange="updateMini2Knockout('rank34', 's2', this.value)"></td>
+                <td><input type="text" value="${mini2Knockout.rank34.p2 || ''}" onchange="updateMini2Knockout('rank34', 'p2', this.value)"></td>
               </tr>
             </table>
 
@@ -1589,10 +1612,10 @@
             <table>
               <tr>
                 <td style="width:70px;"><strong>CK</strong></td>
-                <td><input type="text" value="${mini2Knockout.final.p1}" onchange="updateMini2Knockout('final', 'p1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.final.s1}" onchange="updateMini2Knockout('final', 's1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.final.s2}" onchange="updateMini2Knockout('final', 's2', this.value)"></td>
-                <td><input type="text" value="${mini2Knockout.final.p2}" onchange="updateMini2Knockout('final', 'p2', this.value)"></td>
+                <td><input type="text" value="${mini2Knockout.final.p1 || ''}" onchange="updateMini2Knockout('final', 'p1', this.value)"></td>
+                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.final.s1 || ''}" onchange="updateMini2Knockout('final', 's1', this.value)"></td>
+                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.final.s2 || ''}" onchange="updateMini2Knockout('final', 's2', this.value)"></td>
+                <td><input type="text" value="${mini2Knockout.final.p2 || ''}" onchange="updateMini2Knockout('final', 'p2', this.value)"></td>
               </tr>
             </table>
 

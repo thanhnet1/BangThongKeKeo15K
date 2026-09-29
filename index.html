@@ -184,7 +184,7 @@
           <img src="logo1.png" alt="Logo CMTD" class="title-logo-img">
           <h2 style="margin:0; font-weight:900; color:#fff; font-size:16px;">CLB PICKLEBALL - CMTD</h2>
         </div>
-        <div id="cloudStatus" class="cloud-status cloud-syncing" onclick="saveDataToFirestore()">☁️ Đang kết nối...</div>
+        <div id="cloudStatus" class="cloud-status cloud-syncing" onclick="initDefaultFirestore()">☁️ Đang kết nối... (Bấm thử)</div>
       </div>
 
       <div class="top-nav">
@@ -350,19 +350,6 @@
       listenToFirestore();
     };
 
-    // Hàm hỗ trợ chuẩn hóa ngày dạng 29/9/26
-    function sanitizeDateStr(d) {
-      if (!d) return "";
-      let parts = d.toString().split('/');
-      if (parts.length === 3) {
-        let day = parseInt(parts[0], 10);
-        let month = parseInt(parts[1], 10);
-        let year = parts[2];
-        return `${day}/${month}/${year}`;
-      }
-      return d.toString().trim();
-    }
-
     function listenToFirestore() {
       docRef.onSnapshot((doc) => {
         const statusEl = document.getElementById("cloudStatus");
@@ -373,15 +360,8 @@
           const nowObj = new Date();
           const todayStr = `${nowObj.getDate()}/${nowObj.getMonth() + 1}/${nowObj.getFullYear().toString().substr(-2)}`;
           
-          // Lọc trùng lặp & chuẩn hóa toàn bộ mảng dates từ Firebase
-          let rawDates = data.dates || [todayStr];
-          let cleanDatesSet = new Set();
-          rawDates.forEach(d => cleanDatesSet.add(sanitizeDateStr(d)));
-          
-          dates = Array.from(cleanDatesSet);
-          if (!dates.includes(todayStr)) {
-            dates.unshift(todayStr);
-          }
+          dates = data.dates || [todayStr];
+          if (!dates.includes(todayStr)) dates.unshift(todayStr);
 
           matchesData = data.matchesData || {};
           dateKeoMode = data.dateKeoMode || {};
@@ -410,16 +390,15 @@
           }
           statusEl.className = "cloud-status cloud-online";
           statusEl.innerHTML = "☁️ Firestore Online";
+          renderDatesMenu();
+          renderCurrentTab();
         } else {
+          // TỰ ĐỘNG KHỞI TẠO NẾU DOCUMENT BỊ XÓA
           initDefaultFirestore();
         }
-        renderDatesMenu();
-        renderCurrentTab();
       }, (error) => {
-        console.error("Firestore Error:", error);
-        const statusEl = document.getElementById("cloudStatus");
-        statusEl.className = "cloud-status cloud-error";
-        statusEl.innerHTML = "⚠️ Lỗi Tải Dữ Liệu";
+        console.error("Firestore error:", error);
+        initDefaultFirestore();
       });
     }
 
@@ -464,6 +443,10 @@
 
       miniGame1Matches = DEFAULT_MINI1_DATA;
       generateMini2Matches();
+      currentTab = todayStr;
+      
+      renderDatesMenu();
+      renderCurrentTab();
       saveDataToFirestore();
     }
 
@@ -471,31 +454,17 @@
       const statusEl = document.getElementById("cloudStatus");
       statusEl.className = "cloud-status cloud-syncing";
       statusEl.innerHTML = "⏳ Đang lưu...";
-      
-      // Đồng bộ hóa danh sách ngày chuẩn hóa trước khi đẩy lên
-      let cleanDates = Array.from(new Set(dates.map(d => sanitizeDateStr(d))));
 
       docRef.set({ 
-        vdvs, 
-        dates: cleanDates, 
-        matchesData, 
-        dateKeoMode, 
-        paymentStatus, 
-        miniGame1Content, 
-        miniGame2Content, 
-        miniGame1Matches,
-        mini2PairsA, 
-        mini2PairsB, 
-        mini2MatchesA, 
-        mini2MatchesB, 
-        mini2Knockout
+        vdvs, dates, matchesData, dateKeoMode, paymentStatus, miniGame1Content, miniGame2Content, miniGame1Matches,
+        mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout
       }, { merge: true }).then(() => {
         statusEl.className = "cloud-status cloud-online";
         statusEl.innerHTML = "☁️ Firestore Online";
       }).catch((err) => {
         console.error("Lỗi khi ghi dữ liệu:", err);
         statusEl.className = "cloud-status cloud-error";
-        statusEl.innerHTML = "⚠️ Lỗi lưu dữ liệu!";
+        statusEl.innerHTML = "⚠️ Lỗi kết nối!";
       });
     }
 
@@ -521,6 +490,7 @@
 
     function renderDatesMenu() {
       const container = document.getElementById("datesMenuList");
+      if (!container) return;
       container.innerHTML = dates.map(d => `
         <div class="dropdown-item ${currentTab === d ? 'txt-win' : ''}" onclick="switchTab('${d}')">
           📅 Ngày ${d}
@@ -574,7 +544,8 @@
     }
 
     function renderVDVItems(list) {
-      document.getElementById("vdvCountBtn").innerText = vdvs.length;
+      const btn = document.getElementById("vdvCountBtn");
+      if (btn) btn.innerText = vdvs.length;
       const container = document.getElementById("vdvListContainer");
       if (!container) return;
       container.innerHTML = list.map(v => {
@@ -595,17 +566,14 @@
     function addDateTab() {
       closeAllDropdowns();
       const dateStr = prompt("Nhập ngày đấu mới (VD: 28/9/26):");
-      if (dateStr) {
-        let cleanStr = sanitizeDateStr(dateStr);
-        if (!dates.includes(cleanStr)) {
-          dates.push(cleanStr);
-          matchesData[cleanStr] = Array.from({ length: 5 }, (_, i) => ({
-            id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "", customWin: 5, customLose: -15
-          }));
-          dateKeoMode[cleanStr] = "default";
-          currentTab = cleanStr;
-          saveDataToFirestore();
-        }
+      if (dateStr && !dates.includes(dateStr)) {
+        dates.push(dateStr);
+        matchesData[dateStr] = Array.from({ length: 5 }, (_, i) => ({
+          id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "", customWin: 5, customLose: -15
+        }));
+        dateKeoMode[dateStr] = "default";
+        currentTab = dateStr;
+        saveDataToFirestore();
       }
     }
 
@@ -615,7 +583,7 @@
       const oldDate = currentTab;
       const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
       if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
-        const trimmed = sanitizeDateStr(newDate.trim());
+        const trimmed = newDate.trim();
         if (dates.includes(trimmed)) return alert("⚠️ Tên ngày này đã tồn tại!");
         const idx = dates.indexOf(oldDate);
         if (idx !== -1) dates[idx] = trimmed;
@@ -709,6 +677,7 @@
 
     function renderCurrentTab() {
       const content = document.getElementById("tabContent");
+      if (!content) return;
       if (currentTab === "tonghop") {
         renderTongHopTab(content);
       } else if (currentTab === "minigame1") {

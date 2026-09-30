@@ -1647,8 +1647,8 @@
                       <tr>
                         <td>${m.id}</td>
                         <td style="font-weight:bold; font-size:10px;">${pair1Str}</td>
-                        <td><input type="text" class="score-input" value="${m.s1 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('A', ${i}, 's1', this.value)"></td>
-                        <td><input type="text" class="score-input" value="${m.s2 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('A', ${i}, 's2', this.value)"></td>
+                        <td><input type="text" class="score-input" value="${m.s1 || ''}" onchange="updateMini2MatchScore('A', ${i}, 's1', this.value)"></td>
+                        <td><input type="text" class="score-input" value="${m.s2 || ''}" onchange="updateMini2MatchScore('A', ${i}, 's2', this.value)"></td>
                         <td style="font-weight:bold; font-size:10px;">${pair2Str}</td>
                       </tr>
                     `;

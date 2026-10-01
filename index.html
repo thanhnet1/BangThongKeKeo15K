@@ -210,7 +210,7 @@
           <div class="dropdown-menu" id="menuSetting">
             <div class="dropdown-item" onclick="addDateTab()">📅 ➕ Thêm Ngày Mới</div>
             <div class="dropdown-item" onclick="renameCurrentDate()">✏️ Sửa Tên Ngày Hiện Tại</div>
-            <div class="dropdown-item" style="color:red;" onclick="deleteCurrentDate()">🗑️ Xóa Ngày Hiện Tại</div>
+            <div class="dropdown-item" style="color:red;" onclick="deleteCurrentDate()">🗑️️ Xóa Ngày Hiện Tại</div>
             <div class="dropdown-divider"></div>
             <div class="dropdown-item" onclick="exportToExcel()">📥 Xuất Dữ Liệu Excel</div>
           </div>
@@ -610,7 +610,7 @@
 
     function renameCurrentDate() {
       closeAllDropdowns();
-      if (currentTab === "tonghop" || currentTab === "minigame1" || currentTab === "minigame2") return alert("⚠️ Không thể đổi tên tab này!");
+      if (currentTab === "tonghop" || currentTab === "minigame1" || currentTab === "minigame2") return alert("⚠️️ Không thể đổi tên tab này!");
       const oldDate = currentTab;
       const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
       if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
@@ -653,6 +653,7 @@
         id: newId, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "", customWin: 5, customLose: -15
       });
       saveDataToFirestore();
+      renderCurrentTab();
     }
 
     // Nút XÓA DÒNG TRẬN ĐẤU CỤ THỂ
@@ -691,6 +692,45 @@
       }
       paymentStatus[payKey] = !paymentStatus[payKey];
       saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    // --- PHÂN QUYỀN ADMIN TẠI CỘT NOTE (DÒNG TỔNG BTC THU VỀ) ---
+    function handleBtcNoteAdminChange(date, selectElement) {
+      const selectedValue = selectElement.value;
+
+      if (selectedValue === "YES") {
+        if (!isAdminVerified) {
+          const pass = prompt("🔑 Nhập mật khẩu Admin để chuyển tiền BTC vào Bảng Thống Kê Từng Ngày:");
+          if (pass === ADMIN_PASSCODE) {
+            isAdminVerified = true;
+            alert("✅ Xác thực Admin thành công!");
+            updateBtcNoteAdminPermission(date, "YES");
+          } else {
+            alert("❌ Mật khẩu Admin không chính xác!");
+            selectElement.value = "NO";
+            updateBtcNoteAdminPermission(date, "NO");
+          }
+        } else {
+          updateBtcNoteAdminPermission(date, "YES");
+        }
+      } else {
+        updateBtcNoteAdminPermission(date, "NO");
+      }
+    }
+
+    function updateBtcNoteAdminPermission(date, status) {
+      if (!paymentStatus[date]) {
+        paymentStatus[date] = {};
+      } else if (typeof paymentStatus[date] !== 'object') {
+        const oldVal = paymentStatus[date];
+        paymentStatus[date] = { paid: oldVal };
+      }
+      
+      paymentStatus[date].btcNoteAdminOption = status;
+
+      saveDataToFirestore();
+      renderCurrentTab();
     }
 
     function openGameModal(gameId) {
@@ -963,6 +1003,12 @@
       let btcThuVeCalculated = sumAmThucTe + sumBringBack; 
       let quyCon = sumThucThu - Math.abs(btcThuVeCalculated);
 
+      const pStatus = paymentStatus[dateStr];
+      const currentBtcAdminOption = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption) 
+        ? pStatus.btcNoteAdminOption 
+        : "NO";
+      const isYes = currentBtcAdminOption === "YES";
+
       let summaryTableHtml = `
         <div class="card">
           <div class="card-header-flex">
@@ -992,7 +1038,12 @@
                   <td style="color: blue;"><strong>${sumBringBack}</strong></td>
                   <td style="color: red;"><strong>${btcThuVeCalculated}</strong></td>
                   <td style="color: blue;"><strong>${sumThucThu}</strong></td>
-                  <td></td>
+                  <td class="note-cell" style="padding: 2px;">
+                    <select onchange="handleBtcNoteAdminChange('${dateStr}', this)" style="font-weight: 800; color: ${isYes ? '#16a34a' : '#dc2626'};">
+                      <option value="YES" ${isYes ? 'selected' : ''}>YES (Chuyển tổng ngày)</option>
+                      <option value="NO" ${!isYes ? 'selected' : ''}>NO (Không chuyển)</option>
+                    </select>
+                  </td>
                 </tr>
                 <tr class="total-summary-row">
                   <td style="color: red; text-align: left;" colspan="4"><strong>Quỹ Còn</strong></td>
@@ -1076,7 +1127,14 @@
           }
         });
 
-        dayTotalsSum[d] = sumAmDay - sumBringBackDay;
+        const pStatus = paymentStatus[d];
+        const isYes = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption === "YES");
+
+        if (isYes) {
+          dayTotalsSum[d] = sumAmDay - sumBringBackDay;
+        } else {
+          dayTotalsSum[d] = 0;
+        }
       });
 
       let grandTotalAllDays = 0;
@@ -1151,7 +1209,7 @@
           if (mini1TeamB.includes(name)) return alert("⚠️ VĐV này đã có trong Team B!");
           if (!mini1TeamA.includes(name)) mini1TeamA.push(name);
         } else {
-          if (mini1TeamA.includes(name)) return alert("⚠️️ VĐV này đã có trong Team A!");
+          if (mini1TeamA.includes(name)) return alert("⚠️ VĐV này đã có trong Team A!");
           if (!mini1TeamB.includes(name)) mini1TeamB.push(name);
         }
         if (!vdvs.includes(name)) vdvs.push(name);
@@ -1390,9 +1448,9 @@
                       </td>
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                          <input type="text" class="score-input" value="${m.scoreA || ''}" onchange="updateMini1Score(${i}, 'scoreA', this.value)">
+                          <input type="text" class="score-input" value="${m.scoreA \vert{}\vert{} ''}" onchange="updateMini1Score(${i}, 'scoreA', this.value)">
                           <span>-</span>
-                          <input type="text" class="score-input" value="${m.scoreB || ''}" onchange="updateMini1Score(${i}, 'scoreB', this.value)">
+                          <input type="text" class="score-input" value="${m.scoreB \vert{}\vert{} ''}" onchange="updateMini1Score(${i}, 'scoreB', this.value)">
                         </div>
                       </td>
                       <td>
@@ -1647,8 +1705,8 @@
                       <tr>
                         <td>${m.id}</td>
                         <td style="font-weight:bold; font-size:10px;">${pair1Str}</td>
-                        <td><input type="text" class="score-input" value="${m.s1 || ''}" onchange="updateMini2MatchScore('A', ${i}, 's1', this.value)"></td>
-                        <td><input type="text" class="score-input" value="${m.s2 || ''}" onchange="updateMini2MatchScore('A', ${i}, 's2', this.value)"></td>
+                        <td><input type="text" class="score-input" value="${m.s1 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('A', ${i}, 's1', this.value)"></td>
+                        <td><input type="text" class="score-input" value="${m.s2 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('A', ${i}, 's2', this.value)"></td>
                         <td style="font-weight:bold; font-size:10px;">${pair2Str}</td>
                       </tr>
                     `;
@@ -1705,8 +1763,8 @@
                       <tr>
                         <td>${m.id}</td>
                         <td style="font-weight:bold; font-size:10px;">${pair1Str}</td>
-                        <td><input type="text" class="score-input" value="${m.s1 || ''}" onchange="updateMini2MatchScore('B', ${i}, 's1', this.value)"></td>
-                        <td><input type="text" class="score-input" value="${m.s2 || ''}" onchange="updateMini2MatchScore('B', ${i}, 's2', this.value)"></td>
+                        <td><input type="text" class="score-input" value="${m.s1 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('B', ${i}, 's1', this.value)"></td>
+                        <td><input type="text" class="score-input" value="${m.s2 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('B', ${i}, 's2', this.value)"></td>
                         <td style="font-weight:bold; font-size:10px;">${pair2Str}</td>
                       </tr>
                     `;

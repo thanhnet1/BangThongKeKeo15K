@@ -698,7 +698,7 @@
       renderCurrentTab();
     }
 
-    // --- PHÂN QUYỀN ADMIN TẠI CỘT NOTE (CÓ PHÂN BIỆT THUỘC TÍNH RÊNG TRÁNH LỖI OVERWRITE) ---
+    // --- PHÂN QUYỀN ADMIN TẠI CỘT NOTE (CÓ PHÂN BIỆT THUỘC TÍNH RIÊNG TRÁNH LỖI OVERWRITE) ---
     function handleBtcNoteAdminChange(date, selectElement) {
       const selectedValue = selectElement.value;
 
@@ -1106,7 +1106,7 @@
                     <td>${m.id}</td>
                     <td>${m.category}</td>
                     <td>${m.a1} -${m.a2}</td>
-                    <td><strong>${m.scoreA || 0} - ${m.scoreB || 0}</strong></td>
+                    <td><strong>${m.scoreA \vert{}\vert{} 0} -${m.scoreB || 0}</strong></td>
                     <td>${m.b1} -${m.b2}</td>
                   </tr>
                 `).join('')}

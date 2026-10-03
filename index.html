@@ -1905,10 +1905,15 @@
                         </td>
                         <td>
                           <input 
-                            type="text" 
+                            type="number" 
+                            inputmode="numeric"
+                            min="0"
+                            max="99"
                             class="score-input" 
                             value="${m.s2 || ''}" 
+                            onfocus="this.select()"
                             onchange="updateMini2MatchScore('B', ${i}, 's2', this.value)"
+                            placeholder="-"
                           >
                         </td>
                         <td style="font-weight:bold; font-size:10px;">${pair2Str}</td>

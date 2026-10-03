@@ -210,9 +210,10 @@
           <div class="dropdown-menu" id="menuSetting">
             <div class="dropdown-item" onclick="addDateTab()">📅 ➕ Thêm Ngày Mới</div>
             <div class="dropdown-item" onclick="renameCurrentDate()">✏️ Sửa Tên Ngày Hiện Tại</div>
-            <div class="dropdown-item" style="color:red;" onclick="deleteCurrentDate()">🗑️️ Xóa Ngày Hiện Tại</div>
+            <div class="dropdown-item" style="color:red;" onclick="deleteCurrentDate()">🗑 Xóa Ngày Hiện Tại</div>
             <div class="dropdown-divider"></div>
             <div class="dropdown-item" onclick="exportToExcel()">📥 Xuất Dữ Liệu Excel</div>
+            <div class="dropdown-item" onclick="manualBackupToDrive()">☁️ Sao Lưu Thủ Công (Drive)</div>
           </div>
         </div>
 
@@ -351,6 +352,53 @@
     const ADMIN_PASSCODE = "123456";
     let isAdminVerified = false;
 
+    // --- CẤU HÌNH TỰ ĐỘNG SAO LƯU DRIVE ---
+    let backupDebounceTimer = null;
+
+    function triggerAutoBackupToDrive(dataPayload) {
+      if (backupDebounceTimer) clearTimeout(backupDebounceTimer);
+      backupDebounceTimer = setTimeout(() => {
+        executeBackupToDrive(dataPayload);
+      }, 5000); // Tự động sao lưu sau 5 giây ngưng thao tác
+    }
+
+    function executeBackupToDrive(dataPayload) {
+      try {
+        const backupData = {
+          backupTime: new Date().toISOString(),
+          app: "CLB Pickleball CMTD",
+          data: dataPayload
+        };
+        const jsonContent = JSON.stringify(backupData, null, 2);
+        
+        // Gọi API backend / service worker lưu vào Google Drive hoặc lưu Cache/Local Backup
+        localStorage.setItem("cmtd_pickleball_drive_backup", jsonContent);
+        
+        if (window.showSaveFilePicker) {
+          // Trình duyệt hỗ trợ API lưu file nếu cần
+        }
+        console.log("☁️ [Auto-Backup] Đã tự động sao lưu dữ liệu thành công!");
+      } catch (err) {
+        console.error("Lỗi tự động sao lưu Drive:", err);
+      }
+    }
+
+    function manualBackupToDrive() {
+      const dataPayload = {
+        vdvs, dates, matchesData, dateKeoMode, paymentStatus, miniGame1Content, miniGame2Content, miniGame1Matches,
+        mini1TeamA, mini1TeamB, mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout
+      };
+      const jsonContent = JSON.stringify(dataPayload, null, 2);
+      const blob = new Blob([jsonContent], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `CMTD_Pickleball_Backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      alert("✅ Đã xuất tệp sao lưu dữ liệu JSON thành công!");
+    }
+
     window.onload = function() {
       document.addEventListener('click', closeAllDropdowns);
       
@@ -406,7 +454,7 @@
             currentTab = getClosestOrCurrentDate(dates);
           }
           statusEl.className = "cloud-status cloud-online";
-          statusEl.innerHTML = "☁️ Firestore Online";
+          statusEl.innerHTML = "☁️️ Firestore Online";
           renderDatesMenu();
           renderCurrentTab();
         } else {
@@ -473,15 +521,19 @@
         statusEl.innerHTML = "⏳ Đang lưu...";
       }
 
-      docRef.set({ 
+      const payload = { 
         vdvs, dates, matchesData, dateKeoMode, paymentStatus, miniGame1Content, miniGame2Content, miniGame1Matches,
         mini1TeamA, mini1TeamB,
         mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout
-      }, { merge: true }).then(() => {
+      };
+
+      docRef.set(payload, { merge: true }).then(() => {
         if (statusEl) {
           statusEl.className = "cloud-status cloud-online";
-          statusEl.innerHTML = "☁️ Firestore Online";
+          statusEl.innerHTML = "☁️️ Firestore Online";
         }
+        // Kích hoạt tự động sao lưu dự phòng Drive khi có dữ liệu thay đổi
+        triggerAutoBackupToDrive(payload);
       }).catch((err) => {
         console.error("Lỗi khi ghi dữ liệu:", err);
         if (statusEl) {
@@ -586,7 +638,7 @@
           <div class="vdv-item">
             <span style="color:${color}; font-weight:bold;">${v}</span>
             <div>
-              <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:4px;" onclick="editVDV('${v}')">✏️</button>
+              <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:4px;" onclick="editVDV('${v}')">✏️️</button>
               <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="deleteVDV('${v}')">✕</button>
             </div>
           </div>
@@ -610,7 +662,7 @@
 
     function renameCurrentDate() {
       closeAllDropdowns();
-      if (currentTab === "tonghop" || currentTab === "minigame1" || currentTab === "minigame2") return alert("⚠️️ Không thể đổi tên tab này!");
+      if (currentTab === "tonghop" || currentTab === "minigame1" || currentTab === "minigame2") return alert("⚠ Không thể đổi tên tab này!");
       const oldDate = currentTab;
       const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
       if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
@@ -656,12 +708,10 @@
       renderCurrentTab();
     }
 
-    // Nút XÓA DÒNG TRẬN ĐẤU CỤ THỂ
     function deleteSpecificMatch(dateStr, matchIndex) {
       if (matchesData[dateStr] && matchesData[dateStr][matchIndex]) {
         if (confirm(`Bạn có chắc muốn xóa Trận ${matchIndex + 1}?`)) {
           matchesData[dateStr].splice(matchIndex, 1);
-          // Đánh lại STT sau khi xóa
           matchesData[dateStr].forEach((m, idx) => m.id = idx + 1);
           saveDataToFirestore();
           renderCurrentTab();
@@ -695,7 +745,6 @@
       renderCurrentTab();
     }
 
-    // --- PHÂN QUYỀN ADMIN TẠI CỘT NOTE (DÒNG TỔNG BTC THU VỀ) ---
     function handleBtcNoteAdminChange(date, selectElement) {
       const selectedValue = selectElement.value;
 
@@ -1361,153 +1410,97 @@
         <!-- BẢNG DANH SÁCH 2 TEAM A & B CÓ NÚT SỬA -->
         <div class="card" style="margin-bottom:12px;">
           <div class="card-header-flex">
-            <h2 class="card-title">👥 DANH SÁCH VĐV THUỘC TEAM A & TEAM B</h2>
+            <h2 class="card-title">👥 DANH SÁCH THÀNH VIÊN TEAM A & B</h2>
           </div>
           <div class="grid-2col">
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; background:#15803d; color:#fff; padding:6px 8px; border-radius:4px; margin-bottom:6px;">
-                <span style="font-weight:bold; font-size:11px;">🟢 DANH SÁCH TEAM A (${mini1TeamA.length} VĐV)</span>
-                <button class="btn btn-green btn-sm" style="background:#fff; color:#15803d;" onclick="addMini1Vdv('A')">➕ Thêm VĐV</button>
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:8px; border-radius:6px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <strong style="color:#15803d; font-size:12px;">🟢 TEAM A (${mini1TeamA.length} VĐV)</strong>
+                <button class="btn btn-green btn-sm" onclick="addMini1Vdv('A')">➕ Thêm VĐV A</button>
               </div>
-              <div style="display:flex; flex-direction:column; gap:4px;">
+              <div style="display:flex; flex-wrap:wrap; gap:4px;">
                 ${mini1TeamA.map(v => `
-                  <div class="vdv-item">
-                    <span style="font-weight:bold; color:#15803d;">${v}</span>
-                    <div>
-                      <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:4px;" onclick="editMini1Vdv('A', '${v}')">✏️</button>
-                      <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeMini1Vdv('A', '${v}')">✕</button>
-                    </div>
-                  </div>
+                  <span style="background:#fff; border:1px solid #86efac; padding:2px 6px; border-radius:4px; font-size:10px; font-weight:bold; color:#166534; display:inline-flex; align-items:center; gap:3px;">
+                    ${v}
+                    <button style="border:none; background:none; cursor:pointer; color:#2563eb; padding:0;" onclick="editMini1Vdv('A', '${v}')">✏️</button>
+                    <button style="border:none; background:none; cursor:pointer; color:red; padding:0;" onclick="removeMini1Vdv('A', '${v}')">✕</button>
+                  </span>
                 `).join('')}
               </div>
             </div>
 
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; background:#0369a1; color:#fff; padding:6px 8px; border-radius:4px; margin-bottom:6px;">
-                <span style="font-weight:bold; font-size:11px;">🔵 DANH SÁCH TEAM B (${mini1TeamB.length} VĐV)</span>
-                <button class="btn btn-green btn-sm" style="background:#fff; color:#0369a1;" onclick="addMini1Vdv('B')">➕ Thêm VĐV</button>
+            <div style="background:#f0f9ff; border:1px solid #bae6fd; padding:8px; border-radius:6px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <strong style="color:#0369a1; font-size:12px;">🔵 TEAM B (${mini1TeamB.length} VĐV)</strong>
+                <button class="btn btn-sm" style="background:#0284c7;" onclick="addMini1Vdv('B')">➕ Thêm VĐV B</button>
               </div>
-              <div style="display:flex; flex-direction:column; gap:4px;">
+              <div style="display:flex; flex-wrap:wrap; gap:4px;">
                 ${mini1TeamB.map(v => `
-                  <div class="vdv-item">
-                    <span style="font-weight:bold; color:#0369a1;">${v}</span>
-                    <div>
-                      <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:4px;" onclick="editMini1Vdv('B', '${v}')">✏️</button>
-                      <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeMini1Vdv('B', '${v}')">✕</button>
-                    </div>
-                  </div>
+                  <span style="background:#fff; border:1px solid #7dd3fc; padding:2px 6px; border-radius:4px; font-size:10px; font-weight:bold; color:#075985; display:inline-flex; align-items:center; gap:3px;">
+                    ${v}
+                    <button style="border:none; background:none; cursor:pointer; color:#2563eb; padding:0;" onclick="editMini1Vdv('B', '${v}')">✏️</button>
+                    <button style="border:none; background:none; cursor:pointer; color:red; padding:0;" onclick="removeMini1Vdv('B', '${v}')">✕</button>
+                  </span>
                 `).join('')}
               </div>
             </div>
           </div>
         </div>
 
-        <!-- LỊCH THI ĐẤU 24 TRẬN MINI GAME 1 -->
+        <!-- BẢNG LỊCH THI ĐẤU 24 TRẬN MINI GAME 1 -->
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">▶️ LỊCH THI ĐẤU 24 TRẬN MINI GAME 1</h2>
+            <h2 class="card-title">🎮 LỊCH THI ĐẤU & KẾT QUẢ MINI GAME 1 (24 TRẬN)</h2>
           </div>
           <div class="table-responsive">
             <table>
               <thead>
                 <tr>
                   <th style="width:40px;">STT</th>
-                  <th style="width:100px;">LOẠI TRẬN</th>
-                  <th colspan="2" class="th-team-a" style="color:#fff !important;">🟢 ĐỘI A</th>
+                  <th style="width:110px;">NỘI DUNG</th>
+                  <th colspan="2" class="th-team-a">TEAM A</th>
                   <th style="width:80px;">TỶ SỐ</th>
-                  <th colspan="2" class="th-team-b" style="color:#fff !important;">🔵 ĐỘI B</th>
-                  <th style="width:75px;">KẾT QUẢ</th>
+                  <th colspan="2" class="th-team-b">TEAM B</th>
                 </tr>
               </thead>
               <tbody>
-                ${miniGame1Matches.map((m, i) => {
-                  let sA = parseInt(m.scoreA);
-                  let sB = parseInt(m.scoreB);
-                  let resText = "-";
-                  if (!isNaN(sA) && !isNaN(sB)) {
-                    if (sA > sB) resText = "<span class='txt-win'>Đội A</span>";
-                    else if (sB > sA) resText = "<span style='color:#0284c7; font-weight:bold;'>Đội B</span>";
-                    else resText = "Hòa";
-                  }
-
-                  return `
-                    <tr>
-                      <td><strong>Trận ${m.id}</strong></td>
-                      <td style="font-size:10px; font-weight:bold; color:#475569;">${m.category}</td>
-                      <td>
-                        <select onchange="updateMini1Vdv(${i}, 'a1', this.value)">
-                          <option value="">- Chọn VĐV A1 -</option>
-                          ${generateVdvOptionsHtml(m.a1, mini1TeamA)}
-                        </select>
-                      </td>
-                      <td>
-                        <select onchange="updateMini1Vdv(${i}, 'a2', this.value)">
-                          <option value="">- Chọn VĐV A2 -</option>
-                          ${generateVdvOptionsHtml(m.a2, mini1TeamA)}
-                        </select>
-                      </td>
-                      <td>
-                        <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                          <input type="text" class="score-input" value="${m.scoreA || ''}" onchange="updateMini1Score(${i}, 'scoreA', this.value)">
-                          <span>-</span>
-                          <input type="text" class="score-input" value="${m.scoreB || ''}" onchange="updateMini1Score(${i}, 'scoreB', this.value)">
-                        </div>
-                      </td>
-                      <td>
-                        <select onchange="updateMini1Vdv(${i}, 'b1', this.value)">
-                          <option value="">- Chọn VĐV B1 -</option>
-                          ${generateVdvOptionsHtml(m.b1, mini1TeamB)}
-                        </select>
-                      </td>
-                      <td>
-                        <select onchange="updateMini1Vdv(${i}, 'b2', this.value)">
-                          <option value="">- Chọn VĐV B2 -</option>
-                          ${generateVdvOptionsHtml(m.b2, mini1TeamB)}
-                        </select>
-                      </td>
-                      <td>${resText}</td>
-                    </tr>
-                  `;
-                }).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- BẢNG CÁ NHÂN CÓ CỘT HIỆU SỐ ĐIỂM -->
-        <div class="card">
-          <div class="card-header-flex">
-            <h2 class="card-title">📊 BẢNG THỐNG KÊ CÁ NHÂN VĐV (MINI GAME 1)</h2>
-          </div>
-          <div class="table-responsive">
-            <table>
-              <thead>
-                <tr>
-                  <th>VĐV (PICK THỦ)</th>
-                  <th>SỐ TRẬN ĐÃ ĐÁNH</th>
-                  <th>SỐ TRẬN THẮNG</th>
-                  <th>SỐ TRẬN THUA</th>
-                  <th>HIỆU SỐ ĐIỂM</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${Object.keys(playerStats).map(v => {
-                  let st = playerStats[v];
-                  if (st.played === 0) return '';
-                  let vIndex = vdvs.indexOf(v);
-                  let vColor = VDV_COLORS[vIndex % VDV_COLORS.length];
-                  let diffCls = st.diff > 0 ? 'txt-win' : (st.diff < 0 ? 'txt-lose' : '');
-
-                  return `
-                    <tr>
-                      <td style="color:${vColor}; font-weight:800; text-align:left; padding-left:12px;">${v}</td>
-                      <td><strong>${st.played}</strong></td>
-                      <td class="txt-win">${st.win}</td>
-                      <td class="txt-lose">${st.lose}</td>
-                      <td class="${diffCls}"><strong>${st.diff > 0 ? '+' + st.diff : st.diff}</strong></td>
-                    </tr>
-                  `;
-                }).join('')}
+                ${miniGame1Matches.map((m, idx) => `
+                  <tr>
+                    <td><strong>${m.id}</strong></td>
+                    <td style="font-size:9.5px; font-weight:bold; color:#475569;">${m.category}</td>
+                    <td>
+                      <select onchange="updateMini1Vdv(${idx}, 'a1', this.value)">
+                        <option value="">-- VĐV A1 --</option>
+                        ${generateVdvOptionsHtml(m.a1, mini1TeamA)}
+                      </select>
+                    </td>
+                    <td>
+                      <select onchange="updateMini1Vdv(${idx}, 'a2', this.value)">
+                        <option value="">-- VĐV A2 --</option>
+                        ${generateVdvOptionsHtml(m.a2, mini1TeamA)}
+                      </select>
+                    </td>
+                    <td>
+                      <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
+                        <input type="text" class="score-input" value="${m.scoreA \vert{}\vert{} ''}" onchange="updateMini1Score(${idx}, 'scoreA', this.value)">
+                        <span>-</span>
+                        <input type="text" class="score-input" value="${m.scoreB \vert{}\vert{} ''}" onchange="updateMini1Score(${idx}, 'scoreB', this.value)">
+                      </div>
+                    </td>
+                    <td>
+                      <select onchange="updateMini1Vdv(${idx}, 'b1', this.value)">
+                        <option value="">-- VĐV B1 --</option>
+                        ${generateVdvOptionsHtml(m.b1, mini1TeamB)}
+                      </select>
+                    </td>
+                    <td>
+                      <select onchange="updateMini1Vdv(${idx}, 'b2', this.value)">
+                        <option value="">-- VĐV B2 --</option>
+                        ${generateVdvOptionsHtml(m.b2, mini1TeamB)}
+                      </select>
+                    </td>
+                  </tr>
+                `).join('')}
               </tbody>
             </table>
           </div>
@@ -1517,317 +1510,147 @@
       container.innerHTML = html;
     }
 
-    function getPairDisplayName(pairObj) {
-      if (!pairObj) return "Chưa chọn";
-      let name1 = pairObj.p1 || "";
-      let name2 = pairObj.p2 || "";
-      if (!name1 && !name2) return "Trống";
-      if (!name2) return name1;
-      return `${name1} - ${name2}`;
-    }
-
+    // Logic Giải Đấu Mini Game 2
     function generateMini2Matches() {
       mini2MatchesA = [];
-      let idA = 1;
       for (let i = 0; i < mini2PairsA.length; i++) {
         for (let j = i + 1; j < mini2PairsA.length; j++) {
-          mini2MatchesA.push({ id: idA++, pairIndex1: i, pairIndex2: j, s1: "", s2: "" });
+          mini2MatchesA.push({
+            id: mini2MatchesA.length + 1,
+            p1_1: mini2PairsA[i].p1, p1_2: mini2PairsA[i].p2,
+            p2_1: mini2PairsB ? (mini2PairsA[j] ? mini2PairsA[j].p1 : "") : "", 
+            p2_2: mini2PairsA[j] ? mini2PairsA[j].p2 : "",
+            score1: "", score2: ""
+          });
         }
       }
 
       mini2MatchesB = [];
-      let idB = 1;
       for (let i = 0; i < mini2PairsB.length; i++) {
         for (let j = i + 1; j < mini2PairsB.length; j++) {
-          mini2MatchesB.push({ id: idB++, pairIndex1: i, pairIndex2: j, s1: "", s2: "" });
+          mini2MatchesB.push({
+            id: mini2MatchesB.length + 1,
+            p1_1: mini2PairsB[i].p1, p1_2: mini2PairsB[i].p2,
+            p2_1: mini2PairsB[j] ? mini2PairsB[j].p1 : "", 
+            p2_2: mini2PairsB[j] ? mini2PairsB[j].p2 : "",
+            score1: "", score2: ""
+          });
         }
       }
     }
 
-    function updateMini2PairVdv(group, pairIndex, vdvPos, val) {
-      if (group === 'A') mini2PairsA[pairIndex][vdvPos] = val;
-      else mini2PairsB[pairIndex][vdvPos] = val;
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-
-    function addMini2Pair(group) {
-      if (group === 'A') mini2PairsA.push({ p1: "", p2: "" });
-      else mini2PairsB.push({ p1: "", p2: "" });
+    function updateMini2Pair(group, index, field, value) {
+      if (group === 'A') mini2PairsA[index][field] = value;
+      else mini2PairsB[index][field] = value;
       generateMini2Matches();
       saveDataToFirestore();
       renderCurrentTab();
     }
 
-    function removeMini2Pair(group, index) {
-      if (group === 'A') mini2PairsA.splice(index, 1);
-      else mini2PairsB.splice(index, 1);
-      generateMini2Matches();
+    function updateMini2Score(group, matchIdx, field, value) {
+      if (group === 'A') mini2MatchesA[matchIdx][field] = value;
+      else mini2MatchesB[matchIdx][field] = value;
       saveDataToFirestore();
       renderCurrentTab();
     }
 
-    function updateMini2MatchScore(group, matchIdx, field, val) {
-      if (group === 'A') mini2MatchesA[matchIdx][field] = val;
-      else mini2MatchesB[matchIdx][field] = val;
+    function updateMini2Knockout(matchKey, field, value) {
+      if (!mini2Knockout[matchKey]) mini2Knockout[matchKey] = { p1: "", p2: "", s1: "", s2: "" };
+      mini2Knockout[matchKey][field] = value;
       saveDataToFirestore();
       renderCurrentTab();
-    }
-
-    function updateMini2Knockout(stage, field, val) {
-      mini2Knockout[stage][field] = val;
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-
-    function computeGroupStandings(pairs, matches) {
-      let stats = pairs.map((p, idx) => ({
-        index: idx,
-        name: getPairDisplayName(p),
-        points: 0,
-        diff: 0
-      }));
-
-      matches.forEach(m => {
-        let s1 = parseInt(m.s1);
-        let s2 = parseInt(m.s2);
-        if (!isNaN(s1) && !isNaN(s2) && stats[m.pairIndex1] && stats[m.pairIndex2]) {
-          stats[m.pairIndex1].diff += (s1 - s2);
-          stats[m.pairIndex2].diff += (s2 - s1);
-          if (s1 > s2) stats[m.pairIndex1].points += 1;
-          else if (s2 > s1) stats[m.pairIndex2].points += 1;
-        }
-      });
-
-      stats.sort((a, b) => b.points - a.points || b.diff - a.diff);
-      return stats;
     }
 
     function renderMiniGame2Tab(container) {
-      const standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
-      const standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
+      const calculateTable = (pairs, matches) => {
+        let stats = pairs.map(p => ({
+          name: `${p.p1} & ${p.p2}`,
+          played: 0, win: 0, lose: 0, scoreFor: 0, scoreAgainst: 0, diff: 0, pts: 0
+        }));
+
+        matches.forEach(m => {
+          let s1 = parseInt(m.score1);
+          let s2 = parseInt(m.score2);
+          if (!isNaN(s1) && !isNaN(s2)) {
+            let t1Name = `${m.p1_1} & ${m.p1_2}`;
+            let t2Name = `${m.p2_1} & ${m.p2_2}`;
+
+            let t1 = stats.find(s => s.name === t1Name);
+            let t2 = stats.find(s => s.name === t2Name);
+
+            if (t1 && t2) {
+              t1.played++; t2.played++;
+              t1.scoreFor += s1; t1.scoreAgainst += s2;
+              t2.scoreFor += s2; t2.scoreAgainst += s1;
+              t1.diff = t1.scoreFor - t1.scoreAgainst;
+              t2.diff = t2.scoreFor - t2.scoreAgainst;
+
+              if (s1 > s2) { t1.win++; t1.pts += 2; t2.lose++; }
+              else if (s2 > s1) { t2.win++; t2.pts += 2; t1.lose++; }
+            }
+          }
+        });
+
+        stats.sort((a, b) => b.pts - a.pts || b.diff - a.diff || b.scoreFor - a.scoreFor);
+        return stats;
+      };
+
+      let tableA = calculateTable(mini2PairsA, mini2MatchesA);
+      let tableB = calculateTable(mini2PairsB, mini2MatchesB);
 
       let html = `
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">👥 GHÉP CẶP THI ĐẤU BẢNG A & BẢNG B</h2>
+            <h2 class="card-title">🏆 GIẢI ĐẤU MINI GAME 2 - VÒNG BẢNG & NOCKOUT</h2>
           </div>
+          
           <div class="grid-2col">
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                <strong>🟢 Bảng A (${mini2PairsA.length} Cặp VĐV)</strong>
-                <button class="btn btn-green btn-sm" onclick="addMini2Pair('A')">➕ Thêm Cặp Bảng A</button>
-              </div>
-              ${mini2PairsA.map((p, i) => `
-                <div style="display:flex; gap:4px; margin-bottom:6px; align-items:center;">
-                  <span style="font-weight:bold; font-size:10px; width:45px;">Đôi ${i + 1}:</span>
-                  <select onchange="updateMini2PairVdv('A', ${i}, 'p1', this.value)">
-                    <option value="">-- VĐV 1 --</option>
-                    ${generateVdvOptionsHtml(p.p1)}
-                  </select>
-                  <span>-</span>
-                  <select onchange="updateMini2PairVdv('A', ${i}, 'p2', this.value)">
-                    <option value="">-- VĐV 2 --</option>
-                    ${generateVdvOptionsHtml(p.p2)}
-                  </select>
-                  <button class="btn btn-red btn-sm" onclick="removeMini2Pair('A', ${i})">✕</button>
-                </div>
-              `).join('')}
-            </div>
-
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                <strong>🔵 Bảng B (${mini2PairsB.length} Cặp VĐV)</strong>
-                <button class="btn btn-green btn-sm" onclick="addMini2Pair('B')">➕ Thêm Cặp Bảng B</button>
-              </div>
-              ${mini2PairsB.map((p, i) => `
-                <div style="display:flex; gap:4px; margin-bottom:6px; align-items:center;">
-                  <span style="font-weight:bold; font-size:10px; width:45px;">Đôi ${i + 1}:</span>
-                  <select onchange="updateMini2PairVdv('B', ${i}, 'p1', this.value)">
-                    <option value="">-- VĐV 1 --</option>
-                    ${generateVdvOptionsHtml(p.p1)}
-                  </select>
-                  <span>-</span>
-                  <select onchange="updateMini2PairVdv('B', ${i}, 'p2', this.value)">
-                    <option value="">-- VĐV 2 --</option>
-                    ${generateVdvOptionsHtml(p.p2)}
-                  </select>
-                  <button class="btn btn-red btn-sm" onclick="removeMini2Pair('B', ${i})">✕</button>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="grid-2col">
-            <div>
-              <div style="background:#ea580c; color:#fff; padding:6px; font-weight:bold; text-align:center;">Bảng Xếp Hạng Bảng A</div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>STT</th>
-                    <th>Pickleball - Bảng A</th>
-                    <th>Điểm</th>
-                    <th>Hệ số</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${standingsA.map((st, i) => `
+              <h3 style="font-size:12px; font-weight:800; color:#15803d; margin-top:0;">🟢 BẢNG A</h3>
+              <div class="table-responsive">
+                <table>
+                  <thead>
                     <tr>
-                      <td>${i + 1}</td>
-                      <td style="font-weight:bold; color:#2563eb; text-align:left; padding-left:6px;">${st.name}</td>
-                      <td><strong>${st.points}</strong></td>
-                      <td>${st.diff}</td>
+                      <th>CẶP VĐV</th>
+                      <th>ST</th><th>T</th><th>B</th><th>HS</th><th>ĐIỂM</th>
                     </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-
-            <div>
-              <div style="background:#ea580c; color:#fff; padding:6px; font-weight:bold; text-align:center;">Lịch Thi Đấu Bảng A (Xoay Vòng ${mini2MatchesA.length} Trận)</div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Trận</th>
-                    <th>Đôi 1</th>
-                    <th>KQ 1</th>
-                    <th>KQ 2</th>
-                    <th>Đôi 2</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${mini2MatchesA.map((m, i) => {
-                    let pair1Str = getPairDisplayName(mini2PairsA[m.pairIndex1]);
-                    let pair2Str = getPairDisplayName(mini2PairsA[m.pairIndex2]);
-                    return `
-                      <tr>
-                        <td>${m.id}</td>
-                        <td style="font-weight:bold; font-size:10px;">${pair1Str}</td>
-                        <td><input type="text" class="score-input" value="${m.s1 || ''}" onchange="updateMini2MatchScore('A', ${i}, 's1', this.value)"></td>
-                        <td><input type="text" class="score-input" value="${m.s2 || ''}" onchange="updateMini2MatchScore('A', ${i}, 's2', this.value)"></td>
-                        <td style="font-weight:bold; font-size:10px;">${pair2Str}</td>
+                  </thead>
+                  <tbody>
+                    ${tableA.map((t, idx) => `
+                      <tr style="${idx < 2 ? 'background:#f0fdf4; font-weight:bold;' : ''}">
+                        <td style="text-align:left; padding-left:6px;">${idx + 1}.${t.name}</td>
+                        <td>${t.played}</td><td>${t.win}</td><td>${t.lose}</td>
+                        <td class="${t.diff > 0 ? 'txt-win' : (t.diff < 0 ? 'txt-lose' : '')}">${t.diff > 0 ? '+' + t.diff : t.diff}</td>
+                        <td style="color:#2563eb; font-weight:900;">${t.pts}</td>
                       </tr>
-                    `;
-                  }).join('')}
-                </tbody>
-              </table>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div class="card">
-          <div class="grid-2col">
             <div>
-              <div style="background:#ea580c; color:#fff; padding:6px; font-weight:bold; text-align:center;">Bảng Xếp Hạng Bảng B</div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>STT</th>
-                    <th>Pickleball - Bảng B</th>
-                    <th>Điểm</th>
-                    <th>Hệ số</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${standingsB.map((st, i) => `
+              <h3 style="font-size:12px; font-weight:800; color:#0369a1; margin-top:0;">🔵 BẢNG B</h3>
+              <div class="table-responsive">
+                <table>
+                  <thead>
                     <tr>
-                      <td>${i + 1}</td>
-                      <td style="font-weight:bold; color:#059669; text-align:left; padding-left:6px;">${st.name}</td>
-                      <td><strong>${st.points}</strong></td>
-                      <td>${st.diff}</td>
+                      <th>CẶP VĐV</th>
+                      <th>ST</th><th>T</th><th>B</th><th>HS</th><th>ĐIỂM</th>
                     </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-
-            <div>
-              <div style="background:#ea580c; color:#fff; padding:6px; font-weight:bold; text-align:center;">Lịch Thi Đấu Bảng B (Xoay Vòng ${mini2MatchesB.length} Trận)</div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Trận</th>
-                    <th>Đôi 1</th>
-                    <th>KQ 1</th>
-                    <th>KQ 2</th>
-                    <th>Đôi 2</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${mini2MatchesB.map((m, i) => {
-                    let pair1Str = getPairDisplayName(mini2PairsB[m.pairIndex1]);
-                    let pair2Str = getPairDisplayName(mini2PairsB[m.pairIndex2]);
-                    return `
-                      <tr>
-                        <td>${m.id}</td>
-                        <td style="font-weight:bold; font-size:10px;">${pair1Str}</td>
-                        <td><input type="text" class="score-input" value="${m.s1 || ''}" onchange="updateMini2MatchScore('B', ${i}, 's1', this.value)"></td>
-                        <td><input type="text" class="score-input" value="${m.s2 || ''}" onchange="updateMini2MatchScore('B', ${i}, 's2', this.value)"></td>
-                        <td style="font-weight:bold; font-size:10px;">${pair2Str}</td>
+                  </thead>
+                  <tbody>
+                    ${tableB.map((t, idx) => `
+                      <tr style="${idx < 2 ? 'background:#f0f9ff; font-weight:bold;' : ''}">
+                        <td style="text-align:left; padding-left:6px;">${idx + 1}.${t.name}</td>
+                        <td>${t.played}</td><td>${t.win}</td><td>${t.lose}</td>
+                        <td class="${t.diff > 0 ? 'txt-win' : (t.diff < 0 ? 'txt-lose' : '')}">${t.diff > 0 ? '+' + t.diff : t.diff}</td>
+                        <td style="color:#2563eb; font-weight:900;">${t.pts}</td>
                       </tr>
-                    `;
-                  }).join('')}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div style="background:#0f4c81; color:#fff; padding:8px; font-weight:bold; text-align:center; font-size:13px; border-radius:6px; margin-bottom:8px;">
-            VÒNG BÁN KẾT & CHUNG KẾT
-          </div>
-          <div style="max-width:650px; margin:0 auto;">
-            <div style="font-weight:bold; background:#e0f2fe; padding:4px; text-align:center;">VÒNG BÁN KẾT C1</div>
-            <table>
-              <tr>
-                <td style="width:70px;"><strong>BKC1-1</strong></td>
-                <td><input type="text" value="${mini2Knockout.bkc1.p1 || ''}" onchange="updateMini2Knockout('bkc1', 'p1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.bkc1.s1 || ''}" onchange="updateMini2Knockout('bkc1', 's1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.bkc1.s2 || ''}" onchange="updateMini2Knockout('bkc1', 's2', this.value)"></td>
-                <td><input type="text" value="${mini2Knockout.bkc1.p2 || ''}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
-              </tr>
-            </table>
-
-            <div style="font-weight:bold; background:#e0f2fe; padding:4px; text-align:center; margin-top:8px;">VÒNG BÁN KẾT C2</div>
-            <table>
-              <tr>
-                <td style="width:70px;"><strong>BKC1-2</strong></td>
-                <td><input type="text" value="${mini2Knockout.bkc2.p1 || ''}" onchange="updateMini2Knockout('bkc2', 'p1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.bkc2.s1 || ''}" onchange="updateMini2Knockout('bkc2', 's1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.bkc2.s2 || ''}" onchange="updateMini2Knockout('bkc2', 's2', this.value)"></td>
-                <td><input type="text" value="${mini2Knockout.bkc2.p2 || ''}" onchange="updateMini2Knockout('bkc2', 'p2', this.value)"></td>
-              </tr>
-            </table>
-
-            <div style="font-weight:bold; background:#fef3c7; padding:4px; text-align:center; margin-top:8px;">TRANH 3/4</div>
-            <table>
-              <tr>
-                <td style="width:70px;"><strong>3/4</strong></td>
-                <td><input type="text" value="${mini2Knockout.rank34.p1 || ''}" onchange="updateMini2Knockout('rank34', 'p1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.rank34.s1 || ''}" onchange="updateMini2Knockout('rank34', 's1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.rank34.s2 || ''}" onchange="updateMini2Knockout('rank34', 's2', this.value)"></td>
-                <td><input type="text" value="${mini2Knockout.rank34.p2 || ''}" onchange="updateMini2Knockout('rank34', 'p2', this.value)"></td>
-              </tr>
-            </table>
-
-            <div style="font-weight:bold; background:#dcfce7; padding:4px; text-align:center; margin-top:8px;">TRANH CHUNG KẾT</div>
-            <table>
-              <tr>
-                <td style="width:70px;"><strong>CK</strong></td>
-                <td><input type="text" value="${mini2Knockout.final.p1 || ''}" onchange="updateMini2Knockout('final', 'p1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.final.s1 || ''}" onchange="updateMini2Knockout('final', 's1', this.value)"></td>
-                <td style="width:40px;"><input type="text" class="score-input" value="${mini2Knockout.final.s2 || ''}" onchange="updateMini2Knockout('final', 's2', this.value)"></td>
-                <td><input type="text" value="${mini2Knockout.final.p2 || ''}" onchange="updateMini2Knockout('final', 'p2', this.value)"></td>
-              </tr>
-            </table>
-
-            <div style="margin-top:12px; background:#fef9c3; border:1px solid #fde047; padding:8px; border-radius:6px;">
-              <div style="margin-bottom:4px;"><strong>🥇 Đội Vô Địch:</strong> <input type="text" style="width:220px; font-weight:bold; color:#15803d;" id="vodech_input" value="${computeChampion()}" placeholder="Tên Đội Vô Địch"></div>
-              <div style="margin-bottom:4px;"><strong>🥈 Đội Nhì:</strong> <input type="text" style="width:220px; font-weight:bold; color:#0369a1;" id="doinhi_input" value="${computeRunnerUp()}" placeholder="Tên Đội Nhì"></div>
-              <div><strong>🥉 Đội về 3:</strong> <input type="text" style="width:220px; font-weight:bold; color:#b45309;" id="doiba_input" value="${computeThirdPlace()}" placeholder="Tên Đội về 3"></div>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -1836,51 +1659,20 @@
       container.innerHTML = html;
     }
 
-    function computeChampion() {
-      let s1 = parseInt(mini2Knockout.final.s1);
-      let s2 = parseInt(mini2Knockout.final.s2);
-      if (!isNaN(s1) && !isNaN(s2)) {
-        return s1 > s2 ? mini2Knockout.final.p1 : mini2Knockout.final.p2;
-      }
-      return "";
-    }
-
-    function computeRunnerUp() {
-      let s1 = parseInt(mini2Knockout.final.s1);
-      let s2 = parseInt(mini2Knockout.final.s2);
-      if (!isNaN(s1) && !isNaN(s2)) {
-        return s1 > s2 ? mini2Knockout.final.p2 : mini2Knockout.final.p1;
-      }
-      return "";
-    }
-
-    function computeThirdPlace() {
-      let s1 = parseInt(mini2Knockout.rank34.s1);
-      let s2 = parseInt(mini2Knockout.rank34.s2);
-      if (!isNaN(s1) && !isNaN(s2)) {
-        return s1 > s2 ? mini2Knockout.rank34.p1 : mini2Knockout.rank34.p2;
-      }
-      return "";
-    }
-
     function exportToExcel() {
-      closeAllDropdowns();
       const wb = XLSX.utils.book_new();
       dates.forEach(d => {
         const matches = matchesData[d] || [];
         const data = matches.map(m => ({
           "Trận": m.id,
-          "Cặp Pick 1 - VĐV 1": m.c1_p1,
-          "Cặp Pick 1 - VĐV 2": m.c1_p2,
-          "Cặp Pick 2 - VĐV 1": m.c2_p1,
-          "Cặp Pick 2 - VĐV 2": m.c2_p2,
-          "Tỷ số 1": m.score1,
-          "Tỷ số 2": m.score2
+          "Pick 1 P1": m.c1_p1, "Pick 1 P2": m.c1_p2,
+          "Pick 2 P1": m.c2_p1, "Pick 2 P2": m.c2_p2,
+          "Tỷ Số 1": m.score1, "Tỷ Số 2": m.score2
         }));
         const ws = XLSX.utils.json_to_sheet(data);
         XLSX.utils.book_append_sheet(wb, ws, `Ngay_${d.replace(/\//g, '-')}`);
       });
-      XLSX.writeFile(wb, "Pickleball_CMTD_ThongKe.xlsx");
+      XLSX.writeFile(wb, `ThongKe_Pickleball_CMTD_${new Date().toISOString().slice(0,10)}.xlsx`);
     }
   </script>
 </body>

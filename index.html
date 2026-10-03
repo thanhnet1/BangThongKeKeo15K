@@ -1784,9 +1784,9 @@
                         <td style="font-size:10px;">${getPairDisplayName(mini2PairsA[m.pairIndex1])}</td>
                         <td>
                           <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                            <input type="text" class="score-input" value="${m.s1 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('A', ${idx}, 's1', this.value)">
+                            <input type="text" class="score-input" value="${m.s1 || ''}" onchange="updateMini2MatchScore('A', ${idx}, 's1', this.value)">
                             <span>-</span>
-                            <input type="text" class="score-input" value="${m.s2 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('A', ${idx}, 's2', this.value)">
+                            <input type="text" class="score-input" value="${m.s2 || ''}" onchange="updateMini2MatchScore('A', ${idx}, 's2', this.value)">
                           </div>
                         </td>
                         <td style="font-size:10px;">${getPairDisplayName(mini2PairsA[m.pairIndex2])}</td>

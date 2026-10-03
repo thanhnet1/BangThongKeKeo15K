@@ -1810,18 +1810,28 @@
                         <td style="font-weight:bold; font-size:10px;">${pair1Str}</td>
                         <td>
                           <input 
-                            type="text" 
+                            type="number" 
+                            inputmode="numeric"
+                            min="0"
+                            max="99"
                             class="score-input" 
                             value="${m.s1 || ''}" 
+                            onfocus="this.select()"
                             onchange="updateMini2MatchScore('A', ${i}, 's1', this.value)"
+                            placeholder="-"
                           >
                         </td>
                         <td>
                           <input 
-                            type="text" 
+                            type="number" 
+                            inputmode="numeric"
+                            min="0"
+                            max="99"
                             class="score-input" 
                             value="${m.s2 || ''}" 
+                            onfocus="this.select()"
                             onchange="updateMini2MatchScore('A', ${i}, 's2', this.value)"
+                            placeholder="-"
                           >
                         </td>
                         <td style="font-weight:bold; font-size:10px;">${pair2Str}</td>

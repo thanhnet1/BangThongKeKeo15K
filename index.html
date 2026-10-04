@@ -106,7 +106,6 @@
     .dropdown-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
     .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 3px 0; }
     
-    /* Đã vô hiệu hóa tương tác nhấp vào (pointer-events: none) & bỏ con trỏ tay */
     .cloud-status { 
       font-size: 10px; 
       padding: 3px 8px; 
@@ -166,7 +165,7 @@
     .modal.show { display: flex; }
     .modal-content { background: white; padding: 16px; border-radius: 10px; width: 92%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
 
-    .summary-score-card { background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; padding: 12px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .summary-score-card { background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; padding: 12px; border-radius: 8px; display: flex; justify-space-around: center; align-items: center; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
     .score-box { text-align: center; }
     .score-number { font-size: 28px; font-weight: 900; }
 
@@ -194,7 +193,6 @@
           <img src="logo1.png" alt="Logo CMTD" class="title-logo-img">
           <h2 style="margin:0; font-weight:900; color:#fff; font-size:16px;">CLB PICKLEBALL - CMTD</h2>
         </div>
-        <!-- Khóa sự kiện click (onclick) và vô hiệu hóa nút bấm -->
         <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Tự Động Lưu (Đang Khởi Tạo)...</div>
       </div>
 
@@ -230,7 +228,6 @@
           </div>
         </div>
 
-        <!-- Input ẩn cho chức năng Phục Hồi (Restore) -->
         <input type="file" id="restoreFileInput" accept=".json" style="display:none;" onchange="handleRestoreJSON(event)">
 
         <div class="nav-item">
@@ -307,7 +304,6 @@
     let miniGame1Content = "Lịch Thi Đấu Team A & Team B 24 Trận.";
     let miniGame2Content = "Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.";
 
-    // Quản lý riêng 2 Team MiniGame 1
     let mini1TeamA = ["Tiến Thọ", "Long Diễn", "Phú Mỗ", "Hà Giấy", "Tuấn La", "Châu Sĩ", "Vân Đình", "Cẩm Ly", "Minh Hạnh"];
     let mini1TeamB = ["Trí Đỏ", "Thanh Đàm", "Dũng Ngạc", "Lợi Trí", "Điền Chèm", "Thành Sóc", "Quỳnh Cool", "Hải Hà", "Minh Vượng"];
 
@@ -364,7 +360,7 @@
 
     let currentTab = "";
     let activeGameEditing = 1;
-    let autoBackupMemory = null; // Biến sao lưu tự động bộ nhớ tạm
+    let autoBackupMemory = null;
 
     const ADMIN_PASSCODE = "123456";
     let isAdminVerified = false;
@@ -389,12 +385,7 @@
           const data = doc.data();
           if (data.vdvs && data.vdvs.length > 0) vdvs = data.vdvs;
           
-          const nowObj = new Date();
-          const todayStr = `${nowObj.getDate()}/${nowObj.getMonth() + 1}/${nowObj.getFullYear().toString().substr(-2)}`;
-          
-          dates = data.dates || [todayStr];
-          if (!dates.includes(todayStr)) dates.unshift(todayStr);
-
+          dates = data.dates || [];
           matchesData = data.matchesData || {};
           dateKeoMode = data.dateKeoMode || {};
           paymentStatus = data.paymentStatus || {};
@@ -420,7 +411,6 @@
             generateMini2Matches();
           }
 
-          // CHẾ ĐỘ SAO LƯU TỰ ĐỘNG BỘ NHỚ TẠM (Auto-Backup Snapshot)
           autoBackupMemory = JSON.parse(JSON.stringify(data));
 
           if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop" && currentTab !== "minigame1" && currentTab !== "minigame2")) {
@@ -439,9 +429,16 @@
       });
     }
 
+    // LẤY NGÀY HIỆN TẠI NẾU CÓ, NẾU KHÔNG CÓ THÌ LẤY NGÀY GẦN NHẤT
     function getClosestOrCurrentDate(dateArray) {
       if (!dateArray || dateArray.length === 0) return "tonghop";
       const now = new Date();
+      const todayStr = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear().toString().substr(-2)}`;
+
+      if (dateArray.includes(todayStr)) {
+        return todayStr;
+      }
+
       let closestDate = dateArray[0];
       let minDiff = Infinity;
 
@@ -487,7 +484,6 @@
       saveDataToFirestore();
     }
 
-    // TỰ ĐỘNG LƯU MỖI KHI CÓ BẤT KỲ THAY ĐỔI DỮ LIỆU NÀO
     function saveDataToFirestore() {
       const statusEl = document.getElementById("cloudStatus");
       if (statusEl) {
@@ -501,7 +497,6 @@
         mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout
       };
 
-      // Cập nhật bộ nhớ sao lưu tự động ngay khi lưu
       autoBackupMemory = JSON.parse(JSON.stringify(payload));
 
       docRef.set(payload, { merge: true }).then(() => {
@@ -513,30 +508,16 @@
         console.error("Lỗi khi tự động lưu dữ liệu:", err);
         if (statusEl) {
           statusEl.className = "cloud-status cloud-error";
-          statusEl.innerHTML = "⚠️ Lỗi kết nối tự động lưu!";
+          statusEl.innerHTML = "⚠️️ Lỗi kết nối tự động lưu!";
         }
       });
     }
 
-    // --- TÍNH NĂNG SAO LƯU (BACKUP) & PHỤC HỒI (RESTORE) ---
     function backupDataJSON() {
       closeAllDropdowns();
       const backupData = autoBackupMemory || {
-        vdvs,
-        dates,
-        matchesData,
-        dateKeoMode,
-        paymentStatus,
-        miniGame1Content,
-        miniGame2Content,
-        miniGame1Matches,
-        mini1TeamA,
-        mini1TeamB,
-        mini2PairsA,
-        mini2PairsB,
-        mini2MatchesA,
-        mini2MatchesB,
-        mini2Knockout,
+        vdvs, dates, matchesData, dateKeoMode, paymentStatus, miniGame1Content, miniGame2Content, miniGame1Matches,
+        mini1TeamA, mini1TeamB, mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout,
         exportAt: new Date().toISOString()
       };
 
@@ -739,7 +720,7 @@
       const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
       if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
         const trimmed = newDate.trim();
-        if (dates.includes(trimmed)) return alert("⚠️️ Tên ngày này đã tồn tại!");
+        if (dates.includes(trimmed)) return alert("⚠ Tên ngày này đã tồn tại!");
         const idx = dates.indexOf(oldDate);
         if (idx !== -1) dates[idx] = trimmed;
         matchesData[trimmed] = matchesData[oldDate];
@@ -780,12 +761,10 @@
       renderCurrentTab();
     }
 
-    // Nút XÓA DÒNG TRẬN ĐẤU CỤ THỂ
     function deleteSpecificMatch(dateStr, matchIndex) {
       if (matchesData[dateStr] && matchesData[dateStr][matchIndex]) {
         if (confirm(`Bạn có chắc muốn xóa Trận ${matchIndex + 1}?`)) {
           matchesData[dateStr].splice(matchIndex, 1);
-          // Đánh lại STT sau khi xóa
           matchesData[dateStr].forEach((m, idx) => m.id = idx + 1);
           saveDataToFirestore();
           renderCurrentTab();
@@ -819,7 +798,6 @@
       renderCurrentTab();
     }
 
-    // --- PHÂN QUYỀN ADMIN TẠI CỘT NOTE (DÒNG TỔNG BTC THU VỀ) ---
     function handleBtcNoteAdminChange(date, selectElement) {
       const selectedValue = selectElement.value;
 
@@ -1213,20 +1191,43 @@
       container.innerHTML = matchesHtml + summaryTableHtml;
     }
 
+    // CHỈ CHỈNH SỬA TẠI HÀM TỔNG HỢP CÁC NGÀY: LỌC CHỈ HIỂN THỊ CÁC NGÀY CÓ NHU CẦU THÊM/SỬA
     function renderTongHopTab(container) {
+      let activeDates = dates.filter(d => {
+        const matches = matchesData[d] || [];
+        const hasMatchData = matches.some(m => (!isNaN(parseInt(m.score1)) && !isNaN(parseInt(m.score2))) || m.c1_p1 || m.c1_p2 || m.c2_p1 || m.c2_p2);
+        const pStatus = paymentStatus[d];
+        const isYes = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption === "YES");
+        return hasMatchData || isYes;
+      });
+
+      if (activeDates.length === 0) {
+        container.innerHTML = `
+          <div class="card">
+            <div class="card-header-flex">
+              <h2 class="card-title">BẢNG TỔNG HỢP CÁC NGÀY</h2>
+            </div>
+            <div style="padding: 20px; text-align: center; font-weight: bold; color: #64748b;">
+              Hiện chưa có ngày nào phát sinh dữ liệu trận đấu hoặc chuyển tổng tiền.
+            </div>
+          </div>
+        `;
+        return;
+      }
+
       let vdvDayTotals = {};
       let vdvRowKeoSum = {};
       
       vdvs.forEach(v => {
         vdvDayTotals[v] = {};
         vdvRowKeoSum[v] = 0;
-        dates.forEach(d => { vdvDayTotals[v][d] = 0; });
+        activeDates.forEach(d => { vdvDayTotals[v][d] = 0; });
       });
 
       let dayTotalsSum = {};
-      dates.forEach(d => { dayTotalsSum[d] = 0; });
+      activeDates.forEach(d => { dayTotalsSum[d] = 0; });
 
-      dates.forEach(d => {
+      activeDates.forEach(d => {
         const matches = matchesData[d] || [];
         const currentMode = dateKeoMode[d] || "default";
 
@@ -1296,14 +1297,14 @@
       let html = `
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">BẢNG TỔNG HỢP CÁC NGÀY</h2>
+            <h2 class="card-title">BẢNG TỔNG HỢP CÁC NGÀY (CHỈ NGÀY ĐÃ TẠO)</h2>
           </div>
           <div class="table-responsive">
             <table>
               <thead>
                 <tr>
                   <th style="width: 140px;">VĐV (PICK THỦ)</th>
-                  ${dates.map(d => `<th>NGÀY ${d}</th>`).join('')}
+                  ${activeDates.map(d => `<th>NGÀY ${d}</th>`).join('')}
                   <th style="background-color: #fef08a; color: #854d0e;">TỔNG KÈO</th>
                 </tr>
               </thead>
@@ -1311,7 +1312,7 @@
       `;
 
       vdvs.forEach((v, index) => {
-        let dayCells = dates.map(d => {
+        let dayCells = activeDates.map(d => {
           let val = vdvDayTotals[v][d];
           let cls = val > 0 ? 'txt-win' : (val < 0 ? 'txt-lose' : '');
           return `<td class="${cls}">${val !== 0 ? (val > 0 ? '+' + val + 'K' : val + 'K') : '-'}</td>`;
@@ -1330,7 +1331,7 @@
         `;
       });
 
-      let daySumCells = dates.map(d => {
+      let daySumCells = activeDates.map(d => {
         let val = dayTotalsSum[d];
         grandTotalAllDays += val;
         let cls = val < 0 ? 'txt-lose' : (val > 0 ? 'txt-win' : '');
@@ -1354,7 +1355,6 @@
       container.innerHTML = html;
     }
 
-    // Các hàm Quản Lý VĐV MiniGame 1 (Team A & Team B)
     function addMini1Vdv(team) {
       const vdvName = prompt(`Nhập tên VĐV thêm vào Team ${team}:`);
       if (vdvName && vdvName.trim() !== "") {
@@ -1471,7 +1471,6 @@
       }
 
       let html = `
-        <!-- BẢNG TỔNG HỢP HIỆU SỐ TEAM A & B -->
         <div class="card" style="margin-bottom:12px;">
           <div class="card-header-flex">
             <h2 class="card-title">📊 TỔNG HỢP TỶ SỐ & HIỆU SỐ TEAM A & B</h2>
@@ -1512,7 +1511,6 @@
           </div>
         </div>
 
-        <!-- BẢNG DANH SÁCH 2 TEAM A & B CÓ NÚT SỬA -->
         <div class="card" style="margin-bottom:12px;">
           <div class="card-header-flex">
             <h2 class="card-title">👥 DANH SÁCH VĐV THUỘC TEAM A & TEAM B</h2>
@@ -1556,7 +1554,6 @@
           </div>
         </div>
 
-        <!-- LỊCH THI ĐẤU 24 TRẬN MINI GAME 1 -->
         <div class="card">
           <div class="card-header-flex">
             <h2 class="card-title">▶️ LỊCH THI ĐẤU 24 TRẬN MINI GAME 1</h2>
@@ -1602,9 +1599,9 @@
                       </td>
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                          <input type="text" class="score-input" value="${m.scoreA || ''}" onchange="updateMini1Score(${idx}, 'scoreA', this.value)">
+                          <input type="text" class="score-input" value="${m.scoreA \vert{}\vert{} ''}" onchange="updateMini1Score(${idx}, 'scoreA', this.value)">
                           <span>-</span>
-                          <input type="text" class="score-input" value="${m.scoreB || ''}" onchange="updateMini1Score(${idx}, 'scoreB', this.value)">
+                          <input type="text" class="score-input" value="${m.scoreB \vert{}\vert{} ''}" onchange="updateMini1Score(${idx}, 'scoreB', this.value)">
                         </div>
                       </td>
                       <td>

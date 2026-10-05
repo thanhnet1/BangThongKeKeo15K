@@ -1909,10 +1909,22 @@
                       <td><strong>${m.id}</strong></td>
                       <td style="font-weight:bold;">${mini2PairsB[m.pair1Index] ? mini2PairsB[m.pair1Index].name : ''}</td>
                       <td>
-                        <input type="text" class="score-input" value="${m.score1 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score1', this.value)">
+                        <input 
+                         type="number" 
+                         min="0" 
+                         class="score-input" 
+                         value="${m.score1 ?? ''}" 
+                         oninput="updateMini2MatchScore('B', ${idx}, 'score1', this.value)"
+                        >
                       </td>
                       <td>
-                        <input type="text" class="score-input" value="${m.score2 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score2', this.value)">
+                        <input 
+                         type="number" 
+                         min="0" 
+                         class="score-input" 
+                         value="${m.score2 ?? ''}" 
+                         oninput="updateMini2MatchScore('B', ${idx}, 'score2', this.value)"
+                        >
                       </td>
                       <td style="font-weight:bold;">${mini2PairsB[m.pair2Index] ? mini2PairsB[m.pair2Index].name : ''}</td>
                     </tr>

@@ -120,7 +120,7 @@
     .cloud-syncing { background-color: #f59e0b; color: white; }
     .cloud-error { background-color: #ef4444; color: white; }
     
-    .vdv-container { padding: 8px; width: 250px; }
+    .vdv-container { padding: 8px; width: 240px; }
     .vdv-scroll-list { max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
     .vdv-item { background: #f8fafc; padding: 4px 6px; border-radius: 4px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
 
@@ -165,7 +165,7 @@
     .modal.show { display: flex; }
     .modal-content { background: white; padding: 16px; border-radius: 10px; width: 92%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
 
-    .summary-score-card { background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; padding: 12px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .summary-score-card { background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; padding: 12px; border-radius: 8px; display: flex; justify-around: space-around; align-items: center; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
     .score-box { text-align: center; }
     .score-number { font-size: 28px; font-weight: 900; }
 
@@ -226,7 +226,7 @@
             <div class="vdv-container">
               <div style="font-weight: 800; font-size: 11px; margin-bottom: 4px;">Danh Sách VĐV CLB</div>
               <div style="display: flex; gap: 4px; margin-bottom: 4px;">
-                <input type="text" id="newVdvInput" placeholder="Tên VĐV mới..." onkeypress="if(event.key === 'Enter') addVDV()">
+                <input type="text" id="newVdvInput" placeholder="Tên VĐV mới...">
                 <button class="btn btn-green btn-sm" onclick="addVDV()">Thêm</button>
               </div>
               <input type="text" id="searchVdvInput" placeholder="🔍 Tìm VĐV..." onkeyup="filterVDVList()" style="margin-bottom: 4px;">
@@ -239,7 +239,7 @@
           <button class="nav-btn" onclick="toggleMenu('menuSetting', event)">⚙ SETTING ▾</button>
           <div class="dropdown-menu" id="menuSetting">
             <div class="dropdown-item" onclick="addDateTab()">📅 ➕ Thêm Ngày Mới</div>
-            <div class="dropdown-item" onclick="renameCurrentDate()">✏️️ Sửa Tên Ngày Hiện Tại</div>
+            <div class="dropdown-item" onclick="renameCurrentDate()">✏️ Sửa Tên Ngày Hiện Tại</div>
             <div class="dropdown-item" style="color:red;" onclick="deleteCurrentDate()">🗑 Xóa Ngày Hiện Tại</div>
             <div class="dropdown-divider"></div>
             <div class="dropdown-item" onclick="exportToExcel()">📥 Xuất Dữ Liệu Excel</div>
@@ -317,7 +317,16 @@
       "#c026d3", "#0d9488", "#ea580c", "#4f46e5"
     ];
 
-    let vdvs = ["Tiến Thọ", "Thanh Đàm", "Thành Sóc", "Hà Giấy", "Minh Vượng", "Phú Mỗ", "Điền Chèm", "Hải Hà", "Quỳnh Cool", "Trí Đỏ", "Long Diễn", "Châu Sĩ", "Minh Hạnh", "Dũng Ngạc", "Lợi Trí", "Tuấn La", "Vân Đình", "Cẩm Ly"];
+    // Cập nhật danh sách VĐV đầy đủ từ các bản ghi giải đấu
+    let vdvs = [
+      "Tiến Thọ", "Thanh Đàm", "Thành Sóc", "Hà Giấy", "Minh Vượng", 
+      "Phú Mỗ", "Điền Chèm", "Hải Hà", "Quỳnh Cool", "Trí Đỏ", 
+      "Long Diễn", "Châu Sĩ", "Minh Hạnh", "Dũng Ngạc", "Lợi Trí", 
+      "Tuấn La", "Vân Đình", "Cẩm Ly", "Dương", "Vàng Anh", 
+      "Huyền Gà Tre", "Khách 1", "Khách 2", "Khách 3", "Khách 4", 
+      "Ngọc", "Sơn", "Thịnh"
+    ];
+
     let dates = [];
     let matchesData = {};
     let dateKeoMode = {}; 
@@ -660,31 +669,16 @@
       renderCurrentTab();
     }
 
-    /* CHỨC NĂNG THÊM VĐV ĐÃ ĐƯỢC CẢI TIẾN */
     function addVDV() {
       const input = document.getElementById("newVdvInput");
       const name = input ? input.value.trim() : "";
-      
-      if (!name) {
-        alert("⚠️ Vui lòng nhập tên VĐV cần thêm!");
-        return;
+      if (name && !vdvs.includes(name)) {
+        vdvs.push(name);
+        if (input) input.value = "";
+        renderVDVItems(vdvs);
+        saveDataToFirestore();
+        renderCurrentTab();
       }
-      
-      if (vdvs.includes(name)) {
-        alert(`⚠️ VĐV "${name}" đã có trong danh sách!`);
-        return;
-      }
-
-      vdvs.push(name);
-      if (input) input.value = "";
-      
-      // Xóa từ khóa tìm kiếm nếu có để hiện tên VĐV vừa thêm
-      const searchInput = document.getElementById("searchVdvInput");
-      if (searchInput) searchInput.value = "";
-
-      renderVDVItems(vdvs);
-      saveDataToFirestore();
-      renderCurrentTab();
     }
 
     function editVDV(oldName) {
@@ -699,7 +693,6 @@
         let idxB = mini1TeamB.indexOf(oldName);
         if (idxB !== -1) mini1TeamB[idxB] = trimmed;
 
-        renderVDVItems(vdvs);
         saveDataToFirestore();
         renderCurrentTab();
       }
@@ -1839,7 +1832,7 @@
                     <tr>
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 6px; font-weight:bold;">
-                        <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
+                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">
@@ -1847,7 +1840,7 @@
                       </td>
                       <td>
                         <button class="mg2-edit-btn" onclick="editMini2PairName('A', ${st.index})" title="Đổi tên">✏️</button>
-                        <button class="mg2-edit-btn" style="color:red;" onclick="deleteMini2Pair('A', ${st.index})" title="Xóa cặp">🗑️️</button>
+                        <button class="mg2-edit-btn" style="color:red;" onclick="deleteMini2Pair('A', ${st.index})" title="Xóa cặp">🗑️</button>
                       </td>
                     </tr>
                   `).join('')}
@@ -1862,24 +1855,40 @@
                   <tr class="mg2-header-a"><th colspan="5">LỊCH THI ĐẤU BẢNG A</th></tr>
                   <tr class="mg2-sub-header">
                     <th style="width:40px;">Trận</th>
-                    <th>Cặp 1</th>
-                    <th style="width:70px;">Tỷ Số</th>
-                    <th>Cặp 2</th>
+                    <th>Đội 1</th>
+                    <th style="width:90px;">Tỷ Số</th>
+                    <th>Đội 2</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${mini2MatchesA.map((m, idx) => `
                     <tr>
                       <td><strong>${m.id}</strong></td>
-                      <td style="text-align:right; padding-right:6px; font-weight:bold;">${mini2PairsA[m.pair1Index] ? mini2PairsA[m.pair1Index].name : ''}</td>
+                      <td style="text-align: right; padding-right: 6px;">
+                        ${mini2PairsA[m.pair1Index] ? `<span class="pair-badge badge-p${m.pair1Index % 5}">${mini2PairsA[m.pair1Index].name}</span>` : ''}
+                      </td>
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                          <input type="number" min="0" class="score-input" value="${m.score1 || ''}" onchange="updateMini2MatchScore('A', ${idx}, 'score1', this.value)">
+                          <input 
+                           type="number" 
+                           min="0" 
+                           class="score-input" 
+                           value="${m.score1 ?? ''}" 
+                           oninput="updateMini2MatchScore('A', ${idx}, 'score1', this.value)"
+                          >
                           <span>-</span>
-                          <input type="number" min="0" class="score-input" value="${m.score2 || ''}" onchange="updateMini2MatchScore('A', ${idx}, 'score2', this.value)">
+                          <input 
+                           type="number" 
+                           min="0" 
+                           class="score-input" 
+                           value="${m.score2 ?? ''}" 
+                           oninput="updateMini2MatchScore('A', ${idx}, 'score2', this.value)"
+                          >
                         </div>
                       </td>
-                      <td style="text-align:left; padding-left:6px; font-weight:bold;">${mini2PairsA[m.pair2Index] ? mini2PairsA[m.pair2Index].name : ''}</td>
+                      <td style="text-align: left; padding-left: 6px;">
+                        ${mini2PairsA[m.pair2Index] ? `<span class="pair-badge badge-p${m.pair2Index % 5}">${mini2PairsA[m.pair2Index].name}</span>` : ''}
+                      </td>
                     </tr>
                   `).join('')}
                 </tbody>
@@ -1890,7 +1899,7 @@
 
         <!-- CỤM BẢNG B -->
         <div class="card" style="margin-bottom: 16px;">
-          <div class="card-header-flex" style="background:#e0f2fe; padding: 6px; border-radius: 6px;">
+          <div class="card-header-flex" style="background:#f0f9ff; padding: 6px; border-radius: 6px;">
             <h3 style="margin:0; font-size:13px; color:#0369a1; font-weight:900;">⚡ BẢNG B</h3>
             <div style="display:flex; align-items:center; gap:6px;">
               <span style="font-weight:bold; font-size:11px;">Số cặp VĐV:</span>
@@ -1920,7 +1929,7 @@
                     <tr>
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 6px; font-weight:bold;">
-                        <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
+                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">
@@ -1928,7 +1937,7 @@
                       </td>
                       <td>
                         <button class="mg2-edit-btn" onclick="editMini2PairName('B', ${st.index})" title="Đổi tên">✏️</button>
-                        <button class="mg2-edit-btn" style="color:red;" onclick="deleteMini2Pair('B', ${st.index})" title="Xóa cặp">🗑️</button>
+                        <button class="mg2-edit-btn" style="color:red;" onclick="deleteMini2Pair('B', ${st.index})" title="Xóa cặp">🗑️️</button>
                       </td>
                     </tr>
                   `).join('')}
@@ -1943,24 +1952,40 @@
                   <tr class="mg2-header-b"><th colspan="5">LỊCH THI ĐẤU BẢNG B</th></tr>
                   <tr class="mg2-sub-header">
                     <th style="width:40px;">Trận</th>
-                    <th>Cặp 1</th>
-                    <th style="width:70px;">Tỷ Số</th>
-                    <th>Cặp 2</th>
+                    <th>Đội 1</th>
+                    <th style="width:90px;">Tỷ Số</th>
+                    <th>Đội 2</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${mini2MatchesB.map((m, idx) => `
                     <tr>
                       <td><strong>${m.id}</strong></td>
-                      <td style="text-align:right; padding-right:6px; font-weight:bold;">${mini2PairsB[m.pair1Index] ? mini2PairsB[m.pair1Index].name : ''}</td>
+                      <td style="text-align: right; padding-right: 6px;">
+                        ${mini2PairsB[m.pair1Index] ? `<span class="pair-badge badge-p${m.pair1Index % 5}">${mini2PairsB[m.pair1Index].name}</span>` : ''}
+                      </td>
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                          <input type="number" min="0" class="score-input" value="${m.score1 || ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score1', this.value)">
+                          <input 
+                           type="number" 
+                           min="0" 
+                           class="score-input" 
+                           value="${m.score1 ?? ''}" 
+                           oninput="updateMini2MatchScore('B', ${idx}, 'score1', this.value)"
+                          >
                           <span>-</span>
-                          <input type="number" min="0" class="score-input" value="${m.score2 || ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score2', this.value)">
+                          <input 
+                           type="number" 
+                           min="0" 
+                           class="score-input" 
+                           value="${m.score2 ?? ''}" 
+                           oninput="updateMini2MatchScore('B', ${idx}, 'score2', this.value)"
+                          >
                         </div>
                       </td>
-                      <td style="text-align:left; padding-left:6px; font-weight:bold;">${mini2PairsB[m.pair2Index] ? mini2PairsB[m.pair2Index].name : ''}</td>
+                      <td style="text-align: left; padding-left: 6px;">
+                        ${mini2PairsB[m.pair2Index] ? `<span class="pair-badge badge-p${m.pair2Index % 5}">${mini2PairsB[m.pair2Index].name}</span>` : ''}
+                      </td>
                     </tr>
                   `).join('')}
                 </tbody>
@@ -1969,19 +1994,19 @@
           </div>
         </div>
 
-        <!-- VÒNG KNOCKOUT -->
+        <!-- BẢNG VÒNG KNOCKOUT -->
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">🥇 VÒNG BÁN KẾT & CHUNG KẾT</h2>
+            <h3 style="margin:0; font-size:13px; color:#1e293b; font-weight:900;">👑 VÒNG KNOCKOUT (BÁN KẾT - CHUNG KẾT)</h3>
           </div>
           <div class="table-responsive">
             <table>
               <thead>
-                <tr>
+                <tr style="background:#1e293b; color:#fff;">
                   <th>VÒNG đấu</th>
-                  <th>CẶP VĐV 1</th>
-                  <th style="width:70px;">TỶ SỐ</th>
-                  <th>CẶP VĐV 2</th>
+                  <th>ĐỘI 1</th>
+                  <th style="width:90px;">TỶ SỐ</th>
+                  <th>ĐỘI 2</th>
                 </tr>
               </thead>
               <tbody>
@@ -1990,9 +2015,9 @@
                   <td><input type="text" value="${mini2Knockout.bkc1.p1}" onchange="updateMini2Knockout('bkc1', 'p1', this.value)"></td>
                   <td>
                     <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc1.s1}" onchange="updateMini2Knockout('bkc1', 's1', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc1.s1}" oninput="updateMini2Knockout('bkc1', 's1', this.value)">
                       <span>-</span>
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc1.s2}" onchange="updateMini2Knockout('bkc1', 's2', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc1.s2}" oninput="updateMini2Knockout('bkc1', 's2', this.value)">
                     </div>
                   </td>
                   <td><input type="text" value="${mini2Knockout.bkc1.p2}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
@@ -2002,33 +2027,33 @@
                   <td><input type="text" value="${mini2Knockout.bkc2.p1}" onchange="updateMini2Knockout('bkc2', 'p1', this.value)"></td>
                   <td>
                     <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc2.s1}" onchange="updateMini2Knockout('bkc2', 's1', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc2.s1}" oninput="updateMini2Knockout('bkc2', 's1', this.value)">
                       <span>-</span>
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc2.s2}" onchange="updateMini2Knockout('bkc2', 's2', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc2.s2}" oninput="updateMini2Knockout('bkc2', 's2', this.value)">
                     </div>
                   </td>
                   <td><input type="text" value="${mini2Knockout.bkc2.p2}" onchange="updateMini2Knockout('bkc2', 'p2', this.value)"></td>
                 </tr>
-                <tr>
-                  <td><strong style="color:#d97706;">Tranh 3 - 4</strong></td>
+                <tr style="background:#fef3c7;">
+                  <td><strong style="color:#b45309;">Tranh 3 - 4</strong></td>
                   <td><input type="text" value="${mini2Knockout.rank34.p1}" onchange="updateMini2Knockout('rank34', 'p1', this.value)"></td>
                   <td>
                     <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.rank34.s1}" onchange="updateMini2Knockout('rank34', 's1', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.rank34.s1}" oninput="updateMini2Knockout('rank34', 's1', this.value)">
                       <span>-</span>
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.rank34.s2}" onchange="updateMini2Knockout('rank34', 's2', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.rank34.s2}" oninput="updateMini2Knockout('rank34', 's2', this.value)">
                     </div>
                   </td>
                   <td><input type="text" value="${mini2Knockout.rank34.p2}" onchange="updateMini2Knockout('rank34', 'p2', this.value)"></td>
                 </tr>
-                <tr>
-                  <td><strong style="color:#dc2626;">CHUNG KẾT 🏆</strong></td>
+                <tr style="background:#dcfce7;">
+                  <td><strong style="color:#15803d;">🏆 CHUNG KẾT</strong></td>
                   <td><input type="text" value="${mini2Knockout.final.p1}" onchange="updateMini2Knockout('final', 'p1', this.value)"></td>
                   <td>
                     <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.final.s1}" onchange="updateMini2Knockout('final', 's1', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.final.s1}" oninput="updateMini2Knockout('final', 's1', this.value)">
                       <span>-</span>
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.final.s2}" onchange="updateMini2Knockout('final', 's2', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.final.s2}" oninput="updateMini2Knockout('final', 's2', this.value)">
                     </div>
                   </td>
                   <td><input type="text" value="${mini2Knockout.final.p2}" onchange="updateMini2Knockout('final', 'p2', this.value)"></td>

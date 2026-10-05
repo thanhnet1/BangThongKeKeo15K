@@ -7,11 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
   <!-- Firebase SDK Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -170,10 +165,30 @@
     .modal.show { display: flex; }
     .modal-content { background: white; padding: 16px; border-radius: 10px; width: 92%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
 
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .summary-score-card { background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; padding: 12px; border-radius: 8px; display: flex; justify-around: space-around; align-items: center; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .score-box { text-align: center; }
+    .score-number { font-size: 28px; font-weight: 900; }
+
+    .mg2-header-a { background: linear-gradient(135deg, #ea580c, #c2410c) !important; color: white !important; font-weight: 900; font-size: 11px; letter-spacing: 0.5px; }
+    .mg2-header-b { background: linear-gradient(135deg, #0284c7, #0369a1) !important; color: white !important; font-weight: 900; font-size: 11px; letter-spacing: 0.5px; }
+    .mg2-sub-header { background-color: #3b82f6 !important; color: white !important; font-weight: 800; }
+    .mg2-edit-btn { border: none; background: transparent; cursor: pointer; font-size: 11px; padding: 0 2px; }
+    .mg2-edit-btn:hover { transform: scale(1.2); }
+
+    .pair-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 11px;
+      color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .badge-p0 { background: linear-gradient(135deg, #e11d48, #be123c); }
+    .badge-p1 { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+    .badge-p2 { background: linear-gradient(135deg, #059669, #047857); }
+    .badge-p3 { background: linear-gradient(135deg, #d97706, #b45309); }
+    .badge-p4 { background: linear-gradient(135deg, #7c3aed, #6d28d9); }
 
     @media (max-width: 600px) {
       body { padding: 4px 2px; }
@@ -242,7 +257,6 @@
             <div id="datesMenuList"></div>
             <div class="dropdown-divider"></div>
             <div class="dropdown-item" style="font-weight: 800; color: var(--accent-color);" onclick="switchTab('tonghop')">📊 Bảng Tổng Hợp Tất Cả Ngày</div>
-            <div class="dropdown-item" style="font-weight: 800; color: #0284c7;" onclick="switchTab('chitiet')">📋 Chi Tiết Ngày Hằng Ngày</div>
           </div>
         </div>
 
@@ -303,6 +317,7 @@
       "#c026d3", "#0d9488", "#ea580c", "#4f46e5"
     ];
 
+    // Cập nhật danh sách VĐV đầy đủ từ các bản ghi giải đấu
     let vdvs = [
       "Tiến Thọ", "Thanh Đàm", "Thành Sóc", "Hà Giấy", "Minh Vượng", 
       "Phú Mỗ", "Điền Chèm", "Hải Hà", "Quỳnh Cool", "Trí Đỏ", 
@@ -434,7 +449,7 @@
 
           autoBackupMemory = JSON.parse(JSON.stringify(data));
 
-          if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop" && currentTab !== "chitiet" && currentTab !== "minigame1" && currentTab !== "minigame2")) {
+          if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop" && currentTab !== "minigame1" && currentTab !== "minigame2")) {
             currentTab = getClosestOrCurrentDate(dates);
           }
           statusEl.className = "cloud-status cloud-online";
@@ -736,7 +751,7 @@
 
     function renameCurrentDate() {
       closeAllDropdowns();
-      if (currentTab === "tonghop" || currentTab === "chitiet" || currentTab === "minigame1" || currentTab === "minigame2") return alert("⚠ Không thể đổi tên tab này!");
+      if (currentTab === "tonghop" || currentTab === "minigame1" || currentTab === "minigame2") return alert("⚠ Không thể đổi tên tab này!");
       const oldDate = currentTab;
       const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
       if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
@@ -755,7 +770,7 @@
 
     function deleteCurrentDate() {
       closeAllDropdowns();
-      if (currentTab === "tonghop" || currentTab === "chitiet" || currentTab === "minigame1" || currentTab === "minigame2") return alert("⚠️ Không thể xóa tab này!");
+      if (currentTab === "tonghop" || currentTab === "minigame1" || currentTab === "minigame2") return alert("⚠️ Không thể xóa tab này!");
       const dateToDelete = currentTab;
       if (confirm(`❌ Bạn có chắc chắn muốn XÓA TOÀN BỘ dữ liệu ngày "${dateToDelete}"?`)) {
         dates = dates.filter(d => d !== dateToDelete);
@@ -1019,8 +1034,6 @@
       if (!content) return;
       if (currentTab === "tonghop") {
         renderTongHopTab(content);
-      } else if (currentTab === "chitiet") {
-        renderChiTietTab(content);
       } else if (currentTab === "minigame1") {
         renderMiniGame1Tab(content);
       } else if (currentTab === "minigame2") {
@@ -1322,7 +1335,6 @@
       container.innerHTML = matchesHtml + summaryTableHtml;
     }
 
-    /* RENDER TAB TỔNG HỢP CÁC NGÀY TÍCH HỢP NỘI DUNG */
     function renderTongHopTab(container) {
       let activeDates = dates.filter(d => {
         const matches = matchesData[d] || [];
@@ -1331,6 +1343,20 @@
         const isYes = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption === "YES");
         return hasMatchData || isYes;
       });
+
+      if (activeDates.length === 0) {
+        container.innerHTML = `
+          <div class="card">
+            <div class="card-header-flex">
+              <h2 class="card-title">BẢNG TỔNG HỢP CÁC NGÀY</h2>
+            </div>
+            <div style="padding: 20px; text-align: center; font-weight: bold; color: #64748b;">
+              Hiện chưa có ngày nào phát sinh dữ liệu trận đấu hoặc chuyển tổng tiền.
+            </div>
+          </div>
+        `;
+        return;
+      }
 
       let vdvDayTotals = {};
       let vdvRowKeoSum = {};
@@ -1412,242 +1438,64 @@
       let grandTotalAllDays = 0;
 
       let html = `
-        <div class="space-y-6">
-          <!-- Filter Bar -->
-          <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
-              <div class="flex flex-wrap items-center gap-3">
-                  <label class="text-sm font-medium text-slate-700">Chọn thời gian:</label>
-                  <input type="date" value="2026-10-01" class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                  <span class="text-slate-400">-</span>
-                  <input type="date" value="2026-10-05" class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                  <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-colors">
-                      <i class="fa-solid fa-filter mr-1"></i> Lọc dữ liệu
-                  </button>
-              </div>
-              <div class="flex items-center gap-2">
-                  <button onclick="exportToExcel()" class="border border-slate-300 hover:bg-slate-50 text-slate-700 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1">
-                      <i class="fa-solid fa-file-excel text-emerald-600"></i> Xuất Excel
-                  </button>
-              </div>
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">BẢNG TỔNG HỢP CÁC NGÀY (CHỈ NGÀY ĐÃ TẠO)</h2>
           </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 140px;">VĐV (PICK THỦ)</th>
+                  ${activeDates.map(d => `<th>NGÀY ${d}</th>`).join('')}
+                  <th style="background-color: #fef08a; color: #854d0e;">TỔNG KÈO</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
 
-          <!-- Overview Stat Cards -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                  <div>
-                      <p class="text-sm font-medium text-slate-500">Tổng công việc / Trận đấu</p>
-                      <h3 class="text-2xl font-bold text-slate-800 mt-1">128</h3>
-                      <span class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-arrow-up"></i> +12% so với tuần trước</span>
-                  </div>
-                  <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 text-xl">
-                      <i class="fa-solid fa-list-check"></i>
-                  </div>
-              </div>
-
-              <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                  <div>
-                      <p class="text-sm font-medium text-slate-500">Đã hoàn thành</p>
-                      <h3 class="text-2xl font-bold text-emerald-600 mt-1">104</h3>
-                      <span class="text-xs text-slate-500">Tỷ lệ: 81.2%</span>
-                  </div>
-                  <div class="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 text-xl">
-                      <i class="fa-solid fa-circle-check"></i>
-                  </div>
-              </div>
-
-              <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex items-center justify-between">
-                  <div>
-                      <p class="text-sm font-medium text-slate-500">Đang tồn đọng / Trễ</p>
-                      <h3 class="text-2xl font-bold text-amber-600 mt-1">24</h3>
-                      <span class="text-xs text-amber-600 font-medium"><i class="fa-solid fa-triangle-exclamation"></i> Cần xử lý ngay</span>
-                  </div>
-                  <div class="w-12 h-12 bg-amber-50 rounded-full flex items-center justify-center text-amber-600 text-xl">
-                      <i class="fa-solid fa-clock font-normal"></i>
-                  </div>
-              </div>
-          </div>
-
-          <!-- Bảng Tổng Hợp VĐV / Trận Đấu Mới -->
-          <div class="card">
-            <div class="card-header-flex">
-              <h2 class="card-title">📊 BẢNG TỔNG HỢP CÁC NGÀY (THỐNG KÊ KÈO VĐV)</h2>
-            </div>
-            <div class="table-responsive">
-              <table>
-                <thead>
-                  <tr>
-                    <th style="width: 140px;">VĐV (PICK THỦ)</th>
-                    ${activeDates.map(d => `<th>NGÀY ${d}</th>`).join('')}
-                    <th style="background-color: #fef08a; color: #854d0e;">TỔNG KÈO</th>
-                  </tr>
-                </thead>
-                <tbody>
-        `;
-
-        vdvs.forEach((v, index) => {
-          let dayCells = activeDates.map(d => {
-            let val = vdvDayTotals[v][d];
-            let cls = val > 0 ? 'txt-win' : (val < 0 ? 'txt-lose' : '');
-            return `<td class="${cls}">${val !== 0 ? (val > 0 ? '+' + val + 'K' : val + 'K') : '-'}</td>`;
-          }).join('');
-
-          let rowSum = vdvRowKeoSum[v];
-          let totalCls = rowSum > 0 ? 'txt-win' : (rowSum < 0 ? 'txt-lose' : '');
-          let vdvColor = VDV_COLORS[index % VDV_COLORS.length];
-
-          html += `
-            <tr>
-              <td style="color: ${vdvColor}; font-weight: 800; font-size: 11px; text-align: left; padding-left: 8px;">${v}</td>
-              ${dayCells}
-              <td class="${totalCls}" style="background-color: #fef9c3;"><strong>${rowSum !== 0 ? (rowSum > 0 ? '+' + rowSum + 'K' : rowSum + 'K') : '0K'}</strong></td>
-            </tr>
-          `;
-        });
-
-        let daySumCells = activeDates.map(d => {
-          let val = dayTotalsSum[d];
-          grandTotalAllDays += val;
-          let cls = val < 0 ? 'txt-lose' : (val > 0 ? 'txt-win' : '');
-          return `<td class="${cls}"><strong>${val !== 0 ? val + 'K' : '0K'}</strong></td>`;
+      vdvs.forEach((v, index) => {
+        let dayCells = activeDates.map(d => {
+          let val = vdvDayTotals[v][d];
+          let cls = val > 0 ? 'txt-win' : (val < 0 ? 'txt-lose' : '');
+          return `<td class="${cls}">${val !== 0 ? (val > 0 ? '+' + val + 'K' : val + 'K') : '-'}</td>`;
         }).join('');
 
-        let grandTotalCls = grandTotalAllDays < 0 ? 'txt-lose' : (grandTotalAllDays > 0 ? 'txt-win' : '');
+        let rowSum = vdvRowKeoSum[v];
+        let totalCls = rowSum > 0 ? 'txt-win' : (rowSum < 0 ? 'txt-lose' : '');
+        let vdvColor = VDV_COLORS[index % VDV_COLORS.length];
 
         html += `
-                  <tr class="total-summary-row">
-                    <td style="color: red; text-align: center;"><strong>TỔNG NGÀY</strong></td>
-                    ${daySumCells}
-                    <td class="${grandTotalCls}" style="background-color: #fef08a;"><strong>${grandTotalAllDays !== 0 ? grandTotalAllDays + 'K' : '0K'}</strong></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          <tr>
+            <td style="color: ${vdvColor}; font-weight: 800; font-size: 11px; text-align: left; padding-left: 8px;">${v}</td>
+            ${dayCells}
+            <td class="${totalCls}" style="background-color: #fef9c3;"><strong>${rowSum !== 0 ? (rowSum > 0 ? '+' + rowSum + 'K' : rowSum + 'K') : '0K'}</strong></td>
+          </tr>
+        `;
+      });
+
+      let daySumCells = activeDates.map(d => {
+        let val = dayTotalsSum[d];
+        grandTotalAllDays += val;
+        let cls = val < 0 ? 'txt-lose' : (val > 0 ? 'txt-win' : '');
+        return `<td class="${cls}"><strong>${val !== 0 ? val + 'K' : '0K'}</strong></td>`;
+      }).join('');
+
+      let grandTotalCls = grandTotalAllDays < 0 ? 'txt-lose' : (grandTotalAllDays > 0 ? 'txt-win' : '');
+
+      html += `
+                <tr class="total-summary-row">
+                  <td style="color: red; text-align: center;"><strong>TỔNG NGÀY</strong></td>
+                  ${daySumCells}
+                  <td class="${grandTotalCls}" style="background-color: #fef08a;"><strong>${grandTotalAllDays !== 0 ? grandTotalAllDays + 'K' : '0K'}</strong></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       `;
 
       container.innerHTML = html;
-    }
-
-    /* RENDER TAB CHI TIẾT NGÀY TÍCH HỢP NỘI DUNG */
-    function renderChiTietTab(container) {
-      let currentDateDisplay = (dates && dates.length > 0) ? dates[0] : '05/10/2026';
-
-      let html = `
-        <div class="space-y-6">
-          <!-- Selected Date Info Banner -->
-          <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-              <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold text-lg">
-                      <i class="fa-regular fa-calendar-days"></i>
-                  </div>
-                  <div>
-                      <h2 class="text-lg font-bold text-slate-800">Chi tiết công việc / Trận đấu ngày: <span id="selected-date-display" class="text-blue-600">${currentDateDisplay}</span></h2>
-                      <p class="text-xs text-slate-500">Hiển thị danh sách các đầu việc và trạng thái xử lý chi tiết</p>
-                  </div>
-              </div>
-              <div class="flex items-center gap-2">
-                  <input type="date" id="detail-date-picker" value="2026-10-05" onchange="updateDetailDate(this.value)" class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                  <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1">
-                      <i class="fa-solid fa-plus"></i> Thêm việc mới
-                  </button>
-              </div>
-          </div>
-
-          <!-- Table: Chi Tiết Ngày -->
-          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-              <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-                  <h3 class="font-bold text-slate-800 flex items-center gap-2">
-                      <i class="fa-solid fa-list text-slate-500"></i>
-                      Danh Sách Công Việc / Hoạt Động Chi Tiết
-                  </h3>
-                  <div class="flex items-center gap-2">
-                      <span class="text-xs text-slate-500">Lọc trạng thái:</span>
-                      <select class="border border-slate-300 rounded-md text-xs p-1 focus:outline-none">
-                          <option value="all">Tất cả</option>
-                          <option value="done">Hoàn thành</option>
-                          <option value="pending">Đang xử lý</option>
-                      </select>
-                  </div>
-              </div>
-              <div class="overflow-x-auto custom-scrollbar">
-                  <table class="w-full text-left border-collapse text-sm">
-                      <thead>
-                          <tr class="bg-slate-100/70 text-slate-600 border-b border-slate-200 uppercase text-xs tracking-wider">
-                              <th class="p-4 font-semibold w-16 text-center">STT</th>
-                              <th class="p-4 font-semibold">Thời gian</th>
-                              <th class="p-4 font-semibold">Tên công việc / Trận đấu</th>
-                              <th class="p-4 font-semibold">Người thực hiện</th>
-                              <th class="p-4 font-semibold text-center">Trạng thái</th>
-                              <th class="p-4 font-semibold text-center">Ghi chú</th>
-                          </tr>
-                      </thead>
-                      <tbody class="divide-y divide-slate-100">
-                          <tr class="hover:bg-slate-50 transition-colors">
-                              <td class="p-4 text-center text-slate-400">01</td>
-                              <td class="p-4 text-slate-600 font-mono text-xs">08:00 - 09:30</td>
-                              <td class="p-4 font-medium text-slate-800">Giao ban CLB & Chuẩn bị sân thi đấu</td>
-                              <td class="p-4 text-slate-600">Tiến Thọ</td>
-                              <td class="p-4 text-center">
-                                  <span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-full font-medium inline-flex items-center gap-1">
-                                      <i class="fa-solid fa-check text-[10px]"></i> Hoàn thành
-                                  </span>
-                              </td>
-                              <td class="p-4 text-center text-slate-400 text-xs">Đã hoàn thành bàn giao sân</td>
-                          </tr>
-                          <tr class="hover:bg-slate-50 transition-colors">
-                              <td class="p-4 text-center text-slate-400">02</td>
-                              <td class="p-4 text-slate-600 font-mono text-xs">10:00 - 11:30</td>
-                              <td class="p-4 font-medium text-slate-800">Tổ chức các trận Pick vòng loại ngày</td>
-                              <td class="p-4 text-slate-600">Trí Đỏ</td>
-                              <td class="p-4 text-center">
-                                  <span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-full font-medium inline-flex items-center gap-1">
-                                      <i class="fa-solid fa-check text-[10px]"></i> Hoàn thành
-                                  </span>
-                              </td>
-                              <td class="p-4 text-center text-slate-400 text-xs">Cập nhật tỉ số đầy đủ</td>
-                          </tr>
-                          <tr class="hover:bg-slate-50 transition-colors">
-                              <td class="p-4 text-center text-slate-400">03</td>
-                              <td class="p-4 text-slate-600 font-mono text-xs">14:00 - 16:00</td>
-                              <td class="p-4 font-medium text-slate-800">Tổng kết thu chi & Đối soát quỹ với BTC</td>
-                              <td class="p-4 text-slate-600">Thanh Đàm</td>
-                              <td class="p-4 text-center">
-                                  <span class="bg-amber-100 text-amber-700 text-xs px-2.5 py-1 rounded-full font-medium inline-flex items-center gap-1">
-                                      <i class="fa-solid fa-spinner animate-spin text-[10px]"></i> Đang xử lý
-                                  </span>
-                              </td>
-                              <td class="p-4 text-center text-slate-400 text-xs">Đang hoàn thiện 80%</td>
-                          </tr>
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-        </div>
-      `;
-
-      container.innerHTML = html;
-    }
-
-    function viewDetail(dateStr) {
-      const parts = dateStr.split('-');
-      if(parts.length === 3) {
-          const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
-          const displayEl = document.getElementById('selected-date-display');
-          const pickerEl = document.getElementById('detail-date-picker');
-          if(displayEl) displayEl.innerText = formattedDate;
-          if(pickerEl) pickerEl.value = dateStr;
-      }
-      switchTab('chitiet');
-    }
-
-    function updateDetailDate(dateStr) {
-      const parts = dateStr.split('-');
-      if(parts.length === 3) {
-          const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
-          const displayEl = document.getElementById('selected-date-display');
-          if(displayEl) displayEl.innerText = formattedDate;
-      }
     }
 
     function addMini1Vdv(team) {
@@ -2089,7 +1937,7 @@
                       </td>
                       <td>
                         <button class="mg2-edit-btn" onclick="editMini2PairName('B', ${st.index})" title="Đổi tên">✏️</button>
-                        <button class="mg2-edit-btn" style="color:red;" onclick="deleteMini2Pair('B', ${st.index})" title="Xóa cặp">🗑</button>
+                        <button class="mg2-edit-btn" style="color:red;" onclick="deleteMini2Pair('B', ${st.index})" title="Xóa cặp">🗑️️</button>
                       </td>
                     </tr>
                   `).join('')}

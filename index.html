@@ -142,20 +142,25 @@
     .card-title { font-size: 13px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; letter-spacing: 0.3px; }
     .table-actions-toolbar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     
-    .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #cbd5e1; }
-    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 100%; table-layout: auto; }
+    /* CĂN CHỈNH TỐI ƯU CÁC BẢNG TRÊN MÀN HÌNH ĐIỆN THOẠI DỌC & MÁY TÍNH */
+    .table-responsive { 
+      width: 100%; 
+      overflow-x: auto; 
+      -webkit-overflow-scrolling: touch; 
+      border-radius: 8px; 
+      border: 1px solid #cbd5e1; 
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 680px; table-layout: auto; }
     th, td { border: 1px solid #cbd5e1; padding: 6px 4px; text-align: center; vertical-align: middle; word-wrap: break-word; transition: background 0.25s ease; }
     th { background-color: #f8fafc; color: #334155; font-weight: 800; font-size: 10px; text-transform: uppercase; }
     
-    /* HIỆU ỨNG DI CHUỘT (HOVER FX) HIỆN ĐẠI DÒNG BẢNG */
+    /* HIỆU ỨNG DI CHUỘT DÒNG BẢNG */
     tr { transition: all 0.2s ease-in-out; }
     tbody tr:hover {
       background: linear-gradient(90deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%) !important;
       box-shadow: inset 0 0 0 1px #38bdf8;
     }
-    tbody tr:hover td {
-      border-color: #93c5fd;
-    }
+    tbody tr:hover td { border-color: #93c5fd; }
 
     .th-team-a { background-color: #15803d; color: #ffffff !important; }
     .th-team-b { background-color: #0369a1; color: #ffffff !important; }
@@ -163,8 +168,8 @@
     .th-pick2 { background-color: #fee2e2; color: #991b1b; }
     .th-money { background-color: #fef3c7; color: #92400e; }
     
-    /* ĐỒNG BỘ NÚT CHỌN (SELECT) VÀ Ô NHẬP LIỆU */
-    select { width: 100%; padding: 4px 4px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 11px; font-weight: 700; background: #fff; text-overflow: ellipsis; cursor: pointer; transition: all 0.2s; }
+    /* Ô CHỌN VÀ NHẬP LIỆU NHẤT QUÁN */
+    select { width: 100%; padding: 4px 2px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 11px; font-weight: 700; background: #fff; text-overflow: ellipsis; cursor: pointer; transition: all 0.2s; }
     select:hover { border-color: var(--accent-color); }
     input[type="text"], input[type="number"] { width: 100%; padding: 4px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 11px; background: #fff; text-align: center; transition: all 0.2s; }
     input[type="text"]:focus, input[type="number"]:focus { border-color: var(--accent-color); outline: none; box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); }
@@ -213,7 +218,7 @@
       .card { padding: 8px 6px; }
       .card-title { font-size: 11px; }
       .nav-btn { font-size: 10px; padding: 5px 8px; }
-      table { min-width: 100%; font-size: 10px; }
+      table { min-width: 600px; font-size: 10px; }
       th, td { padding: 4px 2px; }
       select { font-size: 10px; padding: 2px 0; }
       .score-input { width: 30px !important; height: 22px; }
@@ -242,7 +247,6 @@
           </button>
         </div>
 
-        <!-- TAB PICK THỦ ĐỒNG BỘ DỮ LIỆU & PHÔNG CHỮ -->
         <div class="nav-item">
           <button class="nav-btn" onclick="switchTab('players')">
             <i class="fa-solid fa-users text-blue-400"></i>
@@ -287,7 +291,7 @@
             <span>MINI GAME 1 ▾</span>
           </button>
           <div class="dropdown-menu" id="menuMini1">
-            <div class="dropdown-item" onclick="switchTab('minigame1')">▶️ Lịch Thi Đấu Team A & B (24 Trận)</div>
+            <div class="dropdown-item" onclick="switchTab('minigame1')">▶️ Lịch Thi Đấu Team A & B</div>
             <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Nội Dung Game 1</div>
           </div>
         </div>
@@ -321,7 +325,7 @@
     </div>
   </div>
 
-  <!-- MODAL THÊM / SỬA PICK THỦ CẬP NHẬT TỐI ƯU -->
+  <!-- MODAL THÊM / SỬA PICK THỦ -->
   <div id="player-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 text-slate-800 border border-slate-100">
       <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
@@ -374,14 +378,12 @@
 
     const docRef = db.collection("clubs").doc("cmtd_main_data");
 
-    // DÃY MÀU CHUẨN ĐỒNG BỘ CHO MỌI PICK THỦ
     const VDV_COLORS = [
       "#d97706", "#2563eb", "#059669", "#dc2626", "#7c3aed", 
       "#db2777", "#0284c7", "#15803d", "#b45309", "#4338ca",
       "#c026d3", "#0d9488", "#ea580c", "#4f46e5"
     ];
 
-    // STATE DANH SÁCH PICK THỦ ĐỒNG BỘ CHUẨN
     let players = [
       { id: 1, name: "Tiến Thọ", gender: "Nam" },
       { id: 2, name: "Châu Sĩ", gender: "Nam" },
@@ -409,7 +411,7 @@
     let matchesData = {};
     let dateKeoMode = {}; 
     let paymentStatus = {};
-    let miniGame1Content = "Lịch Thi Đấu Team A & Team B 24 Trận.";
+    let miniGame1Content = "Lịch Thi Đấu Team A & Team B Xoay Vòng.";
     let miniGame2Content = "Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.";
 
     let mini1TeamA = ["Tiến Thọ", "Long Diễn", "Phú Mỗ", "Hà Giấy", "Tuấn La", "Châu Sĩ", "Vân Đình", "Cẩm Ly", "Minh Hạnh"];
@@ -517,7 +519,7 @@
           if (data.mini1TeamA) mini1TeamA = data.mini1TeamA;
           if (data.mini1TeamB) mini1TeamB = data.mini1TeamB;
 
-          if (data.miniGame1Matches && data.miniGame1Matches.length === 24) {
+          if (data.miniGame1Matches && data.miniGame1Matches.length > 0) {
             miniGame1Matches = data.miniGame1Matches;
           } else {
             miniGame1Matches = DEFAULT_MINI1_DATA;
@@ -756,7 +758,7 @@
       renderCurrentTab();
     }
 
-    /* XỬ LÝ PICK THỦ - CĂN LỀ TRÁI VÀ ĐỒNG BỘ NÚT BẤM */
+    /* XỬ LÝ PICK THỦ */
     function openPlayerModal() {
       document.getElementById('modal-title').innerText = "Thêm Pick Thủ Mới";
       document.getElementById('player-id').value = "";
@@ -831,7 +833,7 @@
             </div>
 
             <div class="smooth-scroll">
-                <table class="w-full text-left border-collapse border border-slate-200">
+                <table class="w-full text-left border-collapse border border-slate-200" style="min-width: 100%;">
                     <thead>
                         <tr class="bg-slate-50 text-slate-700 text-xs uppercase font-extrabold">
                             <th class="p-3 border border-slate-200 w-16 text-center">STT</th>
@@ -1183,7 +1185,6 @@
       }
     }
 
-    /* ĐỒNG BỘ MÀU CHỮ VÀ PHÔNG CHỮ CHO NÚT CHỌN (SELECT) PICK THỦ */
     function generateVdvOptionsHtml(selectedValue, filterList = null) {
       const listToRender = filterList || vdvs;
       return listToRender.map((v) => {
@@ -1639,6 +1640,32 @@
       container.innerHTML = html;
     }
 
+    /* XỬ LÝ MINI GAME 1: THÊM / XÓA CÁC TRẬN ĐẤU */
+    function addMini1Match() {
+      const newId = miniGame1Matches.length + 1;
+      miniGame1Matches.push({
+        id: newId,
+        category: "Trận tự chọn",
+        a1: "",
+        a2: "",
+        scoreA: "",
+        scoreB: "",
+        b1: "",
+        b2: ""
+      });
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function deleteMini1Match(index) {
+      if (confirm(`Bạn có chắc muốn xóa Trận ${index + 1} khỏi Mini Game 1?`)) {
+        miniGame1Matches.splice(index, 1);
+        miniGame1Matches.forEach((m, idx) => m.id = idx + 1);
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
     function addMini1Vdv(team) {
       const vdvName = prompt(`Nhập tên VĐV thêm vào Team ${team}:`);
       if (vdvName && vdvName.trim() !== "") {
@@ -1744,7 +1771,8 @@
         }
       });
 
-      const isCompletedAll = (matchesPlayedCount === 24);
+      const totalMatches = miniGame1Matches.length;
+      const isCompletedAll = (matchesPlayedCount === totalMatches && totalMatches > 0);
       let statusA = "", statusB = "";
 
       if (winCountA > winCountB) {
@@ -1762,7 +1790,7 @@
         <div class="card" style="margin-bottom:12px;">
           <div class="card-header-flex">
             <h2 class="card-title">📊 TỔNG HỢP TỶ SỐ & HIỆU SỐ TEAM A & B</h2>
-            <span style="font-size:11px; font-weight:bold; color:#d97706;">Đã đấu: ${matchesPlayedCount}/24 Trận</span>
+            <span style="font-size:11px; font-weight:bold; color:#d97706;">Đã đấu: ${matchesPlayedCount}/${totalMatches} Trận</span>
           </div>
           <div class="table-responsive">
             <table>
@@ -1852,13 +1880,14 @@
 
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">▶️ LỊCH THI ĐẤU 24 TRẬN MINI GAME 1</h2>
+            <h2 class="card-title">▶️️ LỊCH THI ĐẤU MINI GAME 1 (${miniGame1Matches.length} TRẬN)</h2>
+            <button class="btn btn-green" onclick="addMini1Match()">➕ Thêm Trận Đấu</button>
           </div>
           <div class="table-responsive">
             <table>
               <thead>
                 <tr>
-                  <th style="width:40px;">STT</th>
+                  <th style="width:60px;">THAO TÁC</th>
                   <th style="width:100px;">LOẠI TRẬN</th>
                   <th colspan="2" class="th-team-a" style="color:#fff !important;">🟢 ĐỘI A</th>
                   <th style="width:80px;">TỶ SỐ</th>
@@ -1884,17 +1913,24 @@
 
                   return `
                     <tr>
-                      <td><strong>Trận ${m.id}</strong></td>
-                      <td style="font-size:10px; font-weight:bold; color:#475569;">${m.category}</td>
+                      <td>
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                          <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold; font-size:12px;" onclick="deleteMini1Match(${idx})" title="Xóa trận này">🗑️</button>
+                          <strong>T${m.id}</strong>
+                        </div>
+                      </td>
+                      <td>
+                        <input type="text" style="font-size:10px; font-weight:bold; color:#475569;" value="${m.category}" onchange="updateMini1Vdv(${idx}, 'category', this.value)">
+                      </td>
                       <td>
                         <select style="color:${colorA1};" onchange="updateMini1Vdv(${idx}, 'a1', this.value)">
-                          <option value="">- Chọn VĐV A1 -</option>
+                          <option value="">- Chọn A1 -</option>
                           ${generateVdvOptionsHtml(m.a1, mini1TeamA)}
                         </select>
                       </td>
                       <td>
                         <select style="color:${colorA2};" onchange="updateMini1Vdv(${idx}, 'a2', this.value)">
-                          <option value="">- Chọn VĐV A2 -</option>
+                          <option value="">- Chọn A2 -</option>
                           ${generateVdvOptionsHtml(m.a2, mini1TeamA)}
                         </select>
                       </td>
@@ -1919,13 +1955,13 @@
                       </td>
                       <td>
                         <select style="color:${colorB1};" onchange="updateMini1Vdv(${idx}, 'b1', this.value)">
-                          <option value="">- Chọn VĐV B1 -</option>
+                          <option value="">- Chọn B1 -</option>
                           ${generateVdvOptionsHtml(m.b1, mini1TeamB)}
                         </select>
                       </td>
                       <td>
                         <select style="color:${colorB2};" onchange="updateMini1Vdv(${idx}, 'b2', this.value)">
-                          <option value="">- Chọn VĐV B2 -</option>
+                          <option value="">- Chọn B2 -</option>
                           ${generateVdvOptionsHtml(m.b2, mini1TeamB)}
                         </select>
                       </td>

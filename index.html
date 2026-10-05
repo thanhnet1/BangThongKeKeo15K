@@ -1805,22 +1805,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(st, i) in standingsA" :key="st.id || i">
-                   <td><strong>{{ i + 1 }}</strong></td>
-                   <td>
-                    <span :class="`pair-badge badge-p${i % 5}`">{{ st.name }}</span>
-                   </td>
-                   <td>{{ st.won }}</td>
-                   <td>{{ st.lost }}</td>
-                   <td><strong>{{ st.points }}</strong></td>
-                  </tr>
+                  ${standingsA.map((st, i) => `
                     <tr>
-                      <tr v-for="(item, i) in list" :key="item.id">
-                       <td><strong>{{ i + 1 }}</strong></td>
-                       <td>{{ item.name }}</td>
-                      </tr>
+                      <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 6px; font-weight:bold;">
-                        <span :class="`pair-badge badge-p${st.index % 5}`">{{ st.name }}</span>
+                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
                         <button class="mg2-edit-btn" onclick="editMini2PairName('A', ${st.index})" title="Đổi tên">✏️</button>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>

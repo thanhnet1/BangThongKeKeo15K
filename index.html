@@ -1823,7 +1823,7 @@
                     <tr>
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 6px; font-weight:bold;">
-                        <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
+                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">
@@ -1846,42 +1846,30 @@
                   <tr class="mg2-header-a"><th colspan="5">LỊCH THI ĐẤU BẢNG A</th></tr>
                   <tr class="mg2-sub-header">
                     <th style="width:40px;">Trận</th>
-                    <th>Đội 1</th>
-                    <th style="width:90px;">Tỷ Số</th>
-                    <th>Đội 2</th>
+                    <th>Cặp VĐV 1</th>
+                    <th style="width:80px;">Tỷ Số</th>
+                    <th>Cặp VĐV 2</th>
                   </tr>
                 </thead>
                 <tbody>
-                  ${mini2MatchesA.map((m, idx) => `
-                    <tr>
-                      <td><strong>${m.id}</strong></td>
-                      <td style="text-align: right; padding-right: 6px;">
-                        ${mini2PairsA[m.pair1Index] ? `<span class="pair-badge badge-p${m.pair1Index % 5}">${mini2PairsA[m.pair1Index].name}</span>` : ''}
-                      </td>
-                      <td>
-                        <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                          <input 
-                           type="number" 
-                           min="0" 
-                           class="score-input" 
-                           value="${m.score1 ?? ''}" 
-                           oninput="updateMini2MatchScore('A', ${idx}, 'score1', this.value)"
-                          >
-                          <span>-</span>
-                          <input 
-                           type="number" 
-                           min="0" 
-                           class="score-input" 
-                           value="${m.score2 ?? ''}" 
-                           oninput="updateMini2MatchScore('A', ${idx}, 'score2', this.value)"
-                          >
-                        </div>
-                      </td>
-                      <td style="text-align: left; padding-left: 6px;">
-                        ${mini2PairsA[m.pair2Index] ? `<span class="pair-badge badge-p${m.pair2Index % 5}">${mini2PairsA[m.pair2Index].name}</span>` : ''}
-                      </td>
-                    </tr>
-                  `).join('')}
+                  ${mini2MatchesA.map((m, idx) => {
+                    let p1 = mini2PairsA[m.pair1Index] ? mini2PairsA[m.pair1Index].name : 'Cặp ' + (m.pair1Index + 1);
+                    let p2 = mini2PairsB[m.pair2Index] ? mini2PairsA[m.pair2Index].name : 'Cặp ' + (m.pair2Index + 1);
+                    return `
+                      <tr>
+                        <td><strong>${m.id}</strong></td>
+                        <td style="font-weight:bold;"><span class="pair-badge badge-p${m.pair1Index \% 5}">${p1}</span></td>
+                        <td>
+                          <div style="display:flex; justify-content:center; gap:2px;">
+                            <input type="number" min="0" class="score-input" value="${m.score1 || ''}" onchange="updateMini2MatchScore('A', ${idx}, 'score1', this.value)">
+                            <span>-</span>
+                            <input type="number" min="0" class="score-input" value="${m.score2 || ''}" onchange="updateMini2MatchScore('A', ${idx}, 'score', this.value)">
+                          </div>
+                        </td>
+                        <td style="font-weight:bold;"><span class="pair-badge badge-p${m.pair2Index \% 5}">${p2}</span></td>
+                      </tr>
+                    `;
+                  }).join('')}
                 </tbody>
               </table>
             </div>
@@ -1943,61 +1931,49 @@
                   <tr class="mg2-header-b"><th colspan="5">LỊCH THI ĐẤU BẢNG B</th></tr>
                   <tr class="mg2-sub-header">
                     <th style="width:40px;">Trận</th>
-                    <th>Đội 1</th>
-                    <th style="width:90px;">Tỷ Số</th>
-                    <th>Đội 2</th>
+                    <th>Cặp VĐV 1</th>
+                    <th style="width:80px;">Tỷ Số</th>
+                    <th>Cặp VĐV 2</th>
                   </tr>
                 </thead>
                 <tbody>
-                  ${mini2MatchesB.map((m, idx) => `
-                    <tr>
-                      <td><strong>${m.id}</strong></td>
-                      <td style="text-align: right; padding-right: 6px;">
-                        ${mini2PairsB[m.pair1Index] ? `<span class="pair-badge badge-p${m.pair1Index % 5}">${mini2PairsB[m.pair1Index].name}</span>` : ''}
-                      </td>
-                      <td>
-                        <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                          <input 
-                           type="number" 
-                           min="0" 
-                           class="score-input" 
-                           value="${m.score1 ?? ''}" 
-                           oninput="updateMini2MatchScore('B', ${idx}, 'score1', this.value)"
-                          >
-                          <span>-</span>
-                          <input 
-                           type="number" 
-                           min="0" 
-                           class="score-input" 
-                           value="${m.score2 ?? ''}" 
-                           oninput="updateMini2MatchScore('B', ${idx}, 'score2', this.value)"
-                          >
-                        </div>
-                      </td>
-                      <td style="text-align: left; padding-left: 6px;">
-                        ${mini2PairsB[m.pair2Index] ? `<span class="pair-badge badge-p${m.pair2Index % 5}">${mini2PairsB[m.pair2Index].name}</span>` : ''}
-                      </td>
-                    </tr>
-                  `).join('')}
+                  ${mini2MatchesB.map((m, idx) => {
+                    let p1 = mini2PairsB[m.pair1Index] ? mini2PairsB[m.pair1Index].name : 'Cặp ' + (m.pair1Index + 1);
+                    let p2 = mini2PairsB[m.pair2Index] ? mini2PairsB[m.pair2Index].name : 'Cặp ' + (m.pair2Index + 1);
+                    return `
+                      <tr>
+                        <td><strong>${m.id}</strong></td>
+                        <td style="font-weight:bold;"><span class="pair-badge badge-p${m.pair1Index % 5}">${p1}</span></td>
+                        <td>
+                          <div style="display:flex; justify-content:center; gap:2px;">
+                            <input type="number" min="0" class="score-input" value="${m.score1 || ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score1', this.value)">
+                            <span>-</span>
+                            <input type="number" min="0" class="score-input" value="${m.score2 || ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score2', this.value)">
+                          </div>
+                        </td>
+                        <td style="font-weight:bold;"><span class="pair-badge badge-p${m.pair2Index \% 5}">${p2}</span></td>
+                      </tr>
+                    `;
+                  }).join('')}
                 </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <!-- BẢNG VÒNG KNOCKOUT (BÁN KẾT & CHUNG KẾT) -->
+        <!-- VÒNG KNOCKOUT (BÁN KẾT & CHUNG KẾT) -->
         <div class="card">
           <div class="card-header-flex">
-            <h3 style="margin:0; font-size:13px; color:#1e293b; font-weight:900;">👑 VÒNG KNOCKOUT (BÁN KẾT - CHUNG KẾT)</h3>
+            <h3 style="margin:0; font-size:13px; color:#7c3aed; font-weight:900;">👑 VÒNG KNOCKOUT (BÁN KẾT & CHUNG KẾT)</h3>
           </div>
           <div class="table-responsive">
             <table>
               <thead>
-                <tr style="background:#1e293b; color:#fff;">
-                  <th>VÒNG đấu</th>
-                  <th>ĐỘI 1</th>
-                  <th style="width:90px;">TỶ SỐ</th>
-                  <th>ĐỘI 2</th>
+                <tr style="background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white;">
+                  <th style="width:100px;">Vòng Đấu</th>
+                  <th>Đội 1</th>
+                  <th style="width:80px;">Tỷ Số</th>
+                  <th>Đội 2</th>
                 </tr>
               </thead>
               <tbody>
@@ -2005,7 +1981,7 @@
                   <td><strong>Bán Kết 1</strong></td>
                   <td><input type="text" value="${mini2Knockout.bkc1.p1}" onchange="updateMini2Knockout('bkc1', 'p1', this.value)"></td>
                   <td>
-                    <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
+                    <div style="display:flex; justify-content:center; gap:2px;">
                       <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc1.s1}" oninput="updateMini2Knockout('bkc1', 's1', this.value)">
                       <span>-</span>
                       <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc1.s2}" oninput="updateMini2Knockout('bkc1', 's2', this.value)">
@@ -2017,7 +1993,7 @@
                   <td><strong>Bán Kết 2</strong></td>
                   <td><input type="text" value="${mini2Knockout.bkc2.p1}" onchange="updateMini2Knockout('bkc2', 'p1', this.value)"></td>
                   <td>
-                    <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
+                    <div style="display:flex; justify-content:center; gap:2px;">
                       <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc2.s1}" oninput="updateMini2Knockout('bkc2', 's1', this.value)">
                       <span>-</span>
                       <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc2.s2}" oninput="updateMini2Knockout('bkc2', 's2', this.value)">
@@ -2025,11 +2001,11 @@
                   </td>
                   <td><input type="text" value="${mini2Knockout.bkc2.p2}" onchange="updateMini2Knockout('bkc2', 'p2', this.value)"></td>
                 </tr>
-                <tr style="background:#fef3c7;">
-                  <td><strong style="color:#b45309;">Tranh 3 - 4</strong></td>
+                <tr style="background: #fef3c7;">
+                  <td><strong style="color:#b45309;">Tranh 3-4</strong></td>
                   <td><input type="text" value="${mini2Knockout.rank34.p1}" onchange="updateMini2Knockout('rank34', 'p1', this.value)"></td>
                   <td>
-                    <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
+                    <div style="display:flex; justify-content:center; gap:2px;">
                       <input type="number" min="0" class="score-input" value="${mini2Knockout.rank34.s1}" oninput="updateMini2Knockout('rank34', 's1', this.value)">
                       <span>-</span>
                       <input type="number" min="0" class="score-input" value="${mini2Knockout.rank34.s2}" oninput="updateMini2Knockout('rank34', 's2', this.value)">
@@ -2037,11 +2013,11 @@
                   </td>
                   <td><input type="text" value="${mini2Knockout.rank34.p2}" onchange="updateMini2Knockout('rank34', 'p2', this.value)"></td>
                 </tr>
-                <tr style="background:#dcfce7;">
-                  <td><strong style="color:#15803d;">🏆 CHUNG KẾT</strong></td>
+                <tr style="background: #f0fdf4;">
+                  <td><strong style="color:#15803d;">Chung Kết 🏆</strong></td>
                   <td><input type="text" value="${mini2Knockout.final.p1}" onchange="updateMini2Knockout('final', 'p1', this.value)"></td>
                   <td>
-                    <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
+                    <div style="display:flex; justify-content:center; gap:2px;">
                       <input type="number" min="0" class="score-input" value="${mini2Knockout.final.s1}" oninput="updateMini2Knockout('final', 's1', this.value)">
                       <span>-</span>
                       <input type="number" min="0" class="score-input" value="${mini2Knockout.final.s2}" oninput="updateMini2Knockout('final', 's2', this.value)">

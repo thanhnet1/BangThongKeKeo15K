@@ -1858,7 +1858,7 @@
                     return `
                       <tr>
                         <td><strong>${m.id}</strong></td>
-                        <td style="font-weight:bold;"><span class="pair-badge badge-p${m.pair1Index \% 5}">${p1}</span></td>
+                        <td style="font-weight:bold;"><span class="pair-badge badge-p${m.pair1Index % 5}">${p1}</span></td>
                         <td>
                           <div style="display:flex; justify-content:center; gap:2px;">
                             <input type="number" min="0" class="score-input" value="${m.score1 || ''}" onchange="updateMini2MatchScore('A', ${idx}, 'score1', this.value)">

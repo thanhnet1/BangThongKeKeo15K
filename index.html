@@ -1839,7 +1839,7 @@
                     <tr>
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 6px; font-weight:bold;">
-                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
+                        <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">
@@ -1874,9 +1874,9 @@
                       <td style="text-align:right; padding-right:6px; font-weight:bold;">${mini2PairsA[m.pair1Index] ? mini2PairsA[m.pair1Index].name : ''}</td>
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                          <input type="number" min="0" class="score-input" value="${m.score1 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('A', ${idx}, 'score1', this.value)">
+                          <input type="number" min="0" class="score-input" value="${m.score1 || ''}" onchange="updateMini2MatchScore('A', ${idx}, 'score1', this.value)">
                           <span>-</span>
-                          <input type="number" min="0" class="score-input" value="${m.score2 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('A', ${idx}, 'score2', this.value)">
+                          <input type="number" min="0" class="score-input" value="${m.score2 || ''}" onchange="updateMini2MatchScore('A', ${idx}, 'score2', this.value)">
                         </div>
                       </td>
                       <td style="text-align:left; padding-left:6px; font-weight:bold;">${mini2PairsA[m.pair2Index] ? mini2PairsA[m.pair2Index].name : ''}</td>
@@ -1920,7 +1920,7 @@
                     <tr>
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 6px; font-weight:bold;">
-                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
+                        <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">
@@ -1955,9 +1955,9 @@
                       <td style="text-align:right; padding-right:6px; font-weight:bold;">${mini2PairsB[m.pair1Index] ? mini2PairsB[m.pair1Index].name : ''}</td>
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                          <input type="number" min="0" class="score-input" value="${m.score1 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score1', this.value)">
+                          <input type="number" min="0" class="score-input" value="${m.score1 || ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score1', this.value)">
                           <span>-</span>
-                          <input type="number" min="0" class="score-input" value="${m.score2 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score2', this.value)">
+                          <input type="number" min="0" class="score-input" value="${m.score2 || ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score2', this.value)">
                         </div>
                       </td>
                       <td style="text-align:left; padding-left:6px; font-weight:bold;">${mini2PairsB[m.pair2Index] ? mini2PairsB[m.pair2Index].name : ''}</td>

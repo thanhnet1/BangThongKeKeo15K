@@ -1866,7 +1866,7 @@
                             <input type="number" min="0" class="score-input" value="${m.score2 || ''}" onchange="updateMini2MatchScore('A', ${idx}, 'score2', this.value)">
                           </div>
                         </td>
-                        <td style="font-weight:bold;"><span class="pair-badge badge-p${m.pair2Index \% 5}">${p2}</span></td>
+                        <td style="font-weight:bold;"><span class="pair-badge badge-p${m.pair2Index % 5}">${p2}</span></td>
                       </tr>
                     `;
                   }).join('')}

@@ -2025,9 +2025,9 @@
                           <td style="font-weight:bold; color:#1e293b;">${p1Name}</td>
                           <td>
                             <div style="display:flex; align-items:center; justify-content:center; gap:1px;">
-                              <input type="text" class="score-input" value="${m.score1 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score1', this.value)">
+                              <input type="text" class="score-input" value="${m.score1 || ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score1', this.value)">
                               <span style="font-weight:bold; font-size:8px;">-</span>
-                              <input type="text" class="score-input" value="${m.score2 \vert{}\vert{} ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score2', this.value)">
+                              <input type="text" class="score-input" value="${m.score2 || ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score2', this.value)">
                             </div>
                           </td>
                           <td style="font-weight:bold; color:#1e293b;">${p2Name}</td>

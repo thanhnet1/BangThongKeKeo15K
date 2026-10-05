@@ -135,7 +135,7 @@
     .table-actions-toolbar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     
     .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 6px; border: 1px solid #cbd5e1; }
-    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 680px; table-layout: fixed; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 100%; table-layout: fixed; }
     th, td { border: 1px solid #cbd5e1; padding: 5px 2px; text-align: center; vertical-align: middle; word-wrap: break-word; }
     th { background-color: #f8fafc; color: #334155; font-weight: 800; font-size: 10px; text-transform: uppercase; }
     
@@ -159,15 +159,15 @@
     .total-summary-row { background-color: #f8fafc; font-weight: 800; }
 
     .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    @media (max-width: 900px) { .grid-2col { grid-template-columns: 1fr; } }
+    .mg2-grid { display: grid; grid-template-columns: 320px 1fr; gap: 10px; }
+
+    @media (max-width: 900px) { 
+      .grid-2col, .mg2-grid { grid-template-columns: 1fr; } 
+    }
 
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; }
     .modal.show { display: flex; }
     .modal-content { background: white; padding: 16px; border-radius: 10px; width: 92%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-
-    .summary-score-card { background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; padding: 12px; border-radius: 8px; display: flex; justify-content: space-around; align-items: center; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-    .score-box { text-align: center; }
-    .score-number { font-size: 28px; font-weight: 900; }
 
     /* CSS Riêng Cho Bảng Mẫu Mini Game 2 */
     .mg2-header-bg { background-color: #ea580c !important; color: white !important; font-weight: 900; font-size: 11px; }
@@ -182,7 +182,7 @@
       .card { padding: 6px 4px; }
       .card-title { font-size: 11px; }
       .nav-btn { font-size: 10px; padding: 4px 6px; }
-      table { min-width: 620px; font-size: 10px; }
+      table { min-width: 100%; font-size: 10px; }
       th, td { padding: 3px 1px; }
       select { font-size: 9.5px; padding: 1px 0; }
       .score-input { width: 32px !important; height: 22px; }
@@ -343,25 +343,25 @@
     let miniGame1Matches = DEFAULT_MINI1_DATA;
 
     let mini2PairsA = [
-      { name: "a" },
-      { name: "b" },
-      { name: "c" },
-      { name: "d" }
+      { name: "Cặp A1" },
+      { name: "Cặp A2" },
+      { name: "Cặp A3" },
+      { name: "Cặp A4" }
     ];
     let mini2PairsB = [
-      { name: "e" },
-      { name: "f" },
-      { name: "g" },
-      { name: "h" }
+      { name: "Cặp B1" },
+      { name: "Cặp B2" },
+      { name: "Cặp B3" },
+      { name: "Cặp B4" }
     ];
 
     let mini2MatchesA = [];
     let mini2MatchesB = [];
     let mini2Knockout = {
-      bkc1: { p1: "b", p2: "g", s1: "11", s2: "6" },
-      bkc2: { p1: "d", p2: "h", s1: "11", s2: "9" },
-      rank34: { p1: "g", p2: "h", s1: "8", s2: "11" },
-      final: { p1: "b", p2: "d", s1: "11", s2: "7" }
+      bkc1: { p1: "Nhất Bảng A", p2: "Nhì Bảng B", s1: "", s2: "" },
+      bkc2: { p1: "Nhất Bảng B", p2: "Nhì Bảng A", s1: "", s2: "" },
+      rank34: { p1: "Thua BK1", p2: "Thua BK2", s1: "", s2: "" },
+      final: { p1: "Thắng BK1", p2: "Thắng BK2", s1: "", s2: "" }
     };
 
     let currentTab = "";
@@ -553,7 +553,7 @@
       reader.onload = function(e) {
         try {
           const data = JSON.parse(e.target.result);
-          if (confirm("⚠️ Bạn có chắc muốn khôi phục dữ liệu từ file sao lưu này? Dữ liệu hiện tại sẽ bị thay thế!")) {
+          if (confirm("⚠️️ Bạn có chắc muốn khôi phục dữ liệu từ file sao lưu này? Dữ liệu hiện tại sẽ bị thay thế!")) {
             if (data.vdvs) vdvs = data.vdvs;
             if (data.dates) dates = data.dates;
             if (data.matchesData) matchesData = data.matchesData;
@@ -864,7 +864,7 @@
       closeGameModal();
     }
 
-    /* LOGIC CHO MINI GAME 2 */
+    /* LOGIC CẬP NHẬT DÀNH RIÊNG CHO MINI GAME 2 */
     function generateMini2MatchesForGroup(group) {
       let pairs = group === 'A' ? mini2PairsA : mini2PairsB;
       let matches = [];
@@ -887,12 +887,12 @@
     function setMini2PairCount(group, count) {
       count = parseInt(count);
       let pairs = group === 'A' ? mini2PairsA : mini2PairsB;
-      const defaultNames = group === 'A' ? ['a','b','c','d','e_a'] : ['e','f','g','h','i_b'];
+      const defaultPrefix = group === 'A' ? 'Cặp A' : 'Cặp B';
 
       if (pairs.length < count) {
         while (pairs.length < count) {
-          let nextIdx = pairs.length;
-          pairs.push({ name: defaultNames[nextIdx] || (`đội_${nextIdx+1}`) });
+          let nextIdx = pairs.length + 1;
+          pairs.push({ name: `${defaultPrefix}${nextIdx}` });
         }
       } else if (pairs.length > count) {
         pairs.splice(count);
@@ -906,7 +906,7 @@
     function editMini2PairName(group, index) {
       let pairs = group === 'A' ? mini2PairsA : mini2PairsB;
       let oldName = pairs[index].name;
-      let newName = prompt(`Nhập tên mới cho Cặp/Đội (${oldName}):`, oldName);
+      let newName = prompt(`Nhập tên mới cho cặp VĐV (${oldName}):`, oldName);
       if (newName !== null && newName.trim() !== "") {
         pairs[index].name = newName.trim();
         saveDataToFirestore();
@@ -974,7 +974,7 @@
         s.diff = s.scoreFor - s.scoreAgainst;
       });
 
-      // Sắp xếp theo 3 tiêu chí: 1. Điểm, 2. Hiệu số, 3. Đối đầu
+      // Tiêu chí sắp xếp: 1. Điểm số, 2. Hiệu số, 3. Tỷ số đối đầu
       stats.sort((a, b) => {
         if (b.points !== a.points) return b.points - a.points;
         if (b.diff !== a.diff) return b.diff - a.diff;
@@ -1742,7 +1742,7 @@
       container.innerHTML = html;
     }
 
-    /* BẢNG MINI GAME 2 ĐƯỢC THIẾT KẾ THEO ẢNH MẪU */
+    /* GIAO DIỆN MINI GAME 2 CẬP NHẬT CHUẨN MẪU */
     function renderMiniGame2Tab(container) {
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
       let standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
@@ -1751,8 +1751,8 @@
         <div class="card" style="margin-bottom: 12px;">
           <div class="card-header-flex">
             <h2 class="card-title">🏆 LỊCH THI ĐẤU VÀ BẢNG XẾP HẠNG GIẢI MINI GAME 2</h2>
-            <div style="font-size: 11px; font-weight: bold; color: #475569;">
-              Tiêu chí BXH: 1. Điểm số (Thắng 1đ) ➔ 2. Hiệu số ➔ 3. Tỷ số đối đầu
+            <div style="font-size: 11px; font-weight: bold; color: #d97706;">
+              Tiêu chí BXH: 1. Điểm số (Thắng 1đ) ➔ 2. Hiệu số điểm ➔ 3. Tỷ số đối đầu
             </div>
           </div>
         </div>
@@ -1770,7 +1770,7 @@
             </div>
           </div>
 
-          <div style="display: grid; grid-template-columns: 280px 1fr; gap: 10px; margin-top: 8px;">
+          <div class="mg2-grid" style="margin-top: 8px;">
             <!-- BXH BẢNG A -->
             <div class="table-responsive">
               <table>
@@ -1789,7 +1789,7 @@
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 6px; font-weight:bold;">
                         ${st.name} 
-                        <button class="mg2-edit-btn" onclick="editMini2PairName('A', ${st.index})" title="Đổi tên">✏️</button>
+                        <button class="mg2-edit-btn" onclick="editMini2PairName('A', ${st.index})" title="Đổi tên cặp VĐV">✏️</button>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">
@@ -1805,12 +1805,12 @@
             <div class="table-responsive">
               <table>
                 <thead>
-                  <tr class="mg2-header-bg"><th colspan="6">LỊCH THI ĐẤU BẢNG A</th></tr>
+                  <tr class="mg2-header-bg"><th colspan="5">LỊCH THI ĐẤU BẢNG A</th></tr>
                   <tr class="mg2-sub-header">
                     <th style="width:40px;">Trận</th>
                     <th>Đội 1</th>
-                    <th style="width:65px;">KQ Đội 1</th>
-                    <th style="width:65px;">KQ Đội 2</th>
+                    <th style="width:55px;">KQ Đ1</th>
+                    <th style="width:55px;">KQ Đ2</th>
                     <th>Đội 2</th>
                   </tr>
                 </thead>
@@ -1859,7 +1859,7 @@
             </div>
           </div>
 
-          <div style="display: grid; grid-template-columns: 280px 1fr; gap: 10px; margin-top: 8px;">
+          <div class="mg2-grid" style="margin-top: 8px;">
             <!-- BXH BẢNG B -->
             <div class="table-responsive">
               <table>
@@ -1878,7 +1878,7 @@
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 6px; font-weight:bold;">
                         ${st.name} 
-                        <button class="mg2-edit-btn" onclick="editMini2PairName('B', ${st.index})" title="Đổi tên">✏️</button>
+                        <button class="mg2-edit-btn" onclick="editMini2PairName('B', ${st.index})" title="Đổi tên cặp VĐV">✏️</button>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">
@@ -1894,12 +1894,12 @@
             <div class="table-responsive">
               <table>
                 <thead>
-                  <tr class="mg2-header-bg"><th colspan="6">LỊCH THI ĐẤU BẢNG B</th></tr>
+                  <tr class="mg2-header-bg"><th colspan="5">LỊCH THI ĐẤU BẢNG B</th></tr>
                   <tr class="mg2-sub-header">
                     <th style="width:40px;">Trận</th>
                     <th>Đội 1</th>
-                    <th style="width:65px;">KQ Đội 1</th>
-                    <th style="width:65px;">KQ Đội 2</th>
+                    <th style="width:55px;">KQ Đ1</th>
+                    <th style="width:55px;">KQ Đ2</th>
                     <th>Đội 2</th>
                   </tr>
                 </thead>
@@ -1935,10 +1935,10 @@
           </div>
         </div>
 
-        <!-- VÒNG NOCKOUT & VINH DANH -->
+        <!-- VÒNG KNOCKOUT & CHUNG KẾT -->
         <div class="card">
           <div class="card-header-flex">
-            <h3 class="card-title">🥇 VÒNG BÁN KẾT, CHUNG KẾT & TỔNG TRẢ THƯỞNG</h3>
+            <h3 class="card-title">🥇 VÒNG BÁN KẾT & CHUNG KẾT</h3>
           </div>
 
           <div style="max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;">
@@ -2026,11 +2026,11 @@
               </table>
             </div>
 
-            <!-- TRANH CHUNG KẾT -->
+            <!-- CHUNG KẾT -->
             <div class="table-responsive">
               <table>
                 <thead>
-                  <tr style="background:#15803d; color:#fff;"><th colspan="4">TRANH CHUNG KẾT</th></tr>
+                  <tr style="background:#dc2626; color:#fff;"><th colspan="4">CHUNG KẾT</th></tr>
                   <tr class="mg2-sub-header">
                     <th style="width:80px;">Trận</th>
                     <th>Đội 1</th>
@@ -2049,26 +2049,6 @@
                       </div>
                     </td>
                     <td><input type="text" value="${mini2Knockout.final.p2}" onchange="updateMini2Knockout('final', 'p2', this.value)"></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- KẾT QUẢ TRAO GIẢI -->
-            <div class="table-responsive" style="margin-top:6px;">
-              <table>
-                <tbody>
-                  <tr style="background:#fef08a;">
-                    <td style="font-weight:900; text-align:left; padding-left:10px; width:150px;">🥇 Đội Vô Địch</td>
-                    <td><strong style="color:#15803d; font-size:12px;">${mini2Knockout.final.s1 > mini2Knockout.final.s2 ? mini2Knockout.final.p1 : (mini2Knockout.final.s2 > mini2Knockout.final.s1 ? mini2Knockout.final.p2 : '-')}</strong></td>
-                  </tr>
-                  <tr style="background:#fef08a;">
-                    <td style="font-weight:900; text-align:left; padding-left:10px;">🥈 Đội Nhì</td>
-                    <td><strong style="color:#0369a1; font-size:12px;">${mini2Knockout.final.s1 > mini2Knockout.final.s2 ? mini2Knockout.final.p2 : (mini2Knockout.final.s2 > mini2Knockout.final.s1 ? mini2Knockout.final.p1 : '-')}</strong></td>
-                  </tr>
-                  <tr style="background:#fef08a;">
-                    <td style="font-weight:900; text-align:left; padding-left:10px;">🥉 Đội về 3</td>
-                    <td><strong style="color:#b45309; font-size:12px;">${mini2Knockout.rank34.s1 > mini2Knockout.rank34.s2 ? mini2Knockout.rank34.p1 : (mini2Knockout.rank34.s2 > mini2Knockout.rank34.s1 ? mini2Knockout.rank34.p2 : '-')}</strong></td>
                   </tr>
                 </tbody>
               </table>

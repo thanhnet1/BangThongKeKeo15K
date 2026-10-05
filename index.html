@@ -4,13 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CLB PICKLEBALL - CMTD | Quản Lý & Thống Kê</title>
+  
+  <!-- Font Google & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Tailwind CSS & Excel Export SDK -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <!-- Firebase SDK Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -29,7 +30,7 @@
     
     body {
       font-family: 'Roboto', sans-serif;
-      background-color: #f1f5f9;
+      background-color: #f8fafc;
       color: var(--text-main);
       margin: 0;
       padding: 10px 6px;
@@ -51,7 +52,7 @@
     }
 
     .header-section {
-      background: rgba(15, 23, 42, 0.95);
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: white;
@@ -91,11 +92,16 @@
     .nav-btn {
       background: rgba(51, 65, 85, 0.9);
       color: white; border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 6px 10px; border-radius: 6px; cursor: pointer;
-      font-weight: 700; font-size: 11px; transition: all 0.2s ease;
-      white-space: nowrap; display: flex; align-items: center; gap: 4px;
+      padding: 6px 12px; border-radius: 6px; cursor: pointer;
+      font-weight: 700; font-size: 11px; transition: all 0.25s ease-in-out;
+      white-space: nowrap; display: flex; align-items: center; gap: 6px;
     }
-    .nav-btn:hover { background-color: var(--accent-color); border-color: var(--accent-color); }
+    .nav-btn:hover { 
+      background-color: var(--accent-color); 
+      border-color: var(--accent-color); 
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
     
     .dropdown-menu {
       display: none; position: absolute; top: 115%; left: 0; min-width: 220px;
@@ -106,14 +112,14 @@
     .dropdown-menu.show { display: block; }
     .dropdown-item {
       padding: 8px 12px; font-size: 11px; font-weight: 600; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; color: #334155;
+      display: flex; align-items: center; gap: 6px; color: #334155; transition: all 0.2s;
     }
-    .dropdown-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+    .dropdown-item:hover { background-color: #eff6ff; color: var(--accent-color); padding-left: 16px; }
     .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 3px 0; }
     
     .cloud-status { 
       font-size: 10px; 
-      padding: 3px 8px; 
+      padding: 4px 10px; 
       border-radius: 15px; 
       font-weight: bold; 
       margin-left: auto; 
@@ -125,29 +131,42 @@
     .cloud-syncing { background-color: #f59e0b; color: white; }
     .cloud-error { background-color: #ef4444; color: white; }
 
-    .btn { background-color: var(--accent-color); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; }
-    .btn-sm { padding: 3px 6px; font-size: 10px; }
+    .btn { background-color: var(--accent-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-sm { padding: 4px 8px; font-size: 10px; }
     .btn-green { background-color: #10b981; }
     .btn-red { background-color: #ef4444; }
 
-    .card { background: var(--card-bg); padding: 10px 8px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 14px; position: relative; z-index: 10; border: 1px solid #e2e8f0; }
-    .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; flex-wrap: wrap; gap: 6px; }
-    .card-title { font-size: 13px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; }
+    .card { background: var(--card-bg); padding: 12px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 14px; position: relative; z-index: 10; border: 1px solid #e2e8f0; }
+    .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; flex-wrap: wrap; gap: 6px; }
+    .card-title { font-size: 13px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; letter-spacing: 0.3px; }
     .table-actions-toolbar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     
-    .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 6px; border: 1px solid #cbd5e1; }
+    .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #cbd5e1; }
     table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 100%; table-layout: auto; }
-    th, td { border: 1px solid #cbd5e1; padding: 5px 2px; text-align: center; vertical-align: middle; word-wrap: break-word; }
+    th, td { border: 1px solid #cbd5e1; padding: 6px 4px; text-align: center; vertical-align: middle; word-wrap: break-word; transition: background 0.25s ease; }
     th { background-color: #f8fafc; color: #334155; font-weight: 800; font-size: 10px; text-transform: uppercase; }
     
+    /* HIỆU ỨNG DI CHUỘT (HOVER FX) HIỆN ĐẠI CHO CÁC DÒNG TRONG BẢNG ĐẤU */
+    tr { transition: all 0.2s ease-in-out; }
+    tbody tr:hover {
+      background: linear-gradient(90deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%) !important;
+      box-shadow: inset 0 0 0 1px #38bdf8;
+    }
+    tbody tr:hover td {
+      border-color: #93c5fd;
+    }
+
     .th-team-a { background-color: #15803d; color: #ffffff !important; }
     .th-team-b { background-color: #0369a1; color: #ffffff !important; }
     .th-pick1 { background-color: #dcfce7; color: #166534; }
     .th-pick2 { background-color: #fee2e2; color: #991b1b; }
     .th-money { background-color: #fef3c7; color: #92400e; }
     
-    select { width: 100%; padding: 3px 1px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px; font-weight: 700; background: #fff; text-overflow: ellipsis; cursor: pointer; }
-    input[type="text"], input[type="number"] { width: 100%; padding: 3px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px; background: #fff; text-align: center; }
+    select { width: 100%; padding: 4px 2px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 10px; font-weight: 700; background: #fff; text-overflow: ellipsis; cursor: pointer; transition: all 0.2s; }
+    select:hover { border-color: var(--accent-color); }
+    input[type="text"], input[type="number"] { width: 100%; padding: 4px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 10px; background: #fff; text-align: center; transition: all 0.2s; }
+    input[type="text"]:focus, input[type="number"]:focus { border-color: var(--accent-color); outline: none; box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); }
 
     .score-input { width: 36px !important; height: 24px; padding: 0 !important; font-weight: 800; text-align: center; font-size: 11px; border: 1.5px solid var(--score-border) !important; border-radius: 4px; background: #ffffff; display: inline-flex; align-items: center; justify-content: center; }
     .ham-text { background-color: #ef4444; color: white; font-weight: 900; font-size: 9px; padding: 2px 0; border-radius: 3px; display: block; width: 100%; text-align: center; line-height: 1; }
@@ -159,12 +178,12 @@
     .checkbox-cell { transform: scale(1.15); cursor: pointer; }
     .total-summary-row { background-color: #f8fafc; font-weight: 800; }
 
-    .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     @media (max-width: 900px) { .grid-2col { grid-template-columns: 1fr; } }
 
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; }
     .modal.show { display: flex; }
-    .modal-content { background: white; padding: 16px; border-radius: 10px; width: 92%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    .modal-content { background: white; padding: 18px; border-radius: 12px; width: 92%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
 
     .pair-badge {
       display: inline-block;
@@ -173,8 +192,11 @@
       font-weight: 800;
       font-size: 11px;
       color: #ffffff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease;
     }
+    .pair-badge:hover { transform: scale(1.05); }
+
     .badge-p0 { background: linear-gradient(135deg, #e11d48, #be123c); }
     .badge-p1 { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
     .badge-p2 { background: linear-gradient(135deg, #059669, #047857); }
@@ -187,12 +209,12 @@
       body { padding: 4px 2px; }
       .hero-banner { aspect-ratio: 16 / 7; }
       .title-logo-img { height: 28px; }
-      .card { padding: 6px 4px; }
+      .card { padding: 8px 6px; }
       .card-title { font-size: 11px; }
-      .nav-btn { font-size: 10px; padding: 4px 6px; }
+      .nav-btn { font-size: 10px; padding: 5px 8px; }
       table { min-width: 100%; font-size: 10px; }
-      th, td { padding: 3px 1px; }
-      select { font-size: 9.5px; padding: 1px 0; }
+      th, td { padding: 4px 2px; }
+      select { font-size: 9.5px; padding: 2px 0; }
       .score-input { width: 30px !important; height: 22px; }
     }
   </style>
@@ -201,53 +223,68 @@
   <div class="container">
     <div class="hero-banner"></div>
 
+    <!-- HEADER & THANH ĐIỀU HƯỚNG -->
     <div class="header-section">
       <div class="header-top">
         <div class="brand-title">
           <img src="logo1.png" alt="Logo CMTD" class="title-logo-img">
-          <h2 style="margin:0; font-weight:900; color:#fff; font-size:16px;">CLB PICKLEBALL - CMTD</h2>
+          <h2 style="margin:0; font-weight:900; color:#fff; font-size:16px; letter-spacing:0.5px;">CLB PICKLEBALL - CMTD</h2>
         </div>
-        <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Tự Động Lưu (Đang Khởi Tạo)...</div>
+        <div id="cloudStatus" class="cloud-status cloud-syncing">☁ Tự Động Lưu (Đang Khởi Tạo)...</div>
       </div>
 
       <div class="top-nav">
-        <div class="nav-item"><button class="nav-btn" onclick="goHome()">🏠 HOME</button></div>
+        <div class="nav-item">
+          <button class="nav-btn" onclick="goHome()">
+            <i class="fa-solid fa-house"></i>
+            <span>HOME</span>
+          </button>
+        </div>
 
-        <!-- NÚT PICK THỦ CHUYỂN THÀNH TAB TRỰC TIẾP TỪ FILE DANH SACH PICK THỦ -->
+        <!-- TAB PICK THỦ ĐỒNG BỘ MÃ NGUỒN VÀ DỮ LIỆU -->
         <div class="nav-item">
           <button class="nav-btn" onclick="switchTab('players')">
-            <i class="fa-solid fa-users"></i>
-            <span>👥 PICK THỦ (<span id="vdvCountBtn">0</span>)</span>
+            <i class="fa-solid fa-users text-blue-400"></i>
+            <span>PICK THỦ (<span id="vdvCountBtn">0</span>)</span>
           </button>
         </div>
 
         <div class="nav-item">
-          <button class="nav-btn" onclick="toggleMenu('menuSetting', event)">⚙ SETTING ▾</button>
+          <button class="nav-btn" onclick="toggleMenu('menuSetting', event)">
+            <i class="fa-solid fa-gear"></i>
+            <span>SETTING ▾</span>
+          </button>
           <div class="dropdown-menu" id="menuSetting">
-            <div class="dropdown-item" onclick="addDateTab()">📅 ➕ Thêm Ngày Mới</div>
-            <div class="dropdown-item" onclick="renameCurrentDate()">✏️ Sửa Tên Ngày Hiện Tại</div>
-            <div class="dropdown-item" style="color:red;" onclick="deleteCurrentDate()">🗑 Xóa Ngày Hiện Tại</div>
+            <div class="dropdown-item" onclick="addDateTab()"><i class="fa-solid fa-calendar-plus text-green-600"></i> Thêm Ngày Mới</div>
+            <div class="dropdown-item" onclick="renameCurrentDate()"><i class="fa-solid fa-pen text-amber-600"></i> Sửa Tên Ngày Hiện Tại</div>
+            <div class="dropdown-item" style="color:red;" onclick="deleteCurrentDate()"><i class="fa-solid fa-trash text-red-600"></i> Xóa Ngày Hiện Tại</div>
             <div class="dropdown-divider"></div>
-            <div class="dropdown-item" onclick="exportToExcel()">📥 Xuất Dữ Liệu Excel</div>
+            <div class="dropdown-item" onclick="exportToExcel()"><i class="fa-solid fa-file-excel text-emerald-600"></i> Xuất Dữ Liệu Excel</div>
             <div class="dropdown-divider"></div>
-            <div class="dropdown-item" onclick="backupDataJSON()">💾 Sao Lưu Dữ Liệu (Backup JSON)</div>
-            <div class="dropdown-item" onclick="triggerRestoreJSON()">📤 Phục Hồi Dữ Liệu (Restore JSON)</div>
+            <div class="dropdown-item" onclick="backupDataJSON()"><i class="fa-solid fa-download text-blue-600"></i> Sao Lưu Dữ Liệu (Backup JSON)</div>
+            <div class="dropdown-item" onclick="triggerRestoreJSON()"><i class="fa-solid fa-upload text-indigo-600"></i> Phục Hồi Dữ Liệu (Restore JSON)</div>
           </div>
         </div>
 
         <input type="file" id="restoreFileInput" accept=".json" style="display:none;" onchange="handleRestoreJSON(event)">
 
         <div class="nav-item">
-          <button class="nav-btn" onclick="toggleMenu('menuTongHop', event)">📊 TỔNG HỢP CÁC NGÀY ▾</button>
+          <button class="nav-btn" onclick="toggleMenu('menuTongHop', event)">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>TỔNG HỢP CÁC NGÀY ▾</span>
+          </button>
           <div class="dropdown-menu" id="menuTongHop">
             <div id="datesMenuList"></div>
             <div class="dropdown-divider"></div>
-            <div class="dropdown-item" style="font-weight: 800; color: var(--accent-color);" onclick="switchTab('tonghop')">📊 Bảng Tổng Hợp Tất Cả Ngày</div>
+            <div class="dropdown-item" style="font-weight: 800; color: var(--accent-color);" onclick="switchTab('tonghop')"><i class="fa-solid fa-table"></i> Bảng Tổng Hợp Tất Cả Ngày</div>
           </div>
         </div>
 
         <div class="nav-item">
-          <button class="nav-btn" onclick="toggleMenu('menuMini1', event)">🎮 MINI GAME 1 ▾</button>
+          <button class="nav-btn" onclick="toggleMenu('menuMini1', event)">
+            <i class="fa-solid fa-gamepad"></i>
+            <span>MINI GAME 1 ▾</span>
+          </button>
           <div class="dropdown-menu" id="menuMini1">
             <div class="dropdown-item" onclick="switchTab('minigame1')">▶️ Lịch Thi Đấu Team A & B (24 Trận)</div>
             <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Nội Dung Game 1</div>
@@ -255,51 +292,64 @@
         </div>
 
         <div class="nav-item">
-          <button class="nav-btn" onclick="toggleMenu('menuMini2', event)">🏆 GIẢI ĐẤU MINI GAME 2 ▾</button>
+          <button class="nav-btn" onclick="toggleMenu('menuMini2', event)">
+            <i class="fa-solid fa-trophy text-yellow-400"></i>
+            <span>GIẢI ĐẤU MINI GAME 2 ▾</span>
+          </button>
           <div class="dropdown-menu right-align" id="menuMini2">
             <div class="dropdown-item" onclick="switchTab('minigame2')">🏆 Lịch Thi Đấu & BXH Bảng A, B</div>
-            <div class="dropdown-item" onclick="openGameModal(2)">⚙️ Chỉnh Sửa Nội Dung Game 2</div>
+            <div class="dropdown-item" onclick="openGameModal(2)">⚙ Chỉnh Sửa Nội Dung Game 2</div>
           </div>
         </div>
       </div>
     </div>
     
+    <!-- KHU VỰC HIỂN THỊ NỘI DUNG DYNAMIC -->
     <div id="tabContent"></div>
   </div>
 
   <!-- MODAL CHỈNH SỬA MINI GAME -->
   <div class="modal" id="gameModal">
     <div class="modal-content">
-      <h3 style="margin-top:0; font-size:14px;" id="gameModalTitle">Chỉnh Sửa Mini Game</h3>
-      <textarea id="gameContentInput" rows="5" style="width:100%; padding:6px; border:1px solid #cbd5e1; border-radius:4px; font-size:11px;" placeholder="Nhập thể lệ trò chơi..."></textarea>
-      <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:10px;">
+      <h3 style="margin-top:0; font-size:14px; font-weight:800;" id="gameModalTitle">Chỉnh Sửa Mini Game</h3>
+      <textarea id="gameContentInput" rows="5" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" placeholder="Nhập thể lệ trò chơi..."></textarea>
+      <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:12px;">
         <button class="btn" style="background-color:#64748b;" onclick="closeGameModal()">Hủy</button>
         <button class="btn btn-green" onclick="saveGameContent()">Lưu Thay Đổi</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL THÊM / SỬA PICK THỦ MỚI TỪ FILE DANH SÁCH PICK THỦ -->
-  <div id="player-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6 text-slate-800">
-      <h3 id="modal-title" class="text-lg font-bold text-slate-800 mb-4">Thêm Pick Thủ Mới</h3>
+  <!-- MODAL THÊM / SỬA PICK THỦ CẬP NHẬT TỐI ƯU -->
+  <div id="player-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 text-slate-800 border border-slate-100">
+      <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+        <h3 id="modal-title" class="text-base font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-user-pen text-blue-600"></i> Thêm Pick Thủ Mới
+        </h3>
+        <button onclick="closePlayerModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      
       <input type="hidden" id="player-id">
       <div class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Họ & Tên VĐV</label>
-          <input type="text" id="player-name" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Nhập tên VĐV...">
+          <input type="text" id="player-name" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs text-left focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Nhập tên VĐV...">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Giới Tính</label>
-          <select id="player-gender" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+          <select id="player-gender" class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
             <option value="Nam">Nam</option>
             <option value="Nữ">Nữ</option>
           </select>
         </div>
       </div>
+
       <div class="flex justify-end gap-2 mt-6">
-        <button onclick="closePlayerModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-sm rounded-lg hover:bg-slate-300">Hủy</button>
-        <button onclick="savePlayer()" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 font-semibold">Lưu Pick Thủ</button>
+        <button onclick="closePlayerModal()" class="px-4 py-2 bg-slate-100 text-slate-600 text-xs rounded-lg hover:bg-slate-200 font-bold transition">Hủy</button>
+        <button onclick="savePlayer()" class="px-4 py-2 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 font-bold transition flex items-center gap-1">
+          <i class="fa-solid fa-floppy-disk"></i> Lưu Pick Thủ
+        </button>
       </div>
     </div>
   </div>
@@ -329,7 +379,7 @@
       "#c026d3", "#0d9488", "#ea580c", "#4f46e5"
     ];
 
-    // STATE TÍCH HỢP DANH SÁCH PICK THỦ ĐẦY ĐỦ TỪ DANHSACHPICTHU
+    // STATE DANH SÁCH PICK THỦ ĐÃ TÍCH HỢP HOÀN CHỈNH
     let players = [
       { id: 1, name: "Tiến Thọ", gender: "Nam" },
       { id: 2, name: "Châu Sĩ", gender: "Nam" },
@@ -704,7 +754,7 @@
       renderCurrentTab();
     }
 
-    /* LOGIC THÊM, SỬA, XÓA VÀ RENDER PICK THỦ TỪ FILE DANHSACHPICTHU */
+    /* XỬ LÝ PICK THỦ - CĂN LỀ TRÁI VÀ ĐỒNG BỘ MẪU MỚI */
     function openPlayerModal() {
       document.getElementById('modal-title').innerText = "Thêm Pick Thủ Mới";
       document.getElementById('player-id').value = "";
@@ -765,15 +815,15 @@
     function renderPlayersTab(container) {
       syncVdvsFromPlayers();
       let html = `
-        <div class="bg-white/95 rounded-xl shadow-md p-4 md:p-6 text-slate-800 border border-slate-200">
-            <div class="flex justify-between items-center mb-6 pb-4 border-b">
+        <div class="bg-white rounded-xl shadow-sm p-4 md:p-6 text-slate-800 border border-slate-200">
+            <div class="flex justify-between items-center mb-5 pb-3 border-b border-slate-100">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                        <i class="fa-solid fa-users text-blue-600"></i> Danh Sách Pick Thủ CLB
+                    <h2 class="text-base md:text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-users text-blue-600"></i> Quản Lý Danh Sách Pick Thủ CLB
                     </h2>
-                    <p class="text-xs text-slate-500">Quản lý danh sách thành viên tham gia giải đấu</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Danh sách các vận động viên đăng ký thi đấu chính thức</p>
                 </div>
-                <button onclick="openPlayerModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 shadow">
+                <button onclick="openPlayerModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2 rounded-lg text-xs font-bold flex items-center gap-2 shadow transition">
                     <i class="fa-solid fa-plus"></i> Thêm Pick Thủ
                 </button>
             </div>
@@ -781,33 +831,38 @@
             <div class="smooth-scroll">
                 <table class="w-full text-left border-collapse border border-slate-200">
                     <thead>
-                        <tr class="bg-slate-100 text-slate-700 text-sm">
-                            <th class="p-3 border w-16 text-center">STT</th>
-                            <th class="p-3 border">Tên Pick Thủ</th>
-                            <th class="p-3 border w-28 text-center">Giới tính</th>
-                            <th class="p-3 border text-center w-40">Thao Tác</th>
+                        <tr class="bg-slate-50 text-slate-700 text-xs uppercase font-extrabold">
+                            <th class="p-3 border border-slate-200 w-16 text-center">STT</th>
+                            <th class="p-3 border border-slate-200 text-left pl-4">Tên Pick Thủ</th>
+                            <th class="p-3 border border-slate-200 w-28 text-center">Giới tính</th>
+                            <th class="p-3 border border-slate-200 text-center w-40">Thao Tác</th>
                         </tr>
                     </thead>
-                    <tbody class="text-sm divide-y divide-slate-200">
-                        ${players.map((p, index) => `
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="p-3 border text-center font-bold text-slate-500">${index + 1}</td>
-                                <td class="p-3 border font-semibold text-slate-800">${p.name}</td>
-                                <td class="p-3 border text-center">
-                                    <span class="px-2 py-1 text-xs rounded-full ${p.gender === 'Nam' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700'} font-semibold">
-                                        ${p.gender}
-                                    </span>
-                                </td>
-                                <td class="p-3 border text-center whitespace-nowrap">
-                                    <button onclick="editPlayer(${p.id})" class="text-blue-600 hover:text-blue-800 mr-3 font-semibold text-xs">
-                                        <i class="fa-solid fa-pen"></i> Sửa
-                                    </button>
-                                    <button onclick="deletePlayer(${p.id})" class="text-red-600 hover:text-red-800 font-semibold text-xs">
-                                        <i class="fa-solid fa-trash"></i> Xóa
-                                    </button>
-                                </td>
-                            </tr>
-                        `).join('')}
+                    <tbody class="text-xs divide-y divide-slate-200">
+                        ${players.map((p, index) => {
+                            const color = VDV_COLORS[index % VDV_COLORS.length];
+                            return `
+                              <tr class="hover:bg-blue-50/60 transition">
+                                  <td class="p-2.5 border border-slate-200 text-center font-bold text-slate-500">${index + 1}</td>
+                                  <td class="p-2.5 border border-slate-200 text-left pl-4 font-bold" style="color: ${color};">
+                                      <span class="inline-block">${p.name}</span>
+                                  </td>
+                                  <td class="p-2.5 border border-slate-200 text-center">
+                                      <span class="px-2.5 py-1 text-[10px] rounded-full ${p.gender === 'Nam' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-pink-50 text-pink-700 border border-pink-200'} font-bold">
+                                          ${p.gender}
+                                      </span>
+                                  </td>
+                                  <td class="p-2.5 border border-slate-200 text-center whitespace-nowrap">
+                                      <button onclick="editPlayer(${p.id})" class="text-blue-600 hover:text-blue-800 mr-3 font-bold text-xs inline-flex items-center gap-1">
+                                          <i class="fa-solid fa-pen-to-square"></i> Sửa
+                                      </button>
+                                      <button onclick="deletePlayer(${p.id})" class="text-red-600 hover:text-red-800 font-bold text-xs inline-flex items-center gap-1">
+                                          <i class="fa-solid fa-trash"></i> Xóa
+                                      </button>
+                                  </td>
+                              </tr>
+                            `;
+                        }).join('')}
                     </tbody>
                 </table>
             </div>
@@ -851,7 +906,7 @@
 
     function deleteCurrentDate() {
       closeAllDropdowns();
-      if (currentTab === "tonghop" || currentTab === "players" || currentTab === "minigame1" || currentTab === "minigame2") return alert("⚠️ Không thể xóa tab này!");
+      if (currentTab === "tonghop" || currentTab === "players" || currentTab === "minigame1" || currentTab === "minigame2") return alert("⚠️️ Không thể xóa tab này!");
       const dateToDelete = currentTab;
       if (confirm(`❌ Bạn có chắc chắn muốn XÓA TOÀN BỘ dữ liệu ngày "${dateToDelete}"?`)) {
         dates = dates.filter(d => d !== dateToDelete);
@@ -1377,7 +1432,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>PICK THỦ</th>
+                  <th style="text-align: left; padding-left: 8px;">PICK THỦ</th>
                   <th>SỐ TRẬN</th>
                   <th>THẮNG/K</th>
                   <th>THUA/K</th>
@@ -1390,7 +1445,7 @@
               <tbody>
                 ${summaryRowsHtml}
                 <tr class="total-summary-row">
-                  <td style="color: red; text-align: left;"><strong>Tổng Tiền BTC Thu Về</strong></td>
+                  <td style="color: red; text-align: left; padding-left: 8px;"><strong>Tổng Tiền BTC Thu Về</strong></td>
                   <td></td>
                   <td></td>
                   <td></td>
@@ -1405,7 +1460,7 @@
                   </td>
                 </tr>
                 <tr class="total-summary-row">
-                  <td style="color: red; text-align: left;" colspan="4"><strong>Quỹ Còn</strong></td>
+                  <td style="color: red; text-align: left; padding-left: 8px;" colspan="4"><strong>Quỹ Còn</strong></td>
                   <td colspan="2" style="color: red; font-size: 13px;"><strong>${quyCon}</strong></td>
                   <td colspan="2"></td>
                 </tr>
@@ -1529,7 +1584,7 @@
             <table>
               <thead>
                 <tr>
-                  <th style="width: 140px;">VĐV (PICK THỦ)</th>
+                  <th style="width: 140px; text-align: left; padding-left: 8px;">VĐV (PICK THỦ)</th>
                   ${activeDates.map(d => `<th>NGÀY ${d}</th>`).join('')}
                   <th style="background-color: #fef08a; color: #854d0e;">TỔNG KÈO</th>
                 </tr>
@@ -1747,17 +1802,17 @@
           </div>
           <div class="grid-2col">
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; background:#15803d; color:#fff; padding:6px 8px; border-radius:4px; margin-bottom:6px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; background:#15803d; color:#fff; padding:6px 8px; border-radius:6px; margin-bottom:6px;">
                 <span style="font-weight:bold; font-size:11px;">🟢 DANH SÁCH TEAM A (${mini1TeamA.length} VĐV)</span>
                 <button class="btn btn-green btn-sm" style="background:#fff; color:#15803d;" onclick="addMini1Vdv('A')">➕ Thêm VĐV</button>
               </div>
               <div style="display:flex; flex-direction:column; gap:4px;">
                 ${mini1TeamA.map(v => `
-                  <div class="vdv-item">
+                  <div class="vdv-item" style="background: #f8fafc; padding: 5px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-weight:bold; color:#15803d;">${v}</span>
                     <div>
-                      <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:4px;" onclick="editMini1Vdv('A', '${v}')">✏️</button>
-                      <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeMini1Vdv('A', '${v}')">✕</button>
+                      <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="editMini1Vdv('A', '${v}')"><i class="fa-solid fa-pen-to-square"></i></button>
+                      <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeMini1Vdv('A', '${v}')"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                   </div>
                 `).join('')}
@@ -1765,17 +1820,17 @@
             </div>
 
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; background:#0369a1; color:#fff; padding:6px 8px; border-radius:4px; margin-bottom:6px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; background:#0369a1; color:#fff; padding:6px 8px; border-radius:6px; margin-bottom:6px;">
                 <span style="font-weight:bold; font-size:11px;">🔵 DANH SÁCH TEAM B (${mini1TeamB.length} VĐV)</span>
                 <button class="btn btn-green btn-sm" style="background:#fff; color:#0369a1;" onclick="addMini1Vdv('B')">➕ Thêm VĐV</button>
               </div>
               <div style="display:flex; flex-direction:column; gap:4px;">
                 ${mini1TeamB.map(v => `
-                  <div class="vdv-item">
+                  <div class="vdv-item" style="background: #f8fafc; padding: 5px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
                     <span style="font-weight:bold; color:#0369a1;">${v}</span>
                     <div>
-                      <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:4px;" onclick="editMini1Vdv('B', '${v}')">✏️</button>
-                      <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeMini1Vdv('B', '${v}')">✕</button>
+                      <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="editMini1Vdv('B', '${v}')"><i class="fa-solid fa-pen-to-square"></i></button>
+                      <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeMini1Vdv('B', '${v}')"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                   </div>
                 `).join('')}
@@ -1908,7 +1963,7 @@
                   <tr class="mg2-header-a"><th colspan="5">BẢNG XẾP HẠNG BẢNG A</th></tr>
                   <tr class="mg2-sub-header">
                     <th style="width:35px;">STT</th>
-                    <th>Pickleball - Cặp VĐV Bảng A</th>
+                    <th style="text-align: left; padding-left: 8px;">Pickleball - Cặp VĐV Bảng A</th>
                     <th style="width:50px;">Điểm</th>
                     <th style="width:55px;">Hệ số</th>
                     <th style="width:65px;">Thao tác</th>
@@ -1918,7 +1973,7 @@
                   ${standingsA.map((st, i) => `
                     <tr>
                       <td><strong>${i + 1}</strong></td>
-                      <td style="text-align: left; padding-left: 6px; font-weight:bold;">
+                      <td style="text-align: left; padding-left: 8px; font-weight:bold;">
                         <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
@@ -2005,7 +2060,7 @@
                   <tr class="mg2-header-b"><th colspan="5">BẢNG XẾP HẠNG BẢNG B</th></tr>
                   <tr class="mg2-sub-header">
                     <th style="width:35px;">STT</th>
-                    <th>Pickleball - Cặp VĐV Bảng B</th>
+                    <th style="text-align: left; padding-left: 8px;">Pickleball - Cặp VĐV Bảng B</th>
                     <th style="width:50px;">Điểm</th>
                     <th style="width:55px;">Hệ số</th>
                     <th style="width:65px;">Thao tác</th>
@@ -2015,7 +2070,7 @@
                   ${standingsB.map((st, i) => `
                     <tr>
                       <td><strong>${i + 1}</strong></td>
-                      <td style="text-align: left; padding-left: 6px; font-weight:bold;">
+                      <td style="text-align: left; padding-left: 8px; font-weight:bold;">
                         <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>

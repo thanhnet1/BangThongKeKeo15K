@@ -142,7 +142,6 @@
     .card-title { font-size: 13px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; letter-spacing: 0.3px; }
     .table-actions-toolbar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     
-    /* CĂN CHỈNH TỐI ƯU CÁC BẢNG TRÊN MÀN HÌNH ĐIỆN THOẠI DỌC & MÁY TÍNH */
     .table-responsive { 
       width: 100%; 
       overflow-x: auto; 
@@ -168,10 +167,21 @@
     .th-pick2 { background-color: #fee2e2; color: #991b1b; }
     .th-money { background-color: #fef3c7; color: #92400e; }
     
-    /* Ô CHỌN VÀ NHẬP LIỆU NHẤT QUÁN */
-    select { width: 100%; padding: 4px 2px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 11px; font-weight: 700; background: #fff; text-overflow: ellipsis; cursor: pointer; transition: all 0.2s; }
+    /* ÉP IN ĐẬM TÊN VĐV TRONG CÁC NÚT CHỌN (SELECT) */
+    select { 
+      width: 100%; 
+      padding: 4px 2px; 
+      border: 1px solid #cbd5e1; 
+      border-radius: 5px; 
+      font-size: 11px; 
+      font-weight: 800 !important; /* ĐÃ IN ĐẬM */
+      background: #fff; 
+      text-overflow: ellipsis; 
+      cursor: pointer; 
+      transition: all 0.2s; 
+    }
     select:hover { border-color: var(--accent-color); }
-    input[type="text"], input[type="number"] { width: 100%; padding: 4px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 11px; background: #fff; text-align: center; transition: all 0.2s; }
+    input[type="text"], input[type="number"] { width: 100%; padding: 4px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 11px; background: #fff; text-align: center; font-weight: 700; transition: all 0.2s; }
     input[type="text"]:focus, input[type="number"]:focus { border-color: var(--accent-color); outline: none; box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); }
 
     .score-input { width: 36px !important; height: 24px; padding: 0 !important; font-weight: 800; text-align: center; font-size: 11px; border: 1.5px solid var(--score-border) !important; border-radius: 4px; background: #ffffff; display: inline-flex; align-items: center; justify-content: center; }
@@ -220,7 +230,7 @@
       .nav-btn { font-size: 10px; padding: 5px 8px; }
       table { min-width: 600px; font-size: 10px; }
       th, td { padding: 4px 2px; }
-      select { font-size: 10px; padding: 2px 0; }
+      select { font-size: 10px; padding: 2px 0; font-weight: 800 !important; }
       .score-input { width: 30px !important; height: 22px; }
     }
   </style>
@@ -848,7 +858,7 @@
                             return `
                               <tr class="hover:bg-blue-50/60 transition">
                                   <td class="p-2.5 border border-slate-200 text-center font-bold text-slate-500">${index + 1}</td>
-                                  <td class="p-2.5 border border-slate-200 text-left pl-4 font-bold" style="color: ${color};">
+                                  <td class="p-2.5 border border-slate-200 text-left pl-4 font-extrabold" style="color: ${color}; font-size:12px;">
                                       <span class="inline-block">${p.name}</span>
                                   </td>
                                   <td class="p-2.5 border border-slate-200 text-center">
@@ -1185,13 +1195,14 @@
       }
     }
 
+    /* ĐỒNG BỘ NÚT CHỌN (SELECT) PICK THỦ IN ĐẬM VÀ CÓ MÀU SẮC CHUẨN */
     function generateVdvOptionsHtml(selectedValue, filterList = null) {
       const listToRender = filterList || vdvs;
       return listToRender.map((v) => {
         const i = vdvs.indexOf(v);
-        const color = VDV_COLORS[i % VDV_COLORS.length];
+        const color = i !== -1 ? VDV_COLORS[i % VDV_COLORS.length] : "#1e293b";
         const isSelected = selectedValue === v ? 'selected' : '';
-        return `<option value="${v}" ${isSelected} style="color: ${color}; font-weight: bold; font-size: 11px;">${v}</option>`;
+        return `<option value="${v}" ${isSelected} style="color: ${color}; font-weight: 800; font-size: 11px;">${v}</option>`;
       }).join('');
     }
 
@@ -1296,25 +1307,25 @@
               </div>
             </td>
             <td>
-              <select style="color: ${c1_p1_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c1_p1', this.value)">
+              <select style="color: ${c1_p1_color}; font-weight:800;" onchange="updateMatch('${dateStr}', ${idx}, 'c1_p1', this.value)">
                 <option value="">-- Select --</option>
                 ${generateVdvOptionsHtml(m.c1_p1)}
               </select>
             </td>
             <td>
-              <select style="color: ${c1_p2_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c1_p2', this.value)">
+              <select style="color: ${c1_p2_color}; font-weight:800;" onchange="updateMatch('${dateStr}', ${idx}, 'c1_p2', this.value)">
                 <option value="">-- Select --</option>
                 ${generateVdvOptionsHtml(m.c1_p2)}
               </select>
             </td>
             <td>
-              <select style="color: ${c2_p1_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c2_p1', this.value)">
+              <select style="color: ${c2_p1_color}; font-weight:800;" onchange="updateMatch('${dateStr}', ${idx}, 'c2_p1', this.value)">
                 <option value="">-- Select --</option>
                 ${generateVdvOptionsHtml(m.c2_p1)}
               </select>
             </td>
             <td>
-              <select style="color: ${c2_p2_color};" onchange="updateMatch('${dateStr}', ${idx}, 'c2_p2', this.value)">
+              <select style="color: ${c2_p2_color}; font-weight:800;" onchange="updateMatch('${dateStr}', ${idx}, 'c2_p2', this.value)">
                 <option value="">-- Select --</option>
                 ${generateVdvOptionsHtml(m.c2_p2)}
               </select>
@@ -1405,7 +1416,7 @@
 
           summaryRowsHtml += `
             <tr>
-              <td style="color: ${vColor}; font-weight: 800; text-align: left; padding-left: 8px;">${v}</td>
+              <td style="color: ${vColor}; font-weight: 800; font-size:12px; text-align: left; padding-left: 8px;">${v}</td>
               <td>${st.played}</td>
               <td class="txt-win">${st.winK > 0 ? st.winK : ''}</td>
               <td class="txt-lose">${st.loseK < 0 ? st.loseK : ''}</td>
@@ -1640,7 +1651,7 @@
       container.innerHTML = html;
     }
 
-    /* XỬ LÝ MINI GAME 1: THÊM / XÓA CÁC TRẬN ĐẤU */
+    /* XỬ LÝ MINI GAME 1 */
     function addMini1Match() {
       const newId = miniGame1Matches.length + 1;
       miniGame1Matches.push({
@@ -1843,7 +1854,7 @@
                   const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#15803d';
                   return `
                     <div class="vdv-item" style="background: #f8fafc; padding: 5px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                      <span style="font-weight:bold; color:${color}; font-size: 11px;">${v}</span>
+                      <span style="font-weight:800; color:${color}; font-size: 11px;">${v}</span>
                       <div>
                         <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="editMini1Vdv('A', '${v}')"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeMini1Vdv('A', '${v}')"><i class="fa-solid fa-xmark"></i></button>
@@ -1865,7 +1876,7 @@
                   const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
                   return `
                     <div class="vdv-item" style="background: #f8fafc; padding: 5px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                      <span style="font-weight:bold; color:${color}; font-size: 11px;">${v}</span>
+                      <span style="font-weight:800; color:${color}; font-size: 11px;">${v}</span>
                       <div>
                         <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="editMini1Vdv('B', '${v}')"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeMini1Vdv('B', '${v}')"><i class="fa-solid fa-xmark"></i></button>
@@ -1880,7 +1891,7 @@
 
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">▶️️ LỊCH THI ĐẤU MINI GAME 1 (${miniGame1Matches.length} TRẬN)</h2>
+            <h2 class="card-title">▶ LỊCH THI ĐẤU MINI GAME 1 (${miniGame1Matches.length} TRẬN)</h2>
             <button class="btn btn-green" onclick="addMini1Match()">➕ Thêm Trận Đấu</button>
           </div>
           <div class="table-responsive">
@@ -1923,13 +1934,13 @@
                         <input type="text" style="font-size:10px; font-weight:bold; color:#475569;" value="${m.category}" onchange="updateMini1Vdv(${idx}, 'category', this.value)">
                       </td>
                       <td>
-                        <select style="color:${colorA1};" onchange="updateMini1Vdv(${idx}, 'a1', this.value)">
+                        <select style="color:${colorA1}; font-weight:800;" onchange="updateMini1Vdv(${idx}, 'a1', this.value)">
                           <option value="">- Chọn A1 -</option>
                           ${generateVdvOptionsHtml(m.a1, mini1TeamA)}
                         </select>
                       </td>
                       <td>
-                        <select style="color:${colorA2};" onchange="updateMini1Vdv(${idx}, 'a2', this.value)">
+                        <select style="color:${colorA2}; font-weight:800;" onchange="updateMini1Vdv(${idx}, 'a2', this.value)">
                           <option value="">- Chọn A2 -</option>
                           ${generateVdvOptionsHtml(m.a2, mini1TeamA)}
                         </select>
@@ -1954,13 +1965,13 @@
                         </div>
                       </td>
                       <td>
-                        <select style="color:${colorB1};" onchange="updateMini1Vdv(${idx}, 'b1', this.value)">
+                        <select style="color:${colorB1}; font-weight:800;" onchange="updateMini1Vdv(${idx}, 'b1', this.value)">
                           <option value="">- Chọn B1 -</option>
                           ${generateVdvOptionsHtml(m.b1, mini1TeamB)}
                         </select>
                       </td>
                       <td>
-                        <select style="color:${colorB2};" onchange="updateMini1Vdv(${idx}, 'b2', this.value)">
+                        <select style="color:${colorB2}; font-weight:800;" onchange="updateMini1Vdv(${idx}, 'b2', this.value)">
                           <option value="">- Chọn B2 -</option>
                           ${generateVdvOptionsHtml(m.b2, mini1TeamB)}
                         </select>
@@ -2214,7 +2225,7 @@
                       <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc1.s2}" oninput="updateMini2Knockout('bkc1', 's2', this.value)">
                     </div>
                   </td>
-                  <td><input type="text" value="${mini2Knockout.bkc1.p2}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
+                  <td><input type="text" value="${mini2Knockout.bkc2.p2}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
                 </tr>
                 <tr>
                   <td><strong>Bán Kết 2</strong></td>

@@ -153,6 +153,7 @@
     th, td { border: 1px solid #cbd5e1; padding: 6px 4px; text-align: center; vertical-align: middle; word-wrap: break-word; transition: background 0.25s ease; }
     th { background-color: #f8fafc; color: #334155; font-weight: 800; font-size: 10px; text-transform: uppercase; }
     
+    /* HIỆU ỨNG DI CHUỘT DÒNG BẢNG */
     tr { transition: all 0.2s ease-in-out; }
     tbody tr:hover {
       background: linear-gradient(90deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%) !important;
@@ -166,13 +167,14 @@
     .th-pick2 { background-color: #fee2e2; color: #991b1b; }
     .th-money { background-color: #fef3c7; color: #92400e; }
     
+    /* ÉP IN ĐẬM TÊN VĐV TRONG CÁC NÚT CHỌN (SELECT) */
     select { 
       width: 100%; 
       padding: 4px 2px; 
       border: 1px solid #cbd5e1; 
       border-radius: 5px; 
       font-size: 11px; 
-      font-weight: 800 !important;
+      font-weight: 800 !important; /* ĐÃ IN ĐẬM */
       background: #fff; 
       text-overflow: ellipsis; 
       cursor: pointer; 
@@ -1112,15 +1114,6 @@
       }
     }
 
-    function updateMini2MatchPair(group, matchIdx, field, val) {
-      let matches = group === 'A' ? mini2MatchesA : mini2MatchesB;
-      if (matches[matchIdx]) {
-        matches[matchIdx][field] = parseInt(val);
-        saveDataToFirestore();
-        renderCurrentTab();
-      }
-    }
-
     function updateMini2Knockout(stage, field, val) {
       if (mini2Knockout[stage]) {
         mini2Knockout[stage][field] = val;
@@ -1210,14 +1203,6 @@
         const color = i !== -1 ? VDV_COLORS[i % VDV_COLORS.length] : "#1e293b";
         const isSelected = selectedValue === v ? 'selected' : '';
         return `<option value="${v}" ${isSelected} style="color: ${color}; font-weight: 800; font-size: 11px;">${v}</option>`;
-      }).join('');
-    }
-
-    /* TẠO NÚT CHỌN SỔ XUỐNG CHO CÁC CẶP TRONG MINI GAME 2 */
-    function generateMini2PairOptionsHtml(pairsList, selectedIndex) {
-      return pairsList.map((p, idx) => {
-        const isSelected = parseInt(selectedIndex) === idx ? 'selected' : '';
-        return `<option value="${idx}" ${isSelected} style="font-weight:800; font-size:11px;">${p.name}</option>`;
       }).join('');
     }
 
@@ -2004,7 +1989,7 @@
       container.innerHTML = html;
     }
 
-    /* BẢNG MINI GAME 2 - ĐÃ CẬP NHẬT DANH SÁCH SỔ XUỐNG DỄ DÀNG CHỌN CẶP ĐẤU */
+    /* BẢNG MINI GAME 2 */
     function renderMiniGame2Tab(container) {
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
       let standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
@@ -2068,26 +2053,24 @@
               </table>
             </div>
 
-            <!-- 2. LỊCH THI ĐẤU BẢNG A (ĐÃ ĐỔI THÀNH DANH SÁCH SỔ XUỐNG SELECT) -->
+            <!-- 2. LỊCH THI ĐẤU BẢNG A -->
             <div class="table-responsive">
               <table>
                 <thead>
                   <tr class="mg2-header-a"><th colspan="5">LỊCH THI ĐẤU BẢNG A</th></tr>
                   <tr class="mg2-sub-header">
                     <th style="width:40px;">Trận</th>
-                    <th>Đội 1 (Bảng A)</th>
+                    <th>Đội 1</th>
                     <th style="width:90px;">Tỷ Số</th>
-                    <th>Đội 2 (Bảng A)</th>
+                    <th>Đội 2</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${mini2MatchesA.map((m, idx) => `
                     <tr>
                       <td><strong>${m.id}</strong></td>
-                      <td>
-                        <select onchange="updateMini2MatchPair('A', ${idx}, 'pair1Index', this.value)" style="color:#c2410c; font-weight:800;">
-                          ${generateMini2PairOptionsHtml(mini2PairsA, m.pair1Index)}
-                        </select>
+                      <td style="text-align: right; padding-right: 6px;">
+                        ${mini2PairsA[m.pair1Index] ? `<span class="pair-badge badge-p${m.pair1Index % 5}">${mini2PairsA[m.pair1Index].name}</span>` : ''}
                       </td>
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
@@ -2108,10 +2091,8 @@
                           >
                         </div>
                       </td>
-                      <td>
-                        <select onchange="updateMini2MatchPair('A', ${idx}, 'pair2Index', this.value)" style="color:#c2410c; font-weight:800;">
-                          ${generateMini2PairOptionsHtml(mini2PairsA, m.pair2Index)}
-                        </select>
+                      <td style="text-align: left; padding-left: 6px;">
+                        ${mini2PairsA[m.pair2Index] ? `<span class="pair-badge badge-p${m.pair2Index % 5}">${mini2PairsA[m.pair2Index].name}</span>` : ''}
                       </td>
                     </tr>
                   `).join('')}
@@ -2169,26 +2150,24 @@
               </table>
             </div>
 
-            <!-- 2. LỊCH THI ĐẤU BẢNG B (ĐÃ ĐỔI THÀNH DANH SÁCH SỔ XUỐNG SELECT) -->
+            <!-- 2. LỊCH THI ĐẤU BẢNG B -->
             <div class="table-responsive">
               <table>
                 <thead>
                   <tr class="mg2-header-b"><th colspan="5">LỊCH THI ĐẤU BẢNG B</th></tr>
                   <tr class="mg2-sub-header">
                     <th style="width:40px;">Trận</th>
-                    <th>Đội 1 (Bảng B)</th>
+                    <th>Đội 1</th>
                     <th style="width:90px;">Tỷ Số</th>
-                    <th>Đội 2 (Bảng B)</th>
+                    <th>Đội 2</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${mini2MatchesB.map((m, idx) => `
                     <tr>
                       <td><strong>${m.id}</strong></td>
-                      <td>
-                        <select onchange="updateMini2MatchPair('B', ${idx}, 'pair1Index', this.value)" style="color:#0369a1; font-weight:800;">
-                          ${generateMini2PairOptionsHtml(mini2PairsB, m.pair1Index)}
-                        </select>
+                      <td style="text-align: right; padding-right: 6px;">
+                        ${mini2PairsB[m.pair1Index] ? `<span class="pair-badge badge-p${m.pair1Index % 5}">${mini2PairsB[m.pair1Index].name}</span>` : ''}
                       </td>
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
@@ -2209,10 +2188,8 @@
                           >
                         </div>
                       </td>
-                      <td>
-                        <select onchange="updateMini2MatchPair('B', ${idx}, 'pair2Index', this.value)" style="color:#0369a1; font-weight:800;">
-                          ${generateMini2PairOptionsHtml(mini2PairsB, m.pair2Index)}
-                        </select>
+                      <td style="text-align: left; padding-left: 6px;">
+                        ${mini2PairsB[m.pair2Index] ? `<span class="pair-badge badge-p${m.pair2Index % 5}">${mini2PairsB[m.pair2Index].name}</span>` : ''}
                       </td>
                     </tr>
                   `).join('')}
@@ -2248,7 +2225,7 @@
                       <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc1.s2}" oninput="updateMini2Knockout('bkc1', 's2', this.value)">
                     </div>
                   </td>
-                  <td><input type="text" value="${mini2Knockout.bkc1.p2}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
+                  <td><input type="text" value="${mini2Knockout.bkc2.p2}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
                 </tr>
                 <tr>
                   <td><strong>Bán Kết 2</strong></td>

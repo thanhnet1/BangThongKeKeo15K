@@ -308,7 +308,7 @@
             <div class="dropdown-item" onclick="switchTab('minigame1')">▶️ Lịch Thi Đấu Team A & B</div>
             <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Nội Dung Game 1</div>
             <div class="dropdown-divider"></div>
-            <div class="dropdown-item" onclick="switchTab('minigame1_sub1')">🌸 Minigame 20/10 (5 Nam - 3 Nữ)</div>
+            <div class="dropdown-item" onclick="switchTab('minigame1_sub1')">🌸 Minigame 20/10</div>
             <div class="dropdown-item" onclick="switchTab('minigame1_sub2')">🔥 Nội Dung Mới 2</div>
           </div>
         </div>
@@ -423,7 +423,9 @@
       { id: 15, name: "Thanh Đàm", gender: "Nam" },
       { id: 16, name: "Điền Chèm", gender: "Nam" },
       { id: 17, name: "Minh Hạnh", gender: "Nữ" },
-      { id: 18, name: "Minh Vượng", gender: "Nam" }
+      { id: 18, name: "Minh Vượng", gender: "Nam" },
+      { id: 19, name: "Gà Tre", gender: "Nữ" },
+      { id: 20, name: "Trường Giang", gender: "Nam" }
     ];
 
     let vdvs = players.map(p => p.name);
@@ -440,28 +442,34 @@
     let mini1KeoMode = "k25";
     let mini1Payment = {};
 
-    let mini1Sub1TeamA = ["Tiến Thọ", "Long Diễn", "Phú Mỗ", "Hà Giấy", "Tuấn La", "Vân Đình", "Cẩm Ly", "Minh Hạnh"];
-    let mini1Sub1TeamB = ["Trí Đỏ", "Thành Sóc", "Dũng Ngạc", "Lợi Trí", "Điền Chèm", "Quỳnh Cool", "Hải Hà", "Minh Vượng"];
+    let mini1Sub1TeamA = ["Tuấn La", "Phú Mỗ", "Tiến Thọ", "Châu Sĩ", "Long Diễn", "Vân Đình", "Minh Hạnh", "Cẩm Ly"];
+    let mini1Sub1TeamB = ["Thành Sóc", "Trường Giang", "Trí Đỏ", "Lợi Trí", "Thanh Đàm", "Gà Tre", "Minh Vượng", "Hải Hà"];
     let mini1Sub1KeoMode = "k25";
     let mini1Sub1Payment = {};
 
+    // DỮ LIỆU CHUẨN ĐÚNG 21 TRẬN TỪ HÌNH ẢNH
     const DEFAULT_MINI1_SUB1_MATCHES = [
-      { id: 1, category: "Nam - Nam", a1: "Tiến Thọ", a2: "Long Diễn", scoreA: "11", scoreB: "8", b1: "Trí Đỏ", b2: "Thành Sóc", customWin: 0, customLose: -25 },
-      { id: 2, category: "Nam - Nam", a1: "Phú Mỗ", a2: "Hà Giấy", scoreA: "9", scoreB: "11", b1: "Dũng Ngạc", b2: "Lợi Trí", customWin: 0, customLose: -25 },
-      { id: 3, category: "Nam - Nam", a1: "Tuấn La", a2: "Tiến Thọ", scoreA: "11", scoreB: "7", b1: "Điền Chèm", b2: "Trí Đỏ", customWin: 0, customLose: -25 },
-      { id: 4, category: "Nam - Nam", a1: "Long Diễn", a2: "Phú Mỗ", scoreA: "6", scoreB: "11", b1: "Thành Sóc", b2: "Dũng Ngạc", customWin: 0, customLose: -25 },
-      { id: 5, category: "Nam - Nam", a1: "Hà Giấy", a2: "Tuấn La", scoreA: "11", scoreB: "9", b1: "Lợi Trí", b2: "Điền Chèm", customWin: 0, customLose: -25 },
-      { id: 6, category: "Nam - Nam", a1: "Tiến Thọ", a2: "Phú Mỗ", scoreA: "11", scoreB: "5", b1: "Trí Đỏ", b2: "Dũng Ngạc", customWin: 0, customLose: -25 },
-      { id: 7, category: "Nam - Nam", a1: "Long Diễn", a2: "Hà Giấy", scoreA: "8", scoreB: "11", b1: "Thành Sóc", b2: "Lợi Trí", customWin: 0, customLose: -25 },
-      { id: 8, category: "Nam - Nam", a1: "Tuấn La", a2: "Long Diễn", scoreA: "11", scoreB: "10", b1: "Điền Chèm", b2: "Thành Sóc", customWin: 0, customLose: -25 },
-      { id: 9, category: "Nam - Nữ", a1: "Tiến Thọ", a2: "Vân Đình", scoreA: "11", scoreB: "6", b1: "Trí Đỏ", b2: "Quỳnh Cool", customWin: 0, customLose: -25 },
-      { id: 10, category: "Nam - Nữ", a1: "Phú Mỗ", a2: "Cẩm Ly", scoreA: "7", scoreB: "11", b1: "Dũng Ngạc", b2: "Hải Hà", customWin: 0, customLose: -25 },
-      { id: 11, category: "Nam - Nữ", a1: "Hà Giấy", a2: "Minh Hạnh", scoreA: "11", scoreB: "9", b1: "Lợi Trí", b2: "Minh Vượng", customWin: 0, customLose: -25 },
-      { id: 12, category: "Nam - Nữ", a1: "Tuấn La", a2: "Vân Đình", scoreA: "8", scoreB: "11", b1: "Điền Chèm", b2: "Quỳnh Cool", customWin: 0, customLose: -25 },
-      { id: 13, category: "Nam - Nữ", a1: "Long Diễn", a2: "Cẩm Ly", scoreA: "11", scoreB: "8", b1: "Thành Sóc", b2: "Hải Hà", customWin: 0, customLose: -25 },
-      { id: 14, category: "Nam - Nữ", a1: "Tiến Thọ", a2: "Minh Hạnh", scoreA: "11", scoreB: "4", b1: "Trí Đỏ", b2: "Minh Vượng", customWin: 0, customLose: -25 },
-      { id: 15, category: "Nam - Nữ", a1: "Phú Mỗ", a2: "Vân Đình", scoreA: "9", scoreB: "11", b1: "Dũng Ngạc", b2: "Quỳnh Cool", customWin: 0, customLose: -25 },
-      { id: 16, category: "Nam - Nữ", a1: "Hà Giấy", a2: "Cẩm Ly", scoreA: "11", scoreB: "7", b1: "Lợi Trí", b2: "Hải Hà", customWin: 0, customLose: -25 }
+      { id: 1, category: "Đôi Nam Nữ", a1: "Tuấn La", a2: "Vân Đình", scoreA: "", scoreB: "", b1: "Thành Sóc", b2: "Gà Tre", customWin: 0, customLose: -25 },
+      { id: 2, category: "Đôi Nam Nữ", a1: "Phú Mỗ", a2: "Minh Hạnh", scoreA: "", scoreB: "", b1: "Trường Giang", b2: "Minh Vượng", customWin: 0, customLose: -25 },
+      { id: 3, category: "Đôi Nam", a1: "Tiến Thọ", a2: "Long Diễn", scoreA: "", scoreB: "", b1: "Trí Đỏ", b2: "Thanh Đàm", customWin: 0, customLose: -25 },
+      { id: 4, category: "Đôi Nam", a1: "Phú Mỗ", a2: "Tuấn La", scoreA: "", scoreB: "", b1: "Trường Giang", b2: "Thành Sóc", customWin: 0, customLose: -25 },
+      { id: 5, category: "Đôi Nam Nữ", a1: "Châu Sĩ", a2: "Minh Hạnh", scoreA: "", scoreB: "", b1: "Lợi Trí", b2: "Minh Vượng", customWin: 0, customLose: -25 },
+      { id: 6, category: "Đôi Nam Nữ", a1: "Phú Mỗ", a2: "Cẩm Ly", scoreA: "", scoreB: "", b1: "Trường Giang", b2: "Hải Hà", customWin: 0, customLose: -25 },
+      { id: 7, category: "Đôi Nam", a1: "Châu Sĩ", a2: "Tuấn La", scoreA: "", scoreB: "", b1: "Lợi Trí", b2: "Thành Sóc", customWin: 0, customLose: -25 },
+      { id: 8, category: "Đôi Nam Nữ", a1: "Tiến Thọ", a2: "Vân Đình", scoreA: "", scoreB: "", b1: "Trí Đỏ", b2: "Gà Tre", customWin: 0, customLose: -25 },
+      { id: 9, category: "Đôi Nam", a1: "Long Diễn", a2: "Phú Mỗ", scoreA: "", scoreB: "", b1: "Thanh Đàm", b2: "Trường Giang", customWin: 0, customLose: -25 },
+      { id: 10, category: "Đôi Nam Nữ", a1: "Tiến Thọ", a2: "Cẩm Ly", scoreA: "", scoreB: "", b1: "Trí Đỏ", b2: "Hải Hà", customWin: 0, customLose: -25 },
+      { id: 11, category: "Đôi Nam Nữ", a1: "Phú Mỗ", a2: "Vân Đình", scoreA: "", scoreB: "", b1: "Trường Giang", b2: "Gà Tre", customWin: 0, customLose: -25 },
+      { id: 12, category: "Đôi Nam", a1: "Long Diễn", a2: "Châu Sĩ", scoreA: "", scoreB: "", b1: "Thanh Đàm", b2: "Lợi Trí", customWin: 0, customLose: -25 },
+      { id: 13, category: "Đôi Nam Nữ", a1: "Tiến Thọ", a2: "Minh Hạnh", scoreA: "", scoreB: "", b1: "Trí Đỏ", b2: "Minh Vượng", customWin: 0, customLose: -25 },
+      { id: 14, category: "Đôi Nam Nữ", a1: "Châu Sĩ", a2: "Vân Đình", scoreA: "", scoreB: "", b1: "Lợi Trí", b2: "Gà Tre", customWin: 0, customLose: -25 },
+      { id: 15, category: "Đôi Nam", a1: "Tiến Thọ", a2: "Tuấn La", scoreA: "", scoreB: "", b1: "Trí Đỏ", b2: "Thành Sóc", customWin: 0, customLose: -25 },
+      { id: 16, category: "Đôi Nam Nữ", a1: "Châu Sĩ", a2: "Cẩm Ly", scoreA: "", scoreB: "", b1: "Lợi Trí", b2: "Hải Hà", customWin: 0, customLose: -25 },
+      { id: 17, category: "Đôi Nam Nữ", a1: "Long Diễn", a2: "Vân Đình", scoreA: "", scoreB: "", b1: "Thanh Đàm", b2: "Gà Tre", customWin: 0, customLose: -25 },
+      { id: 18, category: "Đôi Nam Nữ", a1: "Tuấn La", a2: "Cẩm Ly", scoreA: "", scoreB: "", b1: "Thành Sóc", b2: "Hải Hà", customWin: 0, customLose: -25 },
+      { id: 19, category: "Đôi Nam Nữ", a1: "Long Diễn", a2: "Minh Hạnh", scoreA: "", scoreB: "", b1: "Thanh Đàm", b2: "Minh Vượng", customWin: 0, customLose: -25 },
+      { id: 20, category: "Đôi Nam", a1: "Tiến Thọ", a2: "Phú Mỗ", scoreA: "", scoreB: "", b1: "Trí Đỏ", b2: "Trường Giang", customWin: 0, customLose: -25 },
+      { id: 21, category: "Đôi Nam Nữ", a1: "Long Diễn", a2: "Cẩm Ly", scoreA: "", scoreB: "", b1: "Thanh Đàm", b2: "Hải Hà", customWin: 0, customLose: -25 }
     ];
 
     let miniGame1Sub1Matches = DEFAULT_MINI1_SUB1_MATCHES;
@@ -470,35 +478,13 @@
     let miniGame2Tour1Content = "Nội dung chi tiết và lịch thi đấu của Giải Đấu Bổ Sung 1.";
     let miniGame2Tour2Content = "Nội dung chi tiết và lịch thi đấu của Giải Đấu Bổ Sung 2.";
 
-    // Cấu hình kèo cho Giải Mini Game 2
-    let mini2KeoMode = "k25"; // 'k25' hoặc 'free'
+    let mini2KeoMode = "k25";
     let mini2Payment = {};
 
     const DEFAULT_MINI1_DATA = [
       { id: 1, category: "Nam xoay vòng", a1: "Tiến Thọ", a2: "Long Diễn", scoreA: "8", scoreB: "11", b1: "Trí Đỏ", b2: "Thành Sóc", customWin: 0, customLose: -25 },
       { id: 2, category: "Nam xoay vòng", a1: "Phú Mỗ", a2: "Hà Giấy", scoreA: "5", scoreB: "11", b1: "Dũng Ngạc", b2: "Lợi Trí", customWin: 0, customLose: -25 },
-      { id: 3, category: "Nam xoay vòng", a1: "Tuấn La", a2: "Châu Sĩ", scoreA: "6", scoreB: "11", b1: "Điền Chèm", b2: "Thành Sóc", customWin: 0, customLose: -25 },
-      { id: 4, category: "Nam xoay vòng", a1: "Tiến Thọ", a2: "Phú Mỗ", scoreA: "13", scoreB: "11", b1: "Trí Đỏ", b2: "Dũng Ngạc", customWin: 0, customLose: -25 },
-      { id: 5, category: "Nam xoay vòng", a1: "Long Diễn", a2: "Hà Giấy", scoreA: "11", scoreB: "9", b1: "Thành Sóc", b2: "Lợi Trí", customWin: 0, customLose: -25 },
-      { id: 6, category: "Nam xoay vòng", a1: "Tiến Thọ", a2: "Tuấn La", scoreA: "11", scoreB: "9", b1: "Trí Đỏ", b2: "Điền Chèm", customWin: 0, customLose: -25 },
-      { id: 7, category: "Nam xoay vòng", a1: "Long Diễn", a2: "Châu Sĩ", scoreA: "5", scoreB: "11", b1: "Thành Sóc", b2: "Thành Sóc", customWin: 0, customLose: -25 },
-      { id: 8, category: "Nam xoay vòng", a1: "Phú Mỗ", a2: "Tuấn La", scoreA: "11", scoreB: "9", b1: "Dũng Ngạc", b2: "Điền Chèm", customWin: 0, customLose: -25 },
-      { id: 9, category: "Nam xoay vòng", a1: "Hà Giấy", a2: "Châu Sĩ", scoreA: "11", scoreB: "7", b1: "Lợi Trí", b2: "Thành Sóc", customWin: 0, customLose: -25 },
-      { id: 10, category: "Nữ xoay vòng", a1: "Vân Đình", a2: "Cẩm Ly", scoreA: "11", scoreB: "6", b1: "Quỳnh Cool", b2: "Hải Hà", customWin: 0, customLose: -25 },
-      { id: 11, category: "Nam + Nữ", a1: "Phú Mỗ", a2: "Minh Hạnh", scoreA: "11", scoreB: "6", b1: "Dũng Ngạc", b2: "Minh Vượng", customWin: 0, customLose: -25 },
-      { id: 12, category: "Nam xoay vòng", a1: "Tiến Thọ", a2: "Hà Giấy", scoreA: "5", scoreB: "11", b1: "Trí Đỏ", b2: "Lợi Trí", customWin: 0, customLose: -25 },
-      { id: 13, category: "Nam xoay vòng", a1: "Long Diễn", a2: "Tuấn La", scoreA: "12", scoreB: "10", b1: "Thành Sóc", b2: "Điền Chèm", customWin: 0, customLose: -25 },
-      { id: 14, category: "Nữ xoay vòng", a1: "Vân Đình", a2: "Minh Hạnh", scoreA: "11", scoreB: "7", b1: "Quỳnh Cool", b2: "Minh Vượng", customWin: 0, customLose: -25 },
-      { id: 15, category: "Nam xoay vòng", a1: "Tiến Thọ", a2: "Châu Sĩ", scoreA: "5", scoreB: "11", b1: "Trí Đỏ", b2: "Thành Sóc", customWin: 0, customLose: -25 },
-      { id: 16, category: "Nữ xoay vòng", a1: "Cẩm Ly", a2: "Minh Hạnh", scoreA: "11", scoreB: "8", b1: "Hải Hà", b2: "Minh Vượng", customWin: 0, customLose: -25 },
-      { id: 17, category: "Nam xoay vòng", a1: "Long Diễn", a2: "Phú Mỗ", scoreA: "9", scoreB: "11", b1: "Thành Sóc", b2: "Dũng Ngạc", customWin: 0, customLose: -25 },
-      { id: 18, category: "Nam xoay vòng", a1: "Hà Giấy", a2: "Tuấn La", scoreA: "7", scoreB: "11", b1: "Lợi Trí", b2: "Điền Chèm", customWin: 0, customLose: -25 },
-      { id: 19, category: "Nam xoay vòng", a1: "Phú Mỗ", a2: "Châu Sĩ", scoreA: "8", scoreB: "11", b1: "Dũng Ngạc", b2: "Thành Sóc", customWin: 0, customLose: -25 },
-      { id: 20, category: "Nam + Nữ", a1: "Tiến Thọ", a2: "Vân Đình", scoreA: "13", scoreB: "11", b1: "Trí Đỏ", b2: "Quỳnh Cool", customWin: 0, customLose: -25 },
-      { id: 21, category: "Nam + Nữ", a1: "Long Diễn", a2: "Cẩm Ly", scoreA: "11", scoreB: "4", b1: "Thành Sóc", b2: "Hải Hà", customWin: 0, customLose: -25 },
-      { id: 22, category: "Nam + Nữ", a1: "Hà Giấy", a2: "Vân Đình", scoreA: "8", scoreB: "11", b1: "Lợi Trí", b2: "Quỳnh Cool", customWin: 0, customLose: -25 },
-      { id: 23, category: "Nam + Nữ", a1: "Tuấn La", a2: "Cẩm Ly", scoreA: "3", scoreB: "11", b1: "Điền Chèm", b2: "Hải Hà", customWin: 0, customLose: -25 },
-      { id: 24, category: "Nam + Nữ", a1: "Châu Sĩ", a2: "Minh Hạnh", scoreA: "5", scoreB: "11", b1: "Thành Sóc", b2: "Minh Vượng", customWin: 0, customLose: -25 }
+      { id: 3, category: "Nam xoay vòng", a1: "Tuấn La", a2: "Châu Sĩ", scoreA: "6", scoreB: "11", b1: "Điền Chèm", b2: "Thành Sóc", customWin: 0, customLose: -25 }
     ];
 
     let miniGame1Matches = DEFAULT_MINI1_DATA;
@@ -2223,7 +2209,7 @@
       container.innerHTML = html;
     }
 
-    /* GIAO DIỆN CHO TAB MINIGAME 20/10 */
+    /* GIAO DIỆN TAB MINIGAME 20/10 (CẬP NHẬT LỊCH THI ĐẤU CHUẨN ĐÚNG 21 TRẬN THEO ẢNH) */
     function renderMiniGame1Sub1Tab(container) {
       let winA = 0, winB = 0, scoreAAll = 0, scoreBAll = 0, playedCount = 0;
 
@@ -2326,7 +2312,7 @@
       let html = `
         <div class="card" style="margin-bottom:12px;">
           <div class="card-header-flex">
-            <h2 class="card-title">🌸 TỔNG HỢP KẾT QUẢ - MINIGAME 20/10 (5 NAM, 3 NỮ)</h2>
+            <h2 class="card-title">🌸 TỔNG HỢP KẾT QUẢ - MINIGAME 20/10 (21 TRẬN THI ĐẤU)</h2>
             <span style="font-size:11px; font-weight:bold; color:#d97706;">Đã đấu: ${playedCount}/${totalM} Trận</span>
           </div>
           <div class="table-responsive">
@@ -2366,7 +2352,7 @@
 
         <div class="card" style="margin-bottom:12px;">
           <div class="card-header-flex">
-            <h2 class="card-title">👥 DANH SÁCH VĐV MINIGAME 20/10 (5 NAM, 3 NỮ MỖI TEAM)</h2>
+            <h2 class="card-title">👥 DANH SÁCH VĐV MINIGAME 20/10</h2>
           </div>
           <div class="grid-2col">
             <div>
@@ -2417,7 +2403,7 @@
 
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">▶ LỊCH THI ĐẤU 16 TRẬN & TÙY CHỌN KÈO</h2>
+            <h2 class="card-title">▶ LỊCH THI ĐẤU 21 TRẬN & TÙY CHỌN KÈO</h2>
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="font-size:11px; font-weight:bold;">Tùy Chọn Kèo:</span>
               <select style="width: auto; padding: 4px 8px; font-weight: bold; background: #fff8e1; border: 1px solid #d97706;" onchange="changeSub1KeoMode(this.value)">
@@ -2473,7 +2459,7 @@
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
                           <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold; font-size:12px;" onclick="deleteSub1Match(${idx})" title="Xóa">🗑️</button>
-                          <strong>T${m.id}</strong>
+                          <strong>Trận ${m.id}</strong>
                         </div>
                       </td>
                       <td>
@@ -2637,7 +2623,7 @@
       const newId = miniGame1Sub1Matches.length + 1;
       miniGame1Sub1Matches.push({
         id: newId,
-        category: "Nam - Nữ",
+        category: "Đôi Nam Nữ",
         a1: "",
         a2: "",
         scoreA: "",
@@ -2744,7 +2730,6 @@
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
       let standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
 
-      // Thu thập toàn bộ tên các cặp VĐV tham gia Mini Game 2 để tính toán thu chi
       let allMini2Pairs = [];
       mini2PairsA.forEach(p => { if (p.name && !allMini2Pairs.includes(p.name)) allMini2Pairs.push(p.name); });
       mini2PairsB.forEach(p => { if (p.name && !allMini2Pairs.includes(p.name)) allMini2Pairs.push(p.name); });
@@ -2752,7 +2737,6 @@
       let mini2Stats = {};
       allMini2Pairs.forEach(pName => { mini2Stats[pName] = { played: 0, winK: 0, loseK: 0, total: 0 }; });
 
-      // Hàm helper tính điểm/kèo cho một trận đấu bảng A hoặc B
       const processMini2MatchStats = (m, pairsList) => {
         let s1 = parseInt(m.score1);
         let s2 = parseInt(m.score2);

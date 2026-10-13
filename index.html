@@ -434,11 +434,11 @@
     let matchesData = {};
     let dateKeoMode = {}; 
     let paymentStatus = {};
-    let miniGame1Content = "Lịch Thi Đấu Team A & Team B Xoay Vòng.";
+    let miniGame1Content = "Lịch Thi Đấu Team A & Team B Xoay V vòng.";
     let miniGame2Content = "Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.";
     
     let mini1TeamA = ["Tiến Thọ", "Long Diễn", "Phú Mỗ", "Hà Giấy", "Tuấn La", "Châu Sĩ", "Vân Đình", "Cẩm Ly", "Minh Hạnh"];
-    let mini1TeamB = ["Trí Đỏ", "Thành Sóc", "Dũng Ngạc", "Lợi Trí", "Điền Chèm", "Thành Sóc", "Quỳnh Cool", "Hải Hà", "Minh Vượng"];
+    let mini1TeamB = ["Trí Đỏ", "Thành Sóc", "Dũng Ngạc", "Lợi Trí", "Điền Chèm", "Quỳnh Cool", "Hải Hà", "Minh Vượng"];
     let mini1KeoMode = "k25";
     let mini1Payment = {};
 
@@ -447,7 +447,6 @@
     let mini1Sub1KeoMode = "k25";
     let mini1Sub1Payment = {};
 
-    // DỮ LIỆU 21 TRẬN CHUẨN XÁC TỪ ẢNH CHO MINIGAME 20/10
     const DEFAULT_MINI1_SUB1_MATCHES = [
       { id: 1, category: "Đôi Nam Nữ", a1: "Tuấn La", a2: "Vân Đình", scoreA: "", scoreB: "", b1: "Thành Sóc", b2: "Gà Tre", customWin: 0, customLose: -25 },
       { id: 2, category: "Đôi Nam Nữ", a1: "Phú Mỗ", a2: "Minh Hạnh", scoreA: "", scoreB: "", b1: "Trường Giang", b2: "Minh Vượng", customWin: 0, customLose: -25 },
@@ -1756,7 +1755,7 @@
       container.innerHTML = html;
     }
 
-    /* XỬ LÝ MINI GAME 1 (TEAM A & B CHÍNH) */
+    /* XỬ LÝ MINI GAME 1 (TEAM A & B CHÍNH) - ĐÃ ĐỒNG BỘ ĐẦY ĐỦ */
     function addMini1Match() {
       const newId = miniGame1Matches.length + 1;
       miniGame1Matches.push({
@@ -1815,6 +1814,13 @@
           let idx = mini1TeamB.indexOf(oldName);
           if (idx !== -1) mini1TeamB[idx] = trimmed;
         }
+        // Tự động đồng bộ vào các trận đấu
+        miniGame1Matches.forEach(m => {
+          if (m.a1 === oldName) m.a1 = trimmed;
+          if (m.a2 === oldName) m.a2 = trimmed;
+          if (m.b1 === oldName) m.b1 = trimmed;
+          if (m.b2 === oldName) m.b2 = trimmed;
+        });
         let pObj = players.find(p => p.name === oldName);
         if (pObj) pObj.name = trimmed;
         syncVdvsFromPlayers();
@@ -1827,9 +1833,27 @@
       if (confirm(`Xóa VĐV ${name} khỏi Team ${team}?`)) {
         if (team === 'A') mini1TeamA = mini1TeamA.filter(v => v !== name);
         else mini1TeamB = mini1TeamB.filter(v => v !== name);
+        // Tự động xóa VĐV khỏi các trận đấu đã xếp
+        miniGame1Matches.forEach(m => {
+          if (m.a1 === name) m.a1 = "";
+          if (m.a2 === name) m.a2 = "";
+          if (m.b1 === name) m.b1 = "";
+          if (m.b2 === name) m.b2 = "";
+        });
         saveDataToFirestore();
         renderCurrentTab();
       }
+    }
+
+    function moveMini1Vdv(team, index, direction) {
+      let list = team === 'A' ? mini1TeamA : mini1TeamB;
+      let targetIdx = index + direction;
+      if (targetIdx < 0 || targetIdx >= list.length) return;
+      let temp = list[index];
+      list[index] = list[targetIdx];
+      list[targetIdx] = temp;
+      saveDataToFirestore();
+      renderCurrentTab();
     }
 
     function updateMini1Score(index, field, val) {
@@ -2021,13 +2045,15 @@
                 <button class="btn btn-green btn-sm" style="background:#fff; color:#15803d;" onclick="addMini1Vdv('A')">➕ Thêm VĐV</button>
               </div>
               <div style="display:flex; flex-direction:column; gap:4px;">
-                ${mini1TeamA.map(v => {
+                ${mini1TeamA.map((v, index) => {
                   const idx = vdvs.indexOf(v);
                   const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#15803d';
                   return `
                     <div class="vdv-item" style="background: #f8fafc; padding: 5px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                      <span style="font-weight:800; color:${color}; font-size: 11px;">${v}</span>
+                      <span style="font-weight:800; color:${color}; font-size: 11px;">${index + 1}. ${v}</span>
                       <div>
+                        <button style="border:none; background:none; color:#475569; cursor:pointer; font-weight:bold; margin-right:4px;" onclick="moveMini1Vdv('A', ${index}, -1)" title="Lên">⬆</button>
+                        <button style="border:none; background:none; color:#475569; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="moveMini1Vdv('A', ${index}, 1)" title="Xuống">⬇</button>
                         <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="editMini1Vdv('A', '${v}')"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeMini1Vdv('A', '${v}')"><i class="fa-solid fa-xmark"></i></button>
                       </div>
@@ -2043,13 +2069,15 @@
                 <button class="btn btn-green btn-sm" style="background:#fff; color:#0369a1;" onclick="addMini1Vdv('B')">➕ Thêm VĐV</button>
               </div>
               <div style="display:flex; flex-direction:column; gap:4px;">
-                ${mini1TeamB.map(v => {
+                ${mini1TeamB.map((v, index) => {
                   const idx = vdvs.indexOf(v);
                   const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
                   return `
                     <div class="vdv-item" style="background: #f8fafc; padding: 5px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                      <span style="font-weight:800; color:${color}; font-size: 11px;">${v}</span>
+                      <span style="font-weight:800; color:${color}; font-size: 11px;">${index + 1}. ${v}</span>
                       <div>
+                        <button style="border:none; background:none; color:#475569; cursor:pointer; font-weight:bold; margin-right:4px;" onclick="moveMini1Vdv('B', ${index}, -1)" title="Lên">⬆</button>
+                        <button style="border:none; background:none; color:#475569; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="moveMini1Vdv('B', ${index}, 1)" title="Xuống">⬇</button>
                         <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="editMini1Vdv('B', '${v}')"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeMini1Vdv('B', '${v}')"><i class="fa-solid fa-xmark"></i></button>
                       </div>
@@ -2083,7 +2111,8 @@
                   <th style="width:80px;">TỶ SỐ</th>
                   <th colspan="2" class="th-team-b" style="color:#fff !important;">🔵 ĐỘI B</th>
                   ${mini1KeoMode === 'free' ? '<th style="width:110px;" class="th-money">MỆNH GIÁ (THẮNG/THUA)</th>' : ''}
-                  <th style="width:75px;">KẾT QUẢ</th>
+                  <th style="width:90px;">TRẠNG THÁI</th>
+                  <th style="width:70px;">KẾT QUẢ</th>
                 </tr>
               </thead>
               <tbody>
@@ -2091,7 +2120,10 @@
                   let sA = parseInt(m.scoreA);
                   let sB = parseInt(m.scoreB);
                   let resText = "-";
+                  let matchStatusHtml = `<span style="color:#f59e0b; font-weight:bold; font-size:10px;">⏳ Chưa đánh</span>`;
+
                   if (!isNaN(sA) && !isNaN(sB)) {
+                    matchStatusHtml = `<span style="color:#16a34a; font-weight:bold; font-size:10px;">✅ Đã xong</span>`;
                     if (sA > sB) resText = "<span class='txt-win'>Đội A</span>";
                     else if (sB > sA) resText = "<span style='color:#0284c7; font-weight:bold;'>Đội B</span>";
                     else resText = "Hòa";
@@ -2157,6 +2189,7 @@
                         </select>
                       </td>
                       ${customKeoCell1}
+                      <td>${matchStatusHtml}</td>
                       <td>${resText}</td>
                     </tr>
                   `;
@@ -2166,10 +2199,10 @@
           </div>
         </div>
 
-        <!-- BẢNG TỔNG HỢP THU & CHI CHO MINI GAME 1 -->
+        <!-- BẢNG TỔNG HỢP KÈO - TEAM A,B -->
         <div class="card" style="margin-top: 14px;">
           <div class="card-header-flex">
-            <h2 class="card-title">📊 BẢNG TỔNG HỢP THU & CHI - TEAM A & B</h2>
+            <h2 class="card-title">📊 BẢNG TỔNG HỢP KÈO - TEAM A,B</h2>
           </div>
           <div class="table-responsive">
             <table>
@@ -2211,7 +2244,7 @@
       container.innerHTML = html;
     }
 
-    /* GIAO DIỆN TAB MINIGAME 20/10 (ĐÃ ĐỒNG BỘ ĐẦY ĐỦ VÀ SỬA THEO YÊU CẦU) */
+    /* GIAO DIỆN TAB MINIGAME 20/10 */
     function renderMiniGame1Sub1Tab(container) {
       let winA = 0, winB = 0, scoreAAll = 0, scoreBAll = 0, playedCount = 0;
 
@@ -2513,7 +2546,7 @@
           </div>
         </div>
 
-        <!-- BẢNG TỔNG HỢP KÈO CHO MINIGAME 20/10 -->
+        <!-- BẢNG TỔNG HỢP KÈO - MINIGAME 20/10 -->
         <div class="card" style="margin-top: 14px;">
           <div class="card-header-flex">
             <h2 class="card-title">📊 BẢNG TỔNG HỢP KÈO - MINIGAME 20/10</h2>

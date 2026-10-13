@@ -217,11 +217,6 @@
     .badge-p3 { background: linear-gradient(135deg, #d97706, #b45309); }
     .badge-p4 { background: linear-gradient(135deg, #7c3aed, #6d28d9); }
 
-    .mg2-header-a { background-color: #ffffff; color: #b45309; font-weight: 900; font-size: 11px; }
-    .mg2-header-b { background-color: #ffffff; color: #0369a1; font-weight: 900; font-size: 11px; }
-    .mg2-sub-header { background-color: #f8fafc; color: #475569; }
-    .mg2-edit-btn { border: none; background: none; cursor: pointer; font-size: 11px; font-weight: bold; }
-
     .smooth-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
     @media (max-width: 600px) {
@@ -1755,7 +1750,7 @@
       container.innerHTML = html;
     }
 
-    /* XỬ LÝ MINI GAME 1 (TEAM A & B CHÍNH) - ĐÃ ĐỒNG BỘ ĐẦY ĐỦ */
+    /* XỬ LÝ MINI GAME 1 (TEAM A & B CHÍNH) */
     function addMini1Match() {
       const newId = miniGame1Matches.length + 1;
       miniGame1Matches.push({
@@ -1814,7 +1809,6 @@
           let idx = mini1TeamB.indexOf(oldName);
           if (idx !== -1) mini1TeamB[idx] = trimmed;
         }
-        // Tự động đồng bộ vào các trận đấu
         miniGame1Matches.forEach(m => {
           if (m.a1 === oldName) m.a1 = trimmed;
           if (m.a2 === oldName) m.a2 = trimmed;
@@ -1833,7 +1827,6 @@
       if (confirm(`Xóa VĐV ${name} khỏi Team ${team}?`)) {
         if (team === 'A') mini1TeamA = mini1TeamA.filter(v => v !== name);
         else mini1TeamB = mini1TeamB.filter(v => v !== name);
-        // Tự động xóa VĐV khỏi các trận đấu đã xếp
         miniGame1Matches.forEach(m => {
           if (m.a1 === name) m.a1 = "";
           if (m.a2 === name) m.a2 = "";
@@ -2199,7 +2192,6 @@
           </div>
         </div>
 
-        <!-- BẢNG TỔNG HỢP KÈO - TEAM A,B -->
         <div class="card" style="margin-top: 14px;">
           <div class="card-header-flex">
             <h2 class="card-title">📊 BẢNG TỔNG HỢP KÈO - TEAM A,B</h2>
@@ -2244,7 +2236,7 @@
       container.innerHTML = html;
     }
 
-    /* GIAO DIỆN TAB MINIGAME 20/10 */
+    /* GIAO DIỆN TAB MINIGAME 20/10 (ĐÃ ĐỒNG BỘ ĐẦY ĐỦ THỨ TỰ VÀ TÊN VĐV) */
     function renderMiniGame1Sub1Tab(container) {
       let winA = 0, winB = 0, scoreAAll = 0, scoreBAll = 0, playedCount = 0;
 
@@ -2396,13 +2388,15 @@
                 <button class="btn btn-green btn-sm" style="background:#fff; color:#15803d;" onclick="addSub1Vdv('A')">➕ Thêm VĐV</button>
               </div>
               <div style="display:flex; flex-direction:column; gap:4px;">
-                ${mini1Sub1TeamA.map(v => {
+                ${mini1Sub1TeamA.map((v, index) => {
                   const idx = vdvs.indexOf(v);
                   const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#15803d';
                   return `
                     <div style="background: #f8fafc; padding: 5px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                      <span style="font-weight:800; color:${color}; font-size: 11px;">${v}</span>
+                      <span style="font-weight:800; color:${color}; font-size: 11px;">${index + 1}. ${v}</span>
                       <div>
+                        <button style="border:none; background:none; color:#475569; cursor:pointer; font-weight:bold; margin-right:4px;" onclick="moveSub1Vdv('A', ${index}, -1)" title="Lên">⬆</button>
+                        <button style="border:none; background:none; color:#475569; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="moveSub1Vdv('A', ${index}, 1)" title="Xuống">⬇</button>
                         <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="editSub1Vdv('A', '${v}')"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeSub1Vdv('A', '${v}')"><i class="fa-solid fa-xmark"></i></button>
                       </div>
@@ -2418,13 +2412,15 @@
                 <button class="btn btn-green btn-sm" style="background:#fff; color:#0369a1;" onclick="addSub1Vdv('B')">➕ Thêm VĐV</button>
               </div>
               <div style="display:flex; flex-direction:column; gap:4px;">
-                ${mini1Sub1TeamB.map(v => {
+                ${mini1Sub1TeamB.map((v, index) => {
                   const idx = vdvs.indexOf(v);
                   const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
                   return `
                     <div style="background: #f8fafc; padding: 5px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                      <span style="font-weight:800; color:${color}; font-size: 11px;">${v}</span>
+                      <span style="font-weight:800; color:${color}; font-size: 11px;">${index + 1}.${v}</span>
                       <div>
+                        <button style="border:none; background:none; color:#475569; cursor:pointer; font-weight:bold; margin-right:4px;" onclick="moveSub1Vdv('B', ${index}, -1)" title="Lên">⬆</button>
+                        <button style="border:none; background:none; color:#475569; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="moveSub1Vdv('B', ${index}, 1)" title="Xuống">⬇</button>
                         <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="editSub1Vdv('B', '${v}')"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeSub1Vdv('B', '${v}')"><i class="fa-solid fa-xmark"></i></button>
                       </div>
@@ -2546,7 +2542,6 @@
           </div>
         </div>
 
-        <!-- BẢNG TỔNG HỢP KÈO - MINIGAME 20/10 -->
         <div class="card" style="margin-top: 14px;">
           <div class="card-header-flex">
             <h2 class="card-title">📊 BẢNG TỔNG HỢP KÈO - MINIGAME 20/10</h2>
@@ -2642,6 +2637,12 @@
           let idx = mini1Sub1TeamB.indexOf(oldName);
           if (idx !== -1) mini1Sub1TeamB[idx] = trimmed;
         }
+        miniGame1Sub1Matches.forEach(m => {
+          if (m.a1 === oldName) m.a1 = trimmed;
+          if (m.a2 === oldName) m.a2 = trimmed;
+          if (m.b1 === oldName) m.b1 = trimmed;
+          if (m.b2 === oldName) m.b2 = trimmed;
+        });
         let pObj = players.find(p => p.name === oldName);
         if (pObj) pObj.name = trimmed;
         syncVdvsFromPlayers();
@@ -2654,9 +2655,26 @@
       if (confirm(`Xóa VĐV ${name} khỏi Team ${team}?`)) {
         if (team === 'A') mini1Sub1TeamA = mini1Sub1TeamA.filter(v => v !== name);
         else mini1Sub1TeamB = mini1Sub1TeamB.filter(v => v !== name);
+        miniGame1Sub1Matches.forEach(m => {
+          if (m.a1 === name) m.a1 = "";
+          if (m.a2 === name) m.a2 = "";
+          if (m.b1 === name) m.b1 = "";
+          if (m.b2 === name) m.b2 = "";
+        });
         saveDataToFirestore();
         renderCurrentTab();
       }
+    }
+
+    function moveSub1Vdv(team, index, direction) {
+      let list = team === 'A' ? mini1Sub1TeamA : mini1Sub1TeamB;
+      let targetIdx = index + direction;
+      if (targetIdx < 0 || targetIdx >= list.length) return;
+      let temp = list[index];
+      list[index] = list[targetIdx];
+      list[targetIdx] = temp;
+      saveDataToFirestore();
+      renderCurrentTab();
     }
 
     function addSub1Match() {

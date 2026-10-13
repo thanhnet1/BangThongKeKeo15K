@@ -222,6 +222,15 @@
     .mg2-sub-header { background-color: #f8fafc; color: #334155; }
     .mg2-edit-btn { border: none; background: none; cursor: pointer; font-size: 11px; font-weight: bold; }
 
+    .podium-box {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border: 2px solid #f59e0b;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.15);
+    }
+
     .smooth-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
     @media (max-width: 600px) {
@@ -2528,7 +2537,7 @@
         const name = vdvName.trim();
         if (team === 'A') {
           if (mini1Sub1TeamB.includes(name)) return alert("⚠️ VĐV này đã có trong Team B!");
-          if (!mini1Sub1TeamA.includes(name)) mini1Sub1TeamA.path(name); // safety fix
+          if (!mini1Sub1TeamA.includes(name)) mini1Sub1TeamA.push(name);
         } else {
           if (mini1Sub1TeamA.includes(name)) return alert("⚠️ VĐV này đã có trong Team A!");
           if (!mini1Sub1TeamB.includes(name)) mini1Sub1TeamB.push(name);
@@ -2629,10 +2638,38 @@
       renderCurrentTab();
     }
 
-    /* BẢNG GIẢI ĐẤU MINI GAME 2 (BẢNG A, B & KNOCKOUT) ĐÃ KHÔI PHỤC HOÀN CHỈNH */
+    /* BẢNG GIẢI ĐẤU MINI GAME 2 (BẢNG A, B, LỊCH THI ĐẤU, BXH, BK, CK, VÔ ĐỊCH, NHÌ, BA) */
     function renderMiniGame2Tab(container) {
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
       let standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
+
+      // Tính tự động hoặc nhận diện kết quả Vô địch, Nhì, Ba từ trận Chung kết & Tranh 3-4
+      let finalS1 = parseInt(mini2Knockout.final.s1);
+      let finalS2 = parseInt(mini2Knockout.final.s2);
+      let champion = "Đang cập nhật...";
+      let runnerUp = "Đang cập nhật...";
+
+      if (!isNaN(finalS1) && !isNaN(finalS2)) {
+        if (finalS1 > finalS2) {
+          champion = mini2Knockout.final.p1;
+          runnerUp = mini2Knockout.final.p2;
+        } else if (finalS2 > finalS1) {
+          champion = mini2Knockout.final.p2;
+          runnerUp = mini2Knockout.final.p1;
+        }
+      }
+
+      let r34S1 = parseInt(mini2Knockout.rank34.s1);
+      let r34S2 = parseInt(mini2Knockout.rank34.s2);
+      let thirdPlace = "Đang cập nhật...";
+
+      if (!isNaN(r34S1) && !isNaN(r34S2)) {
+        if (r34S1 > r34S2) {
+          thirdPlace = mini2Knockout.rank34.p1;
+        } else if (r34S2 > r34S1) {
+          thirdPlace = mini2Knockout.rank34.p2;
+        }
+      }
 
       let html = `
         <div class="card" style="margin-bottom: 12px;">
@@ -2645,9 +2682,30 @@
           <div style="font-size: 11px; line-height: 1.5; color: #334155; background: #f8fafc; padding: 8px; border-radius: 6px; border: 1px solid #e2e8f0; white-space: pre-wrap;">${mini2Content}</div>
         </div>
 
+        <!-- KHU VỰC VINH DANH PODIUM (VÔ ĐỊCH, NHÌ, BA) -->
+        <div class="card" style="margin-bottom: 16px;">
+          <div class="card-header-flex">
+            <h3 style="margin:0; font-size:13px; color:#b45309; font-weight:900;"><i class="fa-solid fa-medal text-yellow-500"></i> KẾT QUẢ CHUNG CỤC GIẢI ĐẤU</h3>
+          </div>
+          <div class="grid-2col" style="grid-template-columns: repeat(3, 1fr); gap: 10px;">
+            <div class="podium-box">
+              <div style="font-size: 11px; font-weight: 800; color: #92400e; text-transform: uppercase;"><i class="fa-solid fa-trophy text-amber-600"></i> Đội Vô Địch (1)</div>
+              <div style="font-size: 13px; font-weight: 900; color: #1e293b; margin-top: 4px;">${champion}</div>
+            </div>
+            <div class="podium-box" style="background: linear-gradient(135deg, #f1f5f9, #e2e8f0); border-color: #94a3b8;">
+              <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase;"><i class="fa-solid fa-medal text-slate-500"></i> Đội Về Nhì (2)</div>
+              <div style="font-size: 13px; font-weight: 900; color: #1e293b; margin-top: 4px;">${runnerUp}</div>
+            </div>
+            <div class="podium-box" style="background: linear-gradient(135deg, #fff7ed, #ffedd5); border-color: #ea580c;">
+              <div style="font-size: 11px; font-weight: 800; color: #c2410c; text-transform: uppercase;"><i class="fa-solid fa-award text-amber-700"></i> Đội Về Ba (3)</div>
+              <div style="font-size: 13px; font-weight: 900; color: #1e293b; margin-top: 4px;">${thirdPlace}</div>
+            </div>
+          </div>
+        </div>
+
         <!-- CỤM BẢNG A -->
         <div class="card" style="margin-bottom: 16px;">
-          <div class="card-header-flex" style="background:#fff7ed; padding: 6px; border-radius: 6px;">
+          <div class="card-header-flex" style="background:#ffedd5; padding: 6px; border-radius: 6px;">
             <h3 style="margin:0; font-size:13px; color:#c2410c; font-weight:900;">🔥 BẢNG A</h3>
             <div style="display:flex; align-items:center; gap:6px;">
               <span style="font-weight:bold; font-size:11px;">Số cặp VĐV:</span>
@@ -2824,7 +2882,7 @@
             <table>
               <thead>
                 <tr style="background:#1e293b; color:#fff;">
-                  <th>VÒNG đấu</th>
+                  <th>VÒNG ĐẤU</th>
                   <th>ĐỘI 1</th>
                   <th style="width:90px;">TỶ SỐ</th>
                   <th>ĐỘI 2</th>

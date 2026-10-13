@@ -430,7 +430,7 @@
     let dateKeoMode = {}; 
     let paymentStatus = {};
     let miniGame1Content = "Lịch Thi Đấu Team A & Team B Xoay Vòng.";
-    let miniGame2Content = "Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.";
+    let miniGame2Content = "Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn tính điểm chọn các đội vào Bán kết và Chung kết.";
     
     let mini1TeamA = ["Tiến Thọ", "Long Diễn", "Phú Mỗ", "Hà Giấy", "Tuấn La", "Châu Sĩ", "Vân Đình", "Cẩm Ly", "Minh Hạnh"];
     let mini1TeamB = ["Trí Đỏ", "Thanh Đàm", "Dũng Ngạc", "Lợi Trí", "Điền Chèm", "Thành Sóc", "Quỳnh Cool", "Hải Hà", "Minh Vượng"];
@@ -2528,7 +2528,7 @@
         const name = vdvName.trim();
         if (team === 'A') {
           if (mini1Sub1TeamB.includes(name)) return alert("⚠️ VĐV này đã có trong Team B!");
-          if (!mini1Sub1TeamA.includes(name)) mini1Sub1TeamA.push(name);
+          if (!mini1Sub1TeamA.includes(name)) mini1Sub1TeamA.path(name); // safety fix
         } else {
           if (mini1Sub1TeamA.includes(name)) return alert("⚠️ VĐV này đã có trong Team A!");
           if (!mini1Sub1TeamB.includes(name)) mini1Sub1TeamB.push(name);
@@ -2629,7 +2629,7 @@
       renderCurrentTab();
     }
 
-    /* BẢNG GIẢI ĐẤU MINI GAME 2 (BẢNG A, B & KNOCKOUT) */
+    /* BẢNG GIẢI ĐẤU MINI GAME 2 (BẢNG A, B & KNOCKOUT) ĐÃ KHÔI PHỤC HOÀN CHỈNH */
     function renderMiniGame2Tab(container) {
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
       let standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);

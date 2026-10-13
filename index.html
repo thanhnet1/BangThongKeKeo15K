@@ -217,6 +217,11 @@
     .badge-p3 { background: linear-gradient(135deg, #d97706, #b45309); }
     .badge-p4 { background: linear-gradient(135deg, #7c3aed, #6d28d9); }
 
+    .mg2-header-a { background-color: #ffedd5; color: #c2410c; font-weight: 900; }
+    .mg2-header-b { background-color: #e0f2fe; color: #0369a1; font-weight: 900; }
+    .mg2-sub-header { background-color: #f8fafc; color: #334155; }
+    .mg2-edit-btn { border: none; background: none; cursor: pointer; font-size: 11px; font-weight: bold; }
+
     .smooth-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
     @media (max-width: 600px) {
@@ -308,6 +313,7 @@
           </div>
         </div>
 
+        <!-- MENU GIẢI ĐẤU MINI GAME 2 -->
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuMini2', event)">
             <i class="fa-solid fa-trophy text-yellow-400"></i>
@@ -1854,7 +1860,6 @@
         statusB = isCompletedAll ? "🤝 HÒA CHUNG CUỘC" : "🤝 TẠM HÒA";
       }
 
-      // Thống kê thu chi cho Team A & B chính
       let allMini1Vdvs = [...mini1TeamA, ...mini1TeamB];
       let mini1Stats = {};
       allMini1Vdvs.forEach(v => { mini1Stats[v] = { played: 0, winK: 0, loseK: 0, total: 0 }; });
@@ -2624,7 +2629,7 @@
       renderCurrentTab();
     }
 
-    /* BẢNG MINI GAME 2 */
+    /* BẢNG GIẢI ĐẤU MINI GAME 2 (BẢNG A, B & KNOCKOUT) */
     function renderMiniGame2Tab(container) {
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
       let standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
@@ -2672,7 +2677,7 @@
                     <tr>
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 8px; font-weight:bold;">
-                        <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
+                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">
@@ -2757,7 +2762,7 @@
                     <tr>
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 8px; font-weight:bold;">
-                        <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
+                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">
@@ -2836,7 +2841,7 @@
                       <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc1.s2}" oninput="updateMini2Knockout('bkc1', 's2', this.value)">
                     </div>
                   </td>
-                  <td><input type="text" value="${mini2Knockout.bkc2.p2}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
+                  <td><input type="text" value="${mini2Knockout.bkc1.p2}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
                 </tr>
                 <tr>
                   <td><strong>Bán Kết 2</strong></td>

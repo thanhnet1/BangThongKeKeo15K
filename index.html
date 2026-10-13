@@ -505,7 +505,10 @@
       bkc1: { p1: "Nhất A", p2: "Nhì B", s1: "", s2: "" },
       bkc2: { p1: "Nhất B", p2: "Nhì A", s1: "", s2: "" },
       rank34: { p1: "Thua BK1", p2: "Thua BK2", s1: "", s2: "" },
-      final: { p1: "Thắng BK1", p2: "Thắng BK2", s1: "", s2: "" }
+      final: { p1: "Thắng BK1", p2: "Thắng BK2", s1: "", s2: "" },
+      champion: "",
+      runnerUp: "",
+      thirdPlace: ""
     };
 
     let currentTab = "";
@@ -580,7 +583,9 @@
           if (data.mini2PairsB) mini2PairsB = data.mini2PairsB;
           if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
           if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
-          if (data.mini2Knockout) mini2Knockout = data.mini2Knockout;
+          if (data.mini2Knockout) {
+            mini2Knockout = Object.assign(mini2Knockout, data.mini2Knockout);
+          }
           if (data.miniGame2Tour1Content) miniGame2Tour1Content = data.miniGame2Tour1Content;
           if (data.miniGame2Tour2Content) miniGame2Tour2Content = data.miniGame2Tour2Content;
           if (data.mini2KeoMode) mini2KeoMode = data.mini2KeoMode;
@@ -755,7 +760,7 @@
             if (data.mini2PairsB) mini2PairsB = data.mini2PairsB;
             if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
             if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
-            if (data.mini2Knockout) mini2Knockout = data.mini2Knockout;
+            if (data.mini2Knockout) mini2Knockout = Object.assign(mini2Knockout, data.mini2Knockout);
             if (data.miniGame2Tour1Content) miniGame2Tour1Content = data.miniGame2Tour1Content;
             if (data.miniGame2Tour2Content) miniGame2Tour2Content = data.miniGame2Tour2Content;
             if (data.mini2KeoMode) mini2KeoMode = data.mini2KeoMode;
@@ -1036,7 +1041,7 @@
 
     function togglePayment(payKey) {
       if (!isAdminVerified) {
-        const inputPass = prompt("🔑 Nhập mật khẩu Quản trị viên:");
+        const inputPass = prompt("🔑 Nhập mật khẩu Quản trị viên để xác nhận thực tế:");
         if (inputPass === ADMIN_PASSCODE) {
           isAdminVerified = true;
         } else if (inputPass !== null) {
@@ -1047,6 +1052,57 @@
         }
       }
       paymentStatus[payKey] = !paymentStatus[payKey];
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function toggleMini1Payment(payKey) {
+      if (!isAdminVerified) {
+        const inputPass = prompt("🔑 Nhập mật khẩu Quản trị viên để xác nhận thực tế:");
+        if (inputPass === ADMIN_PASSCODE) {
+          isAdminVerified = true;
+        } else if (inputPass !== null) {
+          alert("❌ Mật khẩu không đúng!");
+          return;
+        } else {
+          return;
+        }
+      }
+      mini1Payment[payKey] = !mini1Payment[payKey];
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function toggleSub1Payment(payKey) {
+      if (!isAdminVerified) {
+        const inputPass = prompt("🔑 Nhập mật khẩu Quản trị viên để xác nhận thực tế:");
+        if (inputPass === ADMIN_PASSCODE) {
+          isAdminVerified = true;
+        } else if (inputPass !== null) {
+          alert("❌ Mật khẩu không đúng!");
+          return;
+        } else {
+          return;
+        }
+      }
+      mini1Sub1Payment[payKey] = !mini1Sub1Payment[payKey];
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function toggleMini2Payment(payKey) {
+      if (!isAdminVerified) {
+        const inputPass = prompt("🔑 Nhập mật khẩu Quản trị viên để xác nhận thực tế:");
+        if (inputPass === ADMIN_PASSCODE) {
+          isAdminVerified = true;
+        } else if (inputPass !== null) {
+          alert("❌ Mật khẩu không đúng!");
+          return;
+        } else {
+          return;
+        }
+      }
+      mini2Payment[payKey] = !mini2Payment[payKey];
       saveDataToFirestore();
       renderCurrentTab();
     }
@@ -1200,18 +1256,18 @@
       renderCurrentTab();
     }
 
-    function toggleMini2Payment(payKey) {
-      mini2Payment[payKey] = !mini2Payment[payKey];
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-
     function updateMini2Knockout(stage, field, val) {
-      if (mini2Knockout[stage]) {
+      if (mini2Knockout[stage] !== undefined) {
         mini2Knockout[stage][field] = val;
         saveDataToFirestore();
         renderCurrentTab();
       }
+    }
+
+    function updateMini2WinnerField(field, val) {
+      mini2Knockout[field] = val;
+      saveDataToFirestore();
+      renderCurrentTab();
     }
 
     function computeGroupStandings(pairs, matches) {
@@ -1875,12 +1931,6 @@
       }
     }
 
-    function toggleMini1Payment(payKey) {
-      mini1Payment[payKey] = !mini1Payment[payKey];
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-
     function renderMiniGame1Tab(container) {
       let winCountA = 0;
       let winCountB = 0;
@@ -2236,7 +2286,7 @@
       container.innerHTML = html;
     }
 
-    /* GIAO DIỆN TAB MINIGAME 20/10 (ĐÃ ĐỒNG BỘ ĐẦY ĐỦ THỨ TỰ VÀ TÊN VĐV) */
+    /* GIAO DIỆN TAB MINIGAME 20/10 */
     function renderMiniGame1Sub1Tab(container) {
       let winA = 0, winB = 0, scoreAAll = 0, scoreBAll = 0, playedCount = 0;
 
@@ -2417,7 +2467,7 @@
                   const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
                   return `
                     <div style="background: #f8fafc; padding: 5px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                      <span style="font-weight:800; color:${color}; font-size: 11px;">${index + 1}.${v}</span>
+                      <span style="font-weight:800; color:${color}; font-size: 11px;">${index + 1}. ${v}</span>
                       <div>
                         <button style="border:none; background:none; color:#475569; cursor:pointer; font-weight:bold; margin-right:4px;" onclick="moveSub1Vdv('B', ${index}, -1)" title="Lên">⬆</button>
                         <button style="border:none; background:none; color:#475569; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="moveSub1Vdv('B', ${index}, 1)" title="Xuống">⬇</button>
@@ -2600,12 +2650,6 @@
       }
     }
 
-    function toggleSub1Payment(payKey) {
-      mini1Sub1Payment[payKey] = !mini1Sub1Payment[payKey];
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-
     function addSub1Vdv(team) {
       const vdvName = prompt(`Nhập tên VĐV thêm vào Team ${team} (Minigame 20/10):`);
       if (vdvName && vdvName.trim() !== "") {
@@ -2783,35 +2827,57 @@
       renderCurrentTab();
     }
 
-    /* GIAO DIỆN MINI GAME 2 KÈM BẢNG THU CHI & CỘT CHỌN KÈO */
+    /* GIAO DIỆN MINI GAME 2 KÈM TÁCH CÁ NHÂN & BẢNG TỔNG HỢP KÈO */
     function renderMiniGame2Tab(container) {
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
       let standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
 
-      let allMini2Pairs = [];
-      mini2PairsA.forEach(p => { if (p.name && !allMini2Pairs.includes(p.name)) allMini2Pairs.push(p.name); });
-      mini2PairsB.forEach(p => { if (p.name && !allMini2Pairs.includes(p.name)) allMini2Pairs.push(p.name); });
+      let allMini2Individuals = [];
+      const addIndividualFromPair = (pairName) => {
+        if (!pairName) return;
+        let parts = pairName.split('-');
+        parts.forEach(p => {
+          let trimmed = p.trim();
+          if (trimmed && trimmed.toLowerCase() !== 'tự do' && !allMini2Individuals.includes(trimmed)) {
+            allMini2Individuals.push(trimmed);
+          }
+        });
+      };
+
+      mini2PairsA.forEach(p => addIndividualFromPair(p.name));
+      mini2PairsB.forEach(p => addIndividualFromPair(p.name));
 
       let mini2Stats = {};
-      allMini2Pairs.forEach(pName => { mini2Stats[pName] = { played: 0, winK: 0, loseK: 0, total: 0 }; });
+      allMini2Individuals.forEach(indName => { mini2Stats[indName] = { played: 0, winK: 0, loseK: 0, total: 0 }; });
 
       const processMini2MatchStats = (m, pairsList) => {
         let s1 = parseInt(m.score1);
         let s2 = parseInt(m.score2);
         if (!isNaN(s1) && !isNaN(s2)) {
-          let p1Name = pairsList[m.pair1Index] ? pairsList[m.pair1Index].name : "";
-          let p2Name = pairsList[m.pair2Index] ? pairsList[m.pair2Index].name : "";
-          if (!p1Name || !p2Name) return;
+          let p1Obj = pairsList[m.pair1Index];
+          let p2Obj = pairsList[m.pair2Index];
+          if (!p1Obj || !p2Obj) return;
+
+          let team1Members = p1Obj.name.split('-').map(x => x.trim()).filter(x => x && x.toLowerCase() !== 'tự do');
+          let team2Members = p2Obj.name.split('-').map(x => x.trim()).filter(x => x && x.toLowerCase() !== 'tự do');
 
           let winAmt = mini2KeoMode === 'k25' ? 0 : (m.customWin !== undefined ? parseInt(m.customWin) : 0);
           let loseAmt = mini2KeoMode === 'k25' ? -25 : (m.customLose !== undefined ? parseInt(m.customLose) : -25);
 
           if (s1 > s2) {
-            if (mini2Stats[p1Name]) { mini2Stats[p1Name].played++; mini2Stats[p1Name].winK += winAmt; mini2Stats[p1Name].total += winAmt; }
-            if (mini2Stats[p2Name]) { mini2Stats[p2Name].played++; mini2Stats[p2Name].loseK += loseAmt; mini2Stats[p2Name].total += loseAmt; }
+            team1Members.forEach(ind => {
+              if (mini2Stats[ind]) { mini2Stats[ind].played++; mini2Stats[ind].winK += winAmt; mini2Stats[ind].total += winAmt; }
+            });
+            team2Members.forEach(ind => {
+              if (mini2Stats[ind]) { mini2Stats[ind].played++; mini2Stats[ind].loseK += loseAmt; mini2Stats[ind].total += loseAmt; }
+            });
           } else if (s2 > s1) {
-            if (mini2Stats[p2Name]) { mini2Stats[p2Name].played++; mini2Stats[p2Name].winK += winAmt; mini2Stats[p2Name].total += winAmt; }
-            if (mini2Stats[p1Name]) { mini2Stats[p1Name].played++; mini2Stats[p1Name].loseK += loseAmt; mini2Stats[p1Name].total += loseAmt; }
+            team2Members.forEach(ind => {
+              if (mini2Stats[ind]) { mini2Stats[ind].played++; mini2Stats[ind].winK += winAmt; mini2Stats[ind].total += winAmt; }
+            });
+            team1Members.forEach(ind => {
+              if (mini2Stats[ind]) { mini2Stats[ind].played++; mini2Stats[ind].loseK += loseAmt; mini2Stats[ind].total += loseAmt; }
+            });
           }
         }
       };
@@ -2822,11 +2888,13 @@
       let sumBringBack2 = 0, sumThucThu2 = 0, sumAmThucTe2 = 0;
       let summaryRowsHtml2 = "";
 
-      allMini2Pairs.forEach(pName => {
-        const st = mini2Stats[pName];
+      allMini2Individuals.forEach(indName => {
+        const st = mini2Stats[indName];
         if (st && st.played > 0) {
-          const payKey = `mini2_${pName}`;
+          const payKey = `mini2_ind_${indName}`;
           const isPaid = mini2Payment[payKey] || false;
+          const vIndex = vdvs.indexOf(indName);
+          const indColor = vIndex !== -1 ? VDV_COLORS[vIndex % VDV_COLORS.length] : '#1e293b';
 
           let bringBack = 0;
           if (st.played >= 4 && st.total > 0) { bringBack = st.total; sumBringBack2 += bringBack; }
@@ -2841,7 +2909,7 @@
 
           summaryRowsHtml2 += `
             <tr>
-              <td style="font-weight: 800; font-size:12px; text-align: left; padding-left: 8px;">${pName}</td>
+              <td style="color: ${indColor}; font-weight: 800; font-size:12px; text-align: left; padding-left: 8px;">${indName}</td>
               <td>${st.played}</td>
               <td class="txt-win">${st.winK > 0 ? st.winK : ''}</td>
               <td class="txt-lose">${st.loseK < 0 ? st.loseK : ''}</td>
@@ -3081,14 +3149,14 @@
           </div>
         </div>
 
-        <!-- BẢNG VÒNG KNOCKOUT (BÁN KẾT - CHUNG KẾT) -->
+        <!-- BẢNG VÒNG KNOCKOUT (BÁN KẾT - CHUNG KẾT) & XÁC NHẬN ĐỘI THẮNG CUỘC -->
         <div class="card" style="margin-bottom: 14px;">
           <div class="card-header-flex" style="border-bottom: none; margin-bottom: 6px; padding-bottom: 0;">
             <h3 style="margin:0; font-size:12px; color:#1e293b; font-weight:900; display:flex; align-items:center; gap:4px;">
               🏆 VÒNG KNOCKOUT (BÁN KẾT - CHUNG KẾT)
             </h3>
           </div>
-          <div class="table-responsive">
+          <div class="table-responsive" style="margin-bottom: 12px;">
             <table>
               <thead>
                 <tr class="mg2-sub-header">
@@ -3150,18 +3218,34 @@
               </tbody>
             </table>
           </div>
+
+          <!-- DÒNG XÁC NHẬN ĐỘI VÔ ĐỊCH, VỀ NHÌ, VỀ BA -->
+          <div style="display:flex; flex-direction:column; gap:6px; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #cbd5e1;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-weight:900; color:#d97706; width:130px; font-size:11px;"><i class="fa-solid fa-medal"></i> Đội Vô Địch:</span>
+              <input type="text" style="font-weight:bold; background:#fffbeb;" value="${mini2Knockout.champion || ''}" placeholder="Nhập tên cặp đội Vô Địch..." onchange="updateMini2WinnerField('champion', this.value)">
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-weight:900; color:#475569; width:130px; font-size:11px;"><i class="fa-solid fa-award"></i> Đội Về Nhì:</span>
+              <input type="text" style="font-weight:bold; background:#f1f5f9;" value="${mini2Knockout.runnerUp || ''}" placeholder="Nhập tên cặp đội Về Nhì..." onchange="updateMini2WinnerField('runnerUp', this.value)">
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-weight:900; color:#b45309; width:130px; font-size:11px;"><i class="fa-solid fa-star"></i> Đội Về Ba:</span>
+              <input type="text" style="font-weight:bold; background:#fff7ed;" value="${mini2Knockout.thirdPlace || ''}" placeholder="Nhập tên cặp đội Về Ba..." onchange="updateMini2WinnerField('thirdPlace', this.value)">
+            </div>
+          </div>
         </div>
 
-        <!-- BẢNG TỔNG HỢP THU & CHI CHO MINI GAME 2 -->
+        <!-- BẢNG TỔNG HỢP KÈO CHO MINI GAME 2 (TÍCH HỢP TÁCH CÁ NHÂN) -->
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">📊 BẢNG TỔNG HỢP THU & CHI - GIẢI MINI GAME 2</h2>
+            <h2 class="card-title">📊 BẢNG TỔNG HỢP KÈO - GIẢI MINI GAME 2</h2>
           </div>
           <div class="table-responsive">
             <table>
               <thead>
                 <tr>
-                  <th style="text-align: left; padding-left: 8px;">CẶP VĐV</th>
+                  <th style="text-align: left; padding-left: 8px;">PICK THỦ (CÁ NHÂN)</th>
                   <th>SỐ TRẬN</th>
                   <th>THẮNG/K</th>
                   <th>THUA/K</th>

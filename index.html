@@ -293,7 +293,7 @@
           </div>
         </div>
 
-        <!-- MENU MINI GAME 1 CÓ 2 NÚT NỘI DUNG MỚI -->
+        <!-- MENU MINI GAME 1 CÓ NÚT MINIGAME 20/10 -->
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuMini1', event)">
             <i class="fa-solid fa-gamepad"></i>
@@ -303,7 +303,7 @@
             <div class="dropdown-item" onclick="switchTab('minigame1')">▶️ Lịch Thi Đấu Team A & B</div>
             <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Nội Dung Game 1</div>
             <div class="dropdown-divider"></div>
-            <div class="dropdown-item" onclick="switchTab('minigame1_sub1')">⭐ Nội Dung Mới 1 (5 Nam - 3 Nữ)</div>
+            <div class="dropdown-item" onclick="switchTab('minigame1_sub1')">🌸 Minigame 20/10 (5 Nam - 3 Nữ)</div>
             <div class="dropdown-item" onclick="switchTab('minigame1_sub2')">🔥 Nội Dung Mới 2</div>
           </div>
         </div>
@@ -426,15 +426,9 @@
     let miniGame1Content = "Lịch Thi Đấu Team A & Team B Xoay Vòng.";
     let miniGame2Content = "Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.";
     
-    // Dữ liệu và cấu hình cho Nội dung mới 1 (Mini Game 1) gồm 5 Nam, 3 Nữ mỗi team
-    let mini1Sub1TeamA = {
-      nam: ["Tiến Thọ", "Long Diễn", "Phú Mỗ", "Hà Giấy", "Tuấn La"],
-      nu: ["Vân Đình", "Cẩm Ly", "Minh Hạnh"]
-    };
-    let mini1Sub1TeamB = {
-      nam: ["Trí Đỏ", "Thanh Đàm", "Dũng Ngạc", "Lợi Trí", "Điền Chèm"],
-      nu: ["Quỳnh Cool", "Hải Hà", "Minh Vượng"]
-    };
+    // Dữ liệu cho tab Minigame 20/10 (5 Nam, 3 Nữ mỗi team)
+    let mini1Sub1TeamA = ["Tiến Thọ", "Long Diễn", "Phú Mỗ", "Hà Giấy", "Tuấn La", "Vân Đình", "Cẩm Ly", "Minh Hạnh"];
+    let mini1Sub1TeamB = ["Trí Đỏ", "Thanh Đàm", "Dũng Ngạc", "Lợi Trí", "Điền Chèm", "Quỳnh Cool", "Hải Hà", "Minh Vượng"];
 
     const DEFAULT_MINI1_SUB1_MATCHES = [
       { id: 1, category: "Nam - Nam", a1: "Tiến Thọ", a2: "Long Diễn", scoreA: "11", scoreB: "8", b1: "Trí Đỏ", b2: "Thanh Đàm" },
@@ -2029,7 +2023,7 @@
       container.innerHTML = html;
     }
 
-    /* GIAO DIỆN CHO NỘI DUNG MỚI 1 (5 NAM, 3 NỮ MỖI TEAM & 16 TRẬN ĐẤU) */
+    /* GIAO DIỆN CHO TAB MINIGAME 20/10 */
     function renderMiniGame1Sub1Tab(container) {
       let winA = 0, winB = 0, scoreAAll = 0, scoreBAll = 0, playedCount = 0;
 
@@ -2052,7 +2046,7 @@
       let html = `
         <div class="card" style="margin-bottom:12px;">
           <div class="card-header-flex">
-            <h2 class="card-title">⭐ TỔNG HỢP KẾT QUẢ - NỘI DUNG MỚI 1 (5 NAM, 3 NỮ)</h2>
+            <h2 class="card-title">🌸 TỔNG HỢP KẾT QUẢ - MINIGAME 20/10 (5 NAM, 3 NỮ)</h2>
             <span style="font-size:11px; font-weight:bold; color:#d97706;">Đã đấu: ${playedCount}/${totalM} Trận</span>
           </div>
           <div class="table-responsive">
@@ -2068,7 +2062,7 @@
               </thead>
               <tbody>
                 <tr style="background:#f0fdf4;">
-                  <td style="color:#15803d; font-weight:900; text-align:left; padding-left:10px;">🟢 TEAM A (5 Nam, 3 Nữ)</td>
+                  <td style="color:#15803d; font-weight:900; text-align:left; padding-left:10px;">🟢 TEAM A</td>
                   <td class="txt-win" style="font-size:13px;">${winA}</td>
                   <td><strong>${scoreAAll}</strong></td>
                   <td class="${(scoreAAll - scoreBAll) > 0 ? 'txt-win' : ((scoreAAll - scoreBAll) < 0 ? 'txt-lose' : '')}">
@@ -2077,7 +2071,7 @@
                   <td style="font-weight:900; color:#15803d;">${statusA}</td>
                 </tr>
                 <tr style="background:#f0f9ff;">
-                  <td style="color:#0369a1; font-weight:900; text-align:left; padding-left:10px;">🔵 TEAM B (5 Nam, 3 Nữ)</td>
+                  <td style="color:#0369a1; font-weight:900; text-align:left; padding-left:10px;">🔵 TEAM B</td>
                   <td class="txt-win" style="font-size:13px;">${winB}</td>
                   <td><strong>${scoreBAll}</strong></td>
                   <td class="${(scoreBAll - scoreAAll) > 0 ? 'txt-win' : ((scoreBAll - scoreAAll) < 0 ? 'txt-lose' : '')}">
@@ -2092,17 +2086,50 @@
 
         <div class="card" style="margin-bottom:12px;">
           <div class="card-header-flex">
-            <h2 class="card-title">👥 DANH SÁCH THÀNH VIÊN 2 ĐỘI (5 NAM, 3 NỮ)</h2>
+            <h2 class="card-title">👥 DANH SÁCH VĐV MINIGAME 20/10 (5 NAM, 3 NỮ MỖI TEAM)</h2>
           </div>
           <div class="grid-2col">
             <div>
-              <div style="background:#15803d; color:#fff; padding:6px 8px; border-radius:6px; margin-bottom:6px; font-weight:bold; font-size:11px;">
-                🟢 TEAM A: 5 Nam (${mini1Sub1TeamA.nam.join(', ')}) | 3 Nữ (${mini1Sub1TeamA.nu.join(', ')})
+              <div style="display:flex; justify-content:space-between; align-items:center; background:#15803d; color:#fff; padding:6px 8px; border-radius:6px; margin-bottom:6px;">
+                <span style="font-weight:bold; font-size:11px;">🟢 DANH SÁCH TEAM A (${mini1Sub1TeamA.length} VĐV)</span>
+                <button class="btn btn-green btn-sm" style="background:#fff; color:#15803d;" onclick="addSub1Vdv('A')">➕ Thêm VĐV</button>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:4px;">
+                ${mini1Sub1TeamA.map(v => {
+                  const idx = vdvs.indexOf(v);
+                  const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#15803d';
+                  return `
+                    <div style="background: #f8fafc; padding: 5px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                      <span style="font-weight:800; color:${color}; font-size: 11px;">${v}</span>
+                      <div>
+                        <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="editSub1Vdv('A', '${v}')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeSub1Vdv('A', '${v}')"><i class="fa-solid fa-xmark"></i></button>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
               </div>
             </div>
+
             <div>
-              <div style="background:#0369a1; color:#fff; padding:6px 8px; border-radius:6px; margin-bottom:6px; font-weight:bold; font-size:11px;">
-                🔵 TEAM B: 5 Nam (${mini1Sub1TeamB.nam.join(', ')}) | 3 Nữ (${mini1Sub1TeamB.nu.join(', ')})
+              <div style="display:flex; justify-content:space-between; align-items:center; background:#0369a1; color:#fff; padding:6px 8px; border-radius:6px; margin-bottom:6px;">
+                <span style="font-weight:bold; font-size:11px;">🔵 DANH SÁCH TEAM B (${mini1Sub1TeamB.length} VĐV)</span>
+                <button class="btn btn-green btn-sm" style="background:#fff; color:#0369a1;" onclick="addSub1Vdv('B')">➕ Thêm VĐV</button>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:4px;">
+                ${mini1Sub1TeamB.map(v => {
+                  const idx = vdvs.indexOf(v);
+                  const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
+                  return `
+                    <div style="background: #f8fafc; padding: 5px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                      <span style="font-weight:800; color:${color}; font-size: 11px;">${v}</span>
+                      <div>
+                        <button style="border:none; background:none; color:#2563eb; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="editSub1Vdv('B', '${v}')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold;" onclick="removeSub1Vdv('B', '${v}')"><i class="fa-solid fa-xmark"></i></button>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
               </div>
             </div>
           </div>
@@ -2136,8 +2163,10 @@
                     else resText = "Hòa";
                   }
 
-                  let allListA = [...mini1Sub1TeamA.nam, ...mini1Sub1TeamA.nu];
-                  let allListB = [...mini1Sub1TeamB.nam, ...mini1Sub1TeamB.nu];
+                  const colorA1 = m.a1 ? VDV_COLORS[vdvs.indexOf(m.a1) % VDV_COLORS.length] : "#334155";
+                  const colorA2 = m.a2 ? VDV_COLORS[vdvs.indexOf(m.a2) % VDV_COLORS.length] : "#334155";
+                  const colorB1 = m.b1 ? VDV_COLORS[vdvs.indexOf(m.b1) % VDV_COLORS.length] : "#334155";
+                  const colorB2 = m.b2 ? VDV_COLORS[vdvs.indexOf(m.b2) % VDV_COLORS.length] : "#334155";
 
                   return `
                     <tr>
@@ -2151,15 +2180,15 @@
                         <input type="text" style="font-size:10px; font-weight:bold; color:#475569;" value="${m.category}" onchange="updateSub1Field(${idx}, 'category', this.value)">
                       </td>
                       <td>
-                        <select style="font-weight:800;" onchange="updateSub1Field(${idx}, 'a1', this.value)">
+                        <select style="color:${colorA1}; font-weight:800;" onchange="updateSub1Field(${idx}, 'a1', this.value)">
                           <option value="">- Chọn -</option>
-                          ${generateVdvOptionsHtml(m.a1, allListA)}
+                          ${generateVdvOptionsHtml(m.a1, mini1Sub1TeamA)}
                         </select>
                       </td>
                       <td>
-                        <select style="font-weight:800;" onchange="updateSub1Field(${idx}, 'a2', this.value)">
+                        <select style="color:${colorA2}; font-weight:800;" onchange="updateSub1Field(${idx}, 'a2', this.value)">
                           <option value="">- Chọn -</option>
-                          ${generateVdvOptionsHtml(m.a2, allListA)}
+                          ${generateVdvOptionsHtml(m.a2, mini1Sub1TeamA)}
                         </select>
                       </td>
                       <td>
@@ -2170,15 +2199,15 @@
                         </div>
                       </td>
                       <td>
-                        <select style="font-weight:800;" onchange="updateSub1Field(${idx}, 'b1', this.value)">
+                        <select style="color:${colorB1}; font-weight:800;" onchange="updateSub1Field(${idx}, 'b1', this.value)">
                           <option value="">- Chọn -</option>
-                          ${generateVdvOptionsHtml(m.b1, allListB)}
+                          ${generateVdvOptionsHtml(m.b1, mini1Sub1TeamB)}
                         </select>
                       </td>
                       <td>
-                        <select style="font-weight:800;" onchange="updateSub1Field(${idx}, 'b2', this.value)">
+                        <select style="color:${colorB2}; font-weight:800;" onchange="updateSub1Field(${idx}, 'b2', this.value)">
                           <option value="">- Chọn -</option>
-                          ${generateVdvOptionsHtml(m.b2, allListB)}
+                          ${generateVdvOptionsHtml(m.b2, mini1Sub1TeamB)}
                         </select>
                       </td>
                       <td>${resText}</td>
@@ -2192,6 +2221,54 @@
       `;
 
       container.innerHTML = html;
+    }
+
+    function addSub1Vdv(team) {
+      const vdvName = prompt(`Nhập tên VĐV thêm vào Team ${team} (Minigame 20/10):`);
+      if (vdvName && vdvName.trim() !== "") {
+        const name = vdvName.trim();
+        if (team === 'A') {
+          if (mini1Sub1TeamB.includes(name)) return alert("⚠️ VĐV này đã có trong Team B!");
+          if (!mini1Sub1TeamA.includes(name)) mini1Sub1TeamA.push(name);
+        } else {
+          if (mini1Sub1TeamA.includes(name)) return alert("⚠️ VĐV này đã có trong Team A!");
+          if (!mini1Sub1TeamB.includes(name)) mini1Sub1TeamB.push(name);
+        }
+        if (!vdvs.includes(name)) {
+          players.push({ id: players.length + 1, name: name, gender: "Nam" });
+          syncVdvsFromPlayers();
+        }
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function editSub1Vdv(team, oldName) {
+      const newName = prompt(`Sửa tên VĐV "${oldName}":`, oldName);
+      if (newName && newName.trim() !== "" && newName.trim() !== oldName) {
+        const trimmed = newName.trim();
+        if (team === 'A') {
+          let idx = mini1Sub1TeamA.indexOf(oldName);
+          if (idx !== -1) mini1Sub1TeamA[idx] = trimmed;
+        } else {
+          let idx = mini1Sub1TeamB.indexOf(oldName);
+          if (idx !== -1) mini1Sub1TeamB[idx] = trimmed;
+        }
+        let pObj = players.find(p => p.name === oldName);
+        if (pObj) pObj.name = trimmed;
+        syncVdvsFromPlayers();
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function removeSub1Vdv(team, name) {
+      if (confirm(`Xóa VĐV ${name} khỏi Team ${team}?`)) {
+        if (team === 'A') mini1Sub1TeamA = mini1Sub1TeamA.filter(v => v !== name);
+        else mini1Sub1TeamB = mini1Sub1TeamB.filter(v => v !== name);
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
     }
 
     function addSub1Match() {
@@ -2211,7 +2288,7 @@
     }
 
     function deleteSub1Match(idx) {
-      if (confirm(`Bạn có chắc muốn xóa trận này khỏi Nội dung mới 1?`)) {
+      if (confirm(`Bạn có chắc muốn xóa trận này?`)) {
         miniGame1Sub1Matches.splice(idx, 1);
         miniGame1Sub1Matches.forEach((m, i) => m.id = i + 1);
         saveDataToFirestore();
@@ -2299,7 +2376,7 @@
                     <tr>
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 8px; font-weight:bold;">
-                        <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
+                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">
@@ -2384,7 +2461,7 @@
                     <tr>
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 8px; font-weight:bold;">
-                        <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
+                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">

@@ -295,6 +295,7 @@
           </div>
         </div>
 
+        <!-- MENU MINI GAME 1 ĐÃ THÊM 2 NÚT MỚI -->
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuMini1', event)">
             <i class="fa-solid fa-gamepad"></i>
@@ -303,6 +304,9 @@
           <div class="dropdown-menu" id="menuMini1">
             <div class="dropdown-item" onclick="switchTab('minigame1')">▶️ Lịch Thi Đấu Team A & B</div>
             <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Nội Dung Game 1</div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" onclick="switchTab('minigame1_sub1')">⭐ Nội Dung Mới 1</div>
+            <div class="dropdown-item" onclick="switchTab('minigame1_sub2')">🔥 Nội Dung Mới 2</div>
           </div>
         </div>
 
@@ -423,6 +427,10 @@
     let paymentStatus = {};
     let miniGame1Content = "Lịch Thi Đấu Team A & Team B Xoay Vòng.";
     let miniGame2Content = "Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.";
+    
+    // Thêm biến lưu trữ cho 2 nội dung mới của Mini Game 1
+    let miniGame1Sub1Content = "Nội dung độc lập cho nút mới số 1.";
+    let miniGame1Sub2Content = "Nội dung độc lập cho nút mới số 2.";
 
     let mini1TeamA = ["Tiến Thọ", "Long Diễn", "Phú Mỗ", "Hà Giấy", "Tuấn La", "Châu Sĩ", "Vân Đình", "Cẩm Ly", "Minh Hạnh"];
     let mini1TeamB = ["Trí Đỏ", "Thanh Đàm", "Dũng Ngạc", "Lợi Trí", "Điền Chèm", "Thành Sóc", "Quỳnh Cool", "Hải Hà", "Minh Vượng"];
@@ -525,6 +533,9 @@
           paymentStatus = data.paymentStatus || {};
           miniGame1Content = data.miniGame1Content || miniGame1Content;
           miniGame2Content = data.miniGame2Content || miniGame2Content;
+          
+          if (data.miniGame1Sub1Content) miniGame1Sub1Content = data.miniGame1Sub1Content;
+          if (data.miniGame1Sub2Content) miniGame1Sub2Content = data.miniGame1Sub2Content;
 
           if (data.mini1TeamA) mini1TeamA = data.mini1TeamA;
           if (data.mini1TeamB) mini1TeamB = data.mini1TeamB;
@@ -546,7 +557,7 @@
 
           autoBackupMemory = JSON.parse(JSON.stringify(data));
 
-          if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop" && currentTab !== "players" && currentTab !== "minigame1" && currentTab !== "minigame2")) {
+          if (!currentTab || (!dates.includes(currentTab) && currentTab !== "tonghop" && currentTab !== "players" && currentTab !== "minigame1" && currentTab !== "minigame1_sub1" && currentTab !== "minigame1_sub2" && currentTab !== "minigame2")) {
             currentTab = getClosestOrCurrentDate(dates);
           }
           statusEl.className = "cloud-status cloud-online";
@@ -626,8 +637,9 @@
       syncVdvsFromPlayers();
 
       const payload = { 
-        players, vdvs, dates, matchesData, dateKeoMode, paymentStatus, miniGame1Content, miniGame2Content, miniGame1Matches,
-        mini1TeamA, mini1TeamB,
+        players, vdvs, dates, matchesData, dateKeoMode, paymentStatus, 
+        miniGame1Content, miniGame2Content, miniGame1Sub1Content, miniGame1Sub2Content, 
+        miniGame1Matches, mini1TeamA, mini1TeamB,
         mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout
       };
 
@@ -650,8 +662,9 @@
     function backupDataJSON() {
       closeAllDropdowns();
       const backupData = autoBackupMemory || {
-        players, vdvs, dates, matchesData, dateKeoMode, paymentStatus, miniGame1Content, miniGame2Content, miniGame1Matches,
-        mini1TeamA, mini1TeamB, mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout,
+        players, vdvs, dates, matchesData, dateKeoMode, paymentStatus, 
+        miniGame1Content, miniGame2Content, miniGame1Sub1Content, miniGame1Sub2Content, 
+        miniGame1Matches, mini1TeamA, mini1TeamB, mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout,
         exportAt: new Date().toISOString()
       };
 
@@ -687,6 +700,8 @@
             if (data.paymentStatus) paymentStatus = data.paymentStatus;
             if (data.miniGame1Content) miniGame1Content = data.miniGame1Content;
             if (data.miniGame2Content) miniGame2Content = data.miniGame2Content;
+            if (data.miniGame1Sub1Content) miniGame1Sub1Content = data.miniGame1Sub1Content;
+            if (data.miniGame1Sub2Content) miniGame1Sub2Content = data.miniGame1Sub2Content;
             if (data.miniGame1Matches) miniGame1Matches = data.miniGame1Matches;
             if (data.mini1TeamA) mini1TeamA = data.mini1TeamA;
             if (data.mini1TeamB) mini1TeamB = data.mini1TeamB;
@@ -901,7 +916,7 @@
 
     function renameCurrentDate() {
       closeAllDropdowns();
-      if (currentTab === "tonghop" || currentTab === "players" || currentTab === "minigame1" || currentTab === "minigame2") return alert("⚠ Không thể đổi tên tab này!");
+      if (currentTab === "tonghop" || currentTab === "players" || currentTab === "minigame1" || currentTab === "minigame1_sub1" || currentTab === "minigame1_sub2" || currentTab === "minigame2") return alert("⚠ Không thể đổi tên tab này!");
       const oldDate = currentTab;
       const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
       if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
@@ -920,7 +935,7 @@
 
     function deleteCurrentDate() {
       closeAllDropdowns();
-      if (currentTab === "tonghop" || currentTab === "players" || currentTab === "minigame1" || currentTab === "minigame2") return alert("⚠ Không thể xóa tab này!");
+      if (currentTab === "tonghop" || currentTab === "players" || currentTab === "minigame1" || currentTab === "minigame1_sub1" || currentTab === "minigame1_sub2" || currentTab === "minigame2") return alert("⚠ Không thể xóa tab này!");
       const dateToDelete = currentTab;
       if (confirm(`❌ Bạn có chắc chắn muốn XÓA TOÀN BỘ dữ liệu ngày "${dateToDelete}"?`)) {
         dates = dates.filter(d => d !== dateToDelete);
@@ -1188,6 +1203,10 @@
         renderPlayersTab(content);
       } else if (currentTab === "minigame1") {
         renderMiniGame1Tab(content);
+      } else if (currentTab === "minigame1_sub1") {
+        renderMiniGame1Sub1Tab(content);
+      } else if (currentTab === "minigame1_sub2") {
+        renderMiniGame1Sub2Tab(content);
       } else if (currentTab === "minigame2") {
         renderMiniGame2Tab(content);
       } else {
@@ -1989,6 +2008,58 @@
       container.innerHTML = html;
     }
 
+    /* GIAO DIỆN CHO NÚT MỚI 1 */
+    function renderMiniGame1Sub1Tab(container) {
+      container.innerHTML = `
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">⭐ NỘI DUNG MỚI 1 - MINI GAME 1</h2>
+          </div>
+          <div style="padding: 16px; font-size: 12px; color: #334155;">
+            <p>${miniGame1Sub1Content}</p>
+            <div style="margin-top: 10px;">
+              <textarea id="mg1Sub1Input" rows="3" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" placeholder="Nhập nội dung mới...">${miniGame1Sub1Content}</textarea>
+              <button class="btn btn-green" style="margin-top: 8px;" onclick="saveMini1Sub1()">Cập Nhật Nội Dung 1</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function saveMini1Sub1() {
+      const val = document.getElementById("mg1Sub1Input").value;
+      miniGame1Sub1Content = val;
+      saveDataToFirestore();
+      alert("✅ Đã cập nhật thành công nội dung mới 1!");
+      renderCurrentTab();
+    }
+
+    /* GIAO DIỆN CHO NÚT MỚI 2 */
+    function renderMiniGame1Sub2Tab(container) {
+      container.innerHTML = `
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">🔥 NỘI DUNG MỚI 2 - MINI GAME 1</h2>
+          </div>
+          <div style="padding: 16px; font-size: 12px; color: #334155;">
+            <p>${miniGame1Sub2Content}</p>
+            <div style="margin-top: 10px;">
+              <textarea id="mg1Sub2Input" rows="3" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" placeholder="Nhập nội dung mới...">${miniGame1Sub2Content}</textarea>
+              <button class="btn btn-green" style="margin-top: 8px;" onclick="saveMini1Sub2()">Cập Nhật Nội Dung 2</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function saveMini1Sub2() {
+      const val = document.getElementById("mg1Sub2Input").value;
+      miniGame1Sub2Content = val;
+      saveDataToFirestore();
+      alert("✅ Đã cập nhật thành công nội dung mới 2!");
+      renderCurrentTab();
+    }
+
     /* BẢNG MINI GAME 2 */
     function renderMiniGame2Tab(container) {
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
@@ -2037,7 +2108,7 @@
                     <tr>
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 8px; font-weight:bold;">
-                        <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
+                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">
@@ -2134,7 +2205,7 @@
                     <tr>
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 8px; font-weight:bold;">
-                        <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
+                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:12px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">

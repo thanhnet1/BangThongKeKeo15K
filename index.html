@@ -2287,9 +2287,9 @@
                       </td>
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                          <input type="number" min="0" class="score-input" value="${m.scoreA ?? ''}" oninput="updateMini1Score(${idx}, 'scoreA', this.value)">
+                          <input type="number" min="0" class="score-input" value="${m.scoreA ?? ''}" onchange="updateMini1Score(${idx}, 'scoreA', this.value)">
                           <span>-</span>
-                          <input type="number" min="0" class="score-input" value="${m.scoreB ?? ''}" oninput="updateMini1Score(${idx}, 'scoreB', this.value)">
+                          <input type="number" min="0" class="score-input" value="${m.scoreB ?? ''}" onchange="updateMini1Score(${idx}, 'scoreB', this.value)">
                         </div>
                       </td>
                       <td>
@@ -2642,9 +2642,9 @@
                       </td>
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                          <input type="number" min="0" class="score-input" value="${m.scoreA ?? ''}" oninput="updateSub1Field(${idx}, 'scoreA', this.value)">
+                          <input type="number" min="0" class="score-input" value="${m.scoreA ?? ''}" onchange="updateSub1Field(${idx}, 'scoreA', this.value)">
                           <span>-</span>
-                          <input type="number" min="0" class="score-input" value="${m.scoreB ?? ''}" oninput="updateSub1Field(${idx}, 'scoreB', this.value)">
+                          <input type="number" min="0" class="score-input" value="${m.scoreB ?? ''}" onchange="updateSub1Field(${idx}, 'scoreB', this.value)">
                         </div>
                       </td>
                       <td>
@@ -3111,9 +3111,9 @@
                         </td>
                         <td>
                           <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                            <input type="number" min="0" class="score-input" value="${m.score1 ?? ''}" oninput="updateMini2MatchScore('A', ${idx}, 'score1', this.value)">
+                            <input type="number" min="0" class="score-input" value="${m.score1 ?? ''}" onchange="updateMini2MatchScore('A', ${idx}, 'score1', this.value)">
                             <span>-</span>
-                            <input type="number" min="0" class="score-input" value="${m.score2 ?? ''}" oninput="updateMini2MatchScore('A', ${idx}, 'score2', this.value)">
+                            <input type="number" min="0" class="score-input" value="${m.score2 ?? ''}" onchange="updateMini2MatchScore('A', ${idx}, 'score2', this.value)">
                           </div>
                         </td>
                         <td style="text-align: center;">
@@ -3213,9 +3213,9 @@
                         </td>
                         <td>
                           <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                            <input type="number" min="0" class="score-input" value="${m.score1 ?? ''}" oninput="updateMini2MatchScore('B', ${idx}, 'score1', this.value)">
+                            <input type="number" min="0" class="score-input" value="${m.score1 ?? ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score1', this.value)">
                             <span>-</span>
-                            <input type="number" min="0" class="score-input" value="${m.score2 ?? ''}" oninput="updateMini2MatchScore('B', ${idx}, 'score2', this.value)">
+                            <input type="number" min="0" class="score-input" value="${m.score2 ?? ''}" onchange="updateMini2MatchScore('B', ${idx}, 'score2', this.value)">
                           </div>
                         </td>
                         <td style="text-align: center;">
@@ -3254,9 +3254,9 @@
                   <td><input type="text" value="${mini2Knockout.bkc1.p1 || 'Nhất A'}" onchange="updateMini2Knockout('bkc1', 'p1', this.value)"></td>
                   <td>
                     <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc1.s1 ?? ''}" oninput="updateMini2Knockout('bkc1', 's1', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc1.s1 ?? ''}" onchange="updateMini2Knockout('bkc1', 's1', this.value)">
                       <span>-</span>
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc1.s2 ?? ''}" oninput="updateMini2Knockout('bkc1', 's2', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc1.s2 ?? ''}" onchange="updateMini2Knockout('bkc1', 's2', this.value)">
                     </div>
                   </td>
                   <td><input type="text" value="${mini2Knockout.bkc1.p2 || 'Nhì B'}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
@@ -3266,9 +3266,9 @@
                   <td><input type="text" value="${mini2Knockout.bkc2.p1 || 'Nhất B'}" onchange="updateMini2Knockout('bkc2', 'p1', this.value)"></td>
                   <td>
                     <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc2.s1 ?? ''}" oninput="updateMini2Knockout('bkc2', 's1', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc2.s1 ?? ''}" onchange="updateMini2Knockout('bkc2', 's1', this.value)">
                       <span>-</span>
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc2.s2 ?? ''}" oninput="updateMini2Knockout('bkc2', 's2', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.bkc2.s2 ?? ''}" onchange="updateMini2Knockout('bkc2', 's2', this.value)">
                     </div>
                   </td>
                   <td><input type="text" value="${mini2Knockout.bkc2.p2 || 'Nhì A'}" onchange="updateMini2Knockout('bkc2', 'p2', this.value)"></td>
@@ -3278,9 +3278,9 @@
                   <td><input type="text" value="${mini2Knockout.rank34.p1 || 'Thua BK1'}" onchange="updateMini2Knockout('rank34', 'p1', this.value)"></td>
                   <td>
                     <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.rank34.s1 ?? ''}" oninput="updateMini2Knockout('rank34', 's1', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.rank34.s1 ?? ''}" onchange="updateMini2Knockout('rank34', 's1', this.value)">
                       <span>-</span>
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.rank34.s2 ?? ''}" oninput="updateMini2Knockout('rank34', 's2', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.rank34.s2 ?? ''}" onchange="updateMini2Knockout('rank34', 's2', this.value)">
                     </div>
                   </td>
                   <td><input type="text" value="${mini2Knockout.rank34.p2 || 'Thua BK2'}" onchange="updateMini2Knockout('rank34', 'p2', this.value)"></td>
@@ -3290,9 +3290,9 @@
                   <td><input type="text" value="${mini2Knockout.final.p1 || 'Thắng BK1'}" onchange="updateMini2Knockout('final', 'p1', this.value)"></td>
                   <td>
                     <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.final.s1 ?? ''}" oninput="updateMini2Knockout('final', 's1', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.final.s1 ?? ''}" onchange="updateMini2Knockout('final', 's1', this.value)">
                       <span>-</span>
-                      <input type="number" min="0" class="score-input" value="${mini2Knockout.final.s2 ?? ''}" oninput="updateMini2Knockout('final', 's2', this.value)">
+                      <input type="number" min="0" class="score-input" value="${mini2Knockout.final.s2 ?? ''}" onchange="updateMini2Knockout('final', 's2', this.value)">
                     </div>
                   </td>
                   <td><input type="text" value="${mini2Knockout.final.p2 || 'Thắng BK2'}" onchange="updateMini2Knockout('final', 'p2', this.value)"></td>

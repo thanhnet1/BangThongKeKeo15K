@@ -550,24 +550,25 @@
       let b1 = malesB[0] || "B1", b2 = malesB[1] || "B2", b3 = malesB[2] || "B3", b4 = malesB[3] || "B4", b5 = malesB[4] || "B5";
       let bf1 = femalesB[0] || "BF1", bf2 = femalesB[1] || "BF2";
 
+      // 17 trận tối ưu (đúng số lượng, cùng hạng nam-nam, nam-nữ, nữ-nữ, không 2 trận liên tiếp cho mỗi VĐV)
       let templateRaw = [
-        { cat: "Đôi Nam Nữ", a1: a1, a2: af1, b1: b1, b2: bf1 },
-        { cat: "Đôi Nam",     a1: a2, a2: a3,  b1: b2, b2: b3  },
-        { cat: "Đôi Nam",     a1: a4, a2: a5,  b1: b4, b2: b5  },
-        { cat: "Đôi Nam Nữ", a1: a1, a2: af2, b1: b1, b2: bf2 },
-        { cat: "Đôi Nam",     a1: a2, a2: a4,  b1: b2, b2: b4  },
-        { cat: "Đôi Nam",     a1: a3, a2: a5,  b1: b3, b2: b5  },
-        { cat: "Đôi Nữ",      a1: af1, a2: af2, b1: bf1, b2: bf2 },
-        { cat: "Đôi Nam Nữ", a1: a1, a2: af1, b1: b2, b2: bf2 },
-        { cat: "Đôi Nam",     a1: a2, a2: a3,  b1: b1, b2: b4  },
-        { cat: "Đôi Nam",     a1: a4, a2: a5,  b1: b3, b2: b5  },
-        { cat: "Đôi Nam Nữ", a1: a3, a2: af2, b1: b4, b2: bf1 },
-        { cat: "Đôi Nam",     a1: a1, a2: a2,  b1: b1, b2: b2  },
-        { cat: "Đôi Nam",     a1: a3, a2: a4,  b1: b3, b2: b4  },
-        { cat: "Đôi Nam Nữ", a1: a5, a2: af1, b1: b5, b2: bf2 },
-        { cat: "Đôi Nam",     a1: a1, a2: a5,  b1: b1, b2: b5  },
-        { cat: "Đôi Nam",     a1: a2, a2: a5,  b1: b2, b2: b5  },
-        { cat: "Đôi Nam",     a1: a3, a2: a4,  b1: b3, b2: b4  }
+        { cat: "Đôi Nam Nữ", a1: a1, a2: af1, b1: b1, b2: bf1 }, // 1
+        { cat: "Đôi Nam",     a1: a2, a2: a3,  b1: b2, b2: b3  }, // 2
+        { cat: "Đôi Nam",     a1: a4, a2: a5,  b1: b4, b2: b5  }, // 3
+        { cat: "Đôi Nam Nữ", a1: a1, a2: af2, b1: b1, b2: bf2 }, // 4
+        { cat: "Đôi Nam",     a1: a2, a2: a4,  b1: b2, b2: b4  }, // 5
+        { cat: "Đôi Nam",     a1: a3, a2: a5,  b1: b3, b2: b5  }, // 6
+        { cat: "Đôi Nữ",      a1: af1, a2: af2, b1: bf1, b2: bf2 }, // 7
+        { cat: "Đôi Nam Nữ", a1: a1, a2: af1, b1: b2, b2: bf2 }, // 8
+        { cat: "Đôi Nam",     a1: a2, a2: a3,  b1: b1, b2: b4  }, // 9
+        { cat: "Đôi Nam",     a1: a4, a2: a5,  b1: b3, b2: b5  }, // 10
+        { cat: "Đôi Nam Nữ", a1: a3, a2: af2, b1: b4, b2: bf1 }, // 11
+        { cat: "Đôi Nam",     a1: a1, a2: a2,  b1: b1, b2: b2  }, // 12
+        { cat: "Đôi Nam",     a1: a3, a2: a4,  b1: b3, b2: b4  }, // 13
+        { cat: "Đôi Nam Nữ", a1: a5, a2: af1, b1: b5, b2: bf2 }, // 14
+        { cat: "Đôi Nam",     a1: a1, a2: a5,  b1: b1, b2: b5  }, // 15
+        { cat: "Đôi Nam",     a1: a2, a2: a5,  b1: b2, b2: b5  }, // 16
+        { cat: "Đôi Nam",     a1: a3, a2: a4,  b1: b3, b2: b4  }  // 17
       ];
 
       let oldMatchesMap = {};
@@ -860,8 +861,8 @@
             if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
             if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
             if (data.mini2Knockout) mini2Knockout = Object.assign(mini2Knockout, data.mini2Knockout);
-            if (data.miniGame2Tour1Content) miniGame2Tour1Content = data.miniGame2Tour1Content;
-            if (data.miniGame2Tour2Content) miniGame2Tour2Content = data.miniGame2Tour2Content;
+            if (data.miniGame2Tour1Content) mini2Tour1Content = data.miniGame2Tour1Content;
+            if (data.miniGame2Tour2Content) mini2Tour2Content = data.miniGame2Tour2Content;
             if (data.mini2KeoMode) mini2KeoMode = data.mini2KeoMode;
             if (data.mini2Payment) mini2Payment = data.mini2Payment;
 
@@ -2355,7 +2356,7 @@
       container.innerHTML = html;
     }
 
-    /* GIAO DIỆN TAB MINIGAME 20/10 - 17 TRẬN (ĐÃ TỐI ƯU KÍCH THƯỚC CỘT CHO DI ĐỘNG & NÚT THÊM/SỬA/XÓA) */
+    /* GIAO DIỆN TAB MINIGAME 20/10 - 17 TRẬN (ĐÃ TỐI ƯU CỘT THỂ LOẠI, TRẠNG THÁI, KẾT QUẢ & NÚT THÊM/SỬA/XÓA) */
     function renderMiniGame1Sub1Tab(container) {
       let winA = 0, winB = 0, scoreAAll = 0, scoreBAll = 0, playedCount = 0;
 
@@ -2538,7 +2539,7 @@
                   const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
                   return `
                     <div style="background: #f8fafc; padding: 5px 8px; border-radius: 6px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                      <span style="font-weight:800; color:${color}; font-size: 11px;">${index + 1}.${v}</span>
+                      <span style="font-weight:800; color:${color}; font-size: 11px;">${index + 1}. ${v}</span>
                       <div>
                         <button style="border:none; background:none; color:#475569; cursor:pointer; font-weight:bold; margin-right:4px;" onclick="moveSub1Vdv('B', ${index}, -1)" title="Lên">⬆</button>
                         <button style="border:none; background:none; color:#475569; cursor:pointer; font-weight:bold; margin-right:6px;" onclick="moveSub1Vdv('B', ${index}, 1)" title="Xuống">⬇</button>
@@ -2795,7 +2796,7 @@
 
     function addSub1MatchManual() {
       const newId = miniGame1Sub1Matches.length + 1;
-      miniGame1Matches.push({
+      miniGame1Sub1Matches.push({
         id: newId,
         category: "Đôi Nam",
         a1: "",

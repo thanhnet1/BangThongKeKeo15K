@@ -312,7 +312,7 @@
             <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Nội Dung Game 1</div>
             <div class="dropdown-divider"></div>
             <div class="dropdown-item" onclick="switchTab('minigame1_sub1')">🌸 Minigame 20/10</div>
-            <div class="dropdown-item" onclick="switchTab('minigame1_sub2')">🔥 Minigame 20/10-17 trận</div>
+            <div class="dropdown-item" onclick="switchTab('minigame1_sub2')">🔥 Nội Dung Mới 2</div>
           </div>
         </div>
 
@@ -451,29 +451,7 @@
     let mini1Sub1Payment = {};
 
     let miniGame1Sub1Matches = [];
-
-    // CẤU HÌNH CHO NÚT MỚI: MINIGAME 20/10-17 TRẬN (5 NAM, 2 NỮ MỖI TEAM)
-    let teamA = [
-      { id: 'A_N1', name: 'Nam A1', gender: 'Nam', rank: 1 },
-      { id: 'A_N2', name: 'Nam A2', gender: 'Nam', rank: 2 },
-      { id: 'A_N3', name: 'Nam A3', gender: 'Nam', rank: 3 },
-      { id: 'A_N4', name: 'Nam A4', gender: 'Nam', rank: 4 },
-      { id: 'A_N5', name: 'Nam A5', gender: 'Nam', rank: 5 },
-      { id: 'A_Nu1', name: 'Nữ A1', gender: 'Nữ', rank: 1 },
-      { id: 'A_Nu2', name: 'Nữ A2', gender: 'Nữ', rank: 2 }
-    ];
-
-    let teamB = [
-      { id: 'B_N1', name: 'Nam B1', gender: 'Nam', rank: 1 },
-      { id: 'B_N2', name: 'Nam B2', gender: 'Nam', rank: 2 },
-      { id: 'B_N3', name: 'Nam B3', gender: 'Nam', rank: 3 },
-      { id: 'B_N4', name: 'Nam B4', gender: 'Nam', rank: 4 },
-      { id: 'B_N5', name: 'Nam B5', gender: 'Nam', rank: 5 },
-      { id: 'B_Nu1', name: 'Nữ B1', gender: 'Nữ', rank: 1 },
-      { id: 'B_Nu2', name: 'Nữ B2', gender: 'Nữ', rank: 2 }
-    ];
-
-    let matches17 = [];
+    let miniGame1Sub2Content = "Nội dung độc lập cho nút mới số 2.";
 
     let mini2Tour1Content = "Nội dung chi tiết và lịch thi đấu của Giải Đấu Bổ Sung 1.";
     let mini2Tour2Content = "Nội dung chi tiết và lịch thi đấu của Giải Đấu Bổ Sung 2.";
@@ -575,13 +553,13 @@
         { cat: "Đôi Nam Nữ", a1: malesA[2], a2: femalesA[0], b1: malesB[2], b2: femalesB[0] },
         { cat: "Đôi Nam",     a1: malesA[3], a2: malesA[4], b1: malesB[3], b2: malesB[4] },
         { cat: "Đôi Nam Nữ", a1: malesA[0], a2: femalesA[1], b1: malesB[0], b2: femalesB[1] },
-        { cat: "Đôi Nam",     a1: malesA[1], a2: malesA[2], b1: malesB[1], b2: malesB[2] },
+        { cat: "Đôi Nam",     a1: malesA[1], a2: malesA[2], b1: malesB[1], b2: femalesB[2] },
         { cat: "Đôi Nam Nữ", a1: malesA[3], a2: femalesA[2], b1: malesB[3], b2: femalesB[2] },
         { cat: "Đôi Nam Nữ", a1: malesA[4], a2: femalesA[0], b1: malesB[4], b2: femalesB[0] },
         { cat: "Đôi Nam",     a1: malesA[0], a2: malesA[1], b1: malesB[0], b2: malesB[1] },
         { cat: "Đôi Nam Nữ", a1: malesA[2], a2: femalesA[1], b1: malesB[2], b2: femalesB[1] },
         { cat: "Đôi Nam Nữ", a1: malesA[3], a2: femalesA[0], b1: malesB[3], b2: femalesB[0] },
-        { cat: "Đôi Nam",     a1: malesA[4], a2: malesA[2], b1: malesB[4], b2: malesB[2] },
+        { cat: "Đôi Nam",     a1: malesA[4], a2: malesA[2], b1: malesB[4], b2: femalesB[2] },
         { cat: "Đôi Nam Nữ", a1: malesA[0], a2: femalesA[2], b1: malesB[0], b2: femalesB[2] },
         { cat: "Đôi Nam Nữ", a1: malesA[1], a2: femalesA[0], b1: malesB[1], b2: femalesB[0] },
         { cat: "Đôi Nam Nữ", a1: malesA[2], a2: femalesA[2], b1: malesB[2], b2: femalesB[2] },
@@ -690,10 +668,7 @@
           } else {
             generateSub1MatchesAutomatically();
           }
-
-          if (data.teamA) teamA = data.teamA;
-          if (data.teamB) teamB = data.teamB;
-          if (data.matches17) matches17 = data.matches17;
+          if (data.miniGame1Sub2Content) miniGame1Sub2Content = data.miniGame1Sub2Content;
 
           if (data.miniGame1Matches && data.miniGame1Matches.length > 0) {
             miniGame1Matches = data.miniGame1Matches;
@@ -708,14 +683,13 @@
           if (data.mini2Knockout) {
             mini2Knockout = Object.assign(mini2Knockout, data.mini2Knockout);
           }
-          if (data.mini2Tour1Content) mini2Tour1Content = data.mini2Tour1Content;
-          if (data.mini2Tour2Content) mini2Tour2Content = data.mini2Tour2Content;
+          if (data.miniGame2Tour1Content) mini2Tour1Content = data.miniGame2Tour1Content;
+          if (data.miniGame2Tour2Content) mini2Tour2Content = data.miniGame2Tour2Content;
           if (data.mini2KeoMode) mini2KeoMode = data.mini2KeoMode;
           if (data.mini2Payment) mini2Payment = data.mini2Payment;
 
           if (!mini2MatchesA || mini2MatchesA.length === 0) generateMini2MatchesForGroup('A');
           if (!mini2MatchesB || mini2MatchesB.length === 0) generateMini2MatchesForGroup('B');
-          if (!matches17 || matches17.length === 0) generateAutoSchedule17();
 
           autoBackupMemory = JSON.parse(JSON.stringify(data));
 
@@ -781,7 +755,6 @@
 
       miniGame1Matches = DEFAULT_MINI1_DATA;
       generateSub1MatchesAutomatically();
-      generateAutoSchedule17();
       generateMini2MatchesForGroup('A');
       generateMini2MatchesForGroup('B');
       currentTab = todayStr;
@@ -805,8 +778,7 @@
         players, vdvs, dates, matchesData, dateKeoMode, paymentStatus, 
         miniGame1Content, miniGame2Content, 
         mini1TeamA, mini1TeamB, mini1KeoMode, mini1Payment,
-        mini1Sub1TeamA, mini1Sub1TeamB, mini1Sub1KeoMode, mini1Sub1Payment, miniGame1Sub1Matches, 
-        teamA, teamB, matches17,
+        mini1Sub1TeamA, mini1Sub1TeamB, mini1Sub1KeoMode, mini1Sub1Payment, miniGame1Sub1Matches, miniGame1Sub2Content, 
         miniGame1Matches,
         mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout,
         miniGame2Tour1Content, miniGame2Tour2Content, mini2KeoMode, mini2Payment
@@ -832,7 +804,7 @@
       closeAllDropdowns();
       const backupData = autoBackupMemory || {
         players, vdvs, dates, matchesData, dateKeoMode, paymentStatus, 
-        miniGame1Content, miniGame2Content, mini1TeamA, mini1TeamB, mini1KeoMode, mini1Payment, mini1Sub1TeamA, mini1Sub1TeamB, mini1Sub1KeoMode, mini1Sub1Payment, miniGame1Sub1Matches, teamA, teamB, matches17, 
+        miniGame1Content, miniGame2Content, mini1TeamA, mini1TeamB, mini1KeoMode, mini1Payment, mini1Sub1TeamA, mini1Sub1TeamB, mini1Sub1KeoMode, mini1Sub1Payment, miniGame1Sub1Matches, miniGame1Sub2Content, 
         miniGame1Matches, mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout,
         miniGame2Tour1Content, miniGame2Tour2Content, mini2KeoMode, mini2Payment,
         exportAt: new Date().toISOString()
@@ -879,17 +851,15 @@
             if (data.mini1Sub1KeoMode) mini1Sub1KeoMode = data.mini1Sub1KeoMode;
             if (data.mini1Sub1Payment) mini1Sub1Payment = data.mini1Sub1Payment;
             if (data.miniGame1Sub1Matches) miniGame1Sub1Matches = data.miniGame1Sub1Matches;
-            if (data.teamA) teamA = data.teamA;
-            if (data.teamB) teamB = data.teamB;
-            if (data.matches17) matches17 = data.matches17;
+            if (data.miniGame1Sub2Content) miniGame1Sub2Content = data.miniGame1Sub2Content;
             if (data.miniGame1Matches) miniGame1Matches = data.miniGame1Matches;
             if (data.mini2PairsA) mini2PairsA = data.mini2PairsA;
             if (data.mini2PairsB) mini2PairsB = data.mini2PairsB;
             if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
             if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
             if (data.mini2Knockout) mini2Knockout = Object.assign(mini2Knockout, data.mini2Knockout);
-            if (data.miniGame2Tour1Content) miniGame2Tour1Content = data.miniGame2Tour1Content;
-            if (data.miniGame2Tour2Content) miniGame2Tour2Content = data.miniGame2Tour2Content;
+            if (data.miniGame2Tour1Content) mini2Tour1Content = data.miniGame2Tour1Content;
+            if (data.miniGame2Tour2Content) mini2Tour2Content = data.miniGame2Tour2Content;
             if (data.mini2KeoMode) mini2KeoMode = data.mini2KeoMode;
             if (data.mini2Payment) mini2Payment = data.mini2Payment;
 
@@ -2383,7 +2353,7 @@
       container.innerHTML = html;
     }
 
-    /* GIAO DIỆN TAB MINIGAME 20/10 */
+    /* GIAO DIỆN TAB MINIGAME 20/10 - ĐÃ CĂN CHỈNH THU GỌN CÁC CỘT THỂ LOẠI, TRẠNG THÁI, KẾT QUẢ */
     function renderMiniGame1Sub1Tab(container) {
       let winA = 0, winB = 0, scoreAAll = 0, scoreBAll = 0, playedCount = 0;
 
@@ -2655,7 +2625,7 @@
                         </div>
                       </td>
                       <td style="color:${colorB1}; font-weight:800; text-align:center;">${m.b1 || '-'}</td>
-                      <td style="color:${colorB2}; font-weight:800; text-align:center;">${m.b2 || '-'}</td>${customKeoCell}
+                      <td style="color:${colorB2}; font-weight:800; text-align:center;">${m.b2 \vert{}\vert{} '-'}</td>${customKeoCell}
                       <td style="font-size:9px; text-align:center;">${matchStatusHtml}</td>
                       <td style="font-size:9px; text-align:center;">${resText}</td>
                     </tr>
@@ -2794,216 +2764,30 @@
       renderCurrentTab();
     }
 
-    /* GIAO DIỆN TÍCH HỢP LỊCH THI ĐẤU 17 TRẬN (MINIGAME 20/10-17 TRẬN) */
+    /* GIAO DIỆN CHO NÚT MỚI 2 (MINIGAME 1) */
     function renderMiniGame1Sub2Tab(container) {
       container.innerHTML = `
-        <style>
-          .schedule-container { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; padding: 15px; border-radius: 8px; }
-          .team-config { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
-          .team-box { flex: 1; background: #fff; padding: 12px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); min-width: 280px; }
-          .team-box h4 { margin-top: 0; color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px; font-size: 13px; }
-          .player-list { list-style: none; padding: 0; margin: 0; }
-          .player-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 12px; }
-          .player-item input { width: 130px; padding: 3px 6px; border: 1px solid #ccc; border-radius: 4px; }
-          .btn-group-custom { margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
-          .badge-cat { padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; color: white; }
-          .bg-nam { background-color: #007bff; }
-          .bg-nu { background-color: #e83e8c; }
-          .bg-mix { background-color: #6f42c1; }
-          .action-btn { cursor: pointer; border: none; background: transparent; font-size: 14px; margin: 0 2px; }
-        </style>
-
-        <div class="card schedule-container">
+        <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">🔥 MINIGAME 20/10 - 17 TRẬN (ĐỒNG BỘ TỰ ĐỘNG)</h2>
+            <h2 class="card-title">🔥 NỘI DUNG MỚI 2 - MINI GAME 1</h2>
           </div>
-          
-          <!-- Cấu hình danh sách 2 Team -->
-          <div class="team-config">
-            <div class="team-box">
-              <h4>Team A (5 Nam, 2 Nữ)</h4>
-              <div id="teamA-players" class="player-list"></div>
-              <button class="btn btn-warning btn-sm" style="margin-top: 8px; width: 100%;" onclick="addPlayer17('A')">+ Thêm VĐV Team A</button>
+          <div style="padding: 16px; font-size: 12px; color: #334155;">
+            <p>${miniGame1Sub2Content}</p>
+            <div style="margin-top: 10px;">
+              <textarea id="mg1Sub2Input" rows="3" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" placeholder="Nhập nội dung mới...">${miniGame1Sub2Content}</textarea>
+              <button class="btn btn-green" style="margin-top: 8px;" onclick="saveMini1Sub2()">Cập Nhật Nội Dung 2</button>
             </div>
-            <div class="team-box">
-              <h4>Team B (5 Nam, 2 Nữ)</h4>
-              <div id="teamB-players" class="player-list"></div>
-              <button class="btn btn-warning btn-sm" style="margin-top: 8px; width: 100%;" onclick="addPlayer17('B')">+ Thêm VĐV Team B</button>
-            </div>
-          </div>
-
-          <!-- Nút quản lý -->
-          <div class="btn-group-custom">
-            <button class="btn btn-primary btn-sm" onclick="generateAutoSchedule17()">⚡ Tự Động Đồng Bộ Lịch (17 Trận)</button>
-            <button class="btn btn-success btn-sm" onclick="addNewMatch17()">+ Thêm Trận Thủ Công</button>
-          </div>
-
-          <!-- Bảng Lịch Thi Đấu -->
-          <div class="table-responsive">
-            <table>
-              <thead>
-                <tr>
-                  <th style="width:45px;">STT</th>
-                  <th style="width:100px;">Thể Loại</th>
-                  <th>Team A</th>
-                  <th style="width:40px;">VS</th>
-                  <th>Team B</th>
-                  <th style="width:70px;">Thao Tác</th>
-                </tr>
-              </thead>
-              <tbody id="schedule-body-17">
-              </tbody>
-            </table>
           </div>
         </div>
       `;
-      renderPlayers17();
-      renderSchedule17();
     }
 
-    function renderPlayers17() {
-      const renderTeam = (team, containerId, prefix) => {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        container.innerHTML = team.map((p, idx) => `
-          <div class="player-item">
-            <span><strong>${p.gender} H${p.rank}:</strong></span>
-            <input type="text" value="${p.name}" onchange="updatePlayerName17('${prefix}', ${idx}, this.value)">
-            <button class="action-btn" style="color:red;" onclick="deletePlayer17('${prefix}', ${idx})">🗑️</button>
-          </div>
-        `).join('');
-      };
-      renderTeam(teamA, 'teamA-players', 'A');
-      renderTeam(teamB, 'teamB-players', 'B');
-    }
-
-    function updatePlayerName17(teamPrefix, index, name) {
-      if (teamPrefix === 'A') teamA[index].name = name;
-      else teamB[index].name = name;
-      generateAutoSchedule17();
+    function saveMini1Sub2() {
+      const val = document.getElementById("mg1Sub2Input").value;
+      miniGame1Sub2Content = val;
       saveDataToFirestore();
-    }
-
-    function addPlayer17(teamPrefix) {
-      const team = teamPrefix === 'A' ? teamA : teamB;
-      const gender = confirm("Nhấn OK cho 'Nam', Cancel cho 'Nữ'") ? 'Nam' : 'Nữ';
-      const rank = prompt("Nhập hạng VĐV:", "1");
-      const name = prompt("Nhập tên VĐV:", `${gender} ${teamPrefix}${team.length + 1}`);
-      if (name) {
-        team.push({ id: `${teamPrefix}_${Date.now()}`, name, gender, rank: parseInt(rank) || 1 });
-        renderPlayers17();
-        generateAutoSchedule17();
-        saveDataToFirestore();
-      }
-    }
-
-    function deletePlayer17(teamPrefix, index) {
-      if (confirm("Bạn có chắc muốn xóa VĐV này? Lịch thi đấu sẽ tự cập nhật.")) {
-        if (teamPrefix === 'A') teamA.splice(index, 1);
-        else teamB.splice(index, 1);
-        renderPlayers17();
-        generateAutoSchedule17();
-        saveDataToFirestore();
-      }
-    }
-
-    function generateAutoSchedule17() {
-      const getP = (team, gender, index) => {
-        const list = team.filter(p => p.gender === gender);
-        return list[index] ? list[index].name : `(Trống)`;
-      };
-
-      const scheduleTemplate = [
-        { type: 'Nam - Nam', pairA: [0, 1], pairB: [0, 1] },
-        { type: 'Nam - Nam', pairA: [0, 1], pairB: [0, 1] },
-        { type: 'Nam - Nam', pairA: [0, 2], pairB: [0, 2] },
-        { type: 'Nam - Nam', pairA: [0, 2], pairB: [0, 2] },
-        { type: 'Nam - Nam', pairA: [1, 2], pairB: [1, 2] },
-        { type: 'Nam - Nam', pairA: [1, 2], pairB: [1, 2] },
-        { type: 'Nam - Nam', pairA: [3, 4], pairB: [3, 4] },
-        { type: 'Nam - Nam', pairA: [3, 4], pairB: [3, 4] },
-        { type: 'Nam - Nam', pairA: [0, 3], pairB: [0, 3] },
-        { type: 'Nam - Nam', pairA: [1, 4], pairB: [1, 4] },
-        { type: 'Nam - Nam', pairA: [2, 3], pairB: [2, 3] },
-        { type: 'Nam - Nữ', pairA_M: 3, pairA_F: 0, pairB_M: 3, pairB_F: 0 },
-        { type: 'Nam - Nữ', pairA_M: 4, pairA_F: 1, pairB_M: 4, pairB_F: 1 },
-        { type: 'Nam - Nữ', pairA_M: 2, pairA_F: 0, pairB_M: 2, pairB_F: 0 },
-        { type: 'Nữ - Nữ', pairA_F: [0, 1], pairB_F: [0, 1] },
-        { type: 'Nam - Nam', pairA: [0, 4], pairB: [0, 4] },
-        { type: 'Nam - Nữ', pairA_M: 1, pairA_F: 1, pairB_M: 1, pairB_F: 1 }
-      ];
-
-      matches17 = scheduleTemplate.map((item, idx) => {
-        let tA = "", tB = "", category = item.type;
-        if (category === 'Nam - Nam') {
-          tA = `${getP(teamA, 'Nam', item.pairA[0])} + ${getP(teamA, 'Nam', item.pairA[1])}`;
-          tB = `${getP(teamB, 'Nam', item.pairB[0])} + ${getP(teamB, 'Nam', item.pairB[1])}`;
-        } else if (category === 'Nữ - Nữ') {
-          tA = `${getP(teamA, 'Nữ', item.pairA_F[0])} + ${getP(teamA, 'Nữ', item.pairA_F[1])}`;
-          tB = `${getP(teamB, 'Nữ', item.pairB_F[0])} + ${getP(teamB, 'Nữ', item.pairB_F[1])}`;
-        } else {
-          tA = `${getP(teamA, 'Nam', item.pairA_M)} + ${getP(teamA, 'Nữ', item.pairA_F)}`;
-          tB = `${getP(teamB, 'Nam', item.pairB_M)} + ${getP(teamB, 'Nữ', item.pairB_F)}`;
-        }
-        return { id: idx + 1, category, teamA: tA, teamB: tB };
-      });
-
-      renderSchedule17();
-    }
-
-    function renderSchedule17() {
-      const tbody = document.getElementById('schedule-body-17');
-      if (!tbody) return;
-      tbody.innerHTML = matches17.map((m, idx) => {
-        let badgeClass = 'bg-nam';
-        if (m.category === 'Nữ - Nữ') badgeClass = 'bg-nu';
-        if (m.category === 'Nam - Nữ') badgeClass = 'bg-mix';
-
-        return `
-          <tr>
-            <td><strong>${idx + 1}</strong></td>
-            <td><span class="badge-cat ${badgeClass}">${m.category}</span></td>
-            <td>${m.teamA}</td>
-            <td style="font-weight:bold; color:red;">VS</td>
-            <td>${m.teamB}</td>
-            <td>
-              <button class="action-btn" title="Sửa trận" onclick="editMatch17(${idx})">✏️</button>
-              <button class="action-btn" title="Xóa trận" onclick="deleteMatch17(${idx})">❌</button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function addNewMatch17() {
-      const cat = prompt("Nhập thể loại (Nam - Nam / Nam - Nữ / Nữ - Nữ):", "Nam - Nam");
-      const tA = prompt("Nhập cặp VĐV Team A:", "Nam A1 + Nam A2");
-      const tB = prompt("Nhập cặp VĐV Team B:", "Nam B1 + Nam B2");
-      if (tA && tB) {
-        matches17.push({ id: matches17.length + 1, category: cat || 'Tự do', teamA: tA, teamB: tB });
-        renderSchedule17();
-        saveDataToFirestore();
-      }
-    }
-
-    function editMatch17(index) {
-      const m = matches17[index];
-      const newA = prompt("Sửa Đội A:", m.teamA);
-      const newB = prompt("Sửa Đội B:", m.teamB);
-      if (newA !== null && newB !== null) {
-        matches17[index].teamA = newA;
-        matches17[index].teamB = newB;
-        renderSchedule17();
-        saveDataToFirestore();
-      }
-    }
-
-    function deleteMatch17(index) {
-      if (confirm(`Bạn muốn xóa trận thứ ${index + 1}?`)) {
-        matches17.splice(index, 1);
-        renderSchedule17();
-        saveDataToFirestore();
-      }
+      alert("✅ Đã cập nhật thành công nội dung mới 2!");
+      renderCurrentTab();
     }
 
     /* GIAO DIỆN CÁC GIẢI ĐẤU BỔ SUNG TRONG MINI GAME 2 */

@@ -452,7 +452,6 @@
 
     let miniGame1Sub1Matches = [];
 
-    // Khởi tạo thêm bộ dữ liệu độc lập cho "Minigame 20/10 - 17 Trận" (Sub2)
     let mini1Sub2TeamA = ["Tuấn La", "Phú Mỗ", "Tiến Thọ", "Châu Sĩ", "Long Diễn", "Vân Đình", "Minh Hạnh", "Cẩm Ly"];
     let mini1Sub2TeamB = ["Thành Sóc", "Trường Giang", "Trí Đỏ", "Lợi Trí", "Thanh Đàm", "Gà Tre", "Minh Vượng", "Hải Hà"];
     let mini1Sub2KeoMode = "k25";
@@ -511,7 +510,6 @@
       if (btn) btn.innerText = players.length;
     }
 
-    // Hàm sinh lịch 21 trận (cho Minigame 20/10 chính)
     function generateDynamicSub1Matches() {
       let malesA = mini1Sub1TeamA.filter(name => {
         let p = players.find(x => x.name === name);
@@ -571,7 +569,6 @@
       });
     }
 
-    // Hàm sinh lịch 17 trận (cho Minigame 20/10 - 17 Trận / Sub2) sao chép mô hình tương tự từ Minigame 20/10
     function generateDynamicSub2Matches() {
       let malesA = mini1Sub2TeamA.filter(name => {
         let p = players.find(x => x.name === name);
@@ -610,21 +607,21 @@
         { cat: "Đôi Nam",     a1: malesA[3], a2: malesA[4], b1: malesB[3], b2: malesB[4] }
       ];
 
-      miniGame1Sub2Matches = templateRaw17.map((t, idx) => {
-        let existing = miniGame1Sub2Matches[idx];
-        return {
+      // Chỉ khởi tạo mẫu 17 trận nếu mảng chưa có dữ liệu lưu trước đó hoặc chưa được thêm trận thủ công
+      if (!miniGame1Sub2Matches || miniGame1Sub2Matches.length === 0) {
+        miniGame1Sub2Matches = templateRaw17.map((t, idx) => ({
           id: idx + 1,
           category: t.cat,
           a1: t.a1,
           a2: t.a2,
-          scoreA: existing ? existing.scoreA : "",
-          scoreB: existing ? existing.scoreB : "",
+          scoreA: "",
+          scoreB: "",
           b1: t.b1,
           b2: t.b2,
-          customWin: existing ? (existing.customWin !== undefined ? existing.customWin : 0) : 0,
-          customLose: existing ? (existing.customLose !== undefined ? existing.customLose : -25) : -25
-        };
-      });
+          customWin: 0,
+          customLose: -25
+        }));
+      }
     }
 
     function toggleAdminPermission() {
@@ -698,7 +695,6 @@
             generateDynamicSub1Matches();
           }
 
-          // Dữ liệu cho Sub2 (Minigame 20/10 - 17 Trận)
           if (data.mini1Sub2TeamA) mini1Sub2TeamA = data.mini1Sub2TeamA;
           if (data.mini1Sub2TeamB) mini1Sub2TeamB = data.mini1Sub2TeamB;
           if (data.mini1Sub2KeoMode) mini1Sub2KeoMode = data.mini1Sub2KeoMode;
@@ -1282,7 +1278,6 @@
       closeGameModal();
     }
 
-    /* LOGIC DỮ LIỆU CHO MINI GAME 2 */
     function generateMini2MatchesForGroup(group) {
       let pairs = group === 'A' ? mini2PairsA : mini2PairsB;
       let matches = [];
@@ -1927,7 +1922,6 @@
       container.innerHTML = html;
     }
 
-    /* XỬ LÝ MINI GAME 1 (TEAM A & B CHÍNH) */
     function addMini1Match() {
       const newId = miniGame1Matches.length + 1;
       miniGame1Matches.push({
@@ -2833,7 +2827,7 @@
     }
 
 
-    /* GIAO DIỆN TAB MINIGAME 20/10 - 17 TRẬN (SUB2) */
+    /* GIAO DIỆN TAB MINIGAME 20/10 - 17 TRẬN (SUB2) CẬP NHẬT DROPDOWN VÀ THÊM TRẬN */
     function renderMiniGame1Sub2Tab(container) {
       generateDynamicSub2Matches();
 
@@ -2889,7 +2883,7 @@
             teamAPair.forEach(v => { if (sub2Stats[v]) { sub2Stats[v].played++; sub2Stats[v].winK += effWin; sub2Stats[v].total += effWin; } });
             teamBPair.forEach(v => { if (sub2Stats[v]) { sub2Stats[v].played++; sub2Stats[v].loseK += effLose; sub2Stats[v].total += effLose; } });
           } else if (sB > sA) {
-            teamBPair.forEach(v => { if (sub2Stats[v]) { sub2Stats[v].played++; sub2Stats[v].winK += effWin; sub2Stats[v].total += effWin; } });
+            teamBPair.forEach(v => { if (sub2Stats[v]) { sub2Stats[v].played++; sub2Stats[v].loseK += effWin; sub2Stats[v].total += effWin; } });
             teamAPair.forEach(v => { if (sub2Stats[v]) { sub2Stats[v].played++; sub2Stats[v].loseK += effLose; sub2Stats[v].total += effLose; } });
           }
         }
@@ -3035,21 +3029,22 @@
 
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">▶ LỊCH THI ĐẤU 17 TRẬN TỰ ĐỘNG & TÙY CHỌN KÈO</h2>
+            <h2 class="card-title">▶ LỊCH THI ĐẤU LÊN ĐẾN ${miniGame1Sub2Matches.length} TRẬN & TÙY CHỌN KÈO</h2>
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="font-size:11px; font-weight:bold;">Tùy Chọn Kèo:</span>
               <select style="width: auto; padding: 4px 8px; font-weight: bold; background: #fff8e1; border: 1px solid #d97706;" onchange="changeSub2KeoMode(this.value)">
                 <option value="k25" ${mini1Sub2KeoMode === 'k25' ? 'selected' : ''}>Kèo 25k (Thắng 0k - Thua -25k)</option>
                 <option value="free" ${mini1Sub2KeoMode === 'free' ? 'selected' : ''}>Kèo Tự Do (Tùy Chỉnh Từng Trận)</option>
               </select>
+              <button class="btn btn-green" onclick="addSub2Match()">➕ Thêm Trận Đấu</button>
             </div>
           </div>
           <div class="table-responsive">
             <table>
               <thead>
                 <tr>
-                  <th style="width:55px;">STT TRẬN</th>
-                  <th style="width:85px; text-align:center;">THỂ LOẠI</th>
+                  <th style="width:70px;">THAO TÁC</th>
+                  <th style="width:100px; text-align:center;">THỂ LOẠI</th>
                   <th colspan="2" class="th-team-a" style="color:#fff !important;">🟢 ĐỘI A</th>
                   <th style="width:80px;">TỶ SỐ</th>
                   <th colspan="2" class="th-team-b" style="color:#fff !important;">🔵 ĐỘI B</th>
@@ -3093,17 +3088,24 @@
                     <tr>
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                          <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold; font-size:12px;" onclick="deleteSub2Match(${idx})" title="Xóa trận này">🗑️</button>
                           <strong>Trận ${m.id}</strong>
                         </div>
                       </td>
-                      <td style="text-align: center; padding: 4px; font-weight:bold; color:#334155;">
-                        ${m.category}
+                      <td style="text-align: center; padding: 4px;">
+                        <input type="text" style="font-size:10px; font-weight:bold; color:#475569;" value="${m.category}" onchange="updateSub2VdvField(${idx}, 'category', this.value)">
                       </td>
-                      <td style="font-weight:bold; color:${colorA1}; text-align:center;">
-                        ${m.a1 || '--'}
+                      <td>
+                        <select style="color:${colorA1}; font-weight:800;" onchange="updateSub2VdvField(${idx}, 'a1', this.value)">
+                          <option value="">-- Chọn A1 --</option>
+                          ${generateVdvOptionsHtml(m.a1, mini1Sub2TeamA)}
+                        </select>
                       </td>
-                      <td style="font-weight:bold; color:${colorA2}; text-align:center;">
-                        ${m.a2 || '--'}
+                      <td>
+                        <select style="color:${colorA2}; font-weight:800;" onchange="updateSub2VdvField(${idx}, 'a2', this.value)">
+                          <option value="">-- Chọn A2 --</option>
+                          ${generateVdvOptionsHtml(m.a2, mini1Sub2TeamA)}
+                        </select>
                       </td>
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
@@ -3112,11 +3114,17 @@
                           <input type="number" min="0" class="score-input" value="${m.scoreB ?? ''}" oninput="updateSub2Field(${idx}, 'scoreB', this.value)">
                         </div>
                       </td>
-                      <td style="font-weight:bold; color:${colorB1}; text-align:center;">
-                        ${m.b1 || '--'}
+                      <td>
+                        <select style="color:${colorB1}; font-weight:800;" onchange="updateSub2VdvField(${idx}, 'b1', this.value)">
+                          <option value="">-- Chọn B1 --</option>
+                          ${generateVdvOptionsHtml(m.b1, mini1Sub2TeamB)}
+                        </select>
                       </td>
-                      <td style="font-weight:bold; color:${colorB2}; text-align:center;">
-                        ${m.b2 || '--'}
+                      <td>
+                        <select style="color:${colorB2}; font-weight:800;" onchange="updateSub2VdvField(${idx}, 'b2', this.value)">
+                          <option value="">-- Chọn B2 --</option>
+                          ${generateVdvOptionsHtml(m.b2, mini1Sub2TeamB)}
+                        </select>
                       </td>
                       ${customKeoCell}
                       <td>${matchStatusHtml}</td>
@@ -3187,6 +3195,33 @@
       }
     }
 
+    function addSub2Match() {
+      const newId = miniGame1Sub2Matches.length + 1;
+      miniGame1Sub2Matches.push({
+        id: newId,
+        category: "Đôi Nam Nữ",
+        a1: "",
+        a2: "",
+        scoreA: "",
+        scoreB: "",
+        b1: "",
+        b2: "",
+        customWin: 0,
+        customLose: -25
+      });
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function deleteSub2Match(idx) {
+      if (confirm(`Bạn có chắc muốn xóa Trận ${idx + 1}?`)) {
+        miniGame1Sub2Matches.splice(idx, 1);
+        miniGame1Sub2Matches.forEach((m, i) => m.id = i + 1);
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
     function addSub2Vdv(team) {
       const vdvName = prompt(`Nhập tên VĐV thêm vào Team ${team} (Minigame 17 Trận):`);
       if (vdvName && vdvName.trim() !== "") {
@@ -3202,7 +3237,6 @@
           players.push({ id: players.length + 1, name: name, gender: "Nam" });
           syncVdvsFromPlayers();
         }
-        generateDynamicSub2Matches();
         saveDataToFirestore();
         renderCurrentTab();
       }
@@ -3222,7 +3256,6 @@
         let pObj = players.find(p => p.name === oldName);
         if (pObj) pObj.name = trimmed;
         syncVdvsFromPlayers();
-        generateDynamicSub2Matches();
         saveDataToFirestore();
         renderCurrentTab();
       }
@@ -3232,7 +3265,6 @@
       if (confirm(`Xóa VĐV ${name} khỏi Team ${team}?`)) {
         if (team === 'A') mini1Sub2TeamA = mini1Sub2TeamA.filter(v => v !== name);
         else mini1Sub2TeamB = mini1Sub2TeamB.filter(v => v !== name);
-        generateDynamicSub2Matches();
         saveDataToFirestore();
         renderCurrentTab();
       }
@@ -3245,12 +3277,17 @@
       let temp = list[index];
       list[index] = list[targetIdx];
       list[targetIdx] = temp;
-      generateDynamicSub2Matches();
       saveDataToFirestore();
       renderCurrentTab();
     }
 
     function updateSub2Field(idx, field, val) {
+      miniGame1Sub2Matches[idx][field] = val;
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function updateSub2VdvField(idx, field, val) {
       miniGame1Sub2Matches[idx][field] = val;
       saveDataToFirestore();
       renderCurrentTab();

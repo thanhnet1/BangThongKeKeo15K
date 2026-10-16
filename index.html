@@ -2478,7 +2478,7 @@
       container.innerHTML = html;
     }
 
-    /* GIAO DIỆN TAB MINIGAME 20/10 (21 TRẬN) - CĂN CHỈNH KHÔNG GIAN CỘT VĐV */
+    /* GIAO DIỆN TAB MINIGAME 21 TRẬN - TÊN BẢNG TỰ ĐỘNG ĐỒNG BỘ */
     function renderMiniGame1Sub1Tab(container) {
       generateDynamicSub1Matches();
 
@@ -2627,7 +2627,7 @@
 
         <div class="card" style="margin-bottom:12px;">
           <div class="card-header-flex">
-            <h2 class="card-title">👥 DANH SÁCH VĐV MINIGAME 20/10</h2>
+            <h2 class="card-title">👥 DANH SÁCH VĐV - ${titlesConfig.subSub1}</h2>
           </div>
           <div class="grid-2col">
             <div>
@@ -2682,7 +2682,7 @@
 
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">▶ LỊCH THI ĐẤU 21 TRẬN & TÙY CHỌN KÈO</h2>
+            <h2 class="card-title">▶ LỊCH THI ĐẤU - ${titlesConfig.subSub1} & TÙY CHỌN KÈO</h2>
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="font-size:11px; font-weight:bold;">Tùy Chọn Kèo:</span>
               ${renderKeoSelectDropdown(mini1Sub1KeoMode, 'changeSub1KeoMode')}
@@ -2781,7 +2781,7 @@
 
         <div class="card" style="margin-top: 14px;">
           <div class="card-header-flex">
-            <h2 class="card-title">📊 BẢNG TỔNG HỢP KÈO - MINIGAME 20/10</h2>
+            <h2 class="card-title">📊 BẢNG TỔNG HỢP KÈO - ${titlesConfig.subSub1}</h2>
           </div>
           <div class="table-responsive">
             <table>
@@ -2913,7 +2913,7 @@
     }
 
 
-    /* GIAO DIỆN TAB MINIGAME 20/10 - 17 TRẬN (SUB2) - CĂN CHỈNH KHÔNG GIAN CỘT VĐV */
+    /* GIAO DIỆN TAB MINIGAME 17 TRẬN (SUB2) - TÊN BẢNG TỰ ĐỘNG ĐỒNG BỘ */
     function renderMiniGame1Sub2Tab(container) {
       generateDynamicSub2Matches();
 
@@ -3062,7 +3062,7 @@
 
         <div class="card" style="margin-bottom:12px;">
           <div class="card-header-flex">
-            <h2 class="card-title">👥 DANH SÁCH VĐV MINIGAME 20/10 - 17 TRẬN</h2>
+            <h2 class="card-title">👥 DANH SÁCH VĐV - ${titlesConfig.subSub2}</h2>
           </div>
           <div class="grid-2col">
             <div>
@@ -3117,7 +3117,7 @@
 
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">▶ LỊCH THI ĐẤU 17 TRẬN CHUẨN ĐỘNG & TÙY CHỌN KÈO</h2>
+            <h2 class="card-title">▶ LỊCH THI ĐẤU - ${titlesConfig.subSub2} & TÙY CHỌN KÈO</h2>
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="font-size:11px; font-weight:bold;">Tùy Chọn Kèo:</span>
               ${renderKeoSelectDropdown(mini1Sub2KeoMode, 'changeSub2KeoMode')}
@@ -3139,7 +3139,7 @@
                 </tr>
               </thead>
               <tbody>
-                ${miniGame1Sub2Matches.map((m, idx) => {
+                ${mini1Sub2TeamA.length > 0 && mini1Sub2TeamB.length > 0 ? miniGame1Sub2Matches.map((m, idx) => {
                   let sA = parseInt(m.scoreA);
                   let sB = parseInt(m.scoreB);
                   let resText = "-";
@@ -3216,7 +3216,7 @@
                       <td>${resText}</td>
                     </tr>
                   `;
-                }).join('')}
+                }).join('') : ''}
               </tbody>
             </table>
           </div>
@@ -3224,7 +3224,7 @@
 
         <div class="card" style="margin-top: 14px;">
           <div class="card-header-flex">
-            <h2 class="card-title">📊 BẢNG TỔNG HỢP KÈO - MINIGAME 20/10 - 17 TRẬN</h2>
+            <h2 class="card-title">📊 BẢNG TỔNG HỢP KÈO - ${titlesConfig.subSub2}</h2>
           </div>
           <div class="table-responsive">
             <table>

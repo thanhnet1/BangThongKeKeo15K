@@ -1134,7 +1134,7 @@
                 <table>
                   <thead><tr><th>STT</th><th>Tên Cặp VĐV</th><th>Điểm</th><th>Hệ số</th></tr></thead>
                   <tbody>
-                    ${standingsA.map((st, i) => `<tr><td>${i+1}</td><td style="text-align:left; padding-left:6px;"><span class="pair-badge badge-p${st.index\%5}">${st.name}</span></td><td class="txt-win">${st.points}</td><td>${st.diff}</td></tr>`).join('')}
+                    ${standingsA.map((st, i) => `<tr><td>${i+1}</td><td style="text-align:left; padding-left:6px;"><span class="pair-badge badge-p${st.index % 5}">${st.name}</span></td><td class="txt-win">${st.points}</td><td>${st.diff}</td></tr>`).join('')}
                   </tbody>
                 </table>
               </div>
@@ -1145,7 +1145,7 @@
                 <table>
                   <thead><tr><th>STT</th><th>Tên Cặp VĐV</th><th>Điểm</th><th>Hệ số</th></tr></thead>
                   <tbody>
-                    ${standingsB.map((st, i) => `<tr><td>${i+1}</td><td style="text-align:left; padding-left:6px;"><span class="pair-badge badge-p${st.index\%5}">${st.name}</span></td><td class="txt-win">${st.points}</td><td>${st.diff}</td></tr>`).join('')}
+                    ${standingsB.map((st, i) => `<tr><td>${i+1}</td><td style="text-align:left; padding-left:6px;"><span class="pair-badge badge-p${st.index %5}">${st.name}</span></td><td class="txt-win">${st.points}</td><td>${st.diff}</td></tr>`).join('')}
                   </tbody>
                 </table>
               </div>

@@ -729,7 +729,7 @@
                 ${players.map((p, idx) => `
                   <tr>
                     <td class="p-2.5 border border-slate-200 text-center font-bold text-slate-500">${idx + 1}</td>
-                    <td class="p-2.5 border border-slate-200 pl-4 font-extrabold" style="color:${VDV_COLORS[idx \% VDV_COLORS.length]}">${p.name}</td>
+                    <td class="p-2.5 border border-slate-200 pl-4 font-extrabold" style="color:${VDV_COLORS[idx % VDV_COLORS.length]}">${p.name}</td>
                     <td class="p-2.5 border border-slate-200 text-center"><span class="px-2 py-0.5 text-[10px] rounded-full font-bold ${p.gender==='Nam'?'bg-blue-50 text-blue-700':'bg-pink-50 text-pink-700'}">${p.gender}</span></td>
                     <td class="p-2.5 border border-slate-200 text-center">
                       <button onclick="editPlayer(${p.id})" class="text-blue-600 font-bold mr-3 text-xs">Sửa</button>

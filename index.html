@@ -440,7 +440,6 @@
     let miniGame1Content = "Lịch Thi Đấu Team A & Team B Xoay V vòng.";
     let miniGame2Content = "Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.";
     
-    // Cấu hình tên hiển thị các Minigame (Hỗ trợ sửa bút chì)
     let titlesConfig = {
       navMini1: "MINI GAME 1",
       subMini1: "Lịch Thi Đấu Team A & B",
@@ -463,7 +462,6 @@
     let mini1Sub1Payment = {};
     let miniGame1Sub1Matches = [];
 
-    // --- CẤU HÌNH 17 TRẬN MINIGAME 20/10 (SUB2) ---
     const minigame2010Matches = [
       { id: 1, code: "M01", teamAKey: "nam_1", teamBKey: "nam_2", type: "Nam - Nam", group: "Nam Cao" },
       { id: 2, code: "M02", teamAKey: "nu_1", teamBKey: "nu_2", type: "Nữ - Nữ (Đơn)", group: "Nữ Đơn" },
@@ -585,7 +583,7 @@
         { cat: "Đôi Nam Nữ", a1: malesA[0], a2: femalesA[0], b1: malesB[0], b2: femalesB[0] },
         { cat: "Đôi Nam Nữ", a1: malesA[1], a2: femalesA[1], b1: malesB[1], b2: femalesB[1] },
         { cat: "Đôi Nam",     a1: malesA[2], a2: malesA[3], b1: malesB[2], b2: malesB[3] },
-        { cat: "Đôi Nam",     a1: malesA[0], a2: malesA[4], b1: malesB[0], b2: malesB[4] },
+        { cat: "Đôi Nam",     a1: malesA[0], a2: malesA[4], b1: malesB[0], b2: femalesB[4] },
         { cat: "Đôi Nam Nữ", a1: malesA[2], a2: femalesA[2], b1: malesB[2], b2: femalesB[2] },
         { cat: "Đôi Nam Nữ", a1: malesA[3], a2: femalesA[0], b1: malesB[3], b2: femalesB[0] },
         { cat: "Đôi Nam",     a1: malesA[1], a2: femalesA[2], b1: malesB[1], b2: femalesB[2] },
@@ -610,12 +608,12 @@
         return {
           id: idx + 1,
           category: t.cat,
-          a1: t.a1,
-          a2: t.a2,
+          a1: existing && existing.a1 !== undefined ? existing.a1 : t.a1,
+          a2: existing && existing.a2 !== undefined ? existing.a2 : t.a2,
           scoreA: existing ? existing.scoreA : "",
           scoreB: existing ? existing.scoreB : "",
-          b1: t.b1,
-          b2: t.b2,
+          b1: existing && existing.b1 !== undefined ? existing.b1 : t.b1,
+          b2: existing && existing.b2 !== undefined ? existing.b2 : t.b2,
           customWin: existing ? (existing.customWin !== undefined ? existing.customWin : 5) : 5,
           customLose: existing ? (existing.customLose !== undefined ? existing.customLose : -15) : -15
         };
@@ -1779,7 +1777,7 @@
       let summaryTableHtml = `
         <div class="card">
           <div class="card-header-flex">
-            <h2 class="card-title">BẢNG TỔNG HỢP THÀNH TIỀN & THU CHI</h2>
+            <h2 class="card-title">BẢNG TỔNG HỢP NGÀY</h2>
           </div>
           <div class="table-responsive">
             <table>
@@ -2357,7 +2355,7 @@
                 </tr>
               </thead>
               <tbody>
-                ${miniGame1Matches.map((m, idx) => {
+                ${mini1TeamA.length > 0 && mini1TeamB.length > 0 ? miniGame1Matches.map((m, idx) => {
                   let sA = parseInt(m.scoreA);
                   let sB = parseInt(m.scoreB);
                   let resText = "-";
@@ -2432,7 +2430,7 @@
                       <td>${resText}</td>
                     </tr>
                   `;
-                }).join('')}
+                }).join('') : ''}
               </tbody>
             </table>
           </div>
@@ -2480,7 +2478,7 @@
       container.innerHTML = html;
     }
 
-    /* GIAO DIỆN TAB MINIGAME 20/10 (21 TRẬN) */
+    /* GIAO DIỆN TAB MINIGAME 20/10 (21 TRẬN) - CẬP NHẬT SELECT DROPDOWN CHO VĐV */
     function renderMiniGame1Sub1Tab(container) {
       generateDynamicSub1Matches();
 
@@ -2739,8 +2737,18 @@
                     <tr>
                       <td><strong>Trận ${m.id}</strong></td>
                       <td style="text-align: center; padding: 4px; font-weight:bold; color:#334155;">${m.category}</td>
-                      <td style="font-weight:bold; color:${colorA1}; text-align:center;">${m.a1 || '--'}</td>
-                      <td style="font-weight:bold; color:${colorA2}; text-align:center;">${m.a2 || '--'}</td>
+                      <td>
+                        <select style="color:${colorA1}; font-weight:800;" onchange="updateSub1MatchVdv(${idx}, 'a1', this.value)">
+                          <option value="">-- Chọn A1 --</option>
+                          ${generateVdvOptionsHtml(m.a1, mini1Sub1TeamA)}
+                        </select>
+                      </td>
+                      <td>
+                        <select style="color:${colorA2}; font-weight:800;" onchange="updateSub1MatchVdv(${idx}, 'a2', this.value)">
+                          <option value="">-- Chọn A2 --</option>
+                          ${generateVdvOptionsHtml(m.a2, mini1Sub1TeamA)}
+                        </select>
+                      </td>
                       <td>
                         <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
                           <input type="number" min="0" class="score-input" value="${m.scoreA ?? ''}" oninput="updateSub1Field(${idx}, 'scoreA', this.value)">
@@ -2748,8 +2756,18 @@
                           <input type="number" min="0" class="score-input" value="${m.scoreB ?? ''}" oninput="updateSub1Field(${idx}, 'scoreB', this.value)">
                         </div>
                       </td>
-                      <td style="font-weight:bold; color:${colorB1}; text-align:center;">${m.b1 || '--'}</td>
-                      <td style="font-weight:bold; color:${colorB2}; text-align:center;">${m.b2 || '--'}</td>
+                      <td>
+                        <select style="color:${colorB1}; font-weight:800;" onchange="updateSub1MatchVdv(${idx}, 'b1', this.value)">
+                          <option value="">-- Chọn B1 --</option>
+                          ${generateVdvOptionsHtml(m.b1, mini1Sub1TeamB)}
+                        </select>
+                      </td>
+                      <td>
+                        <select style="color:${colorB2}; font-weight:800;" onchange="updateSub1MatchVdv(${idx}, 'b2', this.value)">
+                          <option value="">-- Chọn B2 --</option>
+                          ${generateVdvOptionsHtml(m.b2, mini1Sub1TeamB)}
+                        </select>
+                      </td>
                       ${customKeoCell}
                       <td>${matchStatusHtml}</td>
                       <td>${resText}</td>
@@ -2810,6 +2828,14 @@
     }
 
     function updateSub1MatchKeo(idx, field, val) {
+      if (miniGame1Sub1Matches[idx]) {
+        miniGame1Sub1Matches[idx][field] = val;
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function updateSub1MatchVdv(idx, field, val) {
       if (miniGame1Sub1Matches[idx]) {
         miniGame1Sub1Matches[idx][field] = val;
         saveDataToFirestore();
@@ -2887,7 +2913,7 @@
     }
 
 
-    /* GIAO DIỆN TAB MINIGAME 20/10 - 17 TRẬN (SUB2) TÍCH HỢP ĐẦY ĐỦ */
+    /* GIAO DIỆN TAB MINIGAME 20/10 - 17 TRẬN (SUB2) */
     function renderMiniGame1Sub2Tab(container) {
       generateDynamicSub2Matches();
 
@@ -3404,7 +3430,7 @@
       renderCurrentTab();
     }
 
-    /* GIAO DIỆN MINI GAME 2 KÈM TÁCH CÁ NHÂN & BẢNG TỔNG HỢP KÈO */
+    /* GIAO DIỆN MINI GAME 2 KÈM TÁCH CÁ NHÂN & BẢNG TỔNG HỢP KÈO (ĐÃ TĂNG FONT CHỮ 3 DÒNG VÔ ĐỊCH, NHÌ, BA) */
     function renderMiniGame2Tab(container) {
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
       let standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
@@ -3770,18 +3796,19 @@
             </table>
           </div>
 
-          <div style="display:flex; flex-direction:column; gap:6px; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #cbd5e1;">
+          <!-- ĐÃ TĂNG FONT CHỮ LỚN HƠN CHO 3 DÒNG VÔ ĐỊCH, NHÌ, BA -->
+          <div style="display:flex; flex-direction:column; gap:8px; background:#f8fafc; padding:12px; border-radius:8px; border:1px solid #cbd5e1;">
             <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-weight:900; color:#d97706; width:130px; font-size:11px;"><i class="fa-solid fa-medal"></i> Đội Vô Địch:</span>
-              <input type="text" style="font-weight:bold; background:#fffbeb;" value="${mini2Knockout.champion || ''}" placeholder="Nhập tên cặp đội Vô Địch..." onchange="updateMini2WinnerField('champion', this.value)">
+              <span style="font-weight:900; color:#d97706; width:140px; font-size:13px;"><i class="fa-solid fa-medal"></i> Đội Vô Địch:</span>
+              <input type="text" style="font-weight:900; font-size:14px; padding:6px; background:#fffbeb; color:#b45309;" value="${mini2Knockout.champion || ''}" placeholder="Nhập tên cặp đội Vô Địch..." onchange="updateMini2WinnerField('champion', this.value)">
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-weight:900; color:#475569; width:130px; font-size:11px;"><i class="fa-solid fa-award"></i> Đội Về Nhì:</span>
-              <input type="text" style="font-weight:bold; background:#f1f5f9;" value="${mini2Knockout.runnerUp || ''}" placeholder="Nhập tên cặp đội Về Nhì..." onchange="updateMini2WinnerField('runnerUp', this.value)">
+              <span style="font-weight:900; color:#475569; width:140px; font-size:13px;"><i class="fa-solid fa-award"></i> Đội Về Nhì:</span>
+              <input type="text" style="font-weight:900; font-size:14px; padding:6px; background:#f1f5f9; color:#334155;" value="${mini2Knockout.runnerUp || ''}" placeholder="Nhập tên cặp đội Về Nhì..." onchange="updateMini2WinnerField('runnerUp', this.value)">
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-weight:900; color:#b45309; width:130px; font-size:11px;"><i class="fa-solid fa-star"></i> Đội Về Ba:</span>
-              <input type="text" style="font-weight:bold; background:#fff7ed;" value="${mini2Knockout.thirdPlace || ''}" placeholder="Nhập tên cặp đội Về Ba..." onchange="updateMini2WinnerField('thirdPlace', this.value)">
+              <span style="font-weight:900; color:#b45309; width:140px; font-size:13px;"><i class="fa-solid fa-star"></i> Đội Về Ba:</span>
+              <input type="text" style="font-weight:900; font-size:14px; padding:6px; background:#fff7ed; color:#9a3412;" value="${mini2Knockout.thirdPlace || ''}" placeholder="Nhập tên cặp đội Về Ba..." onchange="updateMini2WinnerField('thirdPlace', this.value)">
             </div>
           </div>
         </div>

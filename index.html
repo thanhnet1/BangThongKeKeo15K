@@ -248,7 +248,7 @@
   </div>
 
   <!-- ================================================= -->
-  <!-- [KHỐI 4]: KHỐI XỬ LÝ LOGIC, DỮ LIỆU & FIRESTORE SCRIPT -->
+  <!-- [KHỐI 4]: XỬ LÝ LOGIC, DỮ LIỆU & FIRESTORE SCRIPT -->
   <!-- ================================================= -->
   <script>
     const firebaseConfig = {
@@ -337,8 +337,12 @@
     let miniGame1Sub2Matches = [];
 
     let miniGame1Matches = [];
-    let mini2PairsA = [];
-    let mini2PairsB = [];
+    let mini2PairsA = [
+      { name: "Trí Đỏ - Tiến Thọ" }, { name: "Điền Chèm - Lợi Trí" }, { name: "Cẩm Ly - Hải Hà" }
+    ];
+    let mini2PairsB = [
+      { name: "Châu Sĩ - Long Diễn" }, { name: "Phú Mỗ - Dũng Ngạc" }, { name: "Tuấn La - Thành Sóc" }
+    ];
     let mini2MatchesA = [];
     let mini2MatchesB = [];
     let mini2Knockout = {
@@ -389,16 +393,6 @@
       if (document.getElementById("subLabelMini2")) document.getElementById("subLabelMini2").innerText = titlesConfig.subMini2;
       if (document.getElementById("subLabelTour1")) document.getElementById("subLabelTour1").innerText = titlesConfig.subTour1;
       if (document.getElementById("subLabelTour2")) document.getElementById("subLabelTour2").innerText = titlesConfig.subTour2;
-    }
-
-    function editTitlePrompt(key, currentVal) {
-      let newVal = prompt(`Sửa tên tiêu đề:`, currentVal);
-      if (newVal !== null && newVal.trim() !== "") {
-        titlesConfig[key] = newVal.trim();
-        updateNavbarTitles();
-        saveDataToFirestore();
-        renderCurrentTab();
-      }
     }
 
     function generateDynamicSub1Matches() {
@@ -462,12 +456,7 @@
     }
 
     function handleMinigame2010Click() {
-      const currentRoster = window.getCurrentRoster ? window.getCurrentRoster() : {};
-      const synchronizedMatches = minigame2010Matches.map(match => ({
-        ...match,
-        teamA: currentRoster[match.teamAKey] || "", teamB: currentRoster[match.teamBKey] || ""
-      }));
-      if (typeof renderMatchTable === "function") renderMatchTable(synchronizedMatches);
+      generateDynamicSub2Matches();
     }
 
     function toggleAdminPermission() {
@@ -531,8 +520,8 @@
           miniGame1Sub2Matches = data.miniGame1Sub2Matches || [];
           if (miniGame1Sub2Matches.length === 0) generateDynamicSub2Matches();
           miniGame1Matches = data.miniGame1Matches || DEFAULT_MINI1_DATA;
-          mini2PairsA = data.mini2PairsA || [];
-          mini2PairsB = data.mini2PairsB || [];
+          mini2PairsA = data.mini2PairsA || mini2PairsA;
+          mini2PairsB = data.mini2PairsB || mini2PairsB;
           mini2MatchesA = data.mini2MatchesA || [];
           mini2MatchesB = data.mini2MatchesB || [];
           mini2Knockout = Object.assign(mini2Knockout, data.mini2Knockout || {});
@@ -729,7 +718,7 @@
                 ${players.map((p, idx) => `
                   <tr>
                     <td class="p-2.5 border border-slate-200 text-center font-bold text-slate-500">${idx + 1}</td>
-                    <td class="p-2.5 border border-slate-200 pl-4 font-extrabold" style="color:${VDV_COLORS[idx % VDV_COLORS.length]}">${p.name}</td>
+                    <td class="p-2.5 border border-slate-200 pl-4 font-extrabold" style="color:${VDV_COLORS[idx \% VDV_COLORS.length]}">${p.name}</td>
                     <td class="p-2.5 border border-slate-200 text-center"><span class="px-2 py-0.5 text-[10px] rounded-full font-bold ${p.gender==='Nam'?'bg-blue-50 text-blue-700':'bg-pink-50 text-pink-700'}">${p.gender}</span></td>
                     <td class="p-2.5 border border-slate-200 text-center">
                       <button onclick="editPlayer(${p.id})" class="text-blue-600 font-bold mr-3 text-xs">Sửa</button>
@@ -814,13 +803,6 @@
     function toggleSub1Payment(key) { if (!isAdminVerified) return alert("Cần Admin!"); mini1Sub1Payment[key] = !mini1Sub1Payment[key]; saveDataToFirestore(); renderCurrentTab(); }
     function toggleSub2Payment(key) { if (!isAdminVerified) return alert("Cần Admin!"); mini1Sub2Payment[key] = !mini1Sub2Payment[key]; saveDataToFirestore(); renderCurrentTab(); }
     function toggleMini2Payment(key) { if (!isAdminVerified) return alert("Cần Admin!"); mini2Payment[key] = !mini2Payment[key]; saveDataToFirestore(); renderCurrentTab(); }
-
-    function handleBtcNoteAdminChange(date, el) {
-      if (el.value === "YES" && !isAdminVerified) { alert("Cần đăng nhập Admin!"); el.value = "NO"; return; }
-      if (!paymentStatus[date]) paymentStatus[date] = {};
-      paymentStatus[date].btcNoteAdminOption = el.value;
-      saveDataToFirestore(); renderCurrentTab();
-    }
 
     function openGameModal(gameId) {
       closeAllDropdowns();
@@ -1013,14 +995,12 @@
         }
       });
 
-      let sumBringBack = 0, sumThucThu = 0, sumAmThucTe = 0, summaryRows = "";
+      let summaryRows = "";
       vdvs.forEach(v => {
         let st = stats[v];
         if (st.played > 0) {
           let payKey = `${dateStr}_${v}`;
           let isPaid = paymentStatus[payKey] || false;
-          if (st.played >= 4 && st.total > 0) sumBringBack += st.total;
-          if (st.total < 0) { sumAmThucTe += st.total; if(isPaid) sumThucThu += Math.abs(st.total); }
           summaryRows += `
             <tr>
               <td style="font-weight:800; text-align:left; padding-left:8px;">${v}</td>
@@ -1062,6 +1042,30 @@
             <button class="btn btn-sm" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Thể Lệ</button>
           </div>
           <p style="font-size:12px; margin-bottom:12px;">${miniGame1Content}</p>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th colspan="2" class="th-team-a">TEAM A</th>
+                  <th style="width:80px;">TỶ SỐ</th>
+                  <th colspan="2" class="th-team-b">TEAM B</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${miniGame1Matches.map((m, idx) => `
+                  <tr>
+                    <td>Trận ${m.id}</td>
+                    <td><select onchange="miniGame1Matches[${idx}].a1=this.value; saveDataToFirestore();"><option value="">--</option>${generateVdvOptionsHtml(m.a1, mini1TeamA)}</select></td>
+                    <td><select onchange="miniGame1Matches[${idx}].a2=this.value; saveDataToFirestore();"><option value="">--</option>${generateVdvOptionsHtml(m.a2, mini1TeamA)}</select></td>
+                    <td><input type="text" class="score-input" value="${m.scoreA}" onchange="miniGame1Matches[${idx}].scoreA=this.value; saveDataToFirestore();"> - <input type="text" class="score-input" value="${m.scoreB}" onchange="miniGame1Matches[${idx}].scoreB=this.value; saveDataToFirestore();"></td>
+                    <td><select onchange="miniGame1Matches[${idx}].b1=this.value; saveDataToFirestore();"><option value="">--</option>${generateVdvOptionsHtml(m.b1, mini1TeamB)}</select></td>
+                    <td><select onchange="miniGame1Matches[${idx}].b2=this.value; saveDataToFirestore();"><option value="">--</option>${generateVdvOptionsHtml(m.b2, mini1TeamB)}</select></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
         </div>
       `;
     }
@@ -1073,7 +1077,32 @@
           <div class="card-header-flex">
             <h2 class="card-title">${titlesConfig.subSub1} (21 Trận Xoay Vòng)</h2>
           </div>
-          <p style="font-size:12px; margin-bottom:12px;">Hệ thống chia đội hình Team A và Team B tự động.</p>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Nội dung</th>
+                  <th colspan="2" class="th-team-a">TEAM A</th>
+                  <th style="width:80px;">TỶ SỐ</th>
+                  <th colspan="2" class="th-team-b">TEAM B</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${miniGame1Sub1Matches.map((m, idx) => `
+                  <tr>
+                    <td>Trận ${m.id}</td>
+                    <td>${m.category}</td>
+                    <td><select onchange="miniGame1Sub1Matches[${idx}].a1=this.value; saveDataToFirestore();"><option value="">--</option>${generateVdvOptionsHtml(m.a1, mini1Sub1TeamA)}</select></td>
+                    <td><select onchange="miniGame1Sub1Matches[${idx}].a2=this.value; saveDataToFirestore();"><option value="">--</option>${generateVdvOptionsHtml(m.a2, mini1Sub1TeamA)}</select></td>
+                    <td><input type="text" class="score-input" value="${m.scoreA}" onchange="miniGame1Sub1Matches[${idx}].scoreA=this.value; saveDataToFirestore();"> - <input type="text" class="score-input" value="${m.scoreB}" onchange="miniGame1Sub1Matches[${idx}].scoreB=this.value; saveDataToFirestore();"></td>
+                    <td><select onchange="miniGame1Sub1Matches[${idx}].b1=this.value; saveDataToFirestore();"><option value="">--</option>${generateVdvOptionsHtml(m.b1, mini1Sub1TeamB)}</select></td>
+                    <td><select onchange="miniGame1Sub1Matches[${idx}].b2=this.value; saveDataToFirestore();"><option value="">--</option>${generateVdvOptionsHtml(m.b2, mini1Sub1TeamB)}</select></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
         </div>
       `;
     }
@@ -1085,7 +1114,32 @@
           <div class="card-header-flex">
             <h2 class="card-title">${titlesConfig.subSub2} (17 Trận)</h2>
           </div>
-          <p style="font-size:12px; margin-bottom:12px;">Nội dung chi tiết cấu trúc 17 trận 20/10.</p>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Mã</th>
+                  <th>Bảng / Nội dung</th>
+                  <th colspan="2" class="th-team-a">TEAM A</th>
+                  <th style="width:80px;">TỶ SỐ</th>
+                  <th colspan="2" class="th-team-b">TEAM B</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${miniGame1Sub2Matches.map((m, idx) => `
+                  <tr>
+                    <td><b>${m.code}</b></td>
+                    <td>${m.group} (${m.category})</td>
+                    <td><select onchange="miniGame1Sub2Matches[${idx}].a1=this.value; saveDataToFirestore();"><option value="">--</option>${generateVdvOptionsHtml(m.a1, mini1Sub2TeamA)}</select></td>
+                    <td><select onchange="miniGame1Sub2Matches[${idx}].a2=this.value; saveDataToFirestore();"><option value="">--</option>${generateVdvOptionsHtml(m.a2, mini1Sub2TeamA)}</select></td>
+                    <td><input type="text" class="score-input" value="${m.scoreA}" onchange="miniGame1Sub2Matches[${idx}].scoreA=this.value; saveDataToFirestore();"> - <input type="text" class="score-input" value="${m.scoreB}" onchange="miniGame1Sub2Matches[${idx}].scoreB=this.value; saveDataToFirestore();"></td>
+                    <td><select onchange="miniGame1Sub2Matches[${idx}].b1=this.value; saveDataToFirestore();"><option value="">--</option>${generateVdvOptionsHtml(m.b1, mini1Sub2TeamB)}</select></td>
+                    <td><select onchange="miniGame1Sub2Matches[${idx}].b2=this.value; saveDataToFirestore();"><option value="">--</option>${generateVdvOptionsHtml(m.b2, mini1Sub2TeamB)}</select></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
         </div>
       `;
     }
@@ -1099,7 +1153,7 @@
           <div class="card-header-flex">
             <h2 class="card-title">${titlesConfig.subTour1}</h2>
           </div>
-          <textarea id="tour1Input" rows="4" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" onchange="mini2Tour1Content=this.value; saveDataToFirestore();">${mini2Tour1Content}</textarea>
+          <textarea id="tour1Input" rows="6" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" onchange="mini2Tour1Content=this.value; saveDataToFirestore();">${mini2Tour1Content}</textarea>
         </div>
       `;
     }
@@ -1110,7 +1164,7 @@
           <div class="card-header-flex">
             <h2 class="card-title">${titlesConfig.subTour2}</h2>
           </div>
-          <textarea id="tour2Input" rows="4" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" onchange="mini2Tour2Content=this.value; saveDataToFirestore();">${mini2Tour2Content}</textarea>
+          <textarea id="tour2Input" rows="6" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" onchange="mini2Tour2Content=this.value; saveDataToFirestore();">${mini2Tour2Content}</textarea>
         </div>
       `;
     }
@@ -1129,23 +1183,56 @@
           
           <div class="grid-2col">
             <div>
-              <h3 style="font-size:12px; font-weight:900; color:#c2410c; margin-bottom:6px;">BẢNG A (${mini2PairsA.length} Cặp)</h3>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <h3 style="font-size:12px; font-weight:900; color:#c2410c; margin:0;">BẢNG A</h3>
+                <select style="width:70px; font-size:10px;" onchange="setMini2PairCount('A', this.value)">
+                  <option value="3" ${mini2PairsA.length===3?'selected':''}>3 cặp</option>
+                  <option value="4" ${mini2PairsA.length===4?'selected':''}>4 cặp</option>
+                  <option value="5" ${mini2PairsA.length===5?'selected':''}>5 cặp</option>
+                </select>
+              </div>
+              <div class="table-responsive" style="margin-bottom:10px;">
+                <table>
+                  <thead><tr><th>STT</th><th>Tên Cặp VĐV</th><th>Thao tác</th></tr></thead>
+                  <tbody>
+                    ${mini2PairsA.map((p, i) => `<tr><td>${i+1}</td><td style="text-align:left; padding-left:6px;"><span class="pair-badge badge-p${i\%5}">${p.name}</span></td><td><button onclick="editMini2PairName('A', ${i})" class="text-blue-600 font-bold mr-2">Sửa</button><button onclick="deleteMini2Pair('A', ${i})" class="text-red-600 font-bold">Xóa</button></td></tr>`).join('')}
+                  </tbody>
+                </table>
+              </div>
+              <h4 style="font-size:11px; font-weight:800; margin-bottom:4px;">Bảng Xếp Hạng Bảng A</h4>
               <div class="table-responsive">
                 <table>
-                  <thead><tr><th>STT</th><th>Tên Cặp VĐV</th><th>Điểm</th><th>Hệ số</th></tr></thead>
+                  <thead><tr><th>Hạng</th><th>Tên Cặp</th><th>Điểm</th><th>Hiệu số</th></tr></thead>
                   <tbody>
-                    ${standingsA.map((st, i) => `<tr><td>${i+1}</td><td style="text-align:left; padding-left:6px;"><span class="pair-badge badge-p${st.index % 5}">${st.name}</span></td><td class="txt-win">${st.points}</td><td>${st.diff}</td></tr>`).join('')}
+                    ${standingsA.map((st, i) => `<tr><td>${i+1}</td><td style="text-align:left; padding-left:6px;"><span class="pair-badge badge-p${st.index\%5}">${st.name}</span></td><td class="txt-win">${st.points}</td><td>${st.diff}</td></tr>`).join('')}
                   </tbody>
                 </table>
               </div>
             </div>
+
             <div>
-              <h3 style="font-size:12px; font-weight:900; color:#0369a1; margin-bottom:6px;">BẢNG B (${mini2PairsB.length} Cặp)</h3>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <h3 style="font-size:12px; font-weight:900; color:#0369a1; margin:0;">BẢNG B</h3>
+                <select style="width:70px; font-size:10px;" onchange="setMini2PairCount('B', this.value)">
+                  <option value="3" ${mini2PairsB.length===3?'selected':''}>3 cặp</option>
+                  <option value="4" ${mini2PairsB.length===4?'selected':''}>4 cặp</option>
+                  <option value="5" ${mini2PairsB.length===5?'selected':''}>5 cặp</option>
+                </select>
+              </div>
+              <div class="table-responsive" style="margin-bottom:10px;">
+                <table>
+                  <thead><tr><th>STT</th><th>Tên Cặp VĐV</th><th>Thao tác</th></tr></thead>
+                  <tbody>
+                    ${mini2PairsB.map((p, i) => `<tr><td>${i+1}</td><td style="text-align:left; padding-left:6px;"><span class="pair-badge badge-p${i\%5}">${p.name}</span></td><td><button onclick="editMini2PairName('B', ${i})" class="text-blue-600 font-bold mr-2">Sửa</button><button onclick="deleteMini2Pair('B', ${i})" class="text-red-600 font-bold">Xóa</button></td></tr>`).join('')}
+                  </tbody>
+                </table>
+              </div>
+              <h4 style="font-size:11px; font-weight:800; margin-bottom:4px;">Bảng Xếp Hạng Bảng B</h4>
               <div class="table-responsive">
                 <table>
-                  <thead><tr><th>STT</th><th>Tên Cặp VĐV</th><th>Điểm</th><th>Hệ số</th></tr></thead>
+                  <thead><tr><th>Hạng</th><th>Tên Cặp</th><th>Điểm</th><th>Hiệu số</th></tr></thead>
                   <tbody>
-                    ${standingsB.map((st, i) => `<tr><td>${i+1}</td><td style="text-align:left; padding-left:6px;"><span class="pair-badge badge-p${st.index %5}">${st.name}</span></td><td class="txt-win">${st.points}</td><td>${st.diff}</td></tr>`).join('')}
+                    ${standingsB.map((st, i) => `<tr><td>${i+1}</td><td style="text-align:left; padding-left:6px;"><span class="pair-badge badge-p${st.index\%5}">${st.name}</span></td><td class="txt-win">${st.points}</td><td>${st.diff}</td></tr>`).join('')}
                   </tbody>
                 </table>
               </div>

@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CLB PICKLEBALL - CMTD | Quản Lý & Thống Kê</title>
   
+  <!-- ========================================================================== -->
+  <!-- [KHỐI 0]: THƯ VIỆN NGOÀI & CẤU HÌNH GIAO DIỆN CSS CHUNG                    -->
+  <!-- ========================================================================== -->
   <!-- Font Google & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -240,7 +243,9 @@
   <div class="container">
     <div class="hero-banner"></div>
 
-    <!-- HEADER & THANH ĐIỀU HƯỚNG -->
+    <!-- ========================================================================== -->
+    <!-- [KHỐI 1]: HEADER, BRAND & THANH ĐIỀU HƯỚNG CHÍNH (NAVIGATION BAR)          -->
+    <!-- ========================================================================== -->
     <div class="header-section">
       <div class="header-top">
         <div class="brand-title">
@@ -333,10 +338,15 @@
       </div>
     </div>
     
-    <!-- KHU VỰC HIỂN THỊ NỘI DUNG DYNAMIC -->
+    <!-- ========================================================================== -->
+    <!-- [KHỐI 2]: KHU VỰC HIỂN THỊ NỘI DUNG ĐỘNG (TAB CONTENT CONTAINER)           -->
+    <!-- ========================================================================== -->
     <div id="tabContent"></div>
   </div>
 
+  <!-- ========================================================================== -->
+  <!-- [KHỐI 3]: CÁC MODAL HỆ THỐNG (CHỈNH SỬA THỂ LỆ & QUẢN LÝ PICK THỦ)           -->
+  <!-- ========================================================================== -->
   <!-- MODAL CHỈNH SỬA MINI GAME -->
   <div class="modal" id="gameModal">
     <div class="modal-content">
@@ -383,6 +393,9 @@
     </div>
   </div>
 
+  <!-- ========================================================================== -->
+  <!-- [KHỐI 4]: KHỞI TẠO BIẾN DỮ LIỆU TOÀN CỤC & CẤU HÌNH FIREBASE                 -->
+  <!-- ========================================================================== -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
@@ -521,6 +534,9 @@
     const ADMIN_PASSCODE = "123456";
     let isAdminVerified = false;
 
+    // ========================================================================== -->
+    // [KHỐI 5]: CÁC HÀM LOGIC XỬ LÝ NGHIỆP VỤ VÀ RENDER GIAO DIỆN (BUSINESS LOGIC)  -->
+    // ========================================================================== -->
     window.onload = function() {
       document.addEventListener('click', closeAllDropdowns);
       
@@ -968,8 +984,8 @@
             if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
             if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
             if (data.mini2Knockout) mini2Knockout = Object.assign(mini2Knockout, data.mini2Knockout);
-            if (data.miniGame2Tour1Content) miniGame2Tour1Content = data.miniGame2Tour1Content;
-            if (data.miniGame2Tour2Content) miniGame2Tour2Content = data.miniGame2Tour2Content;
+            if (data.miniGame2Tour1Content) mini2Tour1Content = data.miniGame2Tour1Content;
+            if (data.miniGame2Tour2Content) mini2Tour2Content = data.miniGame2Tour2Content;
             if (data.mini2KeoMode) mini2KeoMode = data.mini2KeoMode;
             if (data.mini2Payment) mini2Payment = data.mini2Payment;
 
@@ -2478,7 +2494,6 @@
       container.innerHTML = html;
     }
 
-    /* GIAO DIỆN TAB MINIGAME 21 TRẬN - TÊN BẢNG TỰ ĐỘNG ĐỒNG BỘ */
     function renderMiniGame1Sub1Tab(container) {
       generateDynamicSub1Matches();
 

@@ -168,7 +168,7 @@
     
     select { 
       width: 100%; 
-      padding: 4px 2px; 
+      padding: 5px 4px; 
       border: 1px solid #cbd5e1; 
       border-radius: 5px; 
       font-size: 11px; 
@@ -785,8 +785,8 @@
           if (data.mini2Knockout) {
             mini2Knockout = Object.assign(mini2Knockout, data.mini2Knockout);
           }
-          if (data.miniGame2Tour1Content) miniGame2Tour1Content = data.miniGame2Tour1Content;
-          if (data.miniGame2Tour2Content) miniGame2Tour2Content = data.miniGame2Tour2Content;
+          if (data.mini2Tour1Content) mini2Tour1Content = data.mini2Tour1Content;
+          if (data.mini2Tour2Content) mini2Tour2Content = data.mini2Tour2Content;
           if (data.mini2KeoMode) mini2KeoMode = data.mini2KeoMode;
           if (data.mini2Payment) mini2Payment = data.mini2Payment;
 
@@ -2344,14 +2344,14 @@
             <table>
               <thead>
                 <tr>
-                  <th style="width:60px;">THAO TÁC</th>
-                  <th style="width:100px;">LOẠI TRẬN</th>
+                  <th style="width:45px;">THAO TÁC</th>
+                  <th style="width:80px;">LOẠI TRẬN</th>
                   <th colspan="2" class="th-team-a" style="color:#fff !important;">🟢 ĐỘI A</th>
-                  <th style="width:80px;">TỶ SỐ</th>
+                  <th style="width:75px;">TỶ SỐ</th>
                   <th colspan="2" class="th-team-b" style="color:#fff !important;">🔵 ĐỘI B</th>
-                  ${mini1KeoMode === 'free' ? '<th style="width:110px;" class="th-money">MỆNH GIÁ</th>' : ''}
-                  <th style="width:90px;">TRẠNG THÁI</th>
-                  <th style="width:70px;">KẾT QUẢ</th>
+                  ${mini1KeoMode === 'free' ? '<th style="width:100px;" class="th-money">MỆNH GIÁ</th>' : ''}
+                  <th style="width:75px;">TRẠNG THÁI</th>
+                  <th style="width:60px;">KẾT QUẢ</th>
                 </tr>
               </thead>
               <tbody>
@@ -2478,7 +2478,7 @@
       container.innerHTML = html;
     }
 
-    /* GIAO DIỆN TAB MINIGAME 20/10 (21 TRẬN) - CẬP NHẬT SELECT DROPDOWN CHO VĐV */
+    /* GIAO DIỆN TAB MINIGAME 20/10 (21 TRẬN) - CĂN CHỈNH KHÔNG GIAN CỘT VĐV */
     function renderMiniGame1Sub1Tab(container) {
       generateDynamicSub1Matches();
 
@@ -2692,18 +2692,18 @@
             <table>
               <thead>
                 <tr>
-                  <th style="width:55px;">STT TRẬN</th>
-                  <th style="width:85px; text-align:center;">THỂ LOẠI</th>
+                  <th style="width:45px;">STT</th>
+                  <th style="width:75px; text-align:center;">THỂ LOẠI</th>
                   <th colspan="2" class="th-team-a" style="color:#fff !important;">🟢 ĐỘI A</th>
-                  <th style="width:80px;">TỶ SỐ</th>
+                  <th style="width:75px;">TỶ SỐ</th>
                   <th colspan="2" class="th-team-b" style="color:#fff !important;">🔵 ĐỘI B</th>
-                  ${mini1Sub1KeoMode === 'free' ? '<th style="width:110px;" class="th-money">MỆNH GIÁ</th>' : ''}
-                  <th style="width:90px;">TRẠNG THÁI</th>
-                  <th style="width:70px;">KẾT QUẢ</th>
+                  ${mini1Sub1KeoMode === 'free' ? '<th style="width:100px;" class="th-money">MỆNH GIÁ</th>' : ''}
+                  <th style="width:75px;">TRẠNG THÁI</th>
+                  <th style="width:60px;">KẾT QUẢ</th>
                 </tr>
               </thead>
               <tbody>
-                ${miniGame1Sub1Matches.map((m, idx) => {
+                ${mini1Sub1TeamA.length > 0 && mini1Sub1TeamB.length > 0 ? miniGame1Sub1Matches.map((m, idx) => {
                   let sA = parseInt(m.scoreA);
                   let sB = parseInt(m.scoreB);
                   let resText = "-";
@@ -2773,7 +2773,7 @@
                       <td>${resText}</td>
                     </tr>
                   `;
-                }).join('')}
+                }).join('') : ''}
               </tbody>
             </table>
           </div>
@@ -2913,7 +2913,7 @@
     }
 
 
-    /* GIAO DIỆN TAB MINIGAME 20/10 - 17 TRẬN (SUB2) */
+    /* GIAO DIỆN TAB MINIGAME 20/10 - 17 TRẬN (SUB2) - CĂN CHỈNH KHÔNG GIAN CỘT VĐV */
     function renderMiniGame1Sub2Tab(container) {
       generateDynamicSub2Matches();
 
@@ -3128,14 +3128,14 @@
             <table>
               <thead>
                 <tr>
-                  <th style="width:70px;">THAO TÁC</th>
-                  <th style="width:100px; text-align:center;">THỂ LOẠI</th>
+                  <th style="width:55px;">THAO TÁC</th>
+                  <th style="width:80px; text-align:center;">THỂ LOẠI</th>
                   <th colspan="2" class="th-team-a" style="color:#fff !important;">🟢 ĐỘI A</th>
-                  <th style="width:80px;">TỶ SỐ</th>
+                  <th style="width:75px;">TỶ SỐ</th>
                   <th colspan="2" class="th-team-b" style="color:#fff !important;">🔵 ĐỘI B</th>
-                  ${mini1Sub2KeoMode === 'free' ? '<th style="width:110px;" class="th-money">MỆNH GIÁ</th>' : ''}
-                  <th style="width:90px;">TRẠNG THÁI</th>
-                  <th style="width:70px;">KẾT QUẢ</th>
+                  ${mini1Sub2KeoMode === 'free' ? '<th style="width:100px;" class="th-money">MỆNH GIÁ</th>' : ''}
+                  <th style="width:75px;">TRẠNG THÁI</th>
+                  <th style="width:60px;">KẾT QUẢ</th>
                 </tr>
               </thead>
               <tbody>
@@ -3430,7 +3430,7 @@
       renderCurrentTab();
     }
 
-    /* GIAO DIỆN MINI GAME 2 KÈM TÁCH CÁ NHÂN & BẢNG TỔNG HỢP KÈO (ĐÃ TĂNG FONT CHỮ 3 DÒNG VÔ ĐỊCH, NHÌ, BA) */
+    /* GIAO DIỆN MINI GAME 2 KÈM TÁCH CÁ NHÂN & BẢNG TỔNG HỢP KÈO */
     function renderMiniGame2Tab(container) {
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
       let standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
@@ -3796,7 +3796,6 @@
             </table>
           </div>
 
-          <!-- ĐÃ TĂNG FONT CHỮ LỚN HƠN CHO 3 DÒNG VÔ ĐỊCH, NHÌ, BA -->
           <div style="display:flex; flex-direction:column; gap:8px; background:#f8fafc; padding:12px; border-radius:8px; border:1px solid #cbd5e1;">
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="font-weight:900; color:#d97706; width:140px; font-size:13px;"><i class="fa-solid fa-medal"></i> Đội Vô Địch:</span>

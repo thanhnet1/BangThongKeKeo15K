@@ -1051,30 +1051,108 @@
       container.innerHTML = `<div class="card"><h2 class="card-title">BẢNG TỔNG HỢP TẤT CẢ CÁC NGÀY</h2><p>Tính năng đang hoạt động đồng bộ qua Firestore.</p></div>`;
     }
 
+    // ==========================================
+    // [KHỐI 5]: KHÔI PHỤC CHI TIẾT MINI GAME 1 & SUB
+    // ==========================================
     function renderMiniGame1Tab(container) {
-      container.innerHTML = `<div class="card"><h2 class="card-title">MINI GAME 1: TEAM A & B</h2><p>${miniGame1Content}</p></div>`;
+      container.innerHTML = `
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">MINI GAME 1: ${titlesConfig.subMini1}</h2>
+            <button class="btn btn-sm" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Thể Lệ</button>
+          </div>
+          <p style="font-size:12px; margin-bottom:12px;">${miniGame1Content}</p>
+        </div>
+      `;
     }
 
     function renderMiniGame1Sub1Tab(container) {
       generateDynamicSub1Matches();
-      container.innerHTML = `<div class="card"><h2 class="card-title">${titlesConfig.subSub1}</h2><p>Hệ thống 21 trận tự động đồng bộ theo Roster.</p></div>`;
+      container.innerHTML = `
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">${titlesConfig.subSub1} (21 Trận Xoay Vòng)</h2>
+          </div>
+          <p style="font-size:12px; margin-bottom:12px;">Hệ thống chia đội hình Team A và Team B tự động.</p>
+        </div>
+      `;
     }
 
     function renderMiniGame1Sub2Tab(container) {
       generateDynamicSub2Matches();
-      container.innerHTML = `<div class="card"><h2 class="card-title">${titlesConfig.subSub2}</h2><p>Hệ thống 17 trận 20/10.</p></div>`;
+      container.innerHTML = `
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">${titlesConfig.subSub2} (17 Trận)</h2>
+          </div>
+          <p style="font-size:12px; margin-bottom:12px;">Nội dung chi tiết cấu trúc 17 trận 20/10.</p>
+        </div>
+      `;
     }
 
+    // ==========================================
+    // [KHỐI 6]: KHÔI PHỤC CHI TIẾT MINI GAME 2 & GIẢI BỔ SUNG
+    // ==========================================
     function renderMiniGame2Tour1Tab(container) {
-      container.innerHTML = `<div class="card"><h2 class="card-title">${titlesConfig.subTour1}</h2><p>${mini2Tour1Content}</p></div>`;
+      container.innerHTML = `
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">${titlesConfig.subTour1}</h2>
+          </div>
+          <textarea id="tour1Input" rows="4" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" onchange="mini2Tour1Content=this.value; saveDataToFirestore();">${mini2Tour1Content}</textarea>
+        </div>
+      `;
     }
 
     function renderMiniGame2Tour2Tab(container) {
-      container.innerHTML = `<div class="card"><h2 class="card-title">${titlesConfig.subTour2}</h2><p>${mini2Tour2Content}</p></div>`;
+      container.innerHTML = `
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">${titlesConfig.subTour2}</h2>
+          </div>
+          <textarea id="tour2Input" rows="4" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" onchange="mini2Tour2Content=this.value; saveDataToFirestore();">${mini2Tour2Content}</textarea>
+        </div>
+      `;
     }
 
     function renderMiniGame2Tab(container) {
-      container.innerHTML = `<div class="card"><h2 class="card-title">${titlesConfig.subMini2}</h2><p>${mini2Content}</p></div>`;
+      let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
+      let standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
+
+      container.innerHTML = `
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">${titlesConfig.subMini2}</h2>
+            <button class="btn btn-sm" onclick="openGameModal(2)">⚙️ Chỉnh Sửa Thể Lệ</button>
+          </div>
+          <p style="font-size:12px; margin-bottom:12px;">${miniGame2Content}</p>
+          
+          <div class="grid-2col">
+            <div>
+              <h3 style="font-size:12px; font-weight:900; color:#c2410c; margin-bottom:6px;">BẢNG A (${mini2PairsA.length} Cặp)</h3>
+              <div class="table-responsive">
+                <table>
+                  <thead><tr><th>STT</th><th>Tên Cặp VĐV</th><th>Điểm</th><th>Hệ số</th></tr></thead>
+                  <tbody>
+                    ${standingsA.map((st, i) => `<tr><td>${i+1}</td><td style="text-align:left; padding-left:6px;"><span class="pair-badge badge-p${st.index\%5}">${st.name}</span></td><td class="txt-win">${st.points}</td><td>${st.diff}</td></tr>`).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div>
+              <h3 style="font-size:12px; font-weight:900; color:#0369a1; margin-bottom:6px;">BẢNG B (${mini2PairsB.length} Cặp)</h3>
+              <div class="table-responsive">
+                <table>
+                  <thead><tr><th>STT</th><th>Tên Cặp VĐV</th><th>Điểm</th><th>Hệ số</th></tr></thead>
+                  <tbody>
+                    ${standingsB.map((st, i) => `<tr><td>${i+1}</td><td style="text-align:left; padding-left:6px;"><span class="pair-badge badge-p${st.index\%5}">${st.name}</span></td><td class="txt-win">${st.points}</td><td>${st.diff}</td></tr>`).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
     }
   </script>
 </body>

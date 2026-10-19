@@ -1711,11 +1711,13 @@
       renderSingleDaySummaryTable(dateStr, html, container);
     }
 
+    /* ĐÃ KHẮC PHỤC LỖI LẶP VĐV TRONG BẢNG TỔNG HỢP */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
       let stats = {};
 
+      // Gom nhóm duy nhất tất cả Pick Thủ trong hệ thống
       vdvs.forEach(v => { stats[v] = { played: 0, winK: 0, loseK: 0, total: 0 }; });
 
       matches.forEach(m => {
@@ -1745,9 +1747,12 @@
       let sumBringBack = 0, sumThucThu = 0, sumAmThucTe = 0;
       let summaryRowsHtml = "";
 
-      vdvs.forEach((v) => {
+      // Sử dụng Set để lọc trùng tuyệt đối tên Pick Thủ
+      const uniqueVdvs = Array.from(new Set(vdvs));
+
+      uniqueVdvs.forEach((v) => {
         const st = stats[v];
-        if (st.played > 0) {
+        if (st && st.played > 0) {
           const payKey = `${dateStr}_${v}`;
           const isPaid = paymentStatus[payKey] || false;
           const vIndex = vdvs.indexOf(v);
@@ -1865,8 +1870,9 @@
 
       let vdvDayTotals = {};
       let vdvRowKeoSum = {};
+      const uniqueVdvs = Array.from(new Set(vdvs));
       
-      vdvs.forEach(v => {
+      uniqueVdvs.forEach(v => {
         vdvDayTotals[v] = {};
         vdvRowKeoSum[v] = 0;
         activeDates.forEach(d => { vdvDayTotals[v][d] = 0; });
@@ -1880,7 +1886,7 @@
         const currentMode = dateKeoMode[d] || "default";
 
         let statsDay = {};
-        vdvs.forEach(v => { statsDay[v] = { played: 0, total: 0 }; });
+        uniqueVdvs.forEach(v => { statsDay[v] = { played: 0, total: 0 }; });
 
         matches.forEach(m => {
           const s1 = parseInt(m.score1);
@@ -1909,7 +1915,7 @@
         let sumAmDay = 0;
         let sumBringBackDay = 0;
 
-        vdvs.forEach(v => {
+        uniqueVdvs.forEach(v => {
           let st = statsDay[v];
           if (st.played > 0) {
             vdvDayTotals[v][d] = st.total;
@@ -1952,7 +1958,7 @@
               <tbody>
       `;
 
-      vdvs.forEach((v, index) => {
+      uniqueVdvs.forEach((v, index) => {
         let dayCells = activeDates.map(d => {
           let val = vdvDayTotals[v][d];
           let cls = val > 0 ? 'txt-win' : (val < 0 ? 'txt-lose' : '');
@@ -2178,7 +2184,7 @@
         statusB = isCompletedAll ? "🤝 HÒA CHUNG CUỘC" : "🤝 TẠM HÒA";
       }
 
-      let allMini1Vdvs = [...mini1TeamA, ...mini1TeamB];
+      let allMini1Vdvs = Array.from(new Set([...mini1TeamA, ...mini1TeamB]));
       let mini1Stats = {};
       allMini1Vdvs.forEach(v => { mini1Stats[v] = { played: 0, winK: 0, loseK: 0, total: 0 }; });
 
@@ -2526,7 +2532,7 @@
         statusB = isCompletedAll ? "🤝 HÒA CHUNG CUỘC" : "🤝 TẠM HÒA";
       }
 
-      let allSub1Vdvs = [...mini1Sub1TeamA, ...mini1Sub1TeamB];
+      let allSub1Vdvs = Array.from(new Set([...mini1Sub1TeamA, ...mini1Sub1TeamB]));
       let sub1Stats = {};
       allSub1Vdvs.forEach(v => { sub1Stats[v] = { played: 0, winK: 0, loseK: 0, total: 0 }; });
 
@@ -2928,7 +2934,7 @@
     }
 
 
-    /* GIAO DIỆN TAB MINIGAME 17 TRẬN (SUB2) - TÊN BẢNG TỰ ĐỘNG ĐỒNG BỘ */
+    /* GIAO DIỆN TAB MINIGAME 17 TRẬN (SUB2) */
     function renderMiniGame1Sub2Tab(container) {
       generateDynamicSub2Matches();
 
@@ -2961,7 +2967,7 @@
         statusB2 = isCompletedAll2 ? "🤝 HÒA CHUNG CUỘC" : "🤝 TẠM HÒA";
       }
 
-      let allSub2Vdvs = [...mini1Sub2TeamA, ...mini1Sub2TeamB];
+      let allSub2Vdvs = Array.from(new Set([...mini1Sub2TeamA, ...mini1Sub2TeamB]));
       let sub2Stats = {};
       allSub2Vdvs.forEach(v => { sub2Stats[v] = { played: 0, winK: 0, loseK: 0, total: 0 }; });
 
@@ -2983,7 +2989,7 @@
             teamAPair.forEach(v => { if (sub2Stats[v]) { sub2Stats[v].played++; sub2Stats[v].winK += effWin; sub2Stats[v].total += effWin; } });
             teamBPair.forEach(v => { if (sub2Stats[v]) { sub2Stats[v].played++; sub2Stats[v].loseK += effLose; sub2Stats[v].total += effLose; } });
           } else if (sB > sA) {
-            teamBPair.forEach(v => { if (sub2Stats[v]) { sub2Stats[v].played++; sub2Stats[v].loseK += effWin; sub2Stats[v].total += effWin; } });
+            teamBPair.forEach(v => { if (sub2Stats[v]) { sub2Stats[v].played++; sub2Stats[v].winK += effWin; sub2Stats[v].total += effWin; } });
             teamAPair.forEach(v => { if (sub2Stats[v]) { sub2Stats[v].played++; sub2Stats[v].loseK += effLose; sub2Stats[v].total += effLose; } });
           }
         }
@@ -3592,7 +3598,7 @@
                     <tr>
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 8px; font-weight:bold;">
-                        <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
+                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:11px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">${st.diff > 0 ? '+' + st.diff : st.diff}</td>
@@ -3683,7 +3689,7 @@
                     <tr>
                       <td><strong>${i + 1}</strong></td>
                       <td style="text-align: left; padding-left: 8px; font-weight:bold;">
-                        <span class="pair-badge badge-p${st.index % 5}">${st.name}</span>
+                        <span class="pair-badge badge-p${st.index \% 5}">${st.name}</span>
                       </td>
                       <td class="txt-win" style="font-size:11px;">${st.points}</td>
                       <td style="font-weight:bold; color:${st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')}">${st.diff > 0 ? '+' + st.diff : st.diff}</td>

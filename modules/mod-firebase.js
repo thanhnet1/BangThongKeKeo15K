@@ -1,13 +1,14 @@
 // ==========================================
 // CẤU HÌNH & KẾT NỐI FIREBASE FIRESTORE
 // ==========================================
-const firebaseConfig = {
-    apiKey: "AIzaSyDummyKeyForPickleballCMTD...",
-    authDomain: "pickleball-cmtd.firebaseapp.com",
-    projectId: "pickleball-cmtd",
-    storageBucket: "pickleball-cmtd.appspot.com",
-    messagingSenderId: "1234567890",
-    appId: "1:1234567890:web:abcdef123456"
+const firebaseConfig = { 
+  apiKey : "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY" , 
+  authDomain : "pickleball-cmtd.firebaseapp.com" , 
+  projectId : "pickleball-cmtd" , 
+  storageBucket : "pickleball-cmtd.firebasestorage.app" , 
+  messagingSenderId : "648591152243" , 
+  appId : "1:648591152243:web:3343caf2da821373070606" , 
+  measurementId : "G-T91KPDZFJR" 
 };
 
 // Khởi tạo Firebase
@@ -44,7 +45,7 @@ db.collection("cmtd_pickleball").doc("main_data").onSnapshot((doc) => {
     updateCloudStatus("syncing", "Đang đồng bộ dữ liệu...");
     if (doc.exists) {
         const data = doc.data();
-        autoBackupMemory = data; // Lưu bộ nhớ đệm cho tính năng Backup JSON
+        autoBackupMemory = data;
 
         if (data.players) players = data.players;
         if (data.vdvs) vdvs = data.vdvs;
@@ -53,12 +54,10 @@ db.collection("cmtd_pickleball").doc("main_data").onSnapshot((doc) => {
         if (data.dateKeoMode) dateKeoMode = data.dateKeoMode;
         if (data.paymentStatus) paymentStatus = data.paymentStatus;
         
-        // Config Titles & Mini Games
         if (data.titlesConfig) titlesConfig = Object.assign(titlesConfig, data.titlesConfig);
         if (data.miniGame1Content) miniGame1Content = data.miniGame1Content;
         if (data.miniGame2Content) miniGame2Content = data.miniGame2Content;
 
-        // Mini Game 1 & Sub
         if (data.mini1TeamA) mini1TeamA = data.mini1TeamA;
         if (data.mini1TeamB) mini1TeamB = data.mini1TeamB;
         if (data.mini1KeoMode) mini1KeoMode = data.mini1KeoMode;
@@ -75,7 +74,6 @@ db.collection("cmtd_pickleball").doc("main_data").onSnapshot((doc) => {
         if (data.miniGame1Sub2Matches) miniGame1Sub2Matches = data.miniGame1Sub2Matches;
         if (data.miniGame1Matches) miniGame1Matches = data.miniGame1Matches;
 
-        // Mini Game 2 & Tournaments
         if (data.mini2PairsA) mini2PairsA = data.mini2PairsA;
         if (data.mini2PairsB) mini2PairsB = data.mini2PairsB;
         if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
@@ -86,7 +84,7 @@ db.collection("cmtd_pickleball").doc("main_data").onSnapshot((doc) => {
         if (data.mini2KeoMode) mini2KeoMode = data.mini2KeoMode;
         if (data.mini2Payment) mini2Payment = data.mini2Payment;
 
-        syncVdvsFromPlayers();
+        if (typeof syncVdvsFromPlayers === 'function') syncVdvsFromPlayers();
         updateNavbarTitles();
 
         if (!isInitialLoaded) {
@@ -103,7 +101,6 @@ db.collection("cmtd_pickleball").doc("main_data").onSnapshot((doc) => {
         renderCurrentTab();
         updateCloudStatus("online", "Đã lưu Cloud (Realtime)");
     } else {
-        // Nếu Firestore chưa có dữ liệu, khởi tạo dữ liệu mẫu mặc định
         updateCloudStatus("syncing", "Khởi tạo dữ liệu ban đầu...");
         dates = ["28/9/26"];
         matchesData["28/9/26"] = Array.from({ length: 5 }, (_, i) => ({
@@ -124,7 +121,6 @@ let saveTimeout = null;
 function saveDataToFirestore() {
     updateCloudStatus("syncing", "Đang lưu thay đổi...");
     
-    // Gom toàn bộ trạng thái hệ thống vào payload
     const payload = {
         players, vdvs, dates, matchesData, dateKeoMode, paymentStatus,
         titlesConfig, miniGame1Content, miniGame2Content,
@@ -138,7 +134,6 @@ function saveDataToFirestore() {
 
     autoBackupMemory = payload;
 
-    // Tránh ghi liên tục bằng debounce (đợi 500ms sau thao tác cuối)
     if (saveTimeout) clearTimeout(saveTimeout);
     saveTimeout = setTimeout(() => {
         db.collection("cmtd_pickleball").doc("main_data").set(payload, { merge: true })

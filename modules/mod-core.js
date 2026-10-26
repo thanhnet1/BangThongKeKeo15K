@@ -65,16 +65,6 @@ function updateNavbarTitles() {
     if (document.getElementById("subLabelTour2")) document.getElementById("subLabelTour2").innerText = titlesConfig.subTour2;
 }
 
-function editTitlePrompt(key, currentVal) {
-    let newVal = prompt(`Sửa tên tiêu đề:`, currentVal);
-    if (newVal !== null && newVal.trim() !== "") {
-        titlesConfig[key] = newVal.trim();
-        updateNavbarTitles();
-        if (typeof saveDataToFirestore === 'function') saveDataToFirestore();
-        renderCurrentTab();
-    }
-}
-
 function toggleMenu(menuId, e) {
     e.stopPropagation();
     const targetMenu = document.getElementById(menuId);
@@ -122,7 +112,6 @@ function renderCurrentTab() {
     updateNavbarTitles();
 }
 
-// Lắng nghe sự kiện click ra ngoài để đóng menu
 window.addEventListener('click', function() {
     closeAllDropdowns();
 });

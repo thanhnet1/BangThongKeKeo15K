@@ -11,14 +11,12 @@ const firebaseConfig = {
     measurementId: "G-T91KPDZFJR"
 };
 
-// Kiểm tra an toàn và khởi tạo Firebase
-if (typeof firebase === 'undefined') {
-    console.error("❌ Firebase SDK chưa được tải trong head-meta.html!");
-} else {
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
+// Khởi tạo Firebase an toàn
+if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
 }
+
+const db = (typeof firebase !== 'undefined' && firebase.apps.length > 0) ? firebase.firestore() : null;
 
 const db = (typeof firebase !== 'undefined' && firebase.apps.length > 0) ? firebase.firestore() : null;
 

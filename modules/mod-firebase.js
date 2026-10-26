@@ -1,15 +1,27 @@
 // ==========================================
 // CẤU HÌNH & KẾT NỐI FIREBASE FIRESTORE
 // ==========================================
-const firebaseConfig = { 
-  apiKey : "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY" , 
-  authDomain : "pickleball-cmtd.firebaseapp.com" , 
-  projectId : "pickleball-cmtd" , 
-  storageBucket : "pickleball-cmtd.firebasestorage.app" , 
-  messagingSenderId : "648591152243" , 
-  appId : "1:648591152243:web:3343caf2da821373070606" , 
-  measurementId : "G-T91KPDZFJR" 
+const firebaseConfig = {
+    apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
+    authDomain: "pickleball-cmtd.firebaseapp.com",
+    projectId: "pickleball-cmtd",
+    storageBucket: "pickleball-cmtd.firebasestorage.app",
+    messagingSenderId: "648591152243",
+    appId: "1:648591152243:web:3343caf2da821373070606",
+    measurementId: "G-T91KPDZFJR"
 };
+
+// Kiểm tra an toàn xem thư viện firebase đã sẵn sàng chưa
+if (typeof firebase === 'undefined') {
+    console.error("❌ Firebase SDK chưa được tải. Vui lòng kiểm tra lại kết nối mạng hoặc thẻ script trong head-meta.html!");
+} else {
+    // Khởi tạo Firebase an toàn
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+}
+
+const db = typeof firebase !== 'undefined' ? firebase.firestore() : null;
 
 // Khởi tạo Firebase
 if (!firebase.apps.length) {

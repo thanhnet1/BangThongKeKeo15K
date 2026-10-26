@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <!-- Nhúng Meta, Tiêu đề & Thư viện -->
+    <!-- Nhúng Meta, Tiêu đề & Thư viện từ thư mục modules -->
     <div id="inc-head"></div>
     <script>
-        fetch('head-meta.html').then(r => r.text()).then(d => document.getElementById('inc-head').innerHTML = d);
+        fetch('modules/head-meta.html').then(r => r.text()).then(d => document.getElementById('inc-head').innerHTML = d);
     </script>
 
-    <!-- Nhúng toàn bộ CSS định dạng -->
+    <!-- Nhúng toàn bộ CSS định dạng từ thư mục modules -->
     <div id="inc-css"></div>
     <script>
-        fetch('css-styles.html').then(r => r.text()).then(d => document.getElementById('inc-css').innerHTML = d);
+        fetch('modules/css-styles.html').then(r => r.text()).then(d => document.getElementById('inc-css').innerHTML = d);
     </script>
 </head>
 <body>
@@ -20,23 +20,23 @@
         <!-- Nhúng Header, Menu điều hướng & Modal -->
         <div id="inc-header"></div>
         <script>
-            fetch('header-nav.html').then(r => r.text()).then(d => document.getElementById('inc-header').innerHTML = d);
+            fetch('modules/header-nav.html').then(r => r.text()).then(d => document.getElementById('inc-header').innerHTML = d);
         </script>
 
         <!-- Vùng hiển thị nội dung các tab động -->
         <div id="tabContent"></div>
     </div>
 
-    <!-- THỨ TỰ NHÚNG SCRIPT CHUẨN XÁC ĐỂ KHÔNG BỊ LỖI THAM HÌNH (UNDEFINED) -->
-    <script src="mod-core.js"></script>
-    <script src="mod-pickthu.js"></script>
-    <script src="mod-admin.js"></script>
-    <script src="mod-home.js"></script>
-    <script src="mod-setting.js"></script>
-    <script src="mod-tonghop.js"></script>
-    <script src="mod-minigame-common.js"></script>
-    <script src="mod-minigame1.js"></script>
-    <script src="mod-minigame2.js"></script>
-    <script src="mod-firebase.js"></script> <!-- Firebase đặt cuối cùng để các hàm phía trên đã sẵn sàng -->
+    <!-- THỨ TỰ NHÚNG SCRIPT CHUẨN XÁC TỪ THƯ MỤC MODULES -->
+    <script src="modules/mod-core.js"></script>
+    <script src="modules/mod-pickthu.js"></script>
+    <script src="modules/mod-admin.js"></script>
+    <script src="modules/mod-home.js"></script>
+    <script src="modules/mod-setting.js"></script>
+    <script src="modules/mod-tonghop.js"></script>
+    <script src="modules/mod-minigame-common.js"></script>
+    <script src="modules/mod-minigame1.js"></script>
+    <script src="modules/mod-minigame2.js"></script>
+    <script src="modules/mod-firebase.js"></script> <!-- Đặt cuối cùng để khởi tạo dữ liệu sau khi các hàm đã sẵn sàng -->
 </body>
 </html>

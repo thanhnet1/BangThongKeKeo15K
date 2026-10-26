@@ -77,3 +77,7 @@ function renderCurrentTab() {
     updateAdminUIState();
     updateNavbarTitles();
 }
+// Đóng tất cả dropdown khi click ra ngoài vùng menu
+window.addEventListener('click', function() {
+    closeAllDropdowns();
+});

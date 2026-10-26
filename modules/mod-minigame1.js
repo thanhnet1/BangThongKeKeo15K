@@ -194,3 +194,65 @@ function renderMiniGame1Sub1Tab(container) {
 function renderMiniGame1Sub2Tab(container) {
     container.innerHTML = `<div class="card"><h2 class="card-title">Minigame 20/10 (17 Trận)</h2></div>`;
 }
+let mini1TeamA = ["Tiến Thọ", "Long Diễn", "Phú Mỗ", "Hà Giấy", "Tuấn La", "Châu Sĩ", "Vân Đình", "Cẩm Ly", "Minh Hạnh"];
+let mini1TeamB = ["Trí Đỏ", "Thành Sóc", "Dũng Ngạc", "Lợi Trí", "Điền Chèm", "Quỳnh Cool", "Hải Hà", "Minh Vượng"];
+let mini1KeoMode = "default";
+let mini1Payment = {};
+let miniGame1Matches = [
+    { id: 1, category: "Nam xoay vòng", a1: "Tiến Thọ", a2: "Long Diễn", scoreA: "8", scoreB: "11", b1: "Trí Đỏ", b2: "Thành Sóc", customWin: 5, customLose: -15 },
+    { id: 2, category: "Nam xoay vòng", a1: "Phú Mỗ", a2: "Hà Giấy", scoreA: "5", scoreB: "11", b1: "Dũng Ngạc", b2: "Lợi Trí", customWin: 5, customLose: -15 },
+    { id: 3, category: "Nam xoay vòng", a1: "Tuấn La", a2: "Châu Sĩ", scoreA: "6", scoreB: "11", b1: "Điền Chèm", b2: "Thành Sóc", customWin: 5, customLose: -15 }
+];
+
+// Biến cho Sub1 & Sub2 (Minigame 20/10)
+let mini1Sub1TeamA = [];
+let mini1Sub1TeamB = [];
+let mini1Sub1KeoMode = "default";
+let mini1Sub1Payment = {};
+let miniGame1Sub1Matches = [];
+
+let mini1Sub2TeamA = [];
+let mini1Sub2TeamB = [];
+let mini1Sub2KeoMode = "default";
+let mini1Sub2Payment = {};
+let miniGame1Sub2Matches = [];
+
+function toggleMini1Payment(payKey) {
+    if (!isAdminVerified) {
+        alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
+        return;
+    }
+    mini1Payment[payKey] = !mini1Payment[payKey];
+    saveDataToFirestore();
+    renderCurrentTab();
+}
+
+function addMini1Match() {
+    const newId = miniGame1Matches.length + 1;
+    miniGame1Matches.push({
+        id: newId, category: "Trận tự chọn", a1: "", a2: "", scoreA: "", scoreB: "", b1: "", b2: "", customWin: 5, customLose: -15
+    });
+    saveDataToFirestore();
+    renderCurrentTab();
+}
+
+function deleteMini1Match(index) {
+    if (confirm(`Bạn có chắc muốn xóa Trận ${index + 1} khỏi Mini Game 1?`)) {
+        miniGame1Matches.splice(index, 1);
+        miniGame1Matches.forEach((m, idx) => m.id = idx + 1);
+        saveDataToFirestore();
+        renderCurrentTab();
+    }
+}
+
+function renderMiniGame1Tab(container) {
+    container.innerHTML = `<div class="card"><h2 class="card-title">${miniGame1Content}</h2><p>Đang hiển thị Lịch Thi Đấu Team A & B...</p></div>`;
+}
+
+function renderMiniGame1Sub1Tab(container) {
+    container.innerHTML = `<div class="card"><h2 class="card-title">Minigame 20/10 (21 Trận)</h2></div>`;
+}
+
+function renderMiniGame1Sub2Tab(container) {
+    container.innerHTML = `<div class="card"><h2 class="card-title">Minigame 20/10 (17 Trận)</h2></div>`;
+}

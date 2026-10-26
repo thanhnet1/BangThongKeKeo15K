@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <!-- Nhúng Meta, Tiêu đề & Thư viện từ thư mục modules -->
-    <div id="inc-head"></div>
-    <script>
-        fetch('modules/head-meta.html').then(r => r.text()).then(d => document.getElementById('inc-head').innerHTML = d);
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLB PICKLEBALL - CMTD | Quản Lý & Thống Kê</title>
 
-    <!-- Nhúng toàn bộ CSS định dạng từ thư mục modules -->
+    <!-- Font Google & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS & Excel Export SDK -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <!-- 🔥 FIREBASE SDK COMPAT (BẮT BUỘC TẢI TRỰC TIẾP Ở HEAD) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <!-- Nhúng CSS tùy chỉnh từ thư mục modules -->
     <div id="inc-css"></div>
     <script>
         fetch('modules/css-styles.html').then(r => r.text()).then(d => document.getElementById('inc-css').innerHTML = d);
@@ -27,7 +37,7 @@
         <div id="tabContent"></div>
     </div>
 
-    <!-- THỨ TỰ NHÚNG SCRIPT CHUẨN XÁC TỪ THƯ MỤC MODULES -->
+    <!-- THỨ TỰ NHÚNG SCRIPT MODULE CHUẨN XÁC -->
     <script src="modules/mod-core.js"></script>
     <script src="modules/mod-pickthu.js"></script>
     <script src="modules/mod-admin.js"></script>
@@ -37,6 +47,6 @@
     <script src="modules/mod-minigame-common.js"></script>
     <script src="modules/mod-minigame1.js"></script>
     <script src="modules/mod-minigame2.js"></script>
-    <script src="modules/mod-firebase.js"></script> <!-- Đặt cuối cùng để khởi tạo dữ liệu sau khi các hàm đã sẵn sàng -->
+    <script src="modules/mod-firebase.js"></script>
 </body>
 </html>

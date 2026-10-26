@@ -10,6 +10,50 @@ let titlesConfig = {
 };
 let currentTab = "";
 
+// Hàm xác định ngày gần nhất hoặc ngày hôm nay
+function getClosestOrCurrentDate(dateArray) {
+    if (!dateArray || dateArray.length === 0) return "tonghop";
+    const now = new Date();
+    const todayStr = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear().toString().substr(-2)}`;
+    if (dateArray.includes(todayStr)) return todayStr;
+    let closestDate = dateArray[0];
+    let minDiff = Infinity;
+    const parseDateStr = (str) => {
+        const parts = str.split('/');
+        if (parts.length === 3) {
+            let day = parseInt(parts[0], 10);
+            let month = parseInt(parts[1], 10) - 1;
+            let year = parseInt(parts[2], 10);
+            if (year < 100) year += 2000;
+            return new Date(year, month, day);
+        }
+        return new Date(0);
+    };
+    dateArray.forEach(dStr => {
+        const dObj = parseDateStr(dStr);
+        const diff = Math.abs(now - dObj);
+        if (diff < minDiff) {
+            minDiff = diff;
+            closestDate = dStr;
+        }
+    });
+    return closestDate;
+}
+
+// Hàm tính mức tiền thắng/thua theo chế độ kèo
+function getKeoValues(mode, matchObj) {
+    let winAmt = 5, loseAmt = -15;
+    if (mode === "k25") {
+        winAmt = 0; loseAmt = -25;
+    } else if (mode === "no_keo") {
+        winAmt = 0; loseAmt = 0;
+    } else if (mode === "free") {
+        winAmt = matchObj && matchObj.customWin !== undefined ? parseInt(matchObj.customWin) : 5;
+        loseAmt = matchObj && matchObj.customLose !== undefined ? parseInt(matchObj.customLose) : -15;
+    }
+    return { winAmt, loseAmt };
+}
+
 function updateNavbarTitles() {
     if (document.getElementById("navLabelMini1")) document.getElementById("navLabelMini1").innerText = titlesConfig.navMini1;
     if (document.getElementById("subLabelMini1")) document.getElementById("subLabelMini1").innerText = titlesConfig.subMini1;
@@ -26,7 +70,7 @@ function editTitlePrompt(key, currentVal) {
     if (newVal !== null && newVal.trim() !== "") {
         titlesConfig[key] = newVal.trim();
         updateNavbarTitles();
-        saveDataToFirestore();
+        if (typeof saveDataToFirestore === 'function') saveDataToFirestore();
         renderCurrentTab();
     }
 }
@@ -48,7 +92,7 @@ function closeAllDropdowns() {
 function switchTab(tab) {
     currentTab = tab;
     closeAllDropdowns();
-    renderDatesMenu();
+    if (typeof renderDatesMenu === 'function') renderDatesMenu();
     renderCurrentTab();
 }
 
@@ -56,28 +100,29 @@ function renderCurrentTab() {
     const content = document.getElementById("tabContent");
     if (!content) return;
     if (currentTab === "tonghop") {
-        renderTongHopTab(content);
+        if (typeof renderTongHopTab === 'function') renderTongHopTab(content);
     } else if (currentTab === "players") {
-        renderPlayersTab(content);
+        if (typeof renderPlayersTab === 'function') renderPlayersTab(content);
     } else if (currentTab === "minigame1") {
-        renderMiniGame1Tab(content);
+        if (typeof renderMiniGame1Tab === 'function') renderMiniGame1Tab(content);
     } else if (currentTab === "minigame1_sub1") {
-        renderMiniGame1Sub1Tab(content);
+        if (typeof renderMiniGame1Sub1Tab === 'function') renderMiniGame1Sub1Tab(content);
     } else if (currentTab === "minigame1_sub2") {
-        renderMiniGame1Sub2Tab(content);
+        if (typeof renderMiniGame1Sub2Tab === 'function') renderMiniGame1Sub2Tab(content);
     } else if (currentTab === "minigame2") {
-        renderMiniGame2Tab(content);
+        if (typeof renderMiniGame2Tab === 'function') renderMiniGame2Tab(content);
     } else if (currentTab === "minigame2_tour1") {
-        renderMiniGame2Tour1Tab(content);
+        if (typeof renderMiniGame2Tour1Tab === 'function') renderMiniGame2Tour1Tab(content);
     } else if (currentTab === "minigame2_tour2") {
-        renderMiniGame2Tour2Tab(content);
+        if (typeof renderMiniGame2Tour2Tab === 'function') renderMiniGame2Tour2Tab(content);
     } else {
-        renderSingleDayTab(content, currentTab);
+        if (typeof renderSingleDayTab === 'function') renderSingleDayTab(content, currentTab);
     }
-    updateAdminUIState();
+    if (typeof updateAdminUIState === 'function') updateAdminUIState();
     updateNavbarTitles();
 }
-// Đóng tất cả dropdown khi click ra ngoài vùng menu
+
+// Lắng nghe sự kiện click ra ngoài để đóng menu
 window.addEventListener('click', function() {
     closeAllDropdowns();
 });

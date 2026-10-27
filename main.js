@@ -27,7 +27,55 @@
       return tpl.replace(/\{\{(\w+)\}\}/g, (match, slotName) =>
         (slots && Object.prototype.hasOwnProperty.call(slots, slotName)) ? String(slots[slotName]) : match);
     }
+function mountShell() {
+    // Danh sách các nút điều hướng chuẩn xác của hệ thống
+    const navItems = ['pickthu', 'tonghop', 'minigame1', 'minigame2', 'setting'];
+    
+    navItems.forEach(n => {
+        const targetContainer = document.getElementById(`component-nav-${n}`);
+        if (targetContainer) {
+            try {
+                // Kiểm tra an toàn trước khi gán nội dung
+                const rendered = renderComponent(n + '.nav');
+                if (rendered) targetContainer.innerHTML = rendered;
+            } catch (e) {
+                console.warn(`Không thể nạp component nav cho: ${n}`, e);
+            }
+        }
+    });
 
+    // Nạp nút Quản trị viên (Admin)
+    const adminBtnContainer = document.getElementById('component-admin-button');
+    if (adminBtnContainer) {
+        try {
+            const adminHtml = renderComponent('admin.button');
+            if (adminHtml) adminBtnContainer.innerHTML = adminHtml;
+        } catch (e) {
+            console.warn('Lỗi nạp nút Admin', e);
+        }
+    }
+
+    // Nạp trạng thái lưu trữ đám mây (Cloud Status)
+    const cloudStatusContainer = document.getElementById('cloudStatus');
+    if (cloudStatusContainer && !cloudStatusContainer.innerHTML.trim()) {
+        try {
+            const cloudHtml = renderComponent('autobackup.status');
+            if (cloudHtml) cloudStatusContainer.outerHTML = cloudHtml;
+        } catch (e) {
+            console.warn('Lỗi nạp trạng thái Cloud', e);
+        }
+    }
+
+    // Nạp các Modal ẩn hệ thống một cách an toàn
+    try {
+        const modals = (renderComponent('common.game-modal') || '') + (renderComponent('players.modal') || '');
+        if (modals) {
+            document.body.insertAdjacentHTML('beforeend', modals);
+        }
+    } catch (e) {
+        console.warn('Lỗi nạp Modal hệ thống', e);
+    }
+}
 /* ▲▲▲ KẾT THÚC KHỐI [CORE-COMPONENTS] ▲▲▲ */
 
 /* ████████████████ MODULE CORE · LÕI HỆ THỐNG ████████████████ */

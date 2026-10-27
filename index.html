@@ -51,7 +51,7 @@
       margin-bottom: 12px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.18);
     }
-    /* Khung Header duy nhất nằm ngay dưới banner */
+    /* Khung Header duy nhất */
     .header-section {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       backdrop-filter: blur(10px);
@@ -187,10 +187,10 @@
 <body>
   <div class="container">
     
-    <!-- 1. Banner CLB -->
+    <!-- Banner CLB -->
     <div class="hero-banner"></div>
 
-    <!-- 2. Khung Header duy nhất (Thanh tiêu đề & các nút điều hướng chuẩn xác) -->
+    <!-- Khung Header chính chuẩn chỉnh -->
     <div class="header-section">
       <div class="header-top">
         <div class="brand-title">
@@ -201,20 +201,20 @@
         <div id="component-admin-button"></div>
       </div>
 
-      <!-- Thanh điều hướng các nút đúng chuẩn ID -->
+      <!-- Thanh điều hướng các nút (Đã chuẩn hóa ID chuẩn để loadComponent nhận diện đúng) -->
       <div class="top-nav">
         <div class="nav-item">
           <button class="nav-btn" onclick="goHome()">🏠 HOME</button>
         </div>
-        <div id="component-nav-pickthu"></div>
-        <div id="component-nav-tonghop"></div>
-        <div id="component-nav-minigame1"></div>
-        <div id="component-nav-minigame2"></div>
-        <div id="component-nav-setting"></div>
+        <div id="component-pickthu"></div>
+        <div id="component-tonghop"></div>
+        <div id="component-minigame1"></div>
+        <div id="component-minigame2"></div>
+        <div id="component-setting"></div>
       </div>
     </div>
 
-    <!-- 3. Vùng hiển thị nội dung chính động -->
+    <!-- Vùng hiển thị nội dung động -->
     <div id="tabContent"></div>
   </div>
 
@@ -222,7 +222,7 @@
   <div id="component-modal-game"></div>
   <div id="component-modal-player"></div>
 
-  <!-- Tệp điều phối cốt lõi của hệ thống -->
+  <!-- Tệp điều phối cốt lõi -->
   <script src="main.js"></script>
 </body>
 </html>

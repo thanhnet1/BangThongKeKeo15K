@@ -1,8 +1,3 @@
-/* ==========================================================================
-   MODULE MINIGAME2 · MINI GAME 2
-   Gồm: Chia bảng A, B + Vòng Knockout + Giải đấu bổ sung 1 & 2
-   ========================================================================== */
-
 let miniGame2Content = "Thể lệ Giải Đấu Mini Game 2: Chia 2 bảng A và B thi đấu vòng tròn tính điểm chọn vào Bán kết & Chung kết.";
 let mini2PairsA = [
   { id: "A1", p1: "", p2: "" },

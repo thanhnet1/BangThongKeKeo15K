@@ -28,19 +28,37 @@
         (slots && Object.prototype.hasOwnProperty.call(slots, slotName)) ? String(slots[slotName]) : match);
     }
 
-    // Dựng khung trang (header + menu + vùng tab + hộp thoại) từ các component
-    function mountShell() {
-      const nav = ['home', 'players', 'setting', 'tonghop', 'minigame1', 'minigame2']
-        .map(n => renderComponent(n + '.nav')).join('\n');
-      const container = document.querySelector('.container');
-      container.insertAdjacentHTML('beforeend', renderComponent('header.layout', {
-        admin_button: renderComponent('admin.button'),
-        cloud_status: renderComponent('autobackup.status'),
-        nav: nav
-      }));
-      document.body.insertAdjacentHTML('beforeend',
-        renderComponent('common.game-modal') + renderComponent('players.modal'));
+    // Dựng khung trang chuẩn: tránh lặp tiêu đề và đồng bộ hoàn hảo với các định danh trên index.html
+function mountShell() {
+    // Sắp xếp đúng thứ tự các nút điều hướng trên thanh menu chính
+    const navItems = ['pickthu', 'tonghop', 'minigame1', 'minigame2', 'setting'];
+    
+    navItems.forEach(n => {
+        const targetContainer = document.getElementById(`component-nav-${n}`);
+        if (targetContainer) {
+            try {
+                targetContainer.innerHTML = renderComponent(n + '.nav');
+            } catch (e) {
+                // Bỏ qua nếu component chưa sẵn sàng
+            }
+        }
+    });
+
+    // Nạp nút Quản trị viên (Admin) vào vị trí đã định sẵn trên index.html
+    const adminBtnContainer = document.getElementById('component-admin-button');
+    if (adminBtnContainer) {
+        adminBtnContainer.innerHTML = renderComponent('admin.button');
     }
+
+    // Nạp trạng thái lưu trữ đám mây (Cloud Status)
+    const cloudStatusContainer = document.getElementById('cloudStatus');
+    if (cloudStatusContainer && !cloudStatusContainer.innerHTML.trim()) {
+        cloudStatusContainer.outerHTML = renderComponent('autobackup.status');
+    }
+
+    // Nạp các Modal ẩn hệ thống vào cuối body
+    document.body.insertAdjacentHTML('beforeend', renderComponent('common.game-modal') + renderComponent('players.modal'));
+}
 
     function showComponentError(err) {
       console.error(err);

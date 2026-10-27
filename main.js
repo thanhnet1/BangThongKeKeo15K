@@ -28,33 +28,6 @@
         (slots && Object.prototype.hasOwnProperty.call(slots, slotName)) ? String(slots[slotName]) : match);
     }
 
-    function mountShell() {
-    // Khai báo đúng danh sách các nút điều hướng cần nạp vào header
-    const navItems = ['pickthu', 'tonghop', 'minigame1', 'minigame2', 'setting'];
-    
-    navItems.forEach(n => {
-        const targetContainer = document.getElementById(`component-nav-${n}`);
-        if (targetContainer) {
-            try {
-                targetContainer.innerHTML = renderComponent(n + '.nav');
-            } catch (e) {
-                // Bỏ qua nếu component chưa sẵn sàng
-            }
-        }
-    });
-
-    const adminBtnContainer = document.getElementById('component-admin-button');
-    if (adminBtnContainer) {
-        adminBtnContainer.innerHTML = renderComponent('admin.button');
-    }
-
-    const cloudStatusContainer = document.getElementById('cloudStatus');
-    if (cloudStatusContainer && !cloudStatusContainer.innerHTML.trim()) {
-        cloudStatusContainer.outerHTML = renderComponent('autobackup.status');
-    }
-
-    document.body.insertAdjacentHTML('beforeend', renderComponent('common.game-modal') + renderComponent('players.modal'));
-}
 /* ▲▲▲ KẾT THÚC KHỐI [CORE-COMPONENTS] ▲▲▲ */
 
 /* ████████████████ MODULE CORE · LÕI HỆ THỐNG ████████████████ */

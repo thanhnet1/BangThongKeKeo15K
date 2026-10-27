@@ -143,6 +143,12 @@ function renderCurrentTab() {
     } else if (currentTab === "players") {
         if (typeof renderPlayersTab === 'function') renderPlayersTab(content);
         else content.innerHTML = `<div class="card"><h3 class="card-title">QUẢN LÝ VĐV</h3></div>`;
+    } else if (currentTab === "minigame1") {
+        if (typeof renderMiniGame1Tab === 'function') {
+            renderMiniGame1Tab(content);
+        } else {
+            content.innerHTML = `<div class="card"><h3 class="card-title">MINI GAME 1 - TEAM A & B</h3><p style="padding:10px; font-size:12px;">${miniGame1Content}</p></div>`;
+        }
     } else {
         if (typeof renderSingleDayTab === 'function') {
             renderSingleDayTab(content, currentTab);

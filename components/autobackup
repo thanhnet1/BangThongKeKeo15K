@@ -1,0 +1,12 @@
+<!-- ==========================================================================
+     COMPONENT: components/autobackup.html — TỰ ĐỘNG SAO LƯU FIRESTORE: nhãn trạng thái online / đang lưu / lỗi.
+     Mỗi PART nằm giữa dòng chú thích "[PART: tên]" và dòng chú thích "[/PART]" (HTML được giữ nguyên từng ký tự).
+     {{tên_slot}} là chỗ js/main.js điền dữ liệu (số liệu, hàng của bảng...). Sửa chữ/màu/bố cục thoải mái;
+     chỉ cần giữ nguyên các {{tên_slot}} (không đổi tên, không xóa nếu vẫn muốn hiện dữ liệu đó).
+     ========================================================================== -->
+
+<!-- [PART: status] -->
+
+          <div id="cloudStatus" class="cloud-status cloud-syncing">☁ Tự Động Lưu (Đang Khởi Tạo)...</div>
+
+<!-- [/PART] -->

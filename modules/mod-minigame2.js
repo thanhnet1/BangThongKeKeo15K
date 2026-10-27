@@ -3,19 +3,7 @@
 <!-- ========================================== -->
 
 <!-- ▼▼▼ KHỐI [MINIGAME2-BTN] · HTML · Nút GIẢI ĐẤU MINI GAME 2 ▼▼▼ BẮT ĐẦU -->
-<div class="nav-item">
-  <button class="nav-btn" onclick="toggleMenu('menuMini2', event)">
-    <i class="fa-solid fa-trophy text-yellow-400"></i>
-    <span id="navLabelMini2">GIẢI ĐẤU MINI GAME 2</span> ▾
-  </button>
-  <div class="dropdown-menu right-align" id="menuMini2">
-    <div class="dropdown-item" onclick="switchTab('minigame2')"><i class="fa-solid fa-trophy text-yellow-500"></i> 🏆 <span id="subLabelMini2">Giải Đấu Mini Game 2 (Chia Bảng A & B)</span></div>
-    <div class="dropdown-item" onclick="switchTab('minigame2_tour1')"><i class="fa-solid fa-medal text-emerald-600"></i> ⭐ <span id="subLabelTour1">Giải Đấu Bổ Sung 1 (Nội Dung Khác)</span></div>
-    <div class="dropdown-item" onclick="switchTab('minigame2_tour2')"><i class="fa-solid fa-award text-blue-600"></i> 🚀 <span id="subLabelTour2">Giải Đấu Bổ Sung 2 (Nội Dung Khác)</span></div>
-    <div class="dropdown-divider"></div>
-    <div class="dropdown-item" onclick="openGameModal(2)"><i class="fa-solid fa-gear text-slate-500"></i> ⚙️ Chỉnh Sửa Nội Dung Game 2</div>
-  </div>
-</div>
+
 <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-BTN] ▲▲▲ -->
 
 <!-- ▼▼▼ KHỐI [MINIGAME2-DATA] · JS · Dữ liệu Bảng A, B & Knockout ▼▼▼ BẮT ĐẦU -->

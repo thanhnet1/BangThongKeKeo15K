@@ -1,8 +1,3 @@
-/* ==========================================================================
-   MODULE MINIGAME1 · MINI GAME 1
-   Gồm: Lịch thi đấu Team A,B (TEAM) | Minigame 21 trận (SUB1) | Minigame 17 trận (SUB2)
-   ========================================================================== */
-
 /* --- 1. MINIGAME 1: TEAM A & B (MAIN) --- */
 let miniGame1Content = "Thể lệ Mini Game 1: Chia đội Team A và Team B thi đấu các trận Pick đôi.";
 let mini1TeamA = ["Tiến Thọ", "Châu Sĩ", "Vân Đình", "Cẩm Ly"];

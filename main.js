@@ -28,9 +28,8 @@
         (slots && Object.prototype.hasOwnProperty.call(slots, slotName)) ? String(slots[slotName]) : match);
     }
 
-    // Dựng khung trang chuẩn: tránh lặp tiêu đề và đồng bộ hoàn hảo với các định danh trên index.html
-function mountShell() {
-    // Sắp xếp đúng thứ tự các nút điều hướng trên thanh menu chính
+    function mountShell() {
+    // Khai báo đúng danh sách các nút điều hướng cần nạp vào header
     const navItems = ['pickthu', 'tonghop', 'minigame1', 'minigame2', 'setting'];
     
     navItems.forEach(n => {
@@ -44,29 +43,18 @@ function mountShell() {
         }
     });
 
-    // Nạp nút Quản trị viên (Admin) vào vị trí đã định sẵn trên index.html
     const adminBtnContainer = document.getElementById('component-admin-button');
     if (adminBtnContainer) {
         adminBtnContainer.innerHTML = renderComponent('admin.button');
     }
 
-    // Nạp trạng thái lưu trữ đám mây (Cloud Status)
     const cloudStatusContainer = document.getElementById('cloudStatus');
     if (cloudStatusContainer && !cloudStatusContainer.innerHTML.trim()) {
         cloudStatusContainer.outerHTML = renderComponent('autobackup.status');
     }
 
-    // Nạp các Modal ẩn hệ thống vào cuối body
     document.body.insertAdjacentHTML('beforeend', renderComponent('common.game-modal') + renderComponent('players.modal'));
 }
-
-    function showComponentError(err) {
-      console.error(err);
-      document.body.insertAdjacentHTML('afterbegin',
-        '<div style="margin:12px; padding:12px; background:#fee2e2; border:1px solid #ef4444; border-radius:8px; font:13px Roboto,sans-serif; color:#7f1d1d;">' +
-        '<b>Không tải được các file component HTML.</b><br>Hãy mở trang qua máy chủ web (http://...), không mở trực tiếp bằng file://.<br>' +
-        'Ví dụ: chạy <code>python -m http.server 8000</code> trong thư mục này rồi vào http://localhost:8000<br><small>' + (err && err.message ? err.message : err) + '</small></div>');
-    }
 /* ▲▲▲ KẾT THÚC KHỐI [CORE-COMPONENTS] ▲▲▲ */
 
 /* ████████████████ MODULE CORE · LÕI HỆ THỐNG ████████████████ */

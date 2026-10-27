@@ -1,6 +1,299 @@
-<div class="nav-item">
-  <button class="nav-btn" onclick="goHome()">
-    <i class="fa-solid fa-house"></i>
-    <span>HOME</span>
-  </button>
-</div>
+<!-- ==========================================================================
+     COMPONENT: components/home.html — HOME: nút menu HOME + tab ngày (Trang chủ = ngày gần nhất) + Bảng Tổng Hợp Ngày + dòng/ô XIN NGHỈ.
+     Mỗi PART nằm giữa dòng chú thích "[PART: tên]" và dòng chú thích "[/PART]" (HTML được giữ nguyên từng ký tự).
+     {{tên_slot}} là chỗ js/main.js điền dữ liệu (số liệu, hàng của bảng...). Sửa chữ/màu/bố cục thoải mái;
+     chỉ cần giữ nguyên các {{tên_slot}} (không đổi tên, không xóa nếu vẫn muốn hiện dữ liệu đó).
+     ========================================================================== -->
+
+<!-- [PART: nav] -->
+
+        <div class="nav-item">
+          <button class="nav-btn" onclick="goHome()">
+            <i class="fa-solid fa-house"></i>
+            <span>HOME</span>
+          </button>
+        </div>
+
+<!-- [/PART] -->
+
+<!-- từ hàm generateVdvOptionsHtml() · slots: v, isSelected, color -->
+<!-- [PART: vdv-option] -->
+<option value="{{v}}" {{isSelected}} style="color: {{color}}; font-weight: 800; font-size: 11px;">{{v}}</option>
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDayTab() · slots: dateStr, freeKeoHeader, selected_currentMode_default, selected_currentMode_k25, selected_currentMode_no_keo, selected_currentMode_free -->
+<!-- [PART: day-tab] -->
+
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">BẢNG THỐNG KÊ TRẬN PICK - NGÀY {{dateStr}}</h2>
+            <div class="table-actions-toolbar">
+              <button class="btn btn-green" onclick="addMatch('{{dateStr}}')">➕ Thêm Trận</button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 55px;">STT</th>
+                  <th colspan="2" class="th-pick1">CẶP PICK 1</th>
+                  <th colspan="2" class="th-pick2">CẶP PICK 2</th>
+                  <th style="width: 88px;">TỶ SỐ</th>
+                  {{freeKeoHeader}}
+                  <th colspan="2" class="th-money" style="padding: 4px;">
+                    <div style="font-size: 10px; margin-bottom: 2px;">KÈO BAN ĐẦU</div>
+                    <select style="font-size: 10px; padding: 2px; width: 95%; font-weight: bold; background: #fff8e1; border: 1px solid #d97706;" onchange="changeKeoMode('{{dateStr}}', this.value)">
+                      <option value="default" {{selected_currentMode_default}}>Kèo 5k / -15k (Mặc định)</option>
+                      <option value="k25" {{selected_currentMode_k25}}>Kèo 25k (0k / -25k)</option>
+                      <option value="no_keo" {{selected_currentMode_no_keo}}>No Kèo (0k / 0k)</option>
+                      <option value="free" {{selected_currentMode_free}}>Kèo Tự Do (Tùy Chỉnh)</option>
+                    </select>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+      
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDayTab() · không có slot -->
+<!-- [PART: day-tab-span-1] -->
+<span class="ham-text">HẦM</span>
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDayTab() · slots: m_score1, dateStr, idx -->
+<!-- [PART: day-tab-input-1] -->
+<input type="text" class="score-input" value="{{m_score1}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'score1', this.value)">
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDayTab() · không có slot -->
+<!-- [PART: day-tab-span-2] -->
+<span class="ham-text">HẦM</span>
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDayTab() · slots: m_score2, dateStr, idx -->
+<!-- [PART: day-tab-input-2] -->
+<input type="text" class="score-input" value="{{m_score2}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'score2', this.value)">
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDayTab() · slots: m_customWin_or_default, dateStr, idx, m_customLose_or_default -->
+<!-- [PART: day-tab-td-1] -->
+
+            <td>
+              <div style="display:flex; gap:2px; justify-content:center;">
+                <input type="number" placeholder="Thắng" style="width:48px;" value="{{m_customWin_or_default}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'customWin', parseInt(this.value))">
+                <input type="number" placeholder="Thua" style="width:48px;" value="{{m_customLose_or_default}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'customLose', parseInt(this.value))">
+              </div>
+            </td>
+          
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDayTab() · slots: dateStr, idx, m_id, c1_p1_color, generateVdvOptionsHtml_m_c1_p1, c1_p2_color, generateVdvOptionsHtml_m_c1_p2, c2_p1_color, generateVdvOptionsHtml_m_c2_p1, c2_p2_color, generateVdvOptionsHtml_m_c2_p2, isScore1Zero, score1Inner, isScore2Zero, score2Inner, customKeoInputHtml, winLoseClass_keo1, keo1, winLoseClass_keo2, keo2 -->
+<!-- [PART: day-tab-tr-1] -->
+
+          <tr>
+            <td>
+              <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
+                <button style="border:none; background:none; color:red; cursor:pointer; font-weight:bold; font-size:12px; padding:0;" onclick="deleteSpecificMatch('{{dateStr}}', {{idx}})" title="Xóa trận này">🗑️</button>
+                <strong>Trận {{m_id}}</strong>
+              </div>
+            </td>
+            <td>
+              <select style="color: {{c1_p1_color}}; font-weight:800;" onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p1', this.value)">
+                <option value="">-- Select --</option>
+                {{generateVdvOptionsHtml_m_c1_p1}}
+              </select>
+            </td>
+            <td>
+              <select style="color: {{c1_p2_color}}; font-weight:800;" onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p2', this.value)">
+                <option value="">-- Select --</option>
+                {{generateVdvOptionsHtml_m_c1_p2}}
+              </select>
+            </td>
+            <td>
+              <select style="color: {{c2_p1_color}}; font-weight:800;" onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p1', this.value)">
+                <option value="">-- Select --</option>
+                {{generateVdvOptionsHtml_m_c2_p1}}
+              </select>
+            </td>
+            <td>
+              <select style="color: {{c2_p2_color}}; font-weight:800;" onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p2', this.value)">
+                <option value="">-- Select --</option>
+                {{generateVdvOptionsHtml_m_c2_p2}}
+              </select>
+            </td>
+            <td>
+              <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
+                <div class="score-input" onclick="if({{isScore1Zero}}) updateMatch('{{dateStr}}', {{idx}}, 'score1', '')">{{score1Inner}}</div>
+                <span style="font-weight:bold;">-</span>
+                <div class="score-input" onclick="if({{isScore2Zero}}) updateMatch('{{dateStr}}', {{idx}}, 'score2', '')">{{score2Inner}}</div>
+              </div>
+            </td>
+            {{customKeoInputHtml}}
+            <td class="{{winLoseClass_keo1}}">{{keo1}}</td>
+            <td class="{{winLoseClass_keo2}}">{{keo2}}</td>
+          </tr>
+        
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDayTab() · không có slot -->
+<!-- [PART: day-tab-end-tbody-1] -->
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      
+<!-- [/PART] -->
+
+<!-- từ hàm buildAbsentFineCell() · không có slot -->
+<!-- [PART: absent-fine-cell-td-1] -->
+<td class="absent-fine-cell"></td>
+<!-- [/PART] -->
+
+<!-- từ hàm buildAbsentFineCell() · slots: if_unexcused_class, if_unexcused, if_unexcused_2, d, n, unexcused_color, selected_unexcused, ABSENT_FINE_K, selected_not_unexcused -->
+<!-- [PART: absent-fine-cell] -->
+
+        <td class="absent-fine-cell">
+          <div class="{{if_unexcused_class}}" style="{{if_unexcused}}">{{if_unexcused_2}}</div>
+          <select onchange="setAbsentStatus('{{d}}', '{{n}}', this.value)" style="color: {{unexcused_color}};">
+            <option value="unexcused" {{selected_unexcused}}>Nộp phạt (-{{ABSENT_FINE_K}}K)</option>
+            <option value="excused" {{selected_not_unexcused}}>Không nộp phạt (0K)</option>
+          </select>
+        </td>
+<!-- [/PART] -->
+
+<!-- từ hàm buildAbsentSelectorRow() · slots: d, countOpts_rows -->
+<!-- [PART: absent-select-row-select-1] -->
+
+        <select onchange="setAbsentCount('{{d}}', this.value)" style="color:#be123c;">
+          {{countOpts_rows}}
+        </select>
+<!-- [/PART] -->
+
+<!-- từ hàm buildAbsentSelectorRow() · slots: n, selected_info_count_n, if_n_0 -->
+<!-- [PART: absent-select-row-option-1] -->
+<option value="{{n}}" {{selected_info_count_n}}>{{if_n_0}}</option>
+<!-- [/PART] -->
+
+<!-- từ hàm buildAbsentSelectorRow() · slots: escAbsentAttr_nm, selected_cur_nm, if_taken, color -->
+<!-- [PART: absent-select-row-option-2] -->
+<option value="{{escAbsentAttr_nm}}" {{selected_cur_nm}} {{if_taken}} style="color:{{color}}; font-weight:800;">{{escAbsentAttr_nm}}</option>
+<!-- [/PART] -->
+
+<!-- từ hàm buildAbsentSelectorRow() · slots: d, i, i_plus1, opts -->
+<!-- [PART: absent-select-row-select-2] -->
+
+          <select onchange="setAbsentPlayerSlot('{{d}}', {{i}}, this.value)">
+            <option value="">-- Chọn VĐV nghỉ {{i_plus1}} --</option>
+            {{opts}}
+          </select>
+<!-- [/PART] -->
+
+<!-- từ hàm buildAbsentSelectorRow() · slots: colspan, countSelect, slots, ABSENT_FINE_K -->
+<!-- [PART: absent-select-row] -->
+
+        <tr class="absent-select-row">
+          <td colspan="{{colspan}}">
+            <span class="absent-label">🙋 VĐV XIN NGHỈ HÔM NAY:</span>
+            {{countSelect}}
+            {{slots}}
+            <span class="absent-hint">VĐV được chọn sẽ hiện trong bảng; chọn "Nộp phạt" (-{{ABSENT_FINE_K}}K) hoặc "Không nộp phạt" ở cột XIN NGHỈ.</span>
+          </td>
+        </tr>
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDaySummaryTable() · không có slot -->
+<!-- [PART: summary-span-1] -->
+<span class="note-paid">Đã nộp</span>
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDaySummaryTable() · không có slot -->
+<!-- [PART: summary-span-2] -->
+<span class="note-unpaid">Chưa nộp</span>
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDaySummaryTable() · không có slot -->
+<!-- [PART: summary-span-3] -->
+<span class="note-paid">Đã nhận</span>
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDaySummaryTable() · không có slot -->
+<!-- [PART: summary-span-4] -->
+<span class="note-unpaid">Chưa nhận</span>
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDaySummaryTable() · không có slot -->
+<!-- [PART: summary-span-5] -->
+<span style="color:#64748b; font-weight:800;">Nghỉ - không phạt</span>
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDaySummaryTable() · slots: vColor, v, st_played, if_st_winK_0, if_st_loseK_0, if_bringBack_0, if_st_total_0_class, st_total, buildAbsentFineCell_dateStr_v_isAbsent_fine, checkboxClass, if_isPaid, payKey, if_isAdminVerified, noteText -->
+<!-- [PART: summary-tr-1] -->
+
+            <tr>
+              <td style="color: {{vColor}}; font-weight: 800; font-size:12px; text-align: left; padding-left: 8px;">{{v}}</td>
+              <td>{{st_played}}</td>
+              <td class="txt-win">{{if_st_winK_0}}</td>
+              <td class="txt-lose">{{if_st_loseK_0}}</td>
+              <td style="color:#2563eb; font-weight:bold;">{{if_bringBack_0}}</td>
+              <td class="{{if_st_total_0_class}}"><strong>{{st_total}}</strong></td>
+              {{buildAbsentFineCell_dateStr_v_isAbsent_fine}}
+              <td><input type="checkbox" class="{{checkboxClass}}" {{if_isPaid}} onclick="togglePayment('{{payKey}}')" title="{{if_isAdminVerified}}"></td>
+              <td>{{noteText}}</td>
+            </tr>
+          
+<!-- [/PART] -->
+
+<!-- từ hàm renderSingleDaySummaryTable() · slots: summaryRowsHtml, buildAbsentSelectorRow_dateStr_9, sumBringBack, btcThuVeCalculated, sumFine_color, sumFine_value, sumThucThu, dateStr, isYes_color, selected_isYes, selected_not_isYes, quyCon -->
+<!-- [PART: summary] -->
+
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">BẢNG TỔNG HỢP NGÀY</h2>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th style="text-align: left; padding-left: 8px;">PICK THỦ</th>
+                  <th>SỐ TRẬN</th>
+                  <th>THẮNG/K</th>
+                  <th>THUA/K</th>
+                  <th>MANG VỀ</th>
+                  <th>TỔNG</th>
+                  <th class="th-absent">XIN NGHỈ</th>
+                  <th>THỰC TẾ</th>
+                  <th>NOTE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{summaryRowsHtml}}
+                {{buildAbsentSelectorRow_dateStr_9}}
+                <tr class="total-summary-row">
+                  <td style="color: red; text-align: left; padding-left: 8px;"><strong>Tổng Tiền BTC Thu Về</strong></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td style="color: blue;"><strong>{{sumBringBack}}</strong></td>
+                  <td style="color: red;" title="Đã gồm tiền phạt nghỉ"><strong>{{btcThuVeCalculated}}</strong></td>
+                  <td style="color: {{sumFine_color}};"><strong>{{sumFine_value}}</strong></td>
+                  <td style="color: blue;"><strong>{{sumThucThu}}</strong></td>
+                  <td class="note-cell" style="padding: 2px;">
+                    <select onchange="handleBtcNoteAdminChange('{{dateStr}}', this)" style="font-weight: 800; color: {{isYes_color}};">
+                      <option value="YES" {{selected_isYes}}>YES (Chuyển tổng ngày)</option>
+                      <option value="NO" {{selected_not_isYes}}>NO (Không chuyển)</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr class="total-summary-row">
+                  <td style="color: red; text-align: left; padding-left: 8px;" colspan="4"><strong>Quỹ Còn</strong></td>
+                  <td colspan="2" style="color: red; font-size: 13px;"><strong>{{quyCon}}</strong></td>
+                  <td colspan="3"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      
+<!-- [/PART] -->

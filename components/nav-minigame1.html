@@ -1,0 +1,13 @@
+<div class="nav-item">
+  <button class="nav-btn" onclick="toggleMenu('menuMini1', event)">
+    <i class="fa-solid fa-gamepad"></i>
+    <span id="navLabelMini1">MINI GAME 1</span> ▾
+  </button>
+  <div class="dropdown-menu" id="menuMini1">
+    <div class="dropdown-item" onclick="switchTab('minigame1')">▶️ <span id="subLabelMini1">Lịch Thi Đấu Team A & B</span></div>
+    <div class="dropdown-item" onclick="openGameModal(1)">⚙️ Chỉnh Sửa Nội Dung Game 1</div>
+    <div class="dropdown-divider"></div>
+    <div class="dropdown-item" onclick="switchTab('minigame1_sub1')">🌸 <span id="subLabelSub1">Minigame 20/10</span></div>
+    <div class="dropdown-item" id="btn-minigame-2010" onclick="switchTab('minigame1_sub2'); handleMinigame2010Click();">🌸 <span id="subLabelSub2">Minigame 20/10 - 17 Trận</span></div>
+  </div>
+</div>

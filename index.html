@@ -39,19 +39,19 @@
       margin: 0 auto;
       position: relative;
     }
-    /* Banner CLB */
+    /* Banner CLB tự động co giãn tốt trên di động */
     .hero-banner {
       background-image: url('banner.jpg');
-      background-size: 100% 100%;
+      background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       width: 100%;
-      aspect-ratio: 16 / 6.2;
-      border-radius: 14px;
+      aspect-ratio: 16 / 6;
+      border-radius: 12px;
       margin-bottom: 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     }
-    /* Khung Header chính duy nhất */
+    /* Khung Header chuẩn */
     .header-section {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       backdrop-filter: blur(10px);
@@ -106,7 +106,7 @@
       cursor: pointer;
       font-weight: 700;
       font-size: 11px;
-      transition: all 0.25s ease-in-out;
+      transition: all 0.2s ease;
       white-space: nowrap;
       display: flex;
       align-items: center;
@@ -115,15 +115,14 @@
     .nav-btn:hover {
       background-color: var(--accent-color);
       border-color: var(--accent-color);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+      transform: translateY(-1px);
     }
     .dropdown-menu {
       display: none;
       position: absolute;
       top: 115%;
       left: 0;
-      min-width: 240px;
+      min-width: 220px;
       background: #ffffff;
       border-radius: 8px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.2);
@@ -142,12 +141,10 @@
       align-items: center;
       gap: 6px;
       color: #334155;
-      transition: all 0.2s;
     }
     .dropdown-item:hover {
-      background-color: #eff6ff;
+      background-color: #f1f5f9;
       color: var(--accent-color);
-      padding-left: 16px;
     }
     .dropdown-divider {
       height: 1px;
@@ -165,14 +162,31 @@
     .cloud-syncing { background-color: #f59e0b; color: white; }
     .cloud-error { background-color: #ef4444; color: white; }
     
+    /* Tối ưu hóa hiển thị Bảng (Tables) cho Mobile & Desktop */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      white-space: nowrap;
+    }
+    th, td {
+      padding: 8px 10px;
+      font-size: 11px;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+    }
+    
     .card {
       background: var(--card-bg);
       padding: 12px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
       margin-bottom: 14px;
-      position: relative;
-      z-index: 10;
       border: 1px solid #e2e8f0;
     }
     .card-title {
@@ -201,7 +215,7 @@
         <div id="component-admin-button"></div>
       </div>
 
-      <!-- Thanh điều hướng các nút chuẩn xác (Đã khắc phục lỗi mất nút Tổng hợp & trùng nút Setting) -->
+      <!-- Thanh điều hướng chuẩn ID để đồng bộ với main.js và các component -->
       <div class="top-nav">
         <div class="nav-item">
           <button class="nav-btn" onclick="goHome()">🏠 HOME</button>
@@ -214,11 +228,11 @@
       </div>
     </div>
 
-    <!-- Vùng hiển thị nội dung động -->
+    <!-- Vùng hiển thị nội dung tab động -->
     <div id="tabContent"></div>
   </div>
 
-  <!-- Các Modal ẩn -->
+  <!-- Các Modal ẩn hệ thống -->
   <div id="component-modal-game"></div>
   <div id="component-modal-player"></div>
 

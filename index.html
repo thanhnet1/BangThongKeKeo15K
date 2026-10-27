@@ -39,6 +39,7 @@
       margin: 0 auto;
       position: relative;
     }
+    /* Banner CLB */
     .hero-banner {
       background-image: url('banner.jpg');
       background-size: cover;
@@ -50,6 +51,7 @@
       margin-bottom: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     }
+    /* Khung Header chính duy nhất */
     .header-section {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       backdrop-filter: blur(10px);
@@ -170,6 +172,39 @@
       margin: 0;
       text-transform: uppercase;
     }
+
+    /* CSS Tối ưu hiển thị Bảng biểu cho cả Mobile & Desktop */
+    .table-responsive, div:has(> table) {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      white-space: nowrap;
+      background-color: #ffffff;
+    }
+    th, td {
+      padding: 8px 10px;
+      font-size: 11px;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+    }
+    th {
+      background-color: #0f172a;
+      color: #ffffff;
+      font-weight: 700;
+    }
+    @media (max-width: 768px) {
+      th, td {
+        padding: 6px 8px;
+        font-size: 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -178,7 +213,7 @@
     <!-- Banner CLB -->
     <div class="hero-banner"></div>
 
-    <!-- Khung Header duy nhất -->
+    <!-- Khung Header chính -->
     <div class="header-section">
       <div class="header-top">
         <div class="brand-title">
@@ -189,7 +224,7 @@
         <div id="component-admin-button"></div>
       </div>
 
-      <!-- Thanh điều hướng các nút: Đã có đủ nút Tổng hợp và Setting chuẩn -->
+      <!-- Thanh điều hướng các nút đầy đủ -->
       <div class="top-nav">
         <div class="nav-item">
           <button class="nav-btn" onclick="goHome()">🏠 HOME</button>

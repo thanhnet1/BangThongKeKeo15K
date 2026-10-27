@@ -51,7 +51,7 @@
       margin-bottom: 12px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.18);
     }
-    /* Khung Header chuẩn nằm ngay dưới banner */
+    /* Khung Header duy nhất nằm ngay dưới banner */
     .header-section {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       backdrop-filter: blur(10px);
@@ -187,10 +187,10 @@
 <body>
   <div class="container">
     
-    <!-- 1. Banner CLB luôn nằm ở trên cùng -->
+    <!-- 1. Banner CLB -->
     <div class="hero-banner"></div>
 
-    <!-- 2. Khung Header (Thanh tiêu đề & các nút điều hướng) nằm CHÍNH XÁC ngay dưới banner -->
+    <!-- 2. Khung Header duy nhất (Thanh tiêu đề & các nút điều hướng chuẩn xác) -->
     <div class="header-section">
       <div class="header-top">
         <div class="brand-title">
@@ -201,7 +201,7 @@
         <div id="component-admin-button"></div>
       </div>
 
-      <!-- Thanh điều hướng các nút -->
+      <!-- Thanh điều hướng các nút đúng chuẩn ID -->
       <div class="top-nav">
         <div class="nav-item">
           <button class="nav-btn" onclick="goHome()">🏠 HOME</button>

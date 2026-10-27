@@ -39,7 +39,6 @@
       margin: 0 auto;
       position: relative;
     }
-    /* Banner CLB */
     .hero-banner {
       background-image: url('banner.jpg');
       background-size: cover;
@@ -51,7 +50,6 @@
       margin-bottom: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     }
-    /* Khung Header chính duy nhất */
     .header-section {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       backdrop-filter: blur(10px);
@@ -146,11 +144,6 @@
       background-color: #f1f5f9;
       color: var(--accent-color);
     }
-    .dropdown-divider {
-      height: 1px;
-      background-color: #e2e8f0;
-      margin: 3px 0;
-    }
     .cloud-status {
       font-size: 10px;
       padding: 4px 10px;
@@ -162,24 +155,6 @@
     .cloud-syncing { background-color: #f59e0b; color: white; }
     .cloud-error { background-color: #ef4444; color: white; }
     
-    /* Tối ưu hóa hiển thị Bảng cho Mobile & Desktop */
-    .table-responsive {
-      width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      margin-bottom: 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      white-space: nowrap;
-    }
-    th, td {
-      padding: 8px 10px;
-      font-size: 11px;
-      text-align: center;
-      border: 1px solid #e2e8f0;
-    }
     .card {
       background: var(--card-bg);
       padding: 12px;
@@ -203,7 +178,7 @@
     <!-- Banner CLB -->
     <div class="hero-banner"></div>
 
-    <!-- Khung Header chuẩn duy nhất -->
+    <!-- Khung Header duy nhất -->
     <div class="header-section">
       <div class="header-top">
         <div class="brand-title">
@@ -214,7 +189,7 @@
         <div id="component-admin-button"></div>
       </div>
 
-      <!-- Thanh điều hướng đầy đủ các nút: Home, Pick thủ, Tổng hợp, Mini Game 1, Mini Game 2, Setting -->
+      <!-- Thanh điều hướng các nút: Đã có đủ nút Tổng hợp và Setting chuẩn -->
       <div class="top-nav">
         <div class="nav-item">
           <button class="nav-btn" onclick="goHome()">🏠 HOME</button>

@@ -3002,7 +3002,14 @@
       });
     }
 /* ▲▲▲ KẾT THÚC KHỐI [AUTOBACKUP-FUNCS] ▲▲▲ */
+// Thêm đoạn xử lý này vào hàm renderCurrentTab() trong file main.js của bạn:
 
+    } else if (currentTab === "minigame1") {
+        // Tải nội dung từ component minigame1.html hoặc gọi hàm render trực tiếp
+        loadComponent("tabContent", "components/minigame1.html");
+    } else if (currentTab === "minigame2") {
+        // Tải nội dung từ component minigame2.html hoặc gọi hàm render trực tiếp
+        loadComponent("tabContent", "components/minigame2.html");
 /* ████████████████ MODULE CORE · LÕI HỆ THỐNG ████████████████ */
 /* ▼▼▼ KHỐI [CORE-INIT] · Khởi động: window.onload (chạy sau cùng) ▼▼▼ BẮT ĐẦU */
 /*   ↳ Gồm: onload */

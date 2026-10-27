@@ -4,31 +4,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CLB PICKLEBALL - CMTD | Quản Lý & Thống Kê</title>
-
-  <!-- Font Google & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <!-- Tailwind CSS & Excel Export SDK -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Thư viện ngoài -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
-  <!-- Firebase SDK Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
-  <!-- Giao diện (CSS) -->
-  <link rel="stylesheet" href="css/style.css">
+  
+  <style>
+    :root {
+      --primary-color: #0f172a;
+      --accent-color: #2563eb;
+      --card-bg: #ffffff;
+      --border-color: #cbd5e1;
+      --text-main: #1e293b;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: 'Roboto', sans-serif; background-color: #f1f5f9; color: var(--text-main); margin: 0; padding: 10px 6px; min-height: 100vh; }
+    .container { max-width: 1600px; margin: 0 auto; position: relative; }
+    .hero-banner { background-image: linear-gradient(rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.65)), url('banner.jpg'); background-size: cover; background-position: center; height: 180px; border-radius: 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+    .logo-img { max-height: 80px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.5)); }
+    .header-section { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); color: white; padding: 12px 14px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 500; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .top-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 8px; position: relative; }
+    .nav-item { position: relative; }
+    .nav-btn { background: rgba(51, 65, 85, 0.9); color: white; border: 1px solid rgba(255, 255, 255, 0.2); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s ease; white-space: nowrap; display: flex; align-items: center; gap: 4px; }
+    .nav-btn:hover { background-color: var(--accent-color); border-color: var(--accent-color); }
+    .dropdown-menu { display: none; position: absolute; top: 115%; left: 0; min-width: 220px; background: #ffffff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--border-color); z-index: 9999 !important; padding: 4px 0; color: var(--text-main); }
+    .dropdown-menu.show { display: block; }
+    .dropdown-item { padding: 8px 12px; font-size: 11px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; color: #334155; }
+    .dropdown-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
+    .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 3px 0; }
+    .cloud-status { font-size: 10px; padding: 3px 8px; border-radius: 15px; font-weight: bold; margin-left: auto; }
+    .cloud-online { background-color: #10b981; color: white; }
+    .cloud-syncing { background-color: #f59e0b; color: white; }
+    .cloud-error { background-color: #ef4444; color: white; }
+    .card { background: var(--card-bg); padding: 12px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 14px; border: 1px solid #e2e8f0; }
+    .card-title { font-size: 13px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; }
+  </style>
 </head>
 <body>
   <div class="container">
-    <div class="hero-banner"></div>
-    <!-- Header + menu + vùng nội dung tab: dựng từ components/header.html (do js/main.js nạp) -->
+    <div class="hero-banner">
+      <img src="logo1.png" alt="Logo Pickleball CMTD" class="logo-img">
+    </div>
+
+    <div class="header-section">
+      <div class="header-top">
+        <div id="component-brand-title">
+          <h2 style="margin:0; font-weight:900; color:#fff; font-size:16px;">CLB PICKLEBALL - CMTD</h2>
+        </div>
+        <div id="component-cloud-status">
+          <div id="cloudStatus" class="cloud-status cloud-syncing">☁️ Đang kết nối...</div>
+        </div>
+        <div id="component-admin-button"></div>
+      </div>
+
+      <div class="top-nav">
+        <div id="component-nav-home"><button class="nav-btn" onclick="goHome()">🏠 HOME</button></div>
+        <div id="component-nav-minigame1"></div>
+        <div id="component-nav-minigame2"></div>
+      </div>
+    </div>
+
+    <div id="tabContent"></div>
   </div>
 
-  <!-- Hộp thoại (components/common.html, components/players.html) cũng do js/main.js nạp -->
+  <!-- Modal chứa chung -->
+  <div id="component-modal-game"></div>
+  <div id="component-modal-player"></div>
 
-  <!-- Toàn bộ xử lý nằm trong 1 file duy nhất -->
-  <script src="js/main.js"></script>
+  <!-- Các tệp module script đặt ở cuối body -->
+  <script src="modules/minigame1.js"></script>
+  <script src="modules/minigame2.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>

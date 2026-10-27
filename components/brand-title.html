@@ -1,4 +1,30 @@
-<div class="brand-title">
-  <img src="logo1.png" alt="Logo CMTD" class="title-logo-img">
-  <h2 style="margin:0; font-weight:900; color:#fff; font-size:16px; letter-spacing:0.5px;">CLB PICKLEBALL - CMTD</h2>
-</div>
+<!-- ==========================================================================
+     COMPONENT: components/header.html — Khung đầu trang: logo, khu admin + trạng thái cloud, thanh menu, vùng nội dung tab.
+     Mỗi PART nằm giữa dòng chú thích "[PART: tên]" và dòng chú thích "[/PART]" (HTML được giữ nguyên từng ký tự).
+     {{tên_slot}} là chỗ js/main.js điền dữ liệu (số liệu, hàng của bảng...). Sửa chữ/màu/bố cục thoải mái;
+     chỉ cần giữ nguyên các {{tên_slot}} (không đổi tên, không xóa nếu vẫn muốn hiện dữ liệu đó).
+     Slots của header.layout: {{admin_button}} (admin.html), {{cloud_status}} (autobackup.html), {{nav}} (các nút menu ghép từ home/players/setting/tonghop/minigame1/minigame2 .nav)
+     ========================================================================== -->
+
+<!-- [PART: layout] -->
+
+    <div class="header-section">
+      <div class="header-top">
+        <div class="brand-title">
+          <img src="logo1.png" alt="Logo CMTD" class="title-logo-img">
+          <h2 style="margin:0; font-weight:900; color:#fff; font-size:16px; letter-spacing:0.5px;">CLB PICKLEBALL - CMTD</h2>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+{{admin_button}}
+{{cloud_status}}
+        </div>
+      </div>
+
+      <div class="top-nav">
+{{nav}}
+      </div>
+    </div>
+
+    <div id="tabContent"></div>
+
+<!-- [/PART] -->

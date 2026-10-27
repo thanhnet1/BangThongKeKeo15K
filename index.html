@@ -39,7 +39,7 @@
       margin: 0 auto;
       position: relative;
     }
-    /* Banner CLB tự động co giãn tốt trên di động */
+    /* Banner CLB */
     .hero-banner {
       background-image: url('banner.jpg');
       background-size: cover;
@@ -51,7 +51,7 @@
       margin-bottom: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     }
-    /* Khung Header chuẩn */
+    /* Khung Header chính duy nhất */
     .header-section {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       backdrop-filter: blur(10px);
@@ -162,7 +162,7 @@
     .cloud-syncing { background-color: #f59e0b; color: white; }
     .cloud-error { background-color: #ef4444; color: white; }
     
-    /* Tối ưu hóa hiển thị Bảng (Tables) cho Mobile & Desktop */
+    /* Tối ưu hóa hiển thị Bảng cho Mobile & Desktop */
     .table-responsive {
       width: 100%;
       overflow-x: auto;
@@ -180,7 +180,6 @@
       text-align: center;
       border: 1px solid #e2e8f0;
     }
-    
     .card {
       background: var(--card-bg);
       padding: 12px;
@@ -204,7 +203,7 @@
     <!-- Banner CLB -->
     <div class="hero-banner"></div>
 
-    <!-- Khung Header chính -->
+    <!-- Khung Header chuẩn duy nhất -->
     <div class="header-section">
       <div class="header-top">
         <div class="brand-title">
@@ -215,7 +214,7 @@
         <div id="component-admin-button"></div>
       </div>
 
-      <!-- Thanh điều hướng chuẩn ID để đồng bộ với main.js và các component -->
+      <!-- Thanh điều hướng đầy đủ các nút: Home, Pick thủ, Tổng hợp, Mini Game 1, Mini Game 2, Setting -->
       <div class="top-nav">
         <div class="nav-item">
           <button class="nav-btn" onclick="goHome()">🏠 HOME</button>
@@ -228,7 +227,7 @@
       </div>
     </div>
 
-    <!-- Vùng hiển thị nội dung tab động -->
+    <!-- Vùng hiển thị nội dung động -->
     <div id="tabContent"></div>
   </div>
 

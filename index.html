@@ -25,21 +25,28 @@
     .container { max-width: 1600px; margin: 0 auto; position: relative; }
     .hero-banner { background-image: linear-gradient(rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.65)), url('banner.jpg'); background-size: cover; background-position: center; height: 180px; border-radius: 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
     .logo-img { max-height: 80px; width: auto; object-fit: contain; filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.5)); }
+    
+    /* Khung Header chính được cố định gọn gàng */
     .header-section { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); color: white; padding: 12px 14px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 500; }
     .header-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    
+    /* Thanh điều hướng các nút được sắp xếp theo hàng ngang, không bị lệch dòng */
     .top-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 8px; position: relative; }
     .nav-item { position: relative; }
     .nav-btn { background: rgba(51, 65, 85, 0.9); color: white; border: 1px solid rgba(255, 255, 255, 0.2); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s ease; white-space: nowrap; display: flex; align-items: center; gap: 4px; }
     .nav-btn:hover { background-color: var(--accent-color); border-color: var(--accent-color); }
+    
+    /* Menu thả xuống chuẩn vị trí */
     .dropdown-menu { display: none; position: absolute; top: 115%; left: 0; min-width: 220px; background: #ffffff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); border: 1px solid var(--border-color); z-index: 9999 !important; padding: 4px 0; color: var(--text-main); }
     .dropdown-menu.show { display: block; }
     .dropdown-item { padding: 8px 12px; font-size: 11px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; color: #334155; }
     .dropdown-item:hover { background-color: #f1f5f9; color: var(--accent-color); }
     .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 3px 0; }
+    
     .cloud-status { font-size: 10px; padding: 3px 8px; border-radius: 15px; font-weight: bold; margin-left: auto; }
     .cloud-online { background-color: #10b981; color: white; }
     .cloud-syncing { background-color: #f59e0b; color: white; }
-    .cloud-error { background-color: #ef4444; color: white; }
+    
     .card { background: var(--card-bg); padding: 12px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 14px; border: 1px solid #e2e8f0; }
     .card-title { font-size: 13px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; }
   </style>
@@ -50,6 +57,7 @@
       <img src="logo1.png" alt="Logo Pickleball CMTD" class="logo-img">
     </div>
 
+    <!-- Khung Header cố định giúp các nút sắp xếp chuẩn hàng, không lộn xộn -->
     <div class="header-section">
       <div class="header-top">
         <div id="component-brand-title">
@@ -61,21 +69,26 @@
         <div id="component-admin-button"></div>
       </div>
 
+      <!-- Khu vực các nút bấm điều hướng -->
       <div class="top-nav">
         <div id="component-nav-home"><button class="nav-btn" onclick="goHome()">🏠 HOME</button></div>
+        <div id="component-nav-pickthu"></div>
+        <div id="component-nav-tonghop"></div>
         <div id="component-nav-minigame1"></div>
         <div id="component-nav-minigame2"></div>
+        <div id="component-nav-setting"></div>
       </div>
     </div>
 
+    <!-- Vùng hiển thị nội dung chính -->
     <div id="tabContent"></div>
   </div>
 
-  <!-- Các vùng chứa Modal chung -->
+  <!-- Các Modal ẩn -->
   <div id="component-modal-game"></div>
   <div id="component-modal-player"></div>
 
-  <!-- Chỉ gọi tệp điều hướng cốt lõi main.js, tự động nạp các component từ thư mục components/ -->
+  <!-- Trình điều phối chính -->
   <script src="main.js"></script>
 </body>
 </html>

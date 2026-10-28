@@ -489,75 +489,93 @@
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-KEO-HELPERS] ▲▲▲ */
 /* ▼▼▼ KHỐI [HOME-DAYTAB] · Bảng thống kê trận pick của ngày (Trang Chủ / từng ngày) ▼▼▼ BẮT ĐẦU */
     function renderSingleDayTab(container, dateStr) {
-  const matches = matchesData[dateStr] || [];
-  const currentMode = dateKeoMode[dateStr] || "default";
+      const matches = matchesData[dateStr] || [];
+      const currentMode = dateKeoMode[dateStr] || "default";
 
-  let html = renderComponent('home.day-tab', {
-    dateStr,
-    freeKeoHeader: (currentMode === 'free' ? '<th style="width: 110px; text-align: center;">THẮNG/THUA</th>' : ''),
-    selected_currentMode_default: (currentMode === 'default' ? 'selected' : ''),
-    selected_currentMode_k25: (currentMode === 'k25' ? 'selected' : ''),
-    selected_currentMode_no_keo: (currentMode === 'no_keo' ? 'selected' : ''),
-    selected_currentMode_free: (currentMode === 'free' ? 'selected' : '')
-  });
-
-  matches.forEach((m, idx) => {
-    const val1 = (m.score1 || "").toString().trim();
-    const val2 = (m.score2 || "").toString().trim();
-    const s1 = parseInt(val1);
-    const s2 = parseInt(val2);
-    
-    let keo1 = 0, keo2 = 0;
-    let { winAmt, loseAmt } = getKeoValues(currentMode, m);
-
-    if (!isNaN(s1) && !isNaN(s2)) {
-      let isHam = (s1 === 0 || s2 === 0);
-      let effectiveWin = isHam ? (winAmt > 0 ? winAmt * 2 : 0) : winAmt;
-      let effectiveLose = isHam ? loseAmt * 2 : loseAmt;
-
-      if (s1 > s2) { keo1 = effectiveWin; keo2 = effectiveLose; } 
-      else if (s2 > s1) { keo1 = effectiveLose; keo2 = effectiveWin; } 
-      else { keo1 = 0; keo2 = 0; }
-    }
-
-    // Sử dụng component input tỷ số chuẩn để hiển thị trực quan các ô nhập điểm số
-    const score1Inner = renderComponent('home.day-tab-input-1', { m_score1: (m.score1 || ''), dateStr, idx });
-    const score2Inner = renderComponent('home.day-tab-input-2', { m_score2: (m.score2 || ''), dateStr, idx });
-
-    const c1_p1_color = m.c1_p1 ? VDV_COLORS[vdvs.indexOf(m.c1_p1) % VDV_COLORS.length] : "#334155";
-    const c1_p2_color = m.c1_p2 ? VDV_COLORS[vdvs.indexOf(m.c1_p2) % VDV_COLORS.length] : "#334155";
-    const c2_p1_color = m.c2_p1 ? VDV_COLORS[vdvs.indexOf(m.c2_p1) % VDV_COLORS.length] : "#334155";
-    const c2_p2_color = m.c2_p2 ? VDV_COLORS[vdvs.indexOf(m.c2_p2) % VDV_COLORS.length] : "#334155";
-
-    let customKeoInputHtml = "";
-    if (currentMode === 'free') {
-      customKeoInputHtml = renderComponent('home.day-tab-td-1', {
-        m_customWin_or_default: (m.customWin !== undefined ? m.customWin : winAmt),
-        dateStr, idx,
-        m_customLose_or_default: (m.customLose !== undefined ? m.customLose : loseAmt)
+      let html = renderComponent('home.day-tab', {
+        dateStr,
+        freeKeoHeader: (currentMode === 'free' ? '<th style="width: 120px;" class="th-money">MỆNH GIÁ THẮNG/THUA</th>' : ''),
+        selected_currentMode_default: (currentMode === 'default' ? 'selected' : ''),
+        selected_currentMode_k25: (currentMode === 'k25' ? 'selected' : ''),
+        selected_currentMode_no_keo: (currentMode === 'no_keo' ? 'selected' : ''),
+        selected_currentMode_free: (currentMode === 'free' ? 'selected' : '')
       });
+
+      matches.forEach((m, idx) => {
+        const val1 = (m.score1 || "").toString().trim();
+        const val2 = (m.score2 || "").toString().trim();
+
+        const s1 = parseInt(val1);
+        const s2 = parseInt(val2);
+        
+        let keo1 = 0;
+        let keo2 = 0;
+
+        let { winAmt, loseAmt } = getKeoValues(currentMode, m);
+
+        if (!isNaN(s1) && !isNaN(s2)) {
+          let isHam = (s1 === 0 || s2 === 0);
+          let effectiveWin = isHam ? (winAmt > 0 ? winAmt * 2 : 0) : winAmt;
+          let effectiveLose = isHam ? loseAmt * 2 : loseAmt;
+
+          if (s1 > s2) { keo1 = effectiveWin; keo2 = effectiveLose; } 
+          else if (s2 > s1) { keo1 = effectiveLose; keo2 = effectiveWin; } 
+          else { keo1 = 0; keo2 = 0; }
+        }
+
+        const score1Inner = renderComponent('home.day-tab-input-1', {
+          m_score1: (m.score1 || ''),
+          dateStr,
+          idx
+        });
+
+        const score2Inner = renderComponent('home.day-tab-input-2', {
+          m_score2: (m.score2 || ''),
+          dateStr,
+          idx
+        });
+
+        const c1_p1_color = m.c1_p1 ? VDV_COLORS[vdvs.indexOf(m.c1_p1) % VDV_COLORS.length] : "#334155";
+        const c1_p2_color = m.c1_p2 ? VDV_COLORS[vdvs.indexOf(m.c1_p2) % VDV_COLORS.length] : "#334155";
+        const c2_p1_color = m.c2_p1 ? VDV_COLORS[vdvs.indexOf(m.c2_p1) % VDV_COLORS.length] : "#334155";
+        const c2_p2_color = m.c2_p2 ? VDV_COLORS[vdvs.indexOf(m.c2_p2) % VDV_COLORS.length] : "#334155";
+
+        let customKeoInputHtml = "";
+        if (currentMode === 'free') {
+          customKeoInputHtml = renderComponent('home.day-tab-td-1', {
+            m_customWin_or_default: (m.customWin !== undefined ? m.customWin : winAmt),
+            dateStr,
+            idx,
+            m_customLose_or_default: (m.customLose !== undefined ? m.customLose : loseAmt)
+          });
+        }
+
+        html += renderComponent('home.day-tab-tr-1', {
+          dateStr,
+          idx,
+          m_id: m.id,
+          c1_p1_color,
+          generateVdvOptionsHtml_m_c1_p1: (generateVdvOptionsHtml(m.c1_p1)),
+          c1_p2_color,
+          generateVdvOptionsHtml_m_c1_p2: (generateVdvOptionsHtml(m.c1_p2)),
+          c2_p1_color,
+          generateVdvOptionsHtml_m_c2_p1: (generateVdvOptionsHtml(m.c2_p1)),
+          c2_p2_color,
+          generateVdvOptionsHtml_m_c2_p2: (generateVdvOptionsHtml(m.c2_p2)),
+          score1Inner,
+          score2Inner,
+          customKeoInputHtml,
+          winLoseClass_keo1: (keo1 > 0 ? 'number-pos' : (keo1 < 0 ? 'number-neg' : 'number-zero')),
+          keo1: (keo1 > 0 ? `+${keo1}` : keo1),
+          winLoseClass_keo2: (keo2 > 0 ? 'number-pos' : (keo2 < 0 ? 'number-neg' : 'number-zero')),
+          keo2: (keo2 > 0 ? `+${keo2}` : keo2)
+        });
+      });
+
+      html += renderComponent('home.day-tab-end-tbody-1');
+
+      renderSingleDaySummaryTable(dateStr, html, container);
     }
-
-    html += renderComponent('home.day-tab-tr-1', {
-      dateStr, idx,
-      m_id: m.id,
-      c1_p1_color, generateVdvOptionsHtml_m_c1_p1: generateVdvOptionsHtml(m.c1_p1),
-      c1_p2_color, generateVdvOptionsHtml_m_c1_p2: generateVdvOptionsHtml(m.c1_p2),
-      c2_p1_color, generateVdvOptionsHtml_m_c2_p1: generateVdvOptionsHtml(m.c2_p1),
-      c2_p2_color, generateVdvOptionsHtml_m_c2_p2: generateVdvOptionsHtml(m.c2_p2),
-      score1Inner, 
-      score2Inner,
-      customKeoInputHtml,
-      winLoseClass_keo1: (keo1 > 0 ? 'number-pos' : (keo1 < 0 ? 'number-neg' : 'number-zero')),
-      keo1: (keo1 > 0 ? `+${keo1}` : keo1),
-      winLoseClass_keo2: (keo2 > 0 ? 'number-pos' : (keo2 < 0 ? 'number-neg' : 'number-zero')),
-      keo2: (keo2 > 0 ? `+${keo2}` : keo2)
-    });
-  });
-
-  html += renderComponent('home.day-tab-end-tbody-1');
-  renderSingleDaySummaryTable(dateStr, html, container);
-}
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-DAYTAB] ▲▲▲ */
 /* ▼▼▼ KHỐI [HOME-ABSENT] · VĐV XIN NGHỈ: chọn 2/3/4 VĐV, Nộp phạt / Không nộp phạt ▼▼▼ BẮT ĐẦU */
     const ABSENT_COUNT_OPTIONS = [0, 2, 3, 4];
@@ -949,11 +967,6 @@
             if (data.mini1Sub1KeoMode) mini1Sub1KeoMode = data.mini1Sub1KeoMode;
             if (data.mini1Sub1Payment) mini1Sub1Payment = data.mini1Sub1Payment;
             if (data.miniGame1Sub1Matches) miniGame1Sub1Matches = data.miniGame1Sub1Matches;
-            if (data.mini1Sub2TeamA) mini1Sub2TeamA = data.mini1Sub2TeamA;
-            if (data.mini1Sub2TeamB) mini1Sub2TeamB = data.mini1Sub2TeamB;
-            if (data.mini1Sub2KeoMode) mini1Sub2KeoMode = data.mini1Sub2KeoMode;
-            if (data.mini1Sub2Payment) mini1Sub2Payment = data.mini1Sub2Payment;
-            if (data.miniGame1Sub2Matches) miniGame1Sub2Matches = data.miniGame1Sub2Matches;
             if (data.mini1Sub2TeamA) mini1Sub2TeamA = data.mini1Sub2TeamA;
             if (data.mini1Sub2TeamB) mini1Sub2TeamB = data.mini1Sub2TeamB;
             if (data.mini1Sub2KeoMode) mini1Sub2KeoMode = data.mini1Sub2KeoMode;
@@ -1570,7 +1583,7 @@
       let templateRaw = [
         { cat: "Đôi Nam Nữ", a1: malesA[0], a2: femalesA[0], b1: malesB[0], b2: femalesB[0] },
         { cat: "Đôi Nam Nữ", a1: malesA[1], a2: femalesA[1], b1: malesB[1], b2: femalesB[1] },
-        { cat: "Đôi Nam",     a1: malesA[2], a2: femalesA[3], b1: malesB[2], b2: malesB[3] },
+        { cat: "Đôi Nam",     a1: malesA[2], a2: femalesA[3], b1: malesB[2], b2: femalesB[3] },
         { cat: "Đôi Nam",     a1: malesA[0], a2: femalesA[4], b1: malesB[0], b2: femalesB[4] },
         { cat: "Đôi Nam Nữ", a1: malesA[2], a2: femalesA[2], b1: malesB[2], b2: femalesB[2] },
         { cat: "Đôi Nam Nữ", a1: malesA[3], a2: femalesA[0], b1: malesB[3], b2: femalesB[0] },

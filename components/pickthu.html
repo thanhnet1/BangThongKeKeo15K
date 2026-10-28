@@ -1,5 +1,57 @@
 <!-- [PART: nav] -->
 <div class="nav-item">
-  <button class="nav-btn" onclick="switchTab('pickthu')">🏓 PICK THỦ</button>
+  <button class="nav-btn" onclick="switchTab('players')">🏓 PICK THỦ</button>
 </div>
+<!-- [/PART] -->
+
+<!-- [PART: tab] -->
+<div class="card">
+  <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+    <h3 class="card-title">Danh Sách Pick Thủ (Tổng số: <span id="vdvCountBtn">0</span>)</h3>
+    <button onclick="openPlayerModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 px-3 rounded text-xs flex items-center gap-1.5 shadow">
+      <i class="fa-solid fa-user-plus"></i> Thêm Pick Thủ
+    </button>
+  </div>
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 50px;">STT</th>
+          <th>TÊN PICK THỦ</th>
+          <th style="width: 100px;">GIỚI TÍNH</th>
+          <th style="width: 120px;">THAO TÁC</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{players_rows}}
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- [/PART] -->
+
+<!-- [PART: tab-tr-1] -->
+<tr>
+  <td><b>{{index_plus1}}</b></td>
+  <td>
+    <span style="font-weight: 800; color: {{color}}; display: flex; align-items: center; justify-content: center; gap: 6px;">
+      <i class="fa-solid fa-user-shield"></i> {{p_name}}
+    </span>
+  </td>
+  <td>
+    <span class="px-2 py-1 rounded text-[10px] font-bold {{if_p_gender_Nam_class}}">
+      {{p_gender}}
+    </span>
+  </td>
+  <td>
+    <div class="flex justify-center gap-2">
+      <button onclick="editPlayer({{p_id}})" class="bg-amber-500 hover:bg-amber-600 text-white px-2 py-1 rounded text-[10px] font-bold shadow" title="Sửa">
+        <i class="fa-solid fa-pen"></i>
+      </button>
+      <button onclick="deletePlayer({{p_id}})" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-[10px] font-bold shadow" title="Xóa">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    </div>
+  </td>
+</tr>
 <!-- [/PART] -->

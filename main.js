@@ -28,18 +28,26 @@
         (slots && Object.prototype.hasOwnProperty.call(slots, slotName)) ? String(slots[slotName]) : match);
     }
 function mountShell() {
-    // Danh sách các nút điều hướng chuẩn xác của hệ thống
-    const navItems = ['pickthu', 'tonghop', 'minigame1', 'minigame2', 'setting'];
+    // Khai báo chính xác cặp khóa (key) tương ứng với id trên index.html và tên phần part trong component
+    const navItems = [
+        { key: 'pickthu', part: 'pickthu.nav' },
+        { key: 'tonghop', part: 'tonghop.nav' },
+        { key: 'minigame1', part: 'minigame1.nav' },
+        { key: 'minigame2', part: 'minigame2.nav' },
+        { key: 'setting', part: 'setting.nav' }
+    ];
     
-    navItems.forEach(n => {
-        const targetContainer = document.getElementById(`component-nav-${n}`);
+    navItems.forEach(item => {
+        const targetContainer = document.getElementById(`component-nav-${item.key}`);
         if (targetContainer) {
             try {
-                // Kiểm tra an toàn trước khi gán nội dung
-                const rendered = renderComponent(n + '.nav');
-                if (rendered) targetContainer.innerHTML = rendered;
+                const rendered = renderComponent(item.part);
+                if (rendered) {
+                    targetContainer.innerHTML = rendered;
+                }
             } catch (e) {
-                console.warn(`Không thể nạp component nav cho: ${n}`, e);
+                // Xử lý an toàn, không làm gián đoạn chương trình
+                console.debug(`Bỏ qua component nav: ${item.key}`);
             }
         }
     });
@@ -50,9 +58,7 @@ function mountShell() {
         try {
             const adminHtml = renderComponent('admin.button');
             if (adminHtml) adminBtnContainer.innerHTML = adminHtml;
-        } catch (e) {
-            console.warn('Lỗi nạp nút Admin', e);
-        }
+        } catch (e) {}
     }
 
     // Nạp trạng thái lưu trữ đám mây (Cloud Status)
@@ -61,20 +67,19 @@ function mountShell() {
         try {
             const cloudHtml = renderComponent('autobackup.status');
             if (cloudHtml) cloudStatusContainer.outerHTML = cloudHtml;
-        } catch (e) {
-            console.warn('Lỗi nạp trạng thái Cloud', e);
-        }
+        } catch (e) {}
     }
 
-    // Nạp các Modal ẩn hệ thống một cách an toàn
+    // Nạp các Modal hệ thống ẩn
     try {
         const modals = (renderComponent('common.game-modal') || '') + (renderComponent('players.modal') || '');
-        if (modals) {
-            document.body.insertAdjacentHTML('beforeend', modals);
+        if (modals && !document.getElementById('injectedModals')) {
+            const wrapper = document.createElement('div');
+            wrapper.id = 'injectedModals';
+            wrapper.innerHTML = modals;
+            document.body.appendChild(wrapper);
         }
-    } catch (e) {
-        console.warn('Lỗi nạp Modal hệ thống', e);
-    }
+    } catch (e) {}
 }
 /* ▲▲▲ KẾT THÚC KHỐI [CORE-COMPONENTS] ▲▲▲ */
 

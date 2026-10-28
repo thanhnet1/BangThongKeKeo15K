@@ -22,8 +22,17 @@
           <th style="width: 50px;">TRẬN</th>
           <th>CẶP 1 (ĐỘI 1)</th>
           <th>CẶP 2 (ĐỘI 2)</th>
-          <th style="width: 70px;">TỶ SỐ 1</th>
-          <th style="width: 70px;">TỶ SỐ 2</th>
+          <!-- Ô nhập Tỷ số 1 -->
+<input type="number" 
+       value="{{m_score1}}" 
+       onchange="updateMatch('{{dateStr}}', {{idx}}, 'score1', this.value)" 
+       class="w-16 text-center font-bold bg-slate-800 text-white border border-slate-600 rounded px-1 py-1 text-sm focus:outline-none focus:border-emerald-500">
+
+<!-- Ô nhập Tỷ số 2 -->
+<input type="number" 
+       value="{{m_score2}}" 
+       onchange="updateMatch('{{dateStr}}', {{idx}}, 'score2', this.value)" 
+       class="w-16 text-center font-bold bg-slate-800 text-white border border-slate-600 rounded px-1 py-1 text-sm focus:outline-none focus:border-emerald-500">
           {{freeKeoHeader}}
           <th style="width: 90px;">KÈO 1</th>
           <th style="width: 90px;">KÈO 2</th>

@@ -21,7 +21,8 @@ async function loadComponents() {
 function renderComponent(key, slots) {
     const tpl = COMPONENT_PARTS[key];
     if (tpl === undefined) {
-        console.warn('Không tìm thấy component: ' + key);
+        // Ghi chú chi tiết để bạn biết chính xác thành phần nào đang bị gọi sai hoặc thiếu file
+        console.debug('Bỏ qua component chưa định nghĩa: ' + key);
         return '';
     }
     return tpl.replace(/\{\{(\w+)\}\}/g, (match, slotName) => 

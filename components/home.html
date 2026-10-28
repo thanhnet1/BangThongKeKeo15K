@@ -124,7 +124,7 @@
       <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
         <i class="fa-solid fa-chart-pie text-sm"></i>
       </div>
-      BẢNG TỔNG HỢP KÈO NGÀY: <span class="text-emerald-400 font-extrabold">{{dateStr}}</span>
+      BẢNG TỔNG HỢP VÀ THU CHI NGÀY: <span class="text-emerald-400 font-extrabold">{{dateStr}}</span>
     </h3>
   </div>
 
@@ -241,4 +241,29 @@
 <!-- [/PART] -->
 
 <!-- [PART: summary-span-4] -->
-<span class="text-xs font-semibold text-blue-400
+<span class="text-xs font-semibold text-blue-400 bg-blue-950/50 px-2.5 py-1 rounded-lg border border-blue-900/40">Chưa nhận quỹ</span>
+<!-- [/PART] -->
+
+<!-- [PART: summary-span-5] -->
+<span class="text-xs font-semibold text-slate-400 bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700/50">Nghỉ phép</span>
+<!-- [/PART] -->
+
+<!-- [PART: summary-tr-1] -->
+<tr class="hover:bg-slate-800/30 transition-colors duration-150">
+  <td class="py-3 px-4 font-bold text-xs" style="color: {{vColor}};">{{v}}</td>
+  <td class="py-3 px-3 text-center text-slate-300 text-xs font-semibold">{{st_played}}</td>
+  <td class="py-3 px-3 text-center font-bold text-emerald-400 text-xs">{{if_st_winK_0}}</td>
+  <td class="py-3 px-3 text-center font-bold text-red-400 text-xs">{{if_st_loseK_0}}</td>
+  <td class="py-3 px-3 text-center font-bold text-emerald-400 text-xs">{{if_bringBack_0}}</td>
+  <td class="py-3 px-3 text-center font-bold text-xs {{if_st_total_0_class}}">{{st_total}}K</td>
+  {{buildAbsentFineCell_dateStr_v_isAbsent_fine}}
+  <td class="py-3 px-3 text-center">
+    <input type="checkbox" onclick="togglePayment('{{payKey}}')" class="{{checkboxClass}} w-4 h-4 rounded border-slate-700 text-emerald-600 focus:ring-emerald-500 cursor-pointer" {{if_isPaid}} title="{{if_isAdminVerified}}">
+  </td>
+  <td class="py-3 px-4 text-xs">{{noteText}}</td>
+</tr>
+<!-- [/PART] -->
+
+<!-- [PART: vdv-option] -->
+<option value="{{v}}" {{isSelected}} style="color: {{color}};">{{v}}</option>
+<!-- [/PART] -->

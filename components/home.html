@@ -1,9 +1,9 @@
 <!-- [PART: day-tab] -->
 <div class="card">
   <div class="flex justify-between items-center mb-3 flex-wrap gap-2">
-    <h3 class="card-title">📅 THỐNG KÊ NGÀY: <span class="text-blue-600">{{dateStr}}</span></h3>
+    <h3 class="card-title">📅 Thống Kê Ngày: <span class="text-blue-600">{{dateStr}}</span></h3>
     <div class="flex items-center gap-2 flex-wrap">
-      <select onchange="changeKeoMode('{{dateStr}}', this.value)" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #ffffff; border: 1px solid #b45309;" class="text-[11px] font-extrabold px-3 py-1.5 rounded-lg shadow-md focus:outline-none cursor-pointer">
+      <select onchange="changeKeoMode('{{dateStr}}', this.value)" class="text-[11px] font-bold px-2 py-1.5 rounded-lg bg-slate-800 text-white border border-slate-700 focus:outline-none cursor-pointer">
         <option value="default" {{selected_currentMode_default}}>Kèo: Thắng +5 | Thua -15</option>
         <option value="k25" {{selected_currentMode_k25}}>Kèo: Thua -25</option>
         <option value="no_keo" {{selected_currentMode_no_keo}}>Không tính tiền kèo</option>
@@ -19,15 +19,15 @@
     <table>
       <thead>
         <tr>
-          <th style="width: 45px; text-align: center;">TRẬN</th>
-          <th style="text-align: center;">CẶP 1 (ĐỘI 1)</th>
-          <th style="text-align: center;">CẶP 2 (ĐỘI 2)</th>
-          <th style="width: 65px; text-align: center;">TỶ SỐ 1</th>
-          <th style="width: 65px; text-align: center;">TỶ SỐ 2</th>
+          <th style="width: 50px;">TRẬN</th>
+          <th>CẶP 1 (ĐỘI 1)</th>
+          <th>CẶP 2 (ĐỘI 2)</th>
+          <th style="width: 70px;">TỶ SỐ 1</th>
+          <th style="width: 70px;">TỶ SỐ 2</th>
           {{freeKeoHeader}}
-          <th style="width: 85px; text-align: center;">KÈO 1</th>
-          <th style="width: 85px; text-align: center;">KÈO 2</th>
-          <th style="width: 40px; text-align: center;">XÓA</th>
+          <th style="width: 90px;">KÈO 1</th>
+          <th style="width: 90px;">KÈO 2</th>
+          <th style="width: 45px;">XÓA</th>
         </tr>
       </thead>
       <tbody>
@@ -61,45 +61,45 @@
 
 <!-- [PART: day-tab-tr-1] -->
 <tr>
-  <td class="font-bold text-slate-500 text-center">#{{m_id}}</td>
-  <td style="text-align: center;">
+  <td class="font-bold text-slate-500">#{{m_id}}</td>
+  <td>
     <div class="flex items-center gap-1 justify-center">
-      <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p1', this.value)" style="color: {{c1_p1_color}};" class="text-[11px] font-bold p-1 border border-slate-200 rounded bg-white w-[110px] focus:outline-none focus:border-blue-500 text-center">
+      <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p1', this.value)" style="color: {{c1_p1_color}};" class="text-[11px] font-bold p-1 border border-slate-200 rounded bg-white w-[110px] focus:outline-none focus:border-blue-500">
         <option value="">-- VĐV 1 --</option>
         {{generateVdvOptionsHtml_m_c1_p1}}
       </select>
       <span class="text-slate-400 font-bold">&</span>
-      <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p2', this.value)" style="color: {{c1_p2_color}};" class="text-[11px] font-bold p-1 border border-slate-200 rounded bg-white w-[110px] focus:outline-none focus:border-blue-500 text-center">
+      <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p2', this.value)" style="color: {{c1_p2_color}};" class="text-[11px] font-bold p-1 border border-slate-200 rounded bg-white w-[110px] focus:outline-none focus:border-blue-500">
         <option value="">-- VĐV 2 --</option>
         {{generateVdvOptionsHtml_m_c1_p2}}
       </select>
     </div>
   </td>
-  <td style="text-align: center;">
+  <td>
     <div class="flex items-center gap-1 justify-center">
-      <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p1', this.value)" style="color: {{c2_p1_color}};" class="text-[11px] font-bold p-1 border border-slate-200 rounded bg-white w-[110px] focus:outline-none focus:border-blue-500 text-center">
+      <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p1', this.value)" style="color: {{c2_p1_color}};" class="text-[11px] font-bold p-1 border border-slate-200 rounded bg-white w-[110px] focus:outline-none focus:border-blue-500">
         <option value="">-- VĐV 1 --</option>
         {{generateVdvOptionsHtml_m_c2_p1}}
       </select>
       <span class="text-slate-400 font-bold">&</span>
-      <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p2', this.value)" style="color: {{c2_p2_color}};" class="text-[11px] font-bold p-1 border border-slate-200 rounded bg-white w-[110px] focus:outline-none focus:border-blue-500 text-center">
+      <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p2', this.value)" style="color: {{c2_p2_color}};" class="text-[11px] font-bold p-1 border border-slate-200 rounded bg-white w-[110px] focus:outline-none focus:border-blue-500">
         <option value="">-- VĐV 2 --</option>
         {{generateVdvOptionsHtml_m_c2_p2}}
       </select>
     </div>
   </td>
-  <td style="text-align: center;">
+  <td>
     {{if_isScore1Zero}}
     {{score1Inner}}
   </td>
-  <td style="text-align: center;">
+  <td>
     {{if_isScore2Zero}}
     {{score2Inner}}
   </td>
   {{customKeoInputHtml}}
-  <td class="{{winLoseClass_keo1}} font-extrabold text-center">{{keo1}}K</td>
-  <td class="{{winLoseClass_keo2}} font-extrabold text-center">{{keo2}}K</td>
-  <td style="text-align: center;">
+  <td class="{{winLoseClass_keo1}} font-extrabold">{{keo1}}K</td>
+  <td class="{{winLoseClass_keo2}} font-extrabold">{{keo2}}K</td>
+  <td>
     <button onclick="deleteSpecificMatch('{{dateStr}}', {{idx}})" class="text-slate-400 hover:text-rose-600 transition-colors p-1" title="Xóa trận này">
       <i class="fa-solid fa-trash-can"></i>
     </button>
@@ -118,8 +118,67 @@
 <option value="{{v}}" {{isSelected}} style="color: {{color}}; font-weight: bold;">{{v}}</option>
 <!-- [/PART] -->
 
+<!-- [PART: absent-fine-cell-td-1] -->
+<td style="color: #64748b; font-weight: 700;">-</td>
+<!-- [/PART] -->
+
+<!-- [PART: absent-fine-cell] -->
+<td style="background-color: #fff; text-align: center; vertical-align: middle;">
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 3px;">
+    <span class="{{if_unexcused_class}}" style="font-size: 11px; {{if_unexcused}}">{{if_unexcused_2}}K</span>
+    <select onchange="setAbsentStatus('{{d}}', '{{n}}', this.value)" style="font-size: 10px; font-weight: bold; padding: 2px 4px; border-radius: 4px; border: 1px solid #cbd5e1; background-color: #f8fafc; color: {{unexcused_color}}; cursor: pointer;">
+      <option value="unexcused" {{selected_unexcused}}>Không phép (-{{ABSENT_FINE_K}}K)</option>
+      <option value="excused" {{selected_not_unexcused}}>Có phép (0K)</option>
+    </select>
+  </div>
+</td>
+<!-- [/PART] -->
+
+<!-- [PART: absent-select-row-select-1] -->
+<select onchange="setAbsentCount('{{d}}', this.value)" style="font-size: 11px; font-weight: bold; padding: 3px 6px; border-radius: 6px; border: 1px solid #cbd5e1; background: white; color: #1e293b;">
+  {{countOpts_rows}}
+</select>
+<!-- [/PART] -->
+
+<!-- [PART: absent-select-row-option-1] -->
+<option value="{{n}}" {{selected_info_count_n}}>{{if_n_0}}</option>
+<!-- [/PART] -->
+
+<!-- [PART: absent-select-row-option-2] -->
+<option value="{{escAbsentAttr_nm}}" {{selected_cur_nm}} {{if_taken}} style="color: {{color}}; font-weight: bold;">{{escAbsentAttr_nm}}</option>
+<!-- [/PART] -->
+
+<!-- [PART: absent-select-row-select-2] -->
+<div style="display: flex; align-items: center; gap: 4px;">
+  <span style="font-size: 10px; font-weight: bold; color: #64748b;">#{{i_plus1}}:</span>
+  <select onchange="setAbsentPlayerSlot('{{d}}', {{i}}, this.value)" style="font-size: 11px; font-weight: bold; padding: 3px 6px; border-radius: 6px; border: 1px solid #cbd5e1; background: white; color: #1e293b; max-width: 130px;">
+    <option value="">-- Chọn VĐV nghỉ --</option>
+    {{opts}}
+  </select>
+</div>
+<!-- [/PART] -->
+
+<!-- [PART: absent-select-row] -->
+<tr>
+  <td colspan="{{colspan}}" style="background-color: #f8fafc; padding: 8px 12px; border: 1px solid #cbd5e1;">
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <span style="font-size: 11px; font-weight: 800; color: #dc2626; text-transform: uppercase;">🏖️ VĐV Xin Nghỉ:</span>
+        {{countSelect}}
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        {{slots}}
+      </div>
+      <div style="margin-left: auto; font-size: 10px; font-weight: 700; color: #64748b;">
+        * Mức phạt nghỉ không phép: <span style="color: #dc2626; font-weight: 800;">-{{ABSENT_FINE_K}}K</span>
+      </div>
+    </div>
+  </td>
+</tr>
+<!-- [/PART] -->
+
 <!-- [PART: summary-span-1] -->
-<span class="text-emerald-600 font-extrabold text-[10px]">Đã nộp quỹ</span>
+<span class="text-rose-600 font-extrabold text-[10px]">Đã nộp quỹ</span>
 <!-- [/PART] -->
 
 <!-- [PART: summary-span-2] -->
@@ -134,16 +193,21 @@
 <span class="text-amber-600 font-extrabold text-[10px]">Chưa nhận lại</span>
 <!-- [/PART] -->
 
+<!-- [PART: summary-span-5] -->
+<span class="text-slate-500 font-extrabold text-[10px]">Nghỉ có phép</span>
+<!-- [/PART] -->
+
 <!-- [PART: summary-tr-1] -->
 <tr>
   <td style="color: {{vColor}}; font-weight: 800; text-align: left; padding-left: 12px;">{{v}}</td>
-  <td class="font-extrabold text-center">{{st_played}}</td>
-  <td class="number-pos font-extrabold text-center">{{if_st_winK_0}}</td>
-  <td class="number-neg font-extrabold text-center">{{if_st_loseK_0}}</td>
-  <td class="number-pos font-extrabold text-center">{{if_bringBack_0}}</td>
-  <td class="{{if_st_total_0_class}} font-extrabold text-center">{{st_total}}K</td>
-  <td class="{{checkboxClass}} text-center">
-    <input type="checkbox" {{if_isPaid}} onclick="togglePayment('{{payKey}}')" style="width: 16px; height: 16px; cursor: pointer;">
+  <td class="font-extrabold">{{st_played}}</td>
+  <td class="number-pos font-extrabold">{{if_st_winK_0}}</td>
+  <td class="number-neg font-extrabold">{{if_st_loseK_0}}</td>
+  {{buildAbsentFineCell_dateStr_v_isAbsent_fine}}
+  <td class="number-pos font-extrabold">{{if_bringBack_0}}</td>
+  <td class="{{if_st_total_0_class}} font-extrabold">{{st_total}}K</td>
+  <td class="{{checkboxClass}}">
+    <input type="checkbox" {{if_isPaid}} onclick="togglePayment('{{payKey}}')" title="{{if_isAdminVerified}}" style="width: 16px; height: 16px; cursor: pointer;">
   </td>
   <td style="text-align: center;">{{noteText}}</td>
 </tr>
@@ -151,45 +215,64 @@
 
 <!-- [PART: summary] -->
 <div class="card">
-  <h3 class="card-title mb-3">📊 BẢNG TỔNG HỢP KẾT QUẢ NGÀY: <span class="text-blue-600">{{dateStr}}</span></h3>
+  <h3 class="card-title mb-3">📊 Bảng Tổng Hợp Kết Quả & Tài Chính Ngày: <span class="text-blue-600">{{dateStr}}</span></h3>
   <div class="table-responsive">
     <table>
       <thead>
         <tr>
-          <th style="text-align: left; padding-left: 12px;">PICK THỦ</th>
-          <th style="width: 65px; text-align: center;">TRẬN</th>
-          <th style="width: 85px; text-align: center;">THẮNG (K)</th>
-          <th style="width: 85px; text-align: center;">THUA (K)</th>
-          <th style="width: 95px; text-align: center;">MANG VỀ</th>
-          <th style="width: 95px; text-align: center;">TỔNG (K)</th>
-          <th style="width: 75px; text-align: center;">THỰC NỘP</th>
-          <th style="width: 110px; text-align: center;">NOTE</th>
+          <th style="text-align: left; padding-left: 12px;">TÊN VĐV</th>
+          <th style="width: 60px;">SỐ TRẬN</th>
+          <th style="width: 80px;">THẮNG (K)</th>
+          <th style="width: 80px;">THUA (K)</th>
+          <th style="width: 110px;">XIN NGHỈ</th>
+          <th style="width: 90px;">MANG VỀ</th>
+          <th style="width: 90px;">TỔNG (K)</th>
+          <th style="width: 70px;">ĐÃ NỘP</th>
+          <th style="width: 110px;">TRẠNG THÁI</th>
         </tr>
       </thead>
       <tbody>
         {{summaryRowsHtml}}
-        <!-- Dòng Tổng BTC Thu Về -->
-        <tr style="background-color: #f1f5f9; font-weight: 800;">
-          <td style="text-align: left; padding-left: 12px; color: #0f172a;">Tổng BTC Thu Về</td>
-          <td colspan="3"></td>
-          <td class="number-pos text-center" style="font-weight: 900;">0</td>
-          <td class="number-neg text-center" style="font-weight: 900;">{{btcThuVeCalculated}}K</td>
-          <td class="text-blue-600 text-center" style="font-weight: 900;">{{sumThucThu}}K</td>
-          <td style="text-align: center;">
-            <select onchange="handleBtcNoteAdminChange('{{dateStr}}', this)" style="background: #e2e8f0; color: #0f172a; font-weight: 800; font-size: 10px; padding: 2px 4px; border-radius: 4px; border: 1px solid #cbd5e1; cursor: pointer;">
-              <option value="NO" {{selected_not_isYes}}>NO (Kh...</option>
-              <option value="YES" {{selected_isYes}}>YES (Chuyển)</option>
-            </select>
-          </td>
-        </tr>
+        {{buildAbsentSelectorRow_dateStr_9}}
       </tbody>
     </table>
   </div>
 
-  <!-- Quỹ Tồn Cân Đối Ở Dưới -->
-  <div class="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
-    <span class="text-xs font-extrabold text-slate-700 uppercase">Quỹ Tồn:</span>
-    <span class="number-neg text-sm font-black px-3 py-1 bg-rose-50 rounded-lg border border-rose-200">{{quyCon}}K</span>
+  <!-- Phần tổng kết tài chính dưới bảng -->
+  <div class="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col gap-3">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-bold">
+      <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm flex justify-between items-center">
+        <span class="text-slate-600">Tổng VĐV mang về:</span>
+        <span class="number-pos text-[13px] font-extrabold">{{sumBringBack}}K</span>
+      </div>
+      <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm flex justify-between items-center">
+        <span class="text-slate-600">BTC phải thu về:</span>
+        <span class="number-neg text-[13px] font-extrabold">{{btcThuVeCalculated}}K</span>
+      </div>
+      <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm flex justify-between items-center">
+        <span class="text-slate-600">Tổng tiền phạt nghỉ:</span>
+        <span style="color: {{sumFine_color}};" class="text-[13px] font-extrabold">{{sumFine_value}}K</span>
+      </div>
+      <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm flex justify-between items-center">
+        <span class="text-slate-600">Thực thu quỹ (Đã nộp):</span>
+        <span class="text-blue-600 text-[13px] font-extrabold">+{{sumThucThu}}K</span>
+      </div>
+    </div>
+
+    <!-- Thanh xác nhận chuyển tổng ngày của BTC -->
+    <div class="pt-3 border-t border-slate-200 flex items-center justify-between flex-wrap gap-2">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-extrabold text-slate-700 uppercase">💼 BTC Xác Nhận Chuyển Tổng Ngày Sang Tổng Hợp Chung:</span>
+        <select onchange="handleBtcNoteAdminChange('{{dateStr}}', this)" class="text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-300 bg-white shadow-sm focus:outline-none cursor-pointer" style="color: {{isYes_color}};">
+          <option value="NO" {{selected_not_isYes}}>❌ Không chuyển tổng ngày này</option>
+          <option value="YES" {{selected_isYes}}>✅ Có chuyển tổng ngày này</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-extrabold text-slate-700">Quỹ tồn ngày:</span>
+        <span class="number-pos text-sm font-black px-2.5 py-1 bg-emerald-50 rounded-lg border border-emerald-200">{{quyCon}}K</span>
+      </div>
+    </div>
   </div>
 </div>
 <!-- [/PART] -->

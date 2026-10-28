@@ -32,8 +32,9 @@
           <th class="py-3 px-4 border-r border-slate-200 text-center bg-emerald-100/60 text-emerald-900" colspan="1">CẶP PICK 1</th>
           <th class="py-3 px-4 border-r border-slate-200 text-center bg-rose-100/60 text-rose-900" colspan="1">CẶP PICK 2</th>
           <th style="width: 110px;" class="py-3 px-2 text-center border-r border-slate-200">TỶ SỐ</th>
-          <th style="width: 90px;" class="py-3 px-2 text-center">KÈO</th>
+          <th style="width: 90px;" class="py-3 px-2 text-center border-r border-slate-200">KÈO</th>
           {{freeKeoHeader}}
+          <th style="width: 60px;" class="py-3 px-2 text-center">XÓA</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-200 text-sm">
@@ -73,16 +74,16 @@
               {{score2Inner}}
             </div>
           </td>
-          <td class="py-2.5 px-2 text-center">
+          <td class="py-2.5 px-2 text-center border-r border-slate-200">
             <div class="flex items-center justify-center gap-2">
               <span class="font-bold text-xs {{winLoseClass_keo1}}">{{keo1}}</span>
               <span class="font-bold text-xs {{winLoseClass_keo2}}">{{keo2}}</span>
             </div>
           </td>
           {{customKeoInputHtml}}
-          <td class="py-2.5 px-2 text-center hidden">
-            <button onclick="deleteSpecificMatch('{{dateStr}}', {{idx}})" class="text-slate-400 hover:text-red-600 p-1" title="Xóa trận">
-              <i class="fa-solid fa-trash-can text-xs"></i>
+          <td class="py-2.5 px-2 text-center">
+            <button onclick="deleteSpecificMatch('{{dateStr}}', {{idx}})" class="text-slate-400 hover:text-red-600 p-1.5 transition rounded hover:bg-red-50" title="Xóa trận">
+              <i class="fa-solid fa-trash-can text-xs text-red-500"></i>
             </button>
           </td>
         </tr>

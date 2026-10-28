@@ -2,7 +2,7 @@
    CLB PICKLEBALL - CMTD · js/main.js — FILE XỬ LÝ CHÍNH DUY NHẤT.
    ========================================================================== */
 
-const COMPONENT_FILES = ['header', 'admin', 'autobackup', 'home', 'players', 'setting', 'tonghop', 'minigame1', 'minigame2', 'common'];
+const COMPONENT_FILES = ['header', 'admin', 'autobackup', 'home', 'players', 'pickthu', 'setting', 'tonghop', 'minigame1', 'minigame2', 'common'];
 const COMPONENT_PARTS = {}; 
 
 async function loadComponents() {

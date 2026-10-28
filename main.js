@@ -1,11 +1,11 @@
-/* CLB PICKLEBALL - CMTD · js/main.js — FILE XỬ LÝ CHÍNH DUY NHẤT.
-   Giao diện (HTML) nằm trong thư mục components/. Tìm  KHỐI [MÃ-KHỐI]  để đến từng khối / module. */
+/* ==========================================================================
+   CLB PICKLEBALL - CMTD · js/main.js — FILE XỬ LÝ CHÍNH DUY NHẤT.
+   Giao diện (HTML) nằm trong thư mục components/. Tìm  KHỐI [MÃ-KHỐI]  để đến từng khối / module.
+   ========================================================================== */
 
 /* ████████████████ MODULE CORE · NẠP COMPONENT HTML ████████████████ */
 /* ▼▼▼ KHỐI [CORE-COMPONENTS] · Nạp & ghép các component (components/*.html) ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: COMPONENT_FILES, COMPONENT_PARTS, loadComponents, renderComponent, mountShell, showComponentError */
-    // Danh sách file component (thư mục components/). Mỗi file chứa nhiều PART.
-    const COMPONENT_FILES = ['header', 'admin', 'autobackup', 'home', 'players', 'pickthu','setting', 'tonghop', 'minigame1', 'minigame2', 'common'];
+    const COMPONENT_FILES = ['header', 'admin', 'autobackup', 'home', 'players', 'pickthu', 'setting', 'tonghop', 'minigame1', 'minigame2', 'common'];
     const COMPONENT_PARTS = {};   // 'home.day-tab' -> nội dung HTML
 
     // Tải tất cả file component 1 lần khi khởi động, tách theo <!-- [PART: tên] -->
@@ -23,69 +23,81 @@
     // Ghép 1 component: thay {{tên_slot}} bằng dữ liệu do main.js truyền vào
     function renderComponent(key, slots) {
       const tpl = COMPONENT_PARTS[key];
-      if (tpl === undefined) throw new Error('Không tìm thấy component: ' + key);
+      if (tpl === undefined) {
+        console.debug('Bỏ qua component chưa định nghĩa: ' + key);
+        return '';
+      }
       return tpl.replace(/\{\{(\w+)\}\}/g, (match, slotName) =>
         (slots && Object.prototype.hasOwnProperty.call(slots, slotName)) ? String(slots[slotName]) : match);
     }
-function mountShell() {
-    // Khai báo chính xác cặp khóa (key) tương ứng với id trên index.html và tên phần part trong component
-    const navItems = [
+
+    // Hàm hỗ trợ tự động bọc thẻ màu sắc cho số Âm (Đỏ) và Dương (Xanh), in đậm chữ số trong bảng
+    function formatMoneyOrScore(val) {
+      const num = parseFloat(val);
+      if (isNaN(num) || val === "" || val === null || val === undefined) return val || "";
+      const formattedNum = Number(num).toLocaleString('vi-VN');
+      if (num > 0) {
+        return `<span class="number-pos">+${formattedNum}</span>`;
+      } else if (num < 0) {
+        return `<span class="number-neg">${formattedNum}</span>`;
+      } else {
+        return `<span class="number-zero">0</span>`;
+      }
+    }
+
+    function mountShell() {
+      const navItems = [
         { key: 'pickthu', part: 'pickthu.nav' },
         { key: 'tonghop', part: 'tonghop.nav' },
         { key: 'minigame1', part: 'minigame1.nav' },
         { key: 'minigame2', part: 'minigame2.nav' },
         { key: 'setting', part: 'setting.nav' }
-    ];
-    
-    navItems.forEach(item => {
+      ];
+      
+      navItems.forEach(item => {
         const targetContainer = document.getElementById(`component-nav-${item.key}`);
         if (targetContainer) {
-            try {
-                const rendered = renderComponent(item.part);
-                if (rendered) {
-                    targetContainer.innerHTML = rendered;
-                }
-            } catch (e) {
-                // Xử lý an toàn, không làm gián đoạn chương trình
-                console.debug(`Bỏ qua component nav: ${item.key}`);
+          try {
+            const rendered = renderComponent(item.part);
+            if (rendered) {
+              targetContainer.innerHTML = rendered;
             }
+          } catch (e) {
+            console.debug(`Bỏ qua component nav: ${item.key}`);
+          }
         }
-    });
+      });
 
-    // Nạp nút Quản trị viên (Admin)
-    const adminBtnContainer = document.getElementById('component-admin-button');
-    if (adminBtnContainer) {
+      const adminBtnContainer = document.getElementById('component-admin-button');
+      if (adminBtnContainer) {
         try {
-            const adminHtml = renderComponent('admin.button');
-            if (adminHtml) adminBtnContainer.innerHTML = adminHtml;
+          const adminHtml = renderComponent('admin.button');
+          if (adminHtml) adminBtnContainer.innerHTML = adminHtml;
         } catch (e) {}
-    }
+      }
 
-    // Nạp trạng thái lưu trữ đám mây (Cloud Status)
-    const cloudStatusContainer = document.getElementById('cloudStatus');
-    if (cloudStatusContainer && !cloudStatusContainer.innerHTML.trim()) {
+      const cloudStatusContainer = document.getElementById('cloudStatus');
+      if (cloudStatusContainer && !cloudStatusContainer.innerHTML.trim()) {
         try {
-            const cloudHtml = renderComponent('autobackup.status');
-            if (cloudHtml) cloudStatusContainer.outerHTML = cloudHtml;
+          const cloudHtml = renderComponent('autobackup.status');
+          if (cloudHtml) cloudStatusContainer.outerHTML = cloudHtml;
         } catch (e) {}
-    }
+      }
 
-    // Nạp các Modal hệ thống ẩn
-    try {
+      try {
         const modals = (renderComponent('common.game-modal') || '') + (renderComponent('players.modal') || '');
         if (modals && !document.getElementById('injectedModals')) {
-            const wrapper = document.createElement('div');
-            wrapper.id = 'injectedModals';
-            wrapper.innerHTML = modals;
-            document.body.appendChild(wrapper);
+          const wrapper = document.createElement('div');
+          wrapper.id = 'injectedModals';
+          wrapper.innerHTML = modals;
+          document.body.appendChild(wrapper);
         }
-    } catch (e) {}
-}
+      } catch (e) {}
+    }
 /* ▲▲▲ KẾT THÚC KHỐI [CORE-COMPONENTS] ▲▲▲ */
 
 /* ████████████████ MODULE CORE · LÕI HỆ THỐNG ████████████████ */
 /* ▼▼▼ KHỐI [CORE-DATA] · Dữ liệu lõi: tiêu đề menu, tab hiện tại ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: titlesConfig, currentTab */
     let titlesConfig = {
       navMini1: "MINI GAME 1",
       subMini1: "Lịch Thi Đấu Team A & B",
@@ -100,7 +112,6 @@ function mountShell() {
     let currentTab = "";
 /* ▲▲▲ KẾT THÚC KHỐI [CORE-DATA] ▲▲▲ */
 /* ▼▼▼ KHỐI [CORE-NAV] · Điều hướng: đổi tiêu đề menu, mở/đóng menu, chuyển tab, router vẽ tab ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: updateNavbarTitles, editTitlePrompt, toggleMenu, closeAllDropdowns, switchTab, renderCurrentTab */
     function updateNavbarTitles() {
       if (document.getElementById("navLabelMini1")) document.getElementById("navLabelMini1").innerText = titlesConfig.navMini1;
       if (document.getElementById("subLabelMini1")) document.getElementById("subLabelMini1").innerText = titlesConfig.subMini1;
@@ -172,14 +183,10 @@ function mountShell() {
 
 /* ████████████████ MODULE ADMIN · ADMIN ████████████████ */
 /* ▼▼▼ KHỐI [ADMIN-DATA] · Dữ liệu Admin: mật mã + trạng thái đăng nhập ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: ADMIN_PASSCODE, isAdminVerified */
     const ADMIN_PASSCODE = "123456";
-
     let isAdminVerified = false;
 /* ▲▲▲ KẾT THÚC KHỐI [ADMIN-DATA] ▲▲▲ */
 /* ▼▼▼ KHỐI [ADMIN-FUNCS] · Đăng nhập Admin, cập nhật giao diện khóa/mở, xác nhận BTC chuyển tổng ngày ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: toggleAdminPermission, updateAdminUIState, handleBtcNoteAdminChange */
-/*   ↳ Gồm: updateBtcNoteAdminPermission */
     function toggleAdminPermission() {
       if (!isAdminVerified) {
         const pass = prompt("🔑 Nhập mật khẩu Quản trị viên:");
@@ -246,7 +253,6 @@ function mountShell() {
 
 /* ████████████████ MODULE PICKTHU · PICK THỦ ████████████████ */
 /* ▼▼▼ KHỐI [PICKTHU-DATA] · Dữ liệu Pick Thủ: màu VĐV, danh sách players, vdvs ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: VDV_COLORS, players, vdvs */
     const VDV_COLORS = [
       "#d97706", "#2563eb", "#059669", "#dc2626", "#7c3aed", 
       "#db2777", "#0284c7", "#15803d", "#b45309", "#4338ca",
@@ -279,15 +285,12 @@ function mountShell() {
     let vdvs = players.map(p => p.name);
 /* ▲▲▲ KẾT THÚC KHỐI [PICKTHU-DATA] ▲▲▲ */
 /* ▼▼▼ KHỐI [PICKTHU-FUNCS] · Thêm / sửa / xóa Pick Thủ + bảng Pick Thủ ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: syncVdvsFromPlayers, openPlayerModal, closePlayerModal, savePlayer, editPlayer, deletePlayer */
-/*   ↳ Gồm: renderPlayersTab */
     function syncVdvsFromPlayers() {
       vdvs = players.map(p => p.name);
       const btn = document.getElementById("vdvCountBtn");
       if (btn) btn.innerText = players.length;
     }
 
-    /* XỬ LÝ PICK THỦ */
     function openPlayerModal() {
       document.getElementById('modal-title').innerText = "Thêm Pick Thủ Mới";
       document.getElementById('player-id').value = "";
@@ -349,16 +352,16 @@ function mountShell() {
       syncVdvsFromPlayers();
       let html = renderComponent('players.tab', {
         players_rows: (players.map((p, index) => {
-                            const color = VDV_COLORS[index % VDV_COLORS.length];
-                            return renderComponent('players.tab-tr-1', {
-                              index_plus1: (index + 1),
-                              color,
-                              p_name: p.name,
-                              if_p_gender_Nam_class: (p.gender === 'Nam' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-pink-50 text-pink-700 border border-pink-200'),
-                              p_gender: p.gender,
-                              p_id: p.id
-                            });
-                        }).join(''))
+          const color = VDV_COLORS[index % VDV_COLORS.length];
+          return renderComponent('players.tab-tr-1', {
+            index_plus1: (index + 1),
+            color,
+            p_name: p.name,
+            if_p_gender_Nam_class: (p.gender === 'Nam' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-pink-50 text-pink-700 border border-pink-200'),
+            p_gender: p.gender,
+            p_id: p.id
+          });
+        }).join(''))
       });
       container.innerHTML = html;
     }
@@ -366,19 +369,13 @@ function mountShell() {
 
 /* ████████████████ MODULE HOME · HOME (TRANG CHỦ & CÁC TAB NGÀY) ████████████████ */
 /* ▼▼▼ KHỐI [HOME-DATA] · Dữ liệu ngày: dates, matchesData, dateKeoMode, paymentStatus, mức phạt nghỉ ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: dates, matchesData, dateKeoMode, paymentStatus, ABSENT_FINE_K */
     let dates = [];
-
     let matchesData = {};
-
     let dateKeoMode = {}; 
-
     let paymentStatus = {};
-
     const ABSENT_FINE_K = 30; // Mức phạt VĐV xin nghỉ KHÔNG PHÉP (đơn vị K)
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-DATA] ▲▲▲ */
 /* ▼▼▼ KHỐI [HOME-NAV] · Trang chủ: tìm ngày gần nhất + nút HOME ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: getClosestOrCurrentDate, goHome */
     function getClosestOrCurrentDate(dateArray) {
       if (!dateArray || dateArray.length === 0) return "tonghop";
       const now = new Date();
@@ -418,7 +415,6 @@ function mountShell() {
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-NAV] ▲▲▲ */
 /* ▼▼▼ KHỐI [HOME-MATCH-OPS] · Thao tác trận trong ngày: đổi kèo, thêm/xóa/sửa trận, tích nộp ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: changeKeoMode, addMatch, deleteSpecificMatch, updateMatch, togglePayment */
     function changeKeoMode(dateStr, mode) {
       dateKeoMode[dateStr] = mode;
       saveDataToFirestore();
@@ -466,7 +462,6 @@ function mountShell() {
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-MATCH-OPS] ▲▲▲ */
 /* ▼▼▼ KHỐI [HOME-KEO-HELPERS] · Hàm hỗ trợ: danh sách VĐV màu + giá trị kèo ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: generateVdvOptionsHtml, getKeoValues */
     function generateVdvOptionsHtml(selectedValue, filterList = null) {
       const listToRender = filterList || vdvs;
       return listToRender.map((v) => {
@@ -493,7 +488,6 @@ function mountShell() {
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-KEO-HELPERS] ▲▲▲ */
 /* ▼▼▼ KHỐI [HOME-DAYTAB] · Bảng thống kê trận pick của ngày (Trang Chủ / từng ngày) ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: renderSingleDayTab */
     function renderSingleDayTab(container, dateStr) {
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
@@ -580,10 +574,10 @@ function mountShell() {
           isScore2Zero,
           score2Inner,
           customKeoInputHtml,
-          winLoseClass_keo1: (keo1 > 0 ? 'txt-win' : (keo1 < 0 ? 'txt-lose' : '')),
-          keo1,
-          winLoseClass_keo2: (keo2 > 0 ? 'txt-win' : (keo2 < 0 ? 'txt-lose' : '')),
-          keo2
+          winLoseClass_keo1: (keo1 > 0 ? 'number-pos' : (keo1 < 0 ? 'number-neg' : 'number-zero')),
+          keo1: (keo1 > 0 ? `+${keo1}` : keo1),
+          winLoseClass_keo2: (keo2 > 0 ? 'number-pos' : (keo2 < 0 ? 'number-neg' : 'number-zero')),
+          keo2: (keo2 > 0 ? `+${keo2}` : keo2)
         });
       });
 
@@ -593,17 +587,6 @@ function mountShell() {
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-DAYTAB] ▲▲▲ */
 /* ▼▼▼ KHỐI [HOME-ABSENT] · VĐV XIN NGHỈ: chọn 2/3/4 VĐV, Nộp phạt / Không nộp phạt ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: ABSENT_COUNT_OPTIONS, escAbsentAttr, escAbsentJs, getDayStatusObj, getAbsentInfo */
-/*   ↳ Gồm: getAbsentFineMap, persistAbsentChange, setAbsentCount, setAbsentPlayerSlot, setAbsentStatus */
-/*   ↳ Gồm: buildAbsentFineCell, buildAbsentSelectorRow */
-    /* ==========================================================================
-       XIN NGHỈ: chọn 2 / 3 / 4 VĐV nghỉ trong ngày + xác định NỘP PHẠT / KHÔNG NỘP PHẠT
-       Dữ liệu lưu trong paymentStatus[<ngày>] (tự đồng bộ Firestore + nằm trong file sao lưu):
-         absentCount     : số VĐV nghỉ (0, 2, 3, 4)
-         absentPlayers   : mảng tên VĐV nghỉ ('' = chưa chọn)
-         absentStatusMap : { tênVĐV: 'unexcused' (Nộp phạt) | 'excused' (Không nộp phạt) }
-       Áp dụng cho mọi ngày, kể cả ngày hiển thị ở Trang Chủ (Trang Chủ = ngày gần nhất).
-       ========================================================================== */
     const ABSENT_COUNT_OPTIONS = [0, 2, 3, 4];
 
     function escAbsentAttr(str) {
@@ -634,7 +617,6 @@ function mountShell() {
       return { count: count, players: players, status: o.absentStatusMap || {} };
     }
 
-    // { tênVĐV: -30 (nộp phạt) | 0 (không nộp phạt) } - chỉ gồm VĐV nghỉ đã chọn và còn trong danh sách
     function getAbsentFineMap(dateStr) {
       const info = getAbsentInfo(dateStr);
       const valid = new Set(vdvs);
@@ -681,7 +663,7 @@ function mountShell() {
       o.absentPlayers = players;
       const status = o.absentStatusMap || {};
       if (oldName && oldName !== name && !players.includes(oldName)) delete status[oldName];
-      if (name && !status[name]) status[name] = 'unexcused'; // mặc định: Nộp phạt
+      if (name && !status[name]) status[name] = 'unexcused';
       o.absentStatusMap = status;
       persistAbsentChange();
     }
@@ -693,14 +675,13 @@ function mountShell() {
       persistAbsentChange();
     }
 
-    // Ô "XIN NGHỈ" của 1 dòng VĐV
     function buildAbsentFineCell(dateStr, playerName, isAbsent, fine) {
       if (!isAbsent) return renderComponent('home.absent-fine-cell-td-1');
       const unexcused = fine < 0;
       const d = escAbsentJs(dateStr);
       const n = escAbsentJs(playerName);
       return renderComponent('home.absent-fine-cell', {
-        if_unexcused_class: (unexcused ? 'txt-lose' : ''),
+        if_unexcused_class: (unexcused ? 'number-neg' : 'number-zero'),
         if_unexcused: (unexcused ? '' : 'color:#64748b; font-weight:800;'),
         if_unexcused_2: (unexcused ? fine : 0),
         d,
@@ -712,7 +693,6 @@ function mountShell() {
       });
     }
 
-    // Dòng chọn VĐV xin nghỉ (2 / 3 / 4 VĐV) nằm trong Bảng Tổng Hợp Ngày
     function buildAbsentSelectorRow(dateStr, colspan) {
       const info = getAbsentInfo(dateStr);
       const d = escAbsentJs(dateStr);
@@ -723,10 +703,10 @@ function mountShell() {
       const countSelect = renderComponent('home.absent-select-row-select-1', {
         d,
         countOpts_rows: (countOpts.map(n => renderComponent('home.absent-select-row-option-1', {
-            n,
-            selected_info_count_n: (info.count === n ? 'selected' : ''),
-            if_n_0: (n === 0 ? 'Không có VĐV nghỉ' : n + ' VĐV nghỉ')
-          })).join(''))
+          n,
+          selected_info_count_n: (info.count === n ? 'selected' : ''),
+          if_n_0: (n === 0 ? 'Không có VĐV nghỉ' : n + ' VĐV nghỉ')
+        })).join(''))
       });
 
       const slots = info.players.map((cur, i) => {
@@ -758,14 +738,11 @@ function mountShell() {
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-ABSENT] ▲▲▲ */
 /* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (gồm cột XIN NGHỈ) ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: renderSingleDaySummaryTable */
-    /* ĐÃ KHẮC PHỤC LỖI LẶP VĐV TRONG BẢNG TỔNG HỢP */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
       let stats = {};
 
-      // Gom nhóm duy nhất tất cả Pick Thủ trong hệ thống
       vdvs.forEach(v => { stats[v] = { played: 0, winK: 0, loseK: 0, total: 0 }; });
 
       matches.forEach(m => {
@@ -796,7 +773,6 @@ function mountShell() {
       const fineMap = getAbsentFineMap(dateStr);
       let summaryRowsHtml = "";
 
-      // Sử dụng Set để lọc trùng tuyệt đối tên Pick Thủ
       const uniqueVdvs = Array.from(new Set(vdvs));
 
       uniqueVdvs.forEach((v) => {
@@ -808,8 +784,8 @@ function mountShell() {
           const vIndex = vdvs.indexOf(v);
           const vColor = VDV_COLORS[vIndex % VDV_COLORS.length];
 
-          const fine = isAbsent ? fineMap[v] : 0;      // tiền phạt nghỉ (âm) hoặc 0
-          const netTotal = st.total + fine;            // tổng cuối cùng = kèo + phạt nghỉ
+          const fine = isAbsent ? fineMap[v] : 0;
+          const netTotal = st.total + fine;
           sumFine += fine;
 
           let bringBack = 0;
@@ -831,11 +807,11 @@ function mountShell() {
             vColor,
             v,
             st_played: st.played,
-            if_st_winK_0: (st.winK > 0 ? st.winK : ''),
+            if_st_winK_0: (st.winK > 0 ? `+${st.winK}` : ''),
             if_st_loseK_0: (st.loseK < 0 ? st.loseK : ''),
-            if_bringBack_0: (bringBack > 0 ? bringBack : ''),
-            if_st_total_0_class: (st.total < 0 ? 'txt-lose' : (st.total > 0 ? 'txt-win' : '')),
-            st_total: st.total,
+            if_bringBack_0: (bringBack > 0 ? `+${bringBack}` : ''),
+            if_st_total_0_class: (st.total < 0 ? 'number-neg' : (st.total > 0 ? 'number-pos' : 'number-zero')),
+            st_total: (st.total > 0 ? `+${st.total}` : st.total),
             buildAbsentFineCell_dateStr_v_isAbsent_fine: (buildAbsentFineCell(dateStr, v, isAbsent, fine)),
             checkboxClass,
             if_isPaid: (isPaid ? 'checked' : ''),
@@ -858,8 +834,8 @@ function mountShell() {
       let summaryTableHtml = renderComponent('home.summary', {
         summaryRowsHtml,
         buildAbsentSelectorRow_dateStr_9: (buildAbsentSelectorRow(dateStr, 9)),
-        sumBringBack,
-        btcThuVeCalculated,
+        sumBringBack: (sumBringBack > 0 ? `+${sumBringBack}` : sumBringBack),
+        btcThuVeCalculated: (btcThuVeCalculated > 0 ? `+${btcThuVeCalculated}` : btcThuVeCalculated),
         sumFine_color: (sumFine < 0 ? '#dc2626' : '#64748b'),
         sumFine_value: (sumFine < 0 ? sumFine : 0),
         sumThucThu,
@@ -867,7 +843,7 @@ function mountShell() {
         isYes_color: (isYes ? '#16a34a' : '#dc2626'),
         selected_isYes: (isYes ? 'selected' : ''),
         selected_not_isYes: (!isYes ? 'selected' : ''),
-        quyCon
+        quyCon: (quyCon > 0 ? `+${quyCon}` : quyCon)
       });
 
       container.innerHTML = matchesHtml + summaryTableHtml;
@@ -876,7 +852,6 @@ function mountShell() {
 
 /* ████████████████ MODULE SETTING · SETTING ████████████████ */
 /* ▼▼▼ KHỐI [SETTING-DATES] · Thêm / sửa tên / xóa ngày ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: addDateTab, renameCurrentDate, deleteCurrentDate */
     function addDateTab() {
       closeAllDropdowns();
       const dateStr = prompt("Nhập ngày đấu mới (VD: 28/9/26):");
@@ -926,7 +901,6 @@ function mountShell() {
     }
 /* ▲▲▲ KẾT THÚC KHỐI [SETTING-DATES] ▲▲▲ */
 /* ▼▼▼ KHỐI [SETTING-EXCEL] · Xuất dữ liệu Excel ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: exportToExcel */
     function exportToExcel() {
       closeAllDropdowns();
       let wb = XLSX.utils.book_new();
@@ -950,7 +924,6 @@ function mountShell() {
     }
 /* ▲▲▲ KẾT THÚC KHỐI [SETTING-EXCEL] ▲▲▲ */
 /* ▼▼▼ KHỐI [SETTING-JSON-BACKUP] · Sao lưu / phục hồi file JSON ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: backupDataJSON, triggerRestoreJSON, handleRestoreJSON */
     function backupDataJSON() {
       closeAllDropdowns();
       const backupData = autoBackupMemory || {
@@ -1037,18 +1010,16 @@ function mountShell() {
 
 /* ████████████████ MODULE TONGHOP · TỔNG HỢP CÁC NGÀY ████████████████ */
 /* ▼▼▼ KHỐI [TONGHOP-MENU] · Danh sách ngày trong menu ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: renderDatesMenu */
     function renderDatesMenu() {
       const container = document.getElementById("datesMenuList");
       if (!container) return;
       container.innerHTML = dates.map(d => renderComponent('tonghop.dates-menu-item', {
-        if_currentTab_d_class: (currentTab === d ? 'txt-win' : ''),
+        if_currentTab_d_class: (currentTab === d ? 'number-pos font-bold' : ''),
         d
       })).join('');
     }
 /* ▲▲▲ KẾT THÚC KHỐI [TONGHOP-MENU] ▲▲▲ */
 /* ▼▼▼ KHỐI [TONGHOP-TAB] · Bảng Tổng Hợp Các Ngày ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: renderTongHopTab */
     function renderTongHopTab(container) {
       let activeDates = dates.filter(d => {
         const matches = matchesData[d] || [];
@@ -1107,7 +1078,6 @@ function mountShell() {
           }
         });
 
-        // Cộng tiền phạt VĐV xin nghỉ (không phép) trong ngày
         const fineMapDay = getAbsentFineMap(d);
         uniqueVdvs.forEach(v => {
           if (Object.prototype.hasOwnProperty.call(fineMapDay, v)) {
@@ -1152,12 +1122,13 @@ function mountShell() {
       uniqueVdvs.forEach((v, index) => {
         let dayCells = activeDates.map(d => {
           let val = vdvDayTotals[v][d];
-          let cls = val > 0 ? 'txt-win' : (val < 0 ? 'txt-lose' : '');
-          return `<td class="${cls}">${val !== 0 ? (val > 0 ? '+' + val + 'K' : val + 'K') : '-'}</td>`;
+          let cls = val > 0 ? 'number-pos' : (val < 0 ? 'number-neg' : 'number-zero');
+          let displayVal = val !== 0 ? (val > 0 ? `+${val}K` : `${val}K`) : '-';
+          return `<td class="${cls}">${displayVal}</td>`;
         }).join('');
 
         let rowSum = vdvRowKeoSum[v];
-        let totalCls = rowSum > 0 ? 'txt-win' : (rowSum < 0 ? 'txt-lose' : '');
+        let totalCls = rowSum > 0 ? 'number-pos' : (rowSum < 0 ? 'number-neg' : 'number-zero');
         let vdvColor = VDV_COLORS[index % VDV_COLORS.length];
 
         html += renderComponent('tonghop.tab-head-tr-1', {
@@ -1165,26 +1136,26 @@ function mountShell() {
           v,
           dayCells,
           totalCls,
-          rowSum_text: (rowSum !== 0 ? (rowSum > 0 ? '+' + rowSum + 'K' : rowSum + 'K') : '0K')
+          rowSum_text: (rowSum !== 0 ? (rowSum > 0 ? `+${rowSum}K` : `${rowSum}K`) : '0K')
         });
       });
 
       let daySumCells = activeDates.map(d => {
         let val = dayTotalsSum[d];
         grandTotalAllDays += val;
-        let cls = val < 0 ? 'txt-lose' : (val > 0 ? 'txt-win' : '');
+        let cls = val < 0 ? 'number-neg' : (val > 0 ? 'number-pos' : 'number-zero');
         return renderComponent('tonghop.tab-head-td-1', {
           cls,
-          val_text: (val !== 0 ? val + 'K' : '0K')
+          val_text: (val !== 0 ? (val > 0 ? `+${val}K` : `${val}K`) : '0K')
         });
       }).join('');
 
-      let grandTotalCls = grandTotalAllDays < 0 ? 'txt-lose' : (grandTotalAllDays > 0 ? 'txt-win' : '');
+      let grandTotalCls = grandTotalAllDays < 0 ? 'number-neg' : (grandTotalAllDays > 0 ? 'number-pos' : 'number-zero');
 
       html += renderComponent('tonghop.tab-head-tr-2', {
         daySumCells,
         grandTotalCls,
-        grandTotalAllDays_text: (grandTotalAllDays !== 0 ? grandTotalAllDays + 'K' : '0K')
+        grandTotalAllDays_text: (grandTotalAllDays !== 0 ? (grandTotalAllDays > 0 ? `+${grandTotalAllDays}K` : `${grandTotalAllDays}K`) : '0K')
       });
 
       container.innerHTML = html;
@@ -1193,15 +1164,11 @@ function mountShell() {
 
 /* ████████████████ MODULE MINIGAME · MINIGAME - DÙNG CHUNG ████████████████ */
 /* ▼▼▼ KHỐI [MINIGAME-COMMON-DATA] · Dữ liệu chung: nội dung thể lệ Game 1,2 + game đang sửa ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: miniGame1Content, miniGame2Content, activeGameEditing */
     let miniGame1Content = "Lịch Thi Đấu Team A & Team B Xoay V vòng.";
-
     let miniGame2Content = "Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.";
-
     let activeGameEditing = 1;
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME-COMMON-DATA] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME-COMMON-FUNCS] · Hộp thoại thể lệ + tính/chọn kèo dùng chung ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: openGameModal, closeGameModal, saveGameContent, getMiniKeoValues, renderKeoSelectDropdown */
     function openGameModal(gameId) {
       closeAllDropdowns();
       activeGameEditing = gameId;
@@ -1246,15 +1213,10 @@ function mountShell() {
 
 /* ████████████████ MODULE MINIGAME1 · MINIGAME 1 ████████████████ */
 /* ▼▼▼ KHỐI [MINIGAME1-TEAM-DATA] · Team A,B: dữ liệu (đội, kèo, lịch mặc định) ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: mini1TeamA, mini1TeamB, mini1KeoMode, mini1Payment, miniGame1Matches, DEFAULT_MINI1_DATA */
     let mini1TeamA = ["Tiến Thọ", "Long Diễn", "Phú Mỗ", "Hà Giấy", "Tuấn La", "Châu Sĩ", "Vân Đình", "Cẩm Ly", "Minh Hạnh"];
-
     let mini1TeamB = ["Trí Đỏ", "Thành Sóc", "Dũng Ngạc", "Lợi Trí", "Điền Chèm", "Quỳnh Cool", "Hải Hà", "Minh Vượng"];
-
     let mini1KeoMode = "default";
-
     let mini1Payment = {};
-
     let miniGame1Matches = [];
 
     const DEFAULT_MINI1_DATA = [
@@ -1264,8 +1226,6 @@ function mountShell() {
     ];
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-TEAM-DATA] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME1-TEAM-FUNCS] · Team A,B: thêm/xóa trận, VĐV, tỷ số, kèo, tích nộp ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: toggleMini1Payment, addMini1Match, deleteMini1Match, addMini1Vdv, editMini1Vdv, removeMini1Vdv */
-/*   ↳ Gồm: moveMini1Vdv, updateMini1Score, updateMini1Vdv, changeMini1KeoMode, updateMini1MatchKeo */
     function toggleMini1Payment(payKey) {
       if (!isAdminVerified) {
         alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
@@ -1401,7 +1361,6 @@ function mountShell() {
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-TEAM-FUNCS] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME1-TEAM-TAB] · Giao diện Lịch Thi Đấu Team A & B ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: renderMiniGame1Tab */
     function renderMiniGame1Tab(container) {
       let winCountA = 0;
       let winCountB = 0;
@@ -1494,11 +1453,11 @@ function mountShell() {
             vColor,
             v,
             st_played: st.played,
-            if_st_winK_0: (st.winK > 0 ? st.winK : ''),
+            if_st_winK_0: (st.winK > 0 ? `+${st.winK}` : ''),
             if_st_loseK_0: (st.loseK < 0 ? st.loseK : ''),
-            if_bringBack_0: (bringBack > 0 ? bringBack : ''),
-            if_st_total_0_class: (st.total < 0 ? 'txt-lose' : (st.total > 0 ? 'txt-win' : '')),
-            st_total: st.total,
+            if_bringBack_0: (bringBack > 0 ? `+${bringBack}` : ''),
+            if_st_total_0_class: (st.total < 0 ? 'number-neg' : (st.total > 0 ? 'number-pos' : 'number-zero')),
+            st_total: (st.total > 0 ? `+${st.total}` : st.total),
             checkboxClass,
             if_isPaid: (isPaid ? 'checked' : ''),
             payKey,
@@ -1516,110 +1475,103 @@ function mountShell() {
         totalMatches,
         winCountA,
         totalScoreA,
-        diffClass_totalScoreA: ((totalScoreA - totalScoreB) > 0 ? 'txt-win' : ((totalScoreA - totalScoreB) < 0 ? 'txt-lose' : '')),
-        diffText_totalScoreA: ((totalScoreA - totalScoreB) > 0 ? '+' + (totalScoreA - totalScoreB) : (totalScoreA - totalScoreB)),
+        diffClass_totalScoreA: ((totalScoreA - totalScoreB) > 0 ? 'number-pos' : ((totalScoreA - totalScoreB) < 0 ? 'number-neg' : 'number-zero')),
+        diffText_totalScoreA: ((totalScoreA - totalScoreB) > 0 ? `+${totalScoreA - totalScoreB}` : (totalScoreA - totalScoreB)),
         statusA,
         winCountB,
         totalScoreB,
-        diffClass_totalScoreB: ((totalScoreB - totalScoreA) > 0 ? 'txt-win' : ((totalScoreB - totalScoreA) < 0 ? 'txt-lose' : '')),
-        diffText_totalScoreB: ((totalScoreB - totalScoreA) > 0 ? '+' + (totalScoreB - totalScoreA) : (totalScoreB - totalScoreA)),
+        diffClass_totalScoreB: ((totalScoreB - totalScoreA) > 0 ? 'number-pos' : ((totalScoreB - totalScoreA) < 0 ? 'number-neg' : 'number-zero')),
+        diffText_totalScoreB: ((totalScoreB - totalScoreA) > 0 ? `+${totalScoreB - totalScoreA}` : (totalScoreB - totalScoreA)),
         statusB,
         mini1TeamA_length: mini1TeamA.length,
         mini1TeamA_rows: (mini1TeamA.map((v, index) => {
-                  const idx = vdvs.indexOf(v);
-                  const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#15803d';
-                  return renderComponent('minigame1.team-tab-div-1', {
-                    color,
-                    index_plus1: (index + 1),
-                    v,
-                    index
-                  });
-                }).join('')),
+          const idx = vdvs.indexOf(v);
+          const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#15803d';
+          return renderComponent('minigame1.team-tab-div-1', {
+            color,
+            index_plus1: (index + 1),
+            v,
+            index
+          });
+        }).join('')),
         mini1TeamB_length: mini1TeamB.length,
         mini1TeamB_rows: (mini1TeamB.map((v, index) => {
-                  const idx = vdvs.indexOf(v);
-                  const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
-                  return renderComponent('minigame1.team-tab-div-2', {
-                    color,
-                    index_plus1: (index + 1),
-                    v,
-                    index
-                  });
-                }).join('')),
+          const idx = vdvs.indexOf(v);
+          const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
+          return renderComponent('minigame1.team-tab-div-2', {
+            color,
+            index_plus1: (index + 1),
+            v,
+            index
+          });
+        }).join('')),
         titlesConfig_subMini1: titlesConfig.subMini1,
         renderKeoSelectDropdown: (renderKeoSelectDropdown(mini1KeoMode, 'changeMini1KeoMode')),
         freeKeoHeader: (mini1KeoMode === 'free' ? '<th style="width:100px;" class="th-money">MỆNH GIÁ</th>' : ''),
         miniGame1Matches_rows: (mini1TeamA.length > 0 && mini1TeamB.length > 0 ? miniGame1Matches.map((m, idx) => {
-                  let sA = parseInt(m.scoreA);
-                  let sB = parseInt(m.scoreB);
-                  let resText = "-";
-                  let matchStatusHtml = renderComponent('minigame1.team-tab-span-5');
+          let sA = parseInt(m.scoreA);
+          let sB = parseInt(m.scoreB);
+          let resText = "-";
+          let matchStatusHtml = renderComponent('minigame1.team-tab-span-5');
 
-                  if (!isNaN(sA) && !isNaN(sB)) {
-                    matchStatusHtml = renderComponent('minigame1.team-tab-span-6');
-                    if (sA > sB) resText = "<span class='txt-win'>Đội A</span>";
-                    else if (sB > sA) resText = "<span style='color:#0284c7; font-weight:bold;'>Đội B</span>";
-                    else resText = "Hòa";
-                  }
+          if (!isNaN(sA) && !isNaN(sB)) {
+            matchStatusHtml = renderComponent('minigame1.team-tab-span-6');
+            if (sA > sB) resText = "<span class='number-pos'>Đội A</span>";
+            else if (sB > sA) resText = "<span style='color:#0284c7; font-weight:bold;'>Đội B</span>";
+            else resText = "Hòa";
+          }
 
-                  const colorA1 = m.a1 ? VDV_COLORS[vdvs.indexOf(m.a1) % VDV_COLORS.length] : "#334155";
-                  const colorA2 = m.a2 ? VDV_COLORS[vdvs.indexOf(m.a2) % VDV_COLORS.length] : "#334155";
-                  const colorB1 = m.b1 ? VDV_COLORS[vdvs.indexOf(m.b1) % VDV_COLORS.length] : "#334155";
-                  const colorB2 = m.b2 ? VDV_COLORS[vdvs.indexOf(m.b2) % VDV_COLORS.length] : "#334155";
+          const colorA1 = m.a1 ? VDV_COLORS[vdvs.indexOf(m.a1) % VDV_COLORS.length] : "#334155";
+          const colorA2 = m.a2 ? VDV_COLORS[vdvs.indexOf(m.a2) % VDV_COLORS.length] : "#334155";
+          const colorB1 = m.b1 ? VDV_COLORS[vdvs.indexOf(m.b1) % VDV_COLORS.length] : "#334155";
+          const colorB2 = m.b2 ? VDV_COLORS[vdvs.indexOf(m.b2) % VDV_COLORS.length] : "#334155";
 
-                  let customKeoCell1 = "";
-                  if (mini1KeoMode === 'free') {
-                    customKeoCell1 = renderComponent('minigame1.team-tab-td-1', {
-                      m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
-                      idx,
-                      m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
-                    });
-                  }
+          let customKeoCell1 = "";
+          if (mini1KeoMode === 'free') {
+            customKeoCell1 = renderComponent('minigame1.team-tab-td-1', {
+              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
+              idx,
+              m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
+            });
+          }
 
-                  return renderComponent('minigame1.team-tab-tr-2', {
-                    idx,
-                    m_id: m.id,
-                    m_category: m.category,
-                    colorA1,
-                    generateVdvOptionsHtml_m_a1_mini1TeamA: (generateVdvOptionsHtml(m.a1, mini1TeamA)),
-                    colorA2,
-                    generateVdvOptionsHtml_m_a2_mini1TeamA: (generateVdvOptionsHtml(m.a2, mini1TeamA)),
-                    m_scoreA: (m.scoreA ?? ''),
-                    m_scoreB: (m.scoreB ?? ''),
-                    colorB1,
-                    generateVdvOptionsHtml_m_b1_mini1TeamB: (generateVdvOptionsHtml(m.b1, mini1TeamB)),
-                    colorB2,
-                    generateVdvOptionsHtml_m_b2_mini1TeamB: (generateVdvOptionsHtml(m.b2, mini1TeamB)),
-                    customKeoCell1,
-                    matchStatusHtml,
-                    resText
-                  });
-                }).join('') : ''),
+          return renderComponent('minigame1.team-tab-tr-2', {
+            idx,
+            m_id: m.id,
+            m_category: m.category,
+            colorA1,
+            generateVdvOptionsHtml_m_a1_mini1TeamA: (generateVdvOptionsHtml(m.a1, mini1TeamA)),
+            colorA2,
+            generateVdvOptionsHtml_m_a2_mini1TeamA: (generateVdvOptionsHtml(m.a2, mini1TeamA)),
+            m_scoreA: (m.scoreA ?? ''),
+            m_scoreB: (m.scoreB ?? ''),
+            colorB1,
+            generateVdvOptionsHtml_m_b1_mini1TeamB: (generateVdvOptionsHtml(m.b1, mini1TeamB)),
+            colorB2,
+            generateVdvOptionsHtml_m_b2_mini1TeamB: (generateVdvOptionsHtml(m.b2, mini1TeamB)),
+            customKeoCell1,
+            matchStatusHtml,
+            resText
+          });
+        }).join('') : ''),
         summaryRowsHtml1,
-        sumBringBack1,
-        btcThuVeCalculated1,
+        sumBringBack1: (sumBringBack1 > 0 ? `+${sumBringBack1}` : sumBringBack1),
+        btcThuVeCalculated1: (btcThuVeCalculated1 > 0 ? `+${btcThuVeCalculated1}` : btcThuVeCalculated1),
         sumThucThu1,
-        quyCon1
+        quyCon1: (quyCon1 > 0 ? `+${quyCon1}` : quyCon1)
       });
 
       container.innerHTML = html;
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-TEAM-TAB] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME1-SUB1-DATA] · Minigame 21 trận: dữ liệu (đội, kèo, lịch) ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: mini1Sub1TeamA, mini1Sub1TeamB, mini1Sub1KeoMode, mini1Sub1Payment, miniGame1Sub1Matches */
     let mini1Sub1TeamA = ["Tuấn La", "Phú Mỗ", "Tiến Thọ", "Châu Sĩ", "Long Diễn", "Vân Đình", "Minh Hạnh", "Cẩm Ly"];
-
     let mini1Sub1TeamB = ["Thành Sóc", "Trường Giang", "Trí Đỏ", "Lợi Trí", "Thanh Đàm", "Gà Tre", "Minh Vượng", "Hải Hà"];
-
     let mini1Sub1KeoMode = "default";
-
     let mini1Sub1Payment = {};
-
     let miniGame1Sub1Matches = [];
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB1-DATA] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME1-SUB1-FUNCS] · Minigame 21 trận: tạo lịch, VĐV, kèo, tích nộp ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: generateDynamicSub1Matches, toggleSub1Payment, changeSub1KeoMode, updateSub1MatchKeo */
-/*   ↳ Gồm: updateSub1MatchVdv, addSub1Vdv, editSub1Vdv, removeSub1Vdv, moveSub1Vdv, updateSub1Field */
     function generateDynamicSub1Matches() {
       let malesA = mini1Sub1TeamA.filter(name => {
         let p = players.find(x => x.name === name);
@@ -1641,8 +1593,8 @@ function mountShell() {
       let templateRaw = [
         { cat: "Đôi Nam Nữ", a1: malesA[0], a2: femalesA[0], b1: malesB[0], b2: femalesB[0] },
         { cat: "Đôi Nam Nữ", a1: malesA[1], a2: femalesA[1], b1: malesB[1], b2: femalesB[1] },
-        { cat: "Đôi Nam",     a1: malesA[2], a2: malesA[3], b1: malesB[2], b2: malesB[3] },
-        { cat: "Đôi Nam",     a1: malesA[0], a2: malesA[4], b1: malesB[0], b2: femalesB[4] },
+        { cat: "Đôi Nam",     a1: malesA[2], a2: femalesA[3], b1: malesB[2], b2: malesB[3] },
+        { cat: "Đôi Nam",     a1: malesA[0], a2: femalesA[4], b1: malesB[0], b2: femalesB[4] },
         { cat: "Đôi Nam Nữ", a1: malesA[2], a2: femalesA[2], b1: malesB[2], b2: femalesB[2] },
         { cat: "Đôi Nam Nữ", a1: malesA[3], a2: femalesA[0], b1: malesB[3], b2: femalesB[0] },
         { cat: "Đôi Nam",     a1: malesA[1], a2: femalesA[2], b1: malesB[1], b2: femalesB[2] },
@@ -1781,7 +1733,6 @@ function mountShell() {
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB1-FUNCS] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME1-SUB1-TAB] · Giao diện Minigame 21 trận ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: renderMiniGame1Sub1Tab */
     function renderMiniGame1Sub1Tab(container) {
       generateDynamicSub1Matches();
 
@@ -1870,11 +1821,11 @@ function mountShell() {
             vColor,
             v,
             st_played: st.played,
-            if_st_winK_0: (st.winK > 0 ? st.winK : ''),
+            if_st_winK_0: (st.winK > 0 ? `+${st.winK}` : ''),
             if_st_loseK_0: (st.loseK < 0 ? st.loseK : ''),
-            if_bringBack_0: (bringBack > 0 ? bringBack : ''),
-            if_st_total_0_class: (st.total < 0 ? 'txt-lose' : (st.total > 0 ? 'txt-win' : '')),
-            st_total: st.total,
+            if_bringBack_0: (bringBack > 0 ? `+${bringBack}` : ''),
+            if_st_total_0_class: (st.total < 0 ? 'number-neg' : (st.total > 0 ? 'number-pos' : 'number-zero')),
+            st_total: (st.total > 0 ? `+${st.total}` : st.total),
             checkboxClass,
             if_isPaid: (isPaid ? 'checked' : ''),
             payKey,
@@ -1893,97 +1844,95 @@ function mountShell() {
         totalM,
         winA,
         scoreAAll,
-        diffClass_scoreAAll: ((scoreAAll - scoreBAll) > 0 ? 'txt-win' : ((scoreAAll - scoreBAll) < 0 ? 'txt-lose' : '')),
-        diffText_scoreAAll: ((scoreAAll - scoreBAll) > 0 ? '+' + (scoreAAll - scoreBAll) : (scoreAAll - scoreBAll)),
+        diffClass_scoreAAll: ((scoreAAll - scoreBAll) > 0 ? 'number-pos' : ((scoreAAll - scoreBAll) < 0 ? 'number-neg' : 'number-zero')),
+        diffText_scoreAAll: ((scoreAAll - scoreBAll) > 0 ? `+${scoreAAll - scoreBAll}` : (scoreAAll - scoreBAll)),
         statusA,
         winB,
         scoreBAll,
-        diffClass_scoreBAll: ((scoreBAll - scoreAAll) > 0 ? 'txt-win' : ((scoreBAll - scoreAAll) < 0 ? 'txt-lose' : '')),
-        diffText_scoreBAll: ((scoreBAll - scoreAAll) > 0 ? '+' + (scoreBAll - scoreAAll) : (scoreBAll - scoreAAll)),
+        diffClass_scoreBAll: ((scoreBAll - scoreAAll) > 0 ? 'number-pos' : ((scoreBAll - scoreAAll) < 0 ? 'number-neg' : 'number-zero')),
+        diffText_scoreBAll: ((scoreBAll - scoreAAll) > 0 ? `+${scoreBAll - scoreAAll}` : (scoreBAll - scoreAAll)),
         statusB,
         mini1Sub1TeamA_length: mini1Sub1TeamA.length,
         mini1Sub1TeamA_rows: (mini1Sub1TeamA.map((v, index) => {
-                  const idx = vdvs.indexOf(v);
-                  const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#15803d';
-                  return renderComponent('minigame1.sub1-tab-div-1', {
-                    color,
-                    index_plus1: (index + 1),
-                    v,
-                    index
-                  });
-                }).join('')),
+          const idx = vdvs.indexOf(v);
+          const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#15803d';
+          return renderComponent('minigame1.sub1-tab-div-1', {
+            color,
+            index_plus1: (index + 1),
+            v,
+            index
+          });
+        }).join('')),
         mini1Sub1TeamB_length: mini1Sub1TeamB.length,
         mini1Sub1TeamB_rows: (mini1Sub1TeamB.map((v, index) => {
-                  const idx = vdvs.indexOf(v);
-                  const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
-                  return renderComponent('minigame1.sub1-tab-div-2', {
-                    color,
-                    index_plus1: (index + 1),
-                    v,
-                    index
-                  });
-                }).join('')),
+          const idx = vdvs.indexOf(v);
+          const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
+          return renderComponent('minigame1.sub1-tab-div-2', {
+            color,
+            index_plus1: (index + 1),
+            v,
+            index
+          });
+        }).join('')),
         renderKeoSelectDropdown: (renderKeoSelectDropdown(mini1Sub1KeoMode, 'changeSub1KeoMode')),
         freeKeoHeader: (mini1Sub1KeoMode === 'free' ? '<th style="width:100px;" class="th-money">MỆNH GIÁ</th>' : ''),
         miniGame1Sub1Matches_rows: (mini1Sub1TeamA.length > 0 && mini1Sub1TeamB.length > 0 ? miniGame1Sub1Matches.map((m, idx) => {
-                  let sA = parseInt(m.scoreA);
-                  let sB = parseInt(m.scoreB);
-                  let resText = "-";
-                  let matchStatusHtml = renderComponent('minigame1.sub1-tab-span-5');
+          let sA = parseInt(m.scoreA);
+          let sB = parseInt(m.scoreB);
+          let resText = "-";
+          let matchStatusHtml = renderComponent('minigame1.sub1-tab-span-5');
 
-                  if (!isNaN(sA) && !isNaN(sB)) {
-                    matchStatusHtml = renderComponent('minigame1.sub1-tab-span-6');
-                    if (sA > sB) resText = "<span class='txt-win'>Đội A</span>";
-                    else if (sB > sA) resText = "<span style='color:#0284c7; font-weight:bold;'>Đội B</span>";
-                    else resText = "Hòa";
-                  }
+          if (!isNaN(sA) && !isNaN(sB)) {
+            matchStatusHtml = renderComponent('minigame1.sub1-tab-span-6');
+            if (sA > sB) resText = "<span class='number-pos'>Đội A</span>";
+            else if (sB > sA) resText = "<span style='color:#0284c7; font-weight:bold;'>Đội B</span>";
+            else resText = "Hòa";
+          }
 
-                  const colorA1 = m.a1 ? VDV_COLORS[vdvs.indexOf(m.a1) % VDV_COLORS.length] : "#334155";
-                  const colorA2 = m.a2 ? VDV_COLORS[vdvs.indexOf(m.a2) % VDV_COLORS.length] : "#334155";
-                  const colorB1 = m.b1 ? VDV_COLORS[vdvs.indexOf(m.b1) % VDV_COLORS.length] : "#334155";
-                  const colorB2 = m.b2 ? VDV_COLORS[vdvs.indexOf(m.b2) % VDV_COLORS.length] : "#334155";
+          const colorA1 = m.a1 ? VDV_COLORS[vdvs.indexOf(m.a1) % VDV_COLORS.length] : "#334155";
+          const colorA2 = m.a2 ? VDV_COLORS[vdvs.indexOf(m.a2) % VDV_COLORS.length] : "#334155";
+          const colorB1 = m.b1 ? VDV_COLORS[vdvs.indexOf(m.b1) % VDV_COLORS.length] : "#334155";
+          const colorB2 = m.b2 ? VDV_COLORS[vdvs.indexOf(m.b2) % VDV_COLORS.length] : "#334155";
 
-                  let customKeoCell = "";
-                  if (mini1Sub1KeoMode === 'free') {
-                    customKeoCell = renderComponent('minigame1.sub1-tab-td-1', {
-                      m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
-                      idx,
-                      m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
-                    });
-                  }
+          let customKeoCell = "";
+          if (mini1Sub1KeoMode === 'free') {
+            customKeoCell = renderComponent('minigame1.sub1-tab-td-1', {
+              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
+              idx,
+              m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
+            });
+          }
 
-                  return renderComponent('minigame1.sub1-tab-tr-2', {
-                    m_id: m.id,
-                    m_category: m.category,
-                    colorA1,
-                    idx,
-                    generateVdvOptionsHtml_m_a1_mini1Sub1TeamA: (generateVdvOptionsHtml(m.a1, mini1Sub1TeamA)),
-                    colorA2,
-                    generateVdvOptionsHtml_m_a2_mini1Sub1TeamA: (generateVdvOptionsHtml(m.a2, mini1Sub1TeamA)),
-                    m_scoreA: (m.scoreA ?? ''),
-                    m_scoreB: (m.scoreB ?? ''),
-                    colorB1,
-                    generateVdvOptionsHtml_m_b1_mini1Sub1TeamB: (generateVdvOptionsHtml(m.b1, mini1Sub1TeamB)),
-                    colorB2,
-                    generateVdvOptionsHtml_m_b2_mini1Sub1TeamB: (generateVdvOptionsHtml(m.b2, mini1Sub1TeamB)),
-                    customKeoCell,
-                    matchStatusHtml,
-                    resText
-                  });
-                }).join('') : ''),
+          return renderComponent('minigame1.sub1-tab-tr-2', {
+            m_id: m.id,
+            m_category: m.category,
+            colorA1,
+            idx,
+            generateVdvOptionsHtml_m_a1_mini1Sub1TeamA: (generateVdvOptionsHtml(m.a1, mini1Sub1TeamA)),
+            colorA2,
+            generateVdvOptionsHtml_m_a2_mini1Sub1TeamA: (generateVdvOptionsHtml(m.a2, mini1Sub1TeamA)),
+            m_scoreA: (m.scoreA ?? ''),
+            m_scoreB: (m.scoreB ?? ''),
+            colorB1,
+            generateVdvOptionsHtml_m_b1_mini1Sub1TeamB: (generateVdvOptionsHtml(m.b1, mini1Sub1TeamB)),
+            colorB2,
+            generateVdvOptionsHtml_m_b2_mini1Sub1TeamB: (generateVdvOptionsHtml(m.b2, mini1Sub1TeamB)),
+            customKeoCell,
+            matchStatusHtml,
+            resText
+          });
+        }).join('') : ''),
         summaryRowsHtml,
-        sumBringBack,
-        btcThuVeCalculated,
+        sumBringBack: (sumBringBack > 0 ? `+${sumBringBack}` : sumBringBack),
+        btcThuVeCalculated: (btcThuVeCalculated > 0 ? `+${btcThuVeCalculated}` : btcThuVeCalculated),
         sumThucThu,
-        quyCon
+        quyCon: (quyCon > 0 ? `+${quyCon}` : quyCon)
       });
 
       container.innerHTML = html;
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB1-TAB] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME1-SUB2-DATA] · Minigame 17 trận: dữ liệu (lịch mẫu 20/10, đội, kèo) ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: minigame2010Matches, mini1Sub2TeamA, mini1Sub2TeamB, mini1Sub2KeoMode, mini1Sub2Payment */
-/*   ↳ Gồm: miniGame1Sub2Matches */
     const minigame2010Matches = [
       { id: 1, code: "M01", teamAKey: "nam_1", teamBKey: "nam_2", type: "Nam - Nam", group: "Nam Cao" },
       { id: 2, code: "M02", teamAKey: "nu_1", teamBKey: "nu_2", type: "Nữ - Nữ (Đơn)", group: "Nữ Đơn" },
@@ -2005,19 +1954,12 @@ function mountShell() {
     ];
 
     let mini1Sub2TeamA = ["Tuấn La", "Phú Mỗ", "Tiến Thọ", "Châu Sĩ", "Long Diễn", "Vân Đình", "Minh Hạnh", "Cẩm Ly"];
-
     let mini1Sub2TeamB = ["Thành Sóc", "Trường Giang", "Trí Đỏ", "Lợi Trí", "Thanh Đàm", "Gà Tre", "Minh Vượng", "Hải Hà"];
-
     let mini1Sub2KeoMode = "default";
-
     let mini1Sub2Payment = {};
-
     let miniGame1Sub2Matches = [];
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB2-DATA] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME1-SUB2-FUNCS] · Minigame 17 trận: đội hình, tạo lịch, trận, VĐV, kèo, tích nộp ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: getCurrentRoster, generateDynamicSub2Matches, handleMinigame2010Click, toggleSub2Payment */
-/*   ↳ Gồm: changeSub2KeoMode, updateSub2MatchKeo, addSub2Match, deleteSub2Match, addSub2Vdv, editSub2Vdv */
-/*   ↳ Gồm: removeSub2Vdv, moveSub2Vdv, updateSub2Field, updateSub2VdvField */
     window.getCurrentRoster = function() {
       let malesA = mini1Sub2TeamA.filter(name => {
         let p = players.find(x => x.name === name);
@@ -2067,19 +2009,6 @@ function mountShell() {
           customWin: 5,
           customLose: -15
         }));
-      }
-    }
-
-    function handleMinigame2010Click() {
-      const currentRoster = window.getCurrentRoster ? window.getCurrentRoster() : {};
-      const synchronizedMatches = minigame2010Matches.map(match => ({
-        ...match,
-        teamA: currentRoster[match.teamAKey] || `[VDV ${match.teamAKey.toUpperCase()}]`,
-        teamB: currentRoster[match.teamBKey] || `[VDV ${match.teamBKey.toUpperCase()}]`
-      }));
-
-      if (typeof renderMatchTable === "function") {
-        renderMatchTable(synchronizedMatches);
       }
     }
 
@@ -2206,8 +2135,6 @@ function mountShell() {
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB2-FUNCS] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME1-SUB2-TAB] · Giao diện Minigame 17 trận ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: renderMiniGame1Sub2Tab */
-    /* GIAO DIỆN TAB MINIGAME 17 TRẬN (SUB2) */
     function renderMiniGame1Sub2Tab(container) {
       generateDynamicSub2Matches();
 
@@ -2296,11 +2223,11 @@ function mountShell() {
             vColor,
             v,
             st_played: st.played,
-            if_st_winK_0: (st.winK > 0 ? st.winK : ''),
+            if_st_winK_0: (st.winK > 0 ? `+${st.winK}` : ''),
             if_st_loseK_0: (st.loseK < 0 ? st.loseK : ''),
-            if_bringBack_0: (bringBack > 0 ? bringBack : ''),
-            if_st_total_0_class: (st.total < 0 ? 'txt-lose' : (st.total > 0 ? 'txt-win' : '')),
-            st_total: st.total,
+            if_bringBack_0: (bringBack > 0 ? `+${bringBack}` : ''),
+            if_st_total_0_class: (st.total < 0 ? 'number-neg' : (st.total > 0 ? 'number-pos' : 'number-zero')),
+            st_total: (st.total > 0 ? `+${st.total}` : st.total),
             checkboxClass,
             if_isPaid: (isPaid ? 'checked' : ''),
             payKey,
@@ -2319,89 +2246,89 @@ function mountShell() {
         totalM2,
         winA2,
         scoreAAll2,
-        diffClass_scoreAAll2: ((scoreAAll2 - scoreBAll2) > 0 ? 'txt-win' : ((scoreAAll2 - scoreBAll2) < 0 ? 'txt-lose' : '')),
-        diffText_scoreAAll2: ((scoreAAll2 - scoreBAll2) > 0 ? '+' + (scoreAAll2 - scoreBAll2) : (scoreAAll2 - scoreBAll2)),
+        diffClass_scoreAAll2: ((scoreAAll2 - scoreBAll2) > 0 ? 'number-pos' : ((scoreAAll2 - scoreBAll2) < 0 ? 'number-neg' : 'number-zero')),
+        diffText_scoreAAll2: ((scoreAAll2 - scoreBAll2) > 0 ? `+${scoreAAll2 - scoreBAll2}` : (scoreAAll2 - scoreBAll2)),
         statusA2,
         winB2,
         scoreBAll2,
-        diffClass_scoreBAll2: ((scoreBAll2 - scoreAAll2) > 0 ? 'txt-win' : ((scoreBAll2 - scoreAAll2) < 0 ? 'txt-lose' : '')),
-        diffText_scoreBAll2: ((scoreBAll2 - scoreAAll2) > 0 ? '+' + (scoreBAll2 - scoreAAll2) : (scoreBAll2 - scoreAAll2)),
+        diffClass_scoreBAll2: ((scoreBAll2 - scoreAAll2) > 0 ? 'number-pos' : ((scoreBAll2 - scoreAAll2) < 0 ? 'number-neg' : 'number-zero')),
+        diffText_scoreBAll2: ((scoreBAll2 - scoreAAll2) > 0 ? `+${scoreBAll2 - scoreAAll2}` : (scoreBAll2 - scoreAAll2)),
         statusB2,
         mini1Sub2TeamA_length: mini1Sub2TeamA.length,
         mini1Sub2TeamA_rows: (mini1Sub2TeamA.map((v, index) => {
-                  const idx = vdvs.indexOf(v);
-                  const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#15803d';
-                  return renderComponent('minigame1.sub2-tab-div-1', {
-                    color,
-                    index_plus1: (index + 1),
-                    v,
-                    index
-                  });
-                }).join('')),
+          const idx = vdvs.indexOf(v);
+          const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#15803d';
+          return renderComponent('minigame1.sub2-tab-div-1', {
+            color,
+            index_plus1: (index + 1),
+            v,
+            index
+          });
+        }).join('')),
         mini1Sub2TeamB_length: mini1Sub2TeamB.length,
         mini1Sub2TeamB_rows: (mini1Sub2TeamB.map((v, index) => {
-                  const idx = vdvs.indexOf(v);
-                  const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
-                  return renderComponent('minigame1.sub2-tab-div-2', {
-                    color,
-                    index_plus1: (index + 1),
-                    v,
-                    index
-                  });
-                }).join('')),
+          const idx = vdvs.indexOf(v);
+          const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
+          return renderComponent('minigame1.sub2-tab-div-2', {
+            color,
+            index_plus1: (index + 1),
+            v,
+            index
+          });
+        }).join('')),
         renderKeoSelectDropdown: (renderKeoSelectDropdown(mini1Sub2KeoMode, 'changeSub2KeoMode')),
         freeKeoHeader: (mini1Sub2KeoMode === 'free' ? '<th style="width:100px;" class="th-money">MỆNH GIÁ</th>' : ''),
         miniGame1Sub2Matches_rows: (mini1Sub2TeamA.length > 0 && mini1Sub2TeamB.length > 0 ? miniGame1Sub2Matches.map((m, idx) => {
-                  let sA = parseInt(m.scoreA);
-                  let sB = parseInt(m.scoreB);
-                  let resText = "-";
-                  let matchStatusHtml = renderComponent('minigame1.sub2-tab-span-5');
+          let sA = parseInt(m.scoreA);
+          let sB = parseInt(m.scoreB);
+          let resText = "-";
+          let matchStatusHtml = renderComponent('minigame1.sub2-tab-span-5');
 
-                  if (!isNaN(sA) && !isNaN(sB)) {
-                    matchStatusHtml = renderComponent('minigame1.sub2-tab-span-6');
-                    if (sA > sB) resText = "<span class='txt-win'>Đội A</span>";
-                    else if (sB > sA) resText = "<span style='color:#0284c7; font-weight:bold;'>Đội B</span>";
-                    else resText = "Hòa";
-                  }
+          if (!isNaN(sA) && !isNaN(sB)) {
+            matchStatusHtml = renderComponent('minigame1.sub2-tab-span-6');
+            if (sA > sB) resText = "<span class='number-pos'>Đội A</span>";
+            else if (sB > sA) resText = "<span style='color:#0284c7; font-weight:bold;'>Đội B</span>";
+            else resText = "Hòa";
+          }
 
-                  const colorA1 = m.a1 ? VDV_COLORS[vdvs.indexOf(m.a1) % VDV_COLORS.length] : "#334155";
-                  const colorA2 = m.a2 ? VDV_COLORS[vdvs.indexOf(m.a2) % VDV_COLORS.length] : "#334155";
-                  const colorB1 = m.b1 ? VDV_COLORS[vdvs.indexOf(m.b1) % VDV_COLORS.length] : "#334155";
-                  const colorB2 = m.b2 ? VDV_COLORS[vdvs.indexOf(m.b2) % VDV_COLORS.length] : "#334155";
+          const colorA1 = m.a1 ? VDV_COLORS[vdvs.indexOf(m.a1) % VDV_COLORS.length] : "#334155";
+          const colorA2 = m.a2 ? VDV_COLORS[vdvs.indexOf(m.a2) % VDV_COLORS.length] : "#334155";
+          const colorB1 = m.b1 ? VDV_COLORS[vdvs.indexOf(m.b1) % VDV_COLORS.length] : "#334155";
+          const colorB2 = m.b2 ? VDV_COLORS[vdvs.indexOf(m.b2) % VDV_COLORS.length] : "#334155";
 
-                  let customKeoCell = "";
-                  if (mini1Sub2KeoMode === 'free') {
-                    customKeoCell = renderComponent('minigame1.sub2-tab-td-1', {
-                      m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
-                      idx,
-                      m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
-                    });
-                  }
+          let customKeoCell = "";
+          if (mini1Sub2KeoMode === 'free') {
+            customKeoCell = renderComponent('minigame1.sub2-tab-td-1', {
+              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
+              idx,
+              m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
+            });
+          }
 
-                  return renderComponent('minigame1.sub2-tab-tr-2', {
-                    idx,
-                    m_id: m.id,
-                    m_category: m.category,
-                    colorA1,
-                    generateVdvOptionsHtml_m_a1_mini1Sub2TeamA: (generateVdvOptionsHtml(m.a1, mini1Sub2TeamA)),
-                    colorA2,
-                    generateVdvOptionsHtml_m_a2_mini1Sub2TeamA: (generateVdvOptionsHtml(m.a2, mini1Sub2TeamA)),
-                    m_scoreA: (m.scoreA ?? ''),
-                    m_scoreB: (m.scoreB ?? ''),
-                    colorB1,
-                    generateVdvOptionsHtml_m_b1_mini1Sub2TeamB: (generateVdvOptionsHtml(m.b1, mini1Sub2TeamB)),
-                    colorB2,
-                    generateVdvOptionsHtml_m_b2_mini1Sub2TeamB: (generateVdvOptionsHtml(m.b2, mini1Sub2TeamB)),
-                    customKeoCell,
-                    matchStatusHtml,
-                    resText
-                  });
-                }).join('') : ''),
+          return renderComponent('minigame1.sub2-tab-tr-2', {
+            idx,
+            m_id: m.id,
+            m_category: m.category,
+            colorA1,
+            generateVdvOptionsHtml_m_a1_mini1Sub2TeamA: (generateVdvOptionsHtml(m.a1, mini1Sub2TeamA)),
+            colorA2,
+            generateVdvOptionsHtml_m_a2_mini1Sub2TeamA: (generateVdvOptionsHtml(m.a2, mini1Sub2TeamA)),
+            m_scoreA: (m.scoreA ?? ''),
+            m_scoreB: (m.scoreB ?? ''),
+            colorB1,
+            generateVdvOptionsHtml_m_b1_mini1Sub2TeamB: (generateVdvOptionsHtml(m.b1, mini1Sub2TeamB)),
+            colorB2,
+            generateVdvOptionsHtml_m_b2_mini1Sub2TeamB: (generateVdvOptionsHtml(m.b2, mini1Sub2TeamB)),
+            customKeoCell,
+            matchStatusHtml,
+            resText
+          });
+        }).join('') : ''),
         summaryRowsHtml2,
-        sumBringBack2,
-        btcThuVeCalculated2,
+        sumBringBack2: (sumBringBack2 > 0 ? `+${sumBringBack2}` : sumBringBack2),
+        btcThuVeCalculated2: (btcThuVeCalculated2 > 0 ? `+${btcThuVeCalculated2}` : btcThuVeCalculated2),
         sumThucThu2,
-        quyCon2
+        quyCon2: (quyCon2 > 0 ? `+${quyCon2}` : quyCon2)
       });
 
       container.innerHTML = html;
@@ -2410,16 +2337,10 @@ function mountShell() {
 
 /* ████████████████ MODULE MINIGAME2 · MINIGAME 2 ████████████████ */
 /* ▼▼▼ KHỐI [MINIGAME2-DATA] · Giải chia Bảng A,B: dữ liệu (cặp, lịch, knockout, kèo) ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout, mini2Tour1Content */
-/*   ↳ Gồm: mini2Tour2Content, mini2KeoMode, mini2Payment */
     let mini2PairsA = [];
-
     let mini2PairsB = [];
-
     let mini2MatchesA = [];
-
     let mini2MatchesB = [];
-
     let mini2Knockout = {
       bkc1: { p1: "Nhất A", p2: "Nhì B", s1: "", s2: "" },
       bkc2: { p1: "Nhất B", p2: "Nhì A", s1: "", s2: "" },
@@ -2429,19 +2350,12 @@ function mountShell() {
       runnerUp: "",
       thirdPlace: ""
     };
-
     let mini2Tour1Content = "Nội dung chi tiết và lịch thi đấu của Giải Đấu Bổ Sung 1.";
-
     let mini2Tour2Content = "Nội dung chi tiết và lịch thi đấu của Giải Đấu Bổ Sung 2.";
-
     let mini2KeoMode = "default";
-
     let mini2Payment = {};
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-DATA] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME2-FUNCS] · Giải chia Bảng A,B: lịch vòng tròn, cặp, tỷ số, kèo, xếp hạng, tích nộp ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: toggleMini2Payment, generateMini2MatchesForGroup, setMini2PairCount, editMini2PairName */
-/*   ↳ Gồm: deleteMini2Pair, updateMini2MatchScore, updateMini2MatchKeo, changeMini2KeoMode */
-/*   ↳ Gồm: updateMini2Knockout, updateMini2WinnerField, computeGroupStandings */
     function toggleMini2Payment(payKey) {
       if (!isAdminVerified) {
         alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
@@ -2615,8 +2529,6 @@ function mountShell() {
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-FUNCS] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME2-TOUR] · Giải đấu bổ sung 1 & 2 ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: renderMiniGame2Tour1Tab, saveTour1Content, renderMiniGame2Tour2Tab, saveTour2Content */
-    /* GIAO DIỆN CÁC GIẢI ĐẤU BỔ SUNG TRONG MINI GAME 2 */
     function renderMiniGame2Tour1Tab(container) {
       container.innerHTML = renderComponent('minigame2.tour1-tab', {
         titlesConfig_subTour1: titlesConfig.subTour1,
@@ -2648,8 +2560,6 @@ function mountShell() {
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-TOUR] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME2-TAB] · Giao diện Mini Game 2 (chia Bảng A,B + bảng tổng hợp kèo) ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: renderMiniGame2Tab */
-    /* GIAO DIỆN MINI GAME 2 KÈM TÁCH CÁ NHÂN & BẢNG TỔNG HỢP KÈO */
     function renderMiniGame2Tab(container) {
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
       let standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
@@ -2734,11 +2644,11 @@ function mountShell() {
             indColor,
             indName,
             st_played: st.played,
-            if_st_winK_0: (st.winK > 0 ? st.winK : ''),
+            if_st_winK_0: (st.winK > 0 ? `+${st.winK}` : ''),
             if_st_loseK_0: (st.loseK < 0 ? st.loseK : ''),
-            if_bringBack_0: (bringBack > 0 ? bringBack : ''),
-            if_st_total_0_class: (st.total < 0 ? 'txt-lose' : (st.total > 0 ? 'txt-win' : '')),
-            st_total: st.total,
+            if_bringBack_0: (bringBack > 0 ? `+${bringBack}` : ''),
+            if_st_total_0_class: (st.total < 0 ? 'number-neg' : (st.total > 0 ? 'number-pos' : 'number-zero')),
+            st_total: (st.total > 0 ? `+${st.total}` : st.total),
             checkboxClass,
             if_isPaid: (isPaid ? 'checked' : ''),
             payKey,
@@ -2757,77 +2667,77 @@ function mountShell() {
         selected_mini2PairsA_length_4: (mini2PairsA.length === 4 ? 'selected' : ''),
         selected_mini2PairsA_length_5: (mini2PairsA.length === 5 ? 'selected' : ''),
         standingsA_rows: (standingsA.map((st, i) => renderComponent('minigame2.tab-tr-2', {
-                    i_plus1: (i + 1),
-                    st_index_mod5: (st.index % 5),
-                    st_name: st.name,
-                    st_points: st.points,
-                    if_st_diff_0_color: (st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')),
-                    if_st_diff_0: (st.diff > 0 ? '+' + st.diff : st.diff),
-                    st_index: st.index
-                  })).join('')),
+          i_plus1: (i + 1),
+          st_index_mod5: (st.index % 5),
+          st_name: st.name,
+          st_points: st.points,
+          if_st_diff_0_color: (st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')),
+          if_st_diff_0: (st.diff > 0 ? `+${st.diff}` : st.diff),
+          st_index: st.index
+        })).join('')),
         mini2KeoMode_colspan: (mini2KeoMode === 'free' ? 5 : 4),
         freeKeoHeader: (mini2KeoMode === 'free' ? '<th style="width:110px;" class="th-money">MỆNH GIÁ</th>' : ''),
         mini2MatchesA_rows: (mini2MatchesA.map((m, idx) => {
-                    let customKeoA = "";
-                    if (mini2KeoMode === 'free') {
-                      customKeoA = renderComponent('minigame2.tab-td-1', {
-                        m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
-                        idx,
-                        m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
-                      });
-                    }
-                    return renderComponent('minigame2.tab-tr-3', {
-                      m_id: m.id,
-                      if_mini2PairsA_m_pair1Index: (mini2PairsA[m.pair1Index] ? renderComponent('minigame2.tab-span-5', {
-                          m_pair1Index_mod5: (m.pair1Index % 5),
-                          mini2PairsA_m_pair1Index_name: (mini2PairsA[m.pair1Index].name)
-                        }) : ''),
-                      m_score1: (m.score1 ?? ''),
-                      idx,
-                      m_score2: (m.score2 ?? ''),
-                      if_mini2PairsA_m_pair2Index: (mini2PairsA[m.pair2Index] ? renderComponent('minigame2.tab-span-6', {
-                          m_pair2Index_mod5: (m.pair2Index % 5),
-                          mini2PairsA_m_pair2Index_name: (mini2PairsA[m.pair2Index].name)
-                        }) : ''),
-                      customKeoA
-                    });
-                  }).join('')),
+          let customKeoA = "";
+          if (mini2KeoMode === 'free') {
+            customKeoA = renderComponent('minigame2.tab-td-1', {
+              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
+              idx,
+              m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
+            });
+          }
+          return renderComponent('minigame2.tab-tr-3', {
+            m_id: m.id,
+            if_mini2PairsA_m_pair1Index: (mini2PairsA[m.pair1Index] ? renderComponent('minigame2.tab-span-5', {
+              m_pair1Index_mod5: (m.pair1Index % 5),
+              mini2PairsA_m_pair1Index_name: (mini2PairsA[m.pair1Index].name)
+            }) : ''),
+            m_score1: (m.score1 ?? ''),
+            idx,
+            m_score2: (m.score2 ?? ''),
+            if_mini2PairsA_m_pair2Index: (mini2PairsA[m.pair2Index] ? renderComponent('minigame2.tab-span-6', {
+              m_pair2Index_mod5: (m.pair2Index % 5),
+              mini2PairsA_m_pair2Index_name: (mini2PairsA[m.pair2Index].name)
+            }) : ''),
+            customKeoA
+          });
+        }).join('')),
         selected_mini2PairsB_length_4: (mini2PairsB.length === 4 ? 'selected' : ''),
         selected_mini2PairsB_length_5: (mini2PairsB.length === 5 ? 'selected' : ''),
         standingsB_rows: (standingsB.map((st, i) => renderComponent('minigame2.tab-tr-4', {
-                    i_plus1: (i + 1),
-                    st_index_mod5: (st.index % 5),
-                    st_name: st.name,
-                    st_points: st.points,
-                    if_st_diff_0_color: (st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')),
-                    if_st_diff_0: (st.diff > 0 ? '+' + st.diff : st.diff),
-                    st_index: st.index
-                  })).join('')),
+          i_plus1: (i + 1),
+          st_index_mod5: (st.index % 5),
+          st_name: st.name,
+          st_points: st.points,
+          if_st_diff_0_color: (st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')),
+          if_st_diff_0: (st.diff > 0 ? `+${st.diff}` : st.diff),
+          st_index: st.index
+        })).join('')),
         mini2MatchesB_rows: (mini2MatchesB.map((m, idx) => {
-                    let customKeoB = "";
-                    if (mini2KeoMode === 'free') {
-                      customKeoB = renderComponent('minigame2.tab-td-2', {
-                        m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
-                        idx,
-                        m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
-                      });
-                    }
-                    return renderComponent('minigame2.tab-tr-5', {
-                      m_id: m.id,
-                      if_mini2PairsB_m_pair1Index: (mini2PairsB[m.pair1Index] ? renderComponent('minigame2.tab-span-7', {
-                          m_pair1Index_mod5: (m.pair1Index % 5),
-                          mini2PairsB_m_pair1Index_name: (mini2PairsB[m.pair1Index].name)
-                        }) : ''),
-                      m_score1: (m.score1 ?? ''),
-                      idx,
-                      m_score2: (m.score2 ?? ''),
-                      if_mini2PairsB_m_pair2Index: (mini2PairsB[m.pair2Index] ? renderComponent('minigame2.tab-span-8', {
-                          m_pair2Index_mod5: (m.pair2Index % 5),
-                          mini2PairsB_m_pair2Index_name: (mini2PairsB[m.pair2Index].name)
-                        }) : ''),
-                      customKeoB
-                    });
-                  }).join('')),
+          let customKeoB = "";
+          if (mini2KeoMode === 'free') {
+            customKeoB = renderComponent('minigame2.tab-td-2', {
+              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
+              idx,
+              m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
+            });
+          }
+          return renderComponent('minigame2.tab-tr-5', {
+            m_id: m.id,
+            if_mini2PairsB_m_pair1Index: (mini2PairsB[m.pair1Index] ? renderComponent('minigame2.tab-span-7', {
+              m_pair1Index_mod5: (m.pair1Index % 5),
+              mini2PairsB_m_pair1Index_name: (mini2PairsB[m.pair1Index].name)
+            }) : ''),
+            m_score1: (m.score1 ?? ''),
+            idx,
+            m_score2: (m.score2 ?? ''),
+            if_mini2PairsB_m_pair2Index: (mini2PairsB[m.pair2Index] ? renderComponent('minigame2.tab-span-8', {
+              m_pair2Index_mod5: (m.pair2Index % 5),
+              mini2PairsB_m_pair2Index_name: (mini2PairsB[m.pair2Index].name)
+            }) : ''),
+            customKeoB
+          });
+        }).join('')),
         mini2Knockout_bkc1_p1: (mini2Knockout.bkc1.p1 || 'Nhất A'),
         mini2Knockout_bkc1_s1: (mini2Knockout.bkc1.s1 ?? ''),
         mini2Knockout_bkc1_s2: (mini2Knockout.bkc1.s2 ?? ''),
@@ -2848,10 +2758,10 @@ function mountShell() {
         mini2Knockout_runnerUp: (mini2Knockout.runnerUp || ''),
         mini2Knockout_thirdPlace: (mini2Knockout.thirdPlace || ''),
         summaryRowsHtml2,
-        sumBringBack2,
-        btcThuVeCalculated2,
+        sumBringBack2: (sumBringBack2 > 0 ? `+${sumBringBack2}` : sumBringBack2),
+        btcThuVeCalculated2: (btcThuVeCalculated2 > 0 ? `+${btcThuVeCalculated2}` : btcThuVeCalculated2),
         sumThucThu2,
-        quyCon2
+        quyCon2: (quyCon2 > 0 ? `+${quyCon2}` : quyCon2)
       });
 
       container.innerHTML = html;
@@ -2860,7 +2770,6 @@ function mountShell() {
 
 /* ████████████████ MODULE AUTOBACKUP · TỰ ĐỘNG SAO LƯU FIRESTORE ONLINE ████████████████ */
 /* ▼▼▼ KHỐI [AUTOBACKUP-CONFIG] · Cấu hình Firebase + kết nối Firestore (db, docRef) + bản sao lưu bộ nhớ ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: firebaseConfig, db, docRef, autoBackupMemory */
     const firebaseConfig = {
       apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
       authDomain: "pickleball-cmtd.firebaseapp.com",
@@ -2882,7 +2791,6 @@ function mountShell() {
     let autoBackupMemory = null;
 /* ▲▲▲ KẾT THÚC KHỐI [AUTOBACKUP-CONFIG] ▲▲▲ */
 /* ▼▼▼ KHỐI [AUTOBACKUP-FUNCS] · Lắng nghe Firestore, khởi tạo dữ liệu mặc định, TỰ ĐỘNG LƯU ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: listenToFirestore, initDefaultFirestore, saveDataToFirestore */
     function listenToFirestore() {
       docRef.onSnapshot((doc) => {
         const statusEl = document.getElementById("cloudStatus");
@@ -3037,9 +2945,7 @@ function mountShell() {
 
 /* ████████████████ MODULE CORE · LÕI HỆ THỐNG ████████████████ */
 /* ▼▼▼ KHỐI [CORE-INIT] · Khởi động: window.onload (chạy sau cùng) ▼▼▼ BẮT ĐẦU */
-/*   ↳ Gồm: onload */
     window.onload = async function() {
-      // Nạp các component HTML rồi dựng khung trang trước khi chạy phần còn lại
       try {
         await loadComponents();
       } catch (err) {

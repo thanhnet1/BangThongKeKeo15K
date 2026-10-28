@@ -173,7 +173,7 @@
       text-transform: uppercase;
     }
 
-    /* CSS Bảng Biểu Cao Cấp: Phối màu tiêu đề hài hòa, căn giữa cột tỷ số, in đậm chữ số */
+    /* CSS Bảng Biểu Cao Cấp: Hiệu ứng màu chữ và nền tiêu đề bảng rực rỡ */
     .table-responsive, div:has(> table) {
       width: 100%;
       overflow-x: auto;
@@ -194,32 +194,37 @@
       text-align: center;
       vertical-align: middle;
       border: 1px solid #cbd5e1;
-      font-weight: 700; /* In đậm toàn bộ chữ số trong bảng */
+      font-weight: 700;
     }
+    /* Hiệu ứng màu sắc bắt mắt cho tiêu đề bảng (th) */
     th {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      color: #f8fafc;
-      font-weight: 800;
+      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+      color: #38bdf8; /* Màu chữ xanh dương sáng nổi bật */
+      font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
       border-color: #334155;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
     tr:nth-child(even) td {
-      background-color: #f8fafc; /* Phối màu dòng xen kẽ hài hòa */
+      background-color: #f8fafc;
     }
     tr:hover td {
       background-color: #f1f5f9;
     }
 
-    /* Hiệu ứng màu sắc tự động cho số Âm và Dương trong bảng */
-    .number-pos { color: #16a34a !important; font-weight: 800; } /* Xanh lá dương */
-    .number-neg { color: #dc2626 !important; font-weight: 800; } /* Đỏ âm */
+    /* Hiệu ứng màu sắc tự động cho số Âm và Dương trong bảng chi tiết ngày */
+    .number-pos { color: #16a34a !important; font-weight: 900; } /* Xanh lá dương */
+    .number-neg { color: #dc2626 !important; font-weight: 900; } /* Đỏ âm */
     .number-zero { color: #64748b !important; font-weight: 700; }
 
-    /* Căn chỉnh riêng cho cột tỷ số / điểm số */
-    td input[type="text"], td input[type="number"] {
+    /* Hiệu ứng màu sắc nổi bật cho cột tỷ số / điểm số */
+    td input[type="text"], td input[type="number"], .score-highlight {
       text-align: center;
-      font-weight: 800;
+      font-weight: 900;
+      color: #2563eb !important; /* Màu xanh dương đậm nổi bật cho tỷ số */
+      background-color: #eff6ff !important; /* Nền xanh nhạt giúp dễ nhận diện cột tỷ số */
+      border-color: #bfdbfe !important;
     }
 
     @media (max-width: 768px) {

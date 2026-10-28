@@ -1,17 +1,24 @@
 <!-- [PART: day-tab] -->
-<div class="card bg-slate-900 border border-slate-800 shadow-xl rounded-xl overflow-hidden mb-6">
-  <div class="p-4 bg-slate-900/80 border-b border-slate-800 flex flex-wrap justify-between items-center gap-4">
-    <div>
-      <h2 class="text-lg font-bold text-white flex items-center gap-2">
-        <i class="fa-solid fa-calendar-days text-emerald-400"></i> BẢNG ĐẤU NGÀY: <span class="text-emerald-400">{{dateStr}}</span>
-      </h2>
-      <p class="text-xs text-slate-400 mt-0.5">Quản lý kết quả trận đấu và thống kê tiền kèo theo ngày</p>
+<div class="card bg-slate-900 border border-slate-800 shadow-2xl rounded-2xl overflow-hidden mb-6 transition-all duration-300">
+  <!-- Phần Header của Bảng -->
+  <div class="p-4 sm:p-5 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border-b border-slate-800/80 flex flex-wrap justify-between items-center gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shadow-inner">
+        <i class="fa-solid fa-calendar-days text-lg"></i>
+      </div>
+      <div>
+        <h2 class="text-base sm:text-lg font-bold text-white tracking-wide flex items-center gap-2">
+          BẢNG ĐẤU NGÀY: <span class="text-emerald-400 font-extrabold px-2 py-0.5 bg-emerald-500/10 rounded-md border border-emerald-500/20">{{dateStr}}</span>
+        </h2>
+        <p class="text-xs text-slate-400 mt-0.5">Quản lý kết quả chi tiết từng trận và thống kê tiền kèo theo ngày</p>
+      </div>
     </div>
     
     <div class="flex items-center gap-3 flex-wrap">
-      <div class="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60">
-        <span class="text-xs font-semibold text-slate-300">Chế độ Kèo:</span>
-        <select onchange="changeKeoMode('{{dateStr}}', this.value)" class="bg-slate-900 text-emerald-400 font-bold text-xs border border-slate-700 rounded px-2 py-1 focus:outline-none focus:border-emerald-500">
+      <!-- Bộ chọn chế độ kèo -->
+      <div class="flex items-center gap-2 bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800 shadow-sm">
+        <span class="text-xs font-semibold text-slate-300"><i class="fa-solid fa-sliders text-emerald-400 mr-1"></i> Chế độ Kèo:</span>
+        <select onchange="changeKeoMode('{{dateStr}}', this.value)" class="bg-slate-900 text-emerald-400 font-bold text-xs border border-slate-700/80 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-emerald-500 transition cursor-pointer">
           <option value="default" {{selected_currentMode_default}}>Mặc định (Thắng +5 / Thua -15)</option>
           <option value="k25" {{selected_currentMode_k25}}>Kèo 0 / -25</option>
           <option value="no_keo" {{selected_currentMode_no_keo}}>Không tính tiền (0 / 0)</option>
@@ -19,64 +26,66 @@
         </select>
       </div>
 
-      <button onclick="addMatch('{{dateStr}}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded-lg transition shadow-md flex items-center gap-1.5">
+      <!-- Nút thêm trận -->
+      <button onclick="addMatch('{{dateStr}}')" class="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-900/20 flex items-center gap-1.5 active:scale-95">
         <i class="fa-solid fa-plus"></i> Thêm Trận
       </button>
     </div>
   </div>
 
+  <!-- Phần Bảng Danh Sách Trận Đấu -->
   <div class="overflow-x-auto">
     <table class="w-full text-left border-collapse">
       <thead>
-        <tr class="bg-slate-950/80 text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-800">
+        <tr class="bg-slate-950/90 text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-800">
           <th style="width: 50px;" class="py-3 px-3 text-center font-bold">TRẬN</th>
-          <th style="min-width: 180px;" class="py-3 px-3 font-bold">CẶP 1 (ĐỘI 1)</th>
-          <th style="min-width: 180px;" class="py-3 px-3 font-bold">CẶP 2 (ĐỘI 2)</th>
-          <th style="width: 90px;" class="py-3 px-2 text-center font-bold">TỶ SỐ 1</th>
-          <th style="width: 90px;" class="py-3 px-2 text-center font-bold">TỶ SỐ 2</th>
+          <th style="min-width: 200px;" class="py-3 px-4 font-bold">CẶP 1 (ĐỘI 1)</th>
+          <th style="min-width: 200px;" class="py-3 px-4 font-bold">CẶP 2 (ĐỘI 2)</th>
+          <th style="width: 85px;" class="py-3 px-2 text-center font-bold">TỶ SỐ 1</th>
+          <th style="width: 85px;" class="py-3 px-2 text-center font-bold">TỶ SỐ 2</th>
           {{freeKeoHeader}}
-          <th style="width: 100px;" class="py-3 px-3 text-center font-bold">KÈO 1</th>
-          <th style="width: 100px;" class="py-3 px-3 text-center font-bold">KÈO 2</th>
+          <th style="width: 105px;" class="py-3 px-3 text-center font-bold">KÈO 1</th>
+          <th style="width: 105px;" class="py-3 px-3 text-center font-bold">KÈO 2</th>
           <th style="width: 50px;" class="py-3 px-2 text-center font-bold">XÓA</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-slate-800/60 text-sm">
+      <tbody class="divide-y divide-slate-800/40 text-sm">
 <!-- [/PART] -->
 
 <!-- [PART: day-tab-tr-1] -->
-        <tr class="hover:bg-slate-800/40 transition">
-          <td class="py-2.5 px-3 text-center font-bold text-slate-400 text-xs">{{m_id}}</td>
-          <td class="py-2.5 px-3">
+        <tr class="hover:bg-slate-800/30 transition-colors duration-150">
+          <td class="py-3 px-3 text-center font-bold text-slate-500 text-xs">{{m_id}}</td>
+          <td class="py-3 px-4">
             <div class="flex gap-2">
-              <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p1', this.value)" style="color: {{c1_p1_color}};" class="w-1/2 bg-slate-800 text-xs font-bold border border-slate-700 rounded px-2 py-1.5 focus:outline-none focus:border-emerald-500">
+              <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p1', this.value)" style="color: {{c1_p1_color}};" class="w-1/2 bg-slate-950/60 text-xs font-bold border border-slate-700/70 rounded-lg px-2 py-2 focus:outline-none focus:border-emerald-500 transition cursor-pointer">
                 <option value="">-- VĐV 1 --</option>
                 {{generateVdvOptionsHtml_m_c1_p1}}
               </select>
-              <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p2', this.value)" style="color: {{c1_p2_color}};" class="w-1/2 bg-slate-800 text-xs font-bold border border-slate-700 rounded px-2 py-1.5 focus:outline-none focus:border-emerald-500">
+              <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p2', this.value)" style="color: {{c1_p2_color}};" class="w-1/2 bg-slate-950/60 text-xs font-bold border border-slate-700/70 rounded-lg px-2 py-2 focus:outline-none focus:border-emerald-500 transition cursor-pointer">
                 <option value="">-- VĐV 2 --</option>
                 {{generateVdvOptionsHtml_m_c1_p2}}
               </select>
             </div>
           </td>
-          <td class="py-2.5 px-3">
+          <td class="py-3 px-4">
             <div class="flex gap-2">
-              <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p1', this.value)" style="color: {{c2_p1_color}};" class="w-1/2 bg-slate-800 text-xs font-bold border border-slate-700 rounded px-2 py-1.5 focus:outline-none focus:border-emerald-500">
+              <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p1', this.value)" style="color: {{c2_p1_color}};" class="w-1/2 bg-slate-950/60 text-xs font-bold border border-slate-700/70 rounded-lg px-2 py-2 focus:outline-none focus:border-emerald-500 transition cursor-pointer">
                 <option value="">-- VĐV 1 --</option>
                 {{generateVdvOptionsHtml_m_c2_p1}}
               </select>
-              <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p2', this.value)" style="color: {{c2_p2_color}};" class="w-1/2 bg-slate-800 text-xs font-bold border border-slate-700 rounded px-2 py-1.5 focus:outline-none focus:border-emerald-500">
+              <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p2', this.value)" style="color: {{c2_p2_color}};" class="w-1/2 bg-slate-950/60 text-xs font-bold border border-slate-700/70 rounded-lg px-2 py-2 focus:outline-none focus:border-emerald-500 transition cursor-pointer">
                 <option value="">-- VĐV 2 --</option>
                 {{generateVdvOptionsHtml_m_c2_p2}}
               </select>
             </div>
           </td>
-          <td class="py-2.5 px-2 text-center">{{score1Inner}}</td>
-          <td class="py-2.5 px-2 text-center">{{score2Inner}}</td>
+          <td class="py-3 px-2 text-center">{{score1Inner}}</td>
+          <td class="py-3 px-2 text-center">{{score2Inner}}</td>
           {{customKeoInputHtml}}
-          <td class="py-2.5 px-3 text-center font-bold text-xs {{winLoseClass_keo1}}">{{keo1}}K</td>
-          <td class="py-2.5 px-3 text-center font-bold text-xs {{winLoseClass_keo2}}">{{keo2}}K</td>
-          <td class="py-2.5 px-2 text-center">
-            <button onclick="deleteSpecificMatch('{{dateStr}}', {{idx}})" class="text-slate-500 hover:text-red-400 p-1 transition" title="Xóa trận này">
+          <td class="py-3 px-3 text-center font-bold text-xs {{winLoseClass_keo1}}">{{keo1}}K</td>
+          <td class="py-3 px-3 text-center font-bold text-xs {{winLoseClass_keo2}}">{{keo2}}K</td>
+          <td class="py-3 px-2 text-center">
+            <button onclick="deleteSpecificMatch('{{dateStr}}', {{idx}})" class="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition" title="Xóa trận này">
               <i class="fa-solid fa-trash-can text-xs"></i>
             </button>
           </td>
@@ -84,19 +93,19 @@
 <!-- [/PART] -->
 
 <!-- [PART: day-tab-input-1] -->
-<input type="number" value="{{m_score1}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'score1', this.value)" class="w-16 text-center font-bold bg-slate-800 text-white border border-slate-700 rounded px-1 py-1 text-xs focus:outline-none focus:border-emerald-500">
+<input type="number" value="{{m_score1}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'score1', this.value)" class="w-14 text-center font-extrabold bg-slate-950 text-white border border-slate-700 rounded-lg px-1 py-1.5 text-xs focus:outline-none focus:border-emerald-500 shadow-inner">
 <!-- [/PART] -->
 
 <!-- [PART: day-tab-input-2] -->
-<input type="number" value="{{m_score2}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'score2', this.value)" class="w-16 text-center font-bold bg-slate-800 text-white border border-slate-700 rounded px-1 py-1 text-xs focus:outline-none focus:border-emerald-500">
+<input type="number" value="{{m_score2}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'score2', this.value)" class="w-14 text-center font-extrabold bg-slate-950 text-white border border-slate-700 rounded-lg px-1 py-1.5 text-xs focus:outline-none focus:border-emerald-500 shadow-inner">
 <!-- [/PART] -->
 
 <!-- [PART: day-tab-td-1] -->
-<td class="py-2.5 px-2 text-center">
+<td class="py-3 px-2 text-center">
   <div class="flex items-center justify-center gap-1">
-    <input type="number" value="{{m_customWin_or_default}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'customWin', this.value)" class="w-12 text-center font-bold bg-slate-800 text-emerald-400 border border-slate-700 rounded px-1 py-1 text-[11px]" title="Thắng">
-    <span class="text-slate-600">/</span>
-    <input type="number" value="{{m_customLose_or_default}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'customLose', this.value)" class="w-12 text-center font-bold bg-slate-800 text-red-400 border border-slate-700 rounded px-1 py-1 text-[11px]" title="Thua">
+    <input type="number" value="{{m_customWin_or_default}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'customWin', this.value)" class="w-12 text-center font-bold bg-slate-950 text-emerald-400 border border-slate-700/80 rounded-lg px-1 py-1.5 text-[11px] shadow-inner" title="Thắng">
+    <span class="text-slate-600 font-bold">/</span>
+    <input type="number" value="{{m_customLose_or_default}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'customLose', this.value)" class="w-12 text-center font-bold bg-slate-950 text-red-400 border border-slate-700/80 rounded-lg px-1 py-1.5 text-[11px] shadow-inner" title="Thua">
   </div>
 </td>
 <!-- [/PART] -->
@@ -109,18 +118,21 @@
 <!-- [/PART] -->
 
 <!-- [PART: summary] -->
-<div class="card bg-slate-900 border border-slate-800 shadow-xl rounded-xl overflow-hidden mt-6">
-  <div class="p-4 bg-slate-950/80 border-b border-slate-800 flex justify-between items-center">
-    <h3 class="text-md font-bold text-white flex items-center gap-2">
-      <i class="fa-solid fa-chart-pie text-emerald-400"></i> BẢNG TỔNG HỢP VÀ THU CHI NGÀY: <span class="text-emerald-400">{{dateStr}}</span>
+<div class="card bg-slate-900 border border-slate-800 shadow-2xl rounded-2xl overflow-hidden mt-8">
+  <div class="p-4 sm:p-5 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-slate-800 flex justify-between items-center">
+    <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+        <i class="fa-solid fa-chart-pie text-sm"></i>
+      </div>
+      BẢNG TỔNG HỢP KÈO NGÀY: <span class="text-emerald-400 font-extrabold">{{dateStr}}</span>
     </h3>
   </div>
 
   <div class="overflow-x-auto">
     <table class="w-full text-left border-collapse">
       <thead>
-        <tr class="bg-slate-950/60 text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-800">
-          <th class="py-3 px-3 font-bold">VĐV</th>
+        <tr class="bg-slate-950/90 text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-800">
+          <th class="py-3 px-4 font-bold">VĐV</th>
           <th class="py-3 px-3 text-center font-bold">SỐ TRẬN</th>
           <th class="py-3 px-3 text-center font-bold">THẮNG (K)</th>
           <th class="py-3 px-3 text-center font-bold">THUA (K)</th>
@@ -128,34 +140,34 @@
           <th class="py-3 px-3 text-center font-bold">TỔNG KÈO (K)</th>
           <th class="py-3 px-3 text-center font-bold">XIN NGHỈ (K)</th>
           <th class="py-3 px-3 text-center font-bold">TÍCH NỘP</th>
-          <th class="py-3 px-3 font-bold">GHI CHÚ</th>
+          <th class="py-3 px-4 font-bold">GHI CHÚ</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-slate-800/60 text-sm">
+      <tbody class="divide-y divide-slate-800/40 text-sm">
         {{summaryRowsHtml}}
         {{buildAbsentSelectorRow_dateStr_9}}
       </tbody>
       <tfoot>
-        <tr class="bg-slate-950 font-bold text-xs border-t-2 border-slate-700">
-          <td colspan="4" class="py-3 px-3 text-right text-slate-300">TỔNG HỢP TOÀN BAN:</td>
-          <td class="py-3 px-3 text-center text-emerald-400">{{sumBringBack}}K</td>
-          <td class="py-3 px-3 text-center text-red-400">{{btcThuVeCalculated}}K</td>
-          <td class="py-3 px-3 text-center" style="color: {{sumFine_color}};">{{sumFine_value}}K</td>
-          <td class="py-3 px-3 text-center text-emerald-400">{{sumThucThu}}K</td>
-          <td class="py-3 px-3 text-slate-300"></td>
+        <tr class="bg-slate-950/95 font-bold text-xs border-t-2 border-slate-700/80">
+          <td colspan="4" class="py-3.5 px-4 text-right text-slate-300 tracking-wider">TỔNG HỢP TOÀN BAN:</td>
+          <td class="py-3.5 px-3 text-center text-emerald-400">{{sumBringBack}}K</td>
+          <td class="py-3.5 px-3 text-center text-red-400">{{btcThuVeCalculated}}K</td>
+          <td class="py-3.5 px-3 text-center" style="color: {{sumFine_color}};">{{sumFine_value}}K</td>
+          <td class="py-3.5 px-3 text-center text-emerald-400 font-extrabold text-sm">{{sumThucThu}}K</td>
+          <td class="py-3.5 px-4 text-slate-300"></td>
         </tr>
-        <tr class="bg-slate-950/90 text-xs border-t border-slate-800">
-          <td colspan="9" class="py-3 px-4">
+        <tr class="bg-slate-950 text-xs border-t border-slate-800/80">
+          <td colspan="9" class="py-4 px-4">
             <div class="flex flex-wrap items-center justify-between gap-4">
-              <div class="flex items-center gap-2">
-                <span class="text-slate-400 font-semibold">Xác nhận BTC chuyển tổng ngày:</span>
-                <select onchange="handleBtcNoteAdminChange('{{dateStr}}', this)" class="bg-slate-900 font-bold text-xs border border-slate-700 rounded px-2.5 py-1 focus:outline-none" style="color: {{isYes_color}};">
+              <div class="flex items-center gap-2.5 bg-slate-900/80 px-3 py-2 rounded-xl border border-slate-800">
+                <span class="text-slate-300 font-semibold flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-400"></i> Xác nhận BTC chuyển tổng ngày:</span>
+                <select onchange="handleBtcNoteAdminChange('{{dateStr}}', this)" class="bg-slate-950 font-bold text-xs border border-slate-700 rounded-lg px-3 py-1.5 focus:outline-none cursor-pointer transition" style="color: {{isYes_color}};">
                   <option value="NO" {{selected_not_isYes}}>❌ Chưa chuyển tổng</option>
                   <option value="YES" {{selected_isYes}}>✅ Đã chuyển tổng</option>
                 </select>
               </div>
-              <div class="text-slate-300 font-semibold">
-                Quỹ còn lại: <span class="text-emerald-400 font-bold text-sm">{{quyCon}}K</span>
+              <div class="text-slate-300 font-semibold bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800">
+                Quỹ còn lại: <span class="text-emerald-400 font-extrabold text-base ml-1">{{quyCon}}K</span>
               </div>
             </div>
           </td>
@@ -167,8 +179,8 @@
 <!-- [/PART] -->
 
 <!-- [PART: absent-fine-cell] -->
-<td class="py-2.5 px-3 text-center">
-  <select onchange="setAbsentStatus('{{d}}', '{{n}}', this.value)" class="bg-slate-800 text-xs font-bold border border-slate-700 rounded px-2 py-1 focus:outline-none" style="color: {{unexcused_color}};">
+<td class="py-3 px-3 text-center">
+  <select onchange="setAbsentStatus('{{d}}', '{{n}}', this.value)" class="bg-slate-950 text-xs font-bold border border-slate-700/80 rounded-lg px-2.5 py-1.5 focus:outline-none cursor-pointer transition" style="color: {{unexcused_color}};">
     <option value="unexcused" {{selected_unexcused}}>Không phép (-{{ABSENT_FINE_K}}K)</option>
     <option value="excused" {{selected_not_unexcused}}>Có phép (0K)</option>
   </select>
@@ -176,15 +188,15 @@
 <!-- [/PART] -->
 
 <!-- [PART: absent-fine-cell-td-1] -->
-<td class="py-2.5 px-3 text-center text-slate-500">-</td>
+<td class="py-3 px-3 text-center text-slate-600">-</td>
 <!-- [/PART] -->
 
 <!-- [PART: absent-select-row] -->
-<tr class="bg-slate-950/40 border-t border-slate-800">
-  <td colspan="{{colspan}}" class="py-3 px-4">
+<tr class="bg-slate-950/60 border-t border-slate-800">
+  <td colspan="{{colspan}}" class="py-3.5 px-4">
     <div class="flex flex-wrap items-center gap-4">
       <div class="flex items-center gap-2">
-        <span class="text-xs font-bold text-slate-300"><i class="fa-solid fa-user-slash text-amber-400"></i> Danh sách VĐV xin nghỉ:</span>
+        <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5"><i class="fa-solid fa-user-slash text-amber-400"></i> Danh sách VĐV xin nghỉ:</span>
         {{countSelect}}
       </div>
       <div class="flex flex-wrap items-center gap-2">
@@ -196,7 +208,7 @@
 <!-- [/PART] -->
 
 <!-- [PART: absent-select-row-select-1] -->
-<select onchange="setAbsentCount('{{d}}', this.value)" class="bg-slate-800 text-xs font-bold text-amber-400 border border-slate-700 rounded px-2.5 py-1 focus:outline-none focus:border-emerald-500">
+<select onchange="setAbsentCount('{{d}}', this.value)" class="bg-slate-900 text-xs font-bold text-amber-400 border border-slate-700 rounded-lg px-3 py-1.5 focus:outline-none focus:border-emerald-500 cursor-pointer transition">
   {{countOpts_rows}}
 </select>
 <!-- [/PART] -->
@@ -206,7 +218,7 @@
 <!-- [/PART] -->
 
 <!-- [PART: absent-select-row-option-2] -->
-<select onchange="setAbsentPlayerSlot('{{d}}', {{i}}, this.value)" class="bg-slate-800 text-xs font-bold border border-slate-700 rounded px-2 py-1 focus:outline-none" style="color: {{color}};">
+<select onchange="setAbsentPlayerSlot('{{d}}', {{i}}, this.value)" class="bg-slate-900 text-xs font-bold border border-slate-700 rounded-lg px-2.5 py-1.5 focus:outline-none cursor-pointer transition" style="color: {{color}};">
   <option value="">-- Chọn VĐV nghỉ {{i_plus1}} --</option>
   {{opts}}
 </select>
@@ -217,41 +229,16 @@
 <!-- [/PART] -->
 
 <!-- [PART: summary-span-1] -->
-<span class="text-xs font-semibold text-red-400 bg-red-950/40 px-2 py-0.5 rounded border border-red-900/50">Chưa nộp phạt</span>
+<span class="text-xs font-semibold text-red-400 bg-red-950/50 px-2.5 py-1 rounded-lg border border-red-900/40">Chưa nộp phạt</span>
 <!-- [/PART] -->
 
 <!-- [PART: summary-span-2] -->
-<span class="text-xs font-semibold text-amber-400 bg-amber-950/40 px-2 py-0.5 rounded border border-amber-900/50">Chưa nộp âm</span>
+<span class="text-xs font-semibold text-amber-400 bg-amber-950/50 px-2.5 py-1 rounded-lg border border-amber-900/40">Chưa nộp âm</span>
 <!-- [/PART] -->
 
 <!-- [PART: summary-span-3] -->
-<span class="text-xs font-semibold text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-900/50">Đã nhận quỹ</span>
+<span class="text-xs font-semibold text-emerald-400 bg-emerald-950/50 px-2.5 py-1 rounded-lg border border-emerald-900/40">Đã nhận quỹ</span>
 <!-- [/PART] -->
 
 <!-- [PART: summary-span-4] -->
-<span class="text-xs font-semibold text-blue-400 bg-blue-950/40 px-2 py-0.5 rounded border border-blue-900/50">Chưa nhận quỹ</span>
-<!-- [/PART] -->
-
-<!-- [PART: summary-span-5] -->
-<span class="text-xs font-semibold text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Nghỉ phép</span>
-<!-- [/PART] -->
-
-<!-- [PART: summary-tr-1] -->
-<tr class="hover:bg-slate-800/40 transition">
-  <td class="py-2.5 px-3 font-bold text-xs" style="color: {{vColor}};">{{v}}</td>
-  <td class="py-2.5 px-3 text-center text-slate-300 text-xs">{{st_played}}</td>
-  <td class="py-2.5 px-3 text-center font-bold text-emerald-400 text-xs">{{if_st_winK_0}}</td>
-  <td class="py-2.5 px-3 text-center font-bold text-red-400 text-xs">{{if_st_loseK_0}}</td>
-  <td class="py-2.5 px-3 text-center font-bold text-emerald-400 text-xs">{{if_bringBack_0}}</td>
-  <td class="py-2.5 px-3 text-center font-bold text-xs {{if_st_total_0_class}}">{{st_total}}K</td>
-  {{buildAbsentFineCell_dateStr_v_isAbsent_fine}}
-  <td class="py-2.5 px-3 text-center">
-    <input type="checkbox" onclick="togglePayment('{{payKey}}')" class="{{checkboxClass}}" {{if_isPaid}} title="{{if_isAdminVerified}}">
-  </td>
-  <td class="py-2.5 px-3 text-xs">{{noteText}}</td>
-</tr>
-<!-- [/PART] -->
-
-<!-- [PART: vdv-option] -->
-<option value="{{v}}" {{isSelected}} style="color: {{color}};">{{v}}</option>
-<!-- [/PART] -->
+<span class="text-xs font-semibold text-blue-400

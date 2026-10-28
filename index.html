@@ -51,7 +51,7 @@
       margin-bottom: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     }
-    /* Khung Header chính duy nhất */
+    /* Khung Header chính */
     .header-section {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       backdrop-filter: blur(10px);
@@ -173,7 +173,7 @@
       text-transform: uppercase;
     }
 
-    /* CSS Tối ưu hiển thị Bảng biểu cho cả Mobile & Desktop */
+    /* CSS Bảng Biểu Cao Cấp: Phối màu hài hòa, chữ đậm, tối ưu Mobile & Desktop */
     .table-responsive, div:has(> table) {
       width: 100%;
       overflow-x: auto;
@@ -189,19 +189,35 @@
       background-color: #ffffff;
     }
     th, td {
-      padding: 8px 10px;
+      padding: 9px 12px;
       font-size: 11px;
       text-align: center;
-      border: 1px solid #e2e8f0;
+      border: 1px solid #cbd5e1;
+      font-weight: 700; /* In đậm chữ số trong bảng */
     }
     th {
-      background-color: #0f172a;
-      color: #ffffff;
-      font-weight: 700;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #f8fafc;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-color: #334155;
     }
+    tr:nth-child(even) td {
+      background-color: #f8fafc; /* Phối màu xen kẽ dòng hài hòa */
+    }
+    tr:hover td {
+      background-color: #f1f5f9;
+    }
+
+    /* Màu sắc số âm / số dương tự động */
+    .number-pos { color: #16a34a !important; font-weight: 800; } /* Xanh lá dương */
+    .number-neg { color: #dc2626 !important; font-weight: 800; } /* Đỏ âm */
+    .number-zero { color: #64748b !important; font-weight: 700; }
+
     @media (max-width: 768px) {
       th, td {
-        padding: 6px 8px;
+        padding: 7px 9px;
         font-size: 10px;
       }
     }
@@ -224,7 +240,7 @@
         <div id="component-admin-button"></div>
       </div>
 
-      <!-- Thanh điều hướng các nút chuẩn xác -->
+      <!-- Thanh điều hướng các nút -->
       <div class="top-nav">
         <div class="nav-item">
           <button class="nav-btn" onclick="goHome()">🏠 HOME</button>

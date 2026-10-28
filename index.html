@@ -39,7 +39,7 @@
       margin: 0 auto;
       position: relative;
     }
-    /* Banner CLB */
+    /* Banner CLB chuẩn */
     .hero-banner {
       background-image: url('banner.jpg');
       background-size: cover;
@@ -173,7 +173,7 @@
       text-transform: uppercase;
     }
 
-    /* CSS Bảng Biểu Cao Cấp: Hiệu ứng màu chữ và nền tiêu đề bảng rực rỡ */
+    /* Bảng Biểu Cao Cấp: Cân đối, căn giữa, in đậm số lượng */
     .table-responsive, div:has(> table) {
       width: 100%;
       overflow-x: auto;
@@ -189,22 +189,20 @@
       background-color: #ffffff;
     }
     th, td {
-      padding: 9px 12px;
+      padding: 9px 10px;
       font-size: 11px;
       text-align: center;
       vertical-align: middle;
       border: 1px solid #cbd5e1;
       font-weight: 700;
     }
-    /* Hiệu ứng màu sắc bắt mắt cho tiêu đề bảng (th) */
     th {
-      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
-      color: #38bdf8; /* Màu chữ xanh dương sáng nổi bật */
-      font-weight: 900;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #f8fafc;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.5px;
       border-color: #334155;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
     tr:nth-child(even) td {
       background-color: #f8fafc;
@@ -213,23 +211,19 @@
       background-color: #f1f5f9;
     }
 
-    /* Hiệu ứng màu sắc tự động cho số Âm và Dương trong bảng chi tiết ngày */
-    .number-pos { color: #16a34a !important; font-weight: 900; } /* Xanh lá dương */
-    .number-neg { color: #dc2626 !important; font-weight: 900; } /* Đỏ âm */
+    /* Tông màu Đỏ (Âm) / Xanh (Dương) chuẩn xác */
+    .number-pos { color: #16a34a !important; font-weight: 800; }
+    .number-neg { color: #dc2626 !important; font-weight: 800; }
     .number-zero { color: #64748b !important; font-weight: 700; }
 
-    /* Hiệu ứng màu sắc nổi bật cho cột tỷ số / điểm số */
-    td input[type="text"], td input[type="number"], .score-highlight {
+    td input[type="text"], td input[type="number"] {
       text-align: center;
-      font-weight: 900;
-      color: #2563eb !important; /* Màu xanh dương đậm nổi bật cho tỷ số */
-      background-color: #eff6ff !important; /* Nền xanh nhạt giúp dễ nhận diện cột tỷ số */
-      border-color: #bfdbfe !important;
+      font-weight: 800;
     }
 
     @media (max-width: 768px) {
       th, td {
-        padding: 7px 9px;
+        padding: 6px 7px;
         font-size: 10px;
       }
     }
@@ -252,7 +246,7 @@
         <div id="component-admin-button"></div>
       </div>
 
-      <!-- Thanh điều hướng các nút -->
+      <!-- Thanh điều hướng -->
       <div class="top-nav">
         <div class="nav-item">
           <button class="nav-btn" onclick="goHome()">🏠 HOME</button>
@@ -267,15 +261,15 @@
       </div>
     </div>
 
-    <!-- Vùng hiển thị nội dung động -->
+    <!-- Vùng nội dung tab -->
     <div id="tabContent"></div>
   </div>
 
-  <!-- Các Modal ẩn hệ thống -->
+  <!-- Modal ẩn -->
   <div id="component-modal-game"></div>
   <div id="component-modal-player"></div>
 
-  <!-- Tệp điều phối cốt lõi -->
+  <!-- Tệp JS xử lý chính -->
   <script src="main.js"></script>
 </body>
 </html>

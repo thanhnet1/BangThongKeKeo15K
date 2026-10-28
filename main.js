@@ -5,7 +5,7 @@
 
 /* ████████████████ MODULE CORE · NẠP COMPONENT HTML ████████████████ */
 /* ▼▼▼ KHỐI [CORE-COMPONENTS] · Nạp & ghép các component (components/*.html) ▼▼▼ BẮT ĐẦU */
-    const COMPONENT_FILES = ['header', 'admin', 'autobackup', 'home', 'players', 'pickthu', 'setting', 'tonghop', 'minigame1', 'minigame2', 'common'];
+    const COMPONENT_FILES = ['header', 'admin', 'autobackup', 'home', 'players', 'setting', 'tonghop', 'minigame1', 'minigame2', 'common'];
     const COMPONENT_PARTS = {};   // 'home.day-tab' -> nội dung HTML
 
     // Tải tất cả file component 1 lần khi khởi động, tách theo <!-- [PART: tên] -->
@@ -981,7 +981,11 @@
             if (data.mini1Sub2KeoMode) mini1Sub2KeoMode = data.mini1Sub2KeoMode;
             if (data.mini1Sub2Payment) mini1Sub2Payment = data.mini1Sub2Payment;
             if (data.miniGame1Sub2Matches) miniGame1Sub2Matches = data.miniGame1Sub2Matches;
-            if (data.miniGame1Matches) miniGame1Matches = data.miniGame1Matches;
+            if (data.mini1Sub2TeamA) mini1Sub2TeamA = data.mini1Sub2TeamA;
+            if (data.mini1Sub2TeamB) mini1Sub2TeamB = data.mini1Sub2TeamB;
+            if (data.mini1Sub2KeoMode) mini1Sub2KeoMode = data.mini1Sub2KeoMode;
+            if (data.mini1Sub2Payment) mini1Sub2Payment = data.mini1Sub2Payment;
+            if (data.miniGame1Sub2Matches) miniGame1Sub2Matches = data.miniGame1Sub2Matches;
             if (data.mini2PairsA) mini2PairsA = data.mini2PairsA;
             if (data.mini2PairsB) mini2PairsB = data.mini2PairsB;
             if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;

@@ -5,7 +5,7 @@
 
 /* ████████████████ MODULE CORE · NẠP COMPONENT HTML ████████████████ */
 /* ▼▼▼ KHỐI [CORE-COMPONENTS] · Nạp & ghép các component (components/*.html) ▼▼▼ BẮT ĐẦU */
-    const COMPONENT_FILES = ['header', 'admin', 'autobackup', 'home', 'players', 'setting', 'tonghop', 'minigame1', 'minigame2', 'common'];
+    const COMPONENT_FILES = ['header', 'admin', 'autobackup', 'home', 'players', 'pickthu', 'setting', 'tonghop', 'minigame1', 'minigame2', 'common'];
     const COMPONENT_PARTS = {};   // 'home.day-tab' -> nội dung HTML
 
     // Tải tất cả file component 1 lần khi khởi động, tách theo <!-- [PART: tên] -->

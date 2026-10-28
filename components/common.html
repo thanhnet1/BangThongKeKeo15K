@@ -1,34 +1,41 @@
-<!-- ==========================================================================
-     COMPONENT: components/common.html — DÙNG CHUNG: hộp thoại thể lệ Mini Game + ô chọn loại kèo.
-     Mỗi PART nằm giữa dòng chú thích "[PART: tên]" và dòng chú thích "[/PART]" (HTML được giữ nguyên từng ký tự).
-     {{tên_slot}} là chỗ js/main.js điền dữ liệu (số liệu, hàng của bảng...). Sửa chữ/màu/bố cục thoải mái;
-     chỉ cần giữ nguyên các {{tên_slot}} (không đổi tên, không xóa nếu vẫn muốn hiện dữ liệu đó).
-     ========================================================================== -->
-
-<!-- từ hàm renderKeoSelectDropdown() · slots: onChangeFuncStr, selected_currentMode_default, selected_currentMode_k25, selected_currentMode_no_keo, selected_currentMode_free -->
-<!-- [PART: keo-select] -->
-
-        <select style="width: auto; padding: 4px 8px; font-weight: bold; background: #fff8e1; border: 1px solid #d97706;" onchange="{{onChangeFuncStr}}(this.value)">
-          <option value="default" {{selected_currentMode_default}}>Kèo 5k / -15k (Mặc định)</option>
-          <option value="k25" {{selected_currentMode_k25}}>Kèo 25k (0k / -25k)</option>
-          <option value="no_keo" {{selected_currentMode_no_keo}}>No Kèo (0k / 0k)</option>
-          <option value="free" {{selected_currentMode_free}}>Kèo Tự Do (Tùy Chỉnh)</option>
-        </select>
-      
+<!-- [PART: game-modal] -->
+<!-- Đã loại bỏ hoàn toàn khung chỉnh sửa minigame theo yêu cầu -->
 <!-- [/PART] -->
 
-<!-- [PART: game-modal] -->
-
-  <!-- MODAL CHỈNH SỬA MINI GAME -->
-  <div class="modal" id="gameModal">
-    <div class="modal-content">
-      <h3 style="margin-top:0; font-size:14px; font-weight:800;" id="gameModalTitle">Chỉnh Sửa Mini Game</h3>
-      <textarea id="gameContentInput" rows="5" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:11px;" placeholder="Nhập thể lệ trò chơi..."></textarea>
-      <div style="display:flex; justify-content:flex-end; gap:6px; margin-top:12px;">
-        <button class="btn" style="background-color:#64748b;" onclick="closeGameModal()">Hủy</button>
-        <button class="btn btn-green" onclick="saveGameContent()">Lưu Thay Đổi</button>
+<!-- [PART: players.modal] -->
+<div id="player-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-[9999] p-4">
+  <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
+    <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white px-5 py-4 flex justify-between items-center">
+      <h3 id="modal-title" class="font-bold text-sm uppercase tracking-wider">Thêm Pick Thủ Mới</h3>
+      <button onclick="closePlayerModal()" class="text-slate-400 hover:text-white transition-colors text-lg font-bold px-2">&times;</button>
+    </div>
+    <div class="p-6 space-y-4">
+      <input type="hidden" id="player-id">
+      <div>
+        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tên Pick Thủ</label>
+        <input type="text" id="player-name" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:border-blue-600" placeholder="Nhập tên VĐV...">
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Giới Tính</label>
+        <select id="player-gender" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:border-blue-600 bg-white">
+          <option value="Nam">Nam</option>
+          <option value="Nữ">Nữ</option>
+        </select>
+      </div>
+      <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+        <button onclick="closePlayerModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-xs font-bold transition-colors">Hủy</button>
+        <button onclick="savePlayer()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-colors shadow-sm">Lưu Lại</button>
       </div>
     </div>
   </div>
+</div>
+<!-- [/PART] -->
 
+<!-- [PART: keo-select] -->
+<select onchange="{{onChangeFuncStr}}(this.value)" class="text-[11px] font-bold px-2 py-1 rounded bg-slate-800 text-white border border-slate-700 focus:outline-none cursor-pointer">
+  <option value="default" {{selected_currentMode_default}}>Kèo: Thắng +5 | Thua -15</option>
+  <option value="k25" {{selected_currentMode_k25}}>Kèo: Thua -25</option>
+  <option value="no_keo" {{selected_currentMode_no_keo}}>Không tính tiền kèo</option>
+  <option value="free" {{selected_currentMode_free}}>Kèo tùy chỉnh mệnh giá</option>
+</select>
 <!-- [/PART] -->

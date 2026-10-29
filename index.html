@@ -1,137 +1,25 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <!--[TOC-BEGIN]
-  ╔════════════════════════════════════════════════════════════════════════════════╗
-  ║  CLB PICKLEBALL - CMTD · FILE ĐÃ CHIA KHỐI / MODULE (1 file tổng thể)            ║
-  ╚════════════════════════════════════════════════════════════════════════════════╝
-  CÁCH SỬA: dùng Ctrl+F tìm  KHỐI [MÃ-KHỐI]  (ví dụ: KHỐI [HOME-SUMMARY]).
-  Mỗi khối nằm giữa dòng  ▼▼▼ ... BẮT ĐẦU  và  ▲▲▲ KẾT THÚC. Chỉ sửa NỘI DUNG bên trong khối,
-  KHÔNG xóa / di chuyển 2 dòng đánh dấu. Giữ nguyên id="..." và tên hàm trong onclick="..." để không hỏng liên kết.
-  Mã khối bắt đầu bằng tên MODULE: tìm  [HOME-  để thấy mọi khối (HTML, CSS, JS) của module HOME.
-  Mỗi khối JS là 1 thẻ script riêng, dùng chung biến toàn cục (let/const/function) với các khối khác.
-  Thứ tự các khối JS được giữ nguyên (khối khởi động CORE-INIT luôn ở cuối).
-
-  ■ MODULE CORE · LÕI HỆ THỐNG
-      Khung trang, banner, điều hướng tab (router), tiêu đề menu, khởi động (window.onload).
-      - [HEAD-META] (HTML) Thông tin trang (meta, tiêu đề)
-      - [LIB-FONTS-ICONS] (HTML) Thư viện Google Font + Font Awesome
-      - [LIB-TAILWIND-XLSX] (HTML) Thư viện Tailwind CSS + SheetJS (xuất Excel)
-      - [CSS-BASE] (CSS ) Nền trang, font, khung chứa
-      - [CSS-HEADER] (CSS ) Banner đầu trang, header, logo
-      - [CSS-NAV] (CSS ) Thanh menu + menu thả xuống
-      - [CSS-BUTTON] (CSS ) Nút bấm (.btn)
-      - [CSS-TABLE] (CSS ) Thẻ (card), bảng, tiêu đề cặp pick
-      - [CSS-FORM] (CSS ) Ô chọn, ô nhập, ô tỷ số, nhãn HẦM
-      - [CSS-LAYOUT-MODAL] (CSS ) Lưới 2 cột, hộp thoại (modal)
-      - [CSS-SCROLL-RESPONSIVE] (CSS ) Cuộn ngang + giao diện điện thoại
-      - [BRAND] (HTML) Logo + tên CLB
-      - [TAB-CONTENT] (HTML) Vùng hiển thị nội dung các tab (#tabContent)
-      - [CORE-DATA] (JS  ) Dữ liệu lõi: tiêu đề menu, tab hiện tại
-      - [CORE-NAV] (JS  ) Điều hướng: đổi tiêu đề menu, mở/đóng menu, chuyển tab, router vẽ tab
-      - [CORE-INIT] (JS  ) Khởi động: window.onload (chạy sau cùng)
-
-  ■ MODULE ADMIN · ADMIN
-      Đăng nhập Admin (mật mã), mở khóa tích nộp, xác nhận BTC chuyển tổng ngày.
-      - [CSS-STATUS-CHECKBOX] (CSS ) Màu thắng/thua, ghi chú nộp, ô tích Admin, dòng tổng
-      - [ADMIN-BUTTON] (HTML) Nút Đăng Nhập Admin
-      - [ADMIN-DATA] (JS  ) Dữ liệu Admin: mật mã + trạng thái đăng nhập
-      - [ADMIN-FUNCS] (JS  ) Đăng nhập Admin, cập nhật giao diện khóa/mở, xác nhận BTC chuyển tổng ngày
-
-  ■ MODULE PICKTHU · PICK THỦ
-      Danh sách Pick Thủ: thêm / sửa / xóa, màu VĐV, hộp thoại Pick Thủ.
-      - [PICKTHU-BTN] (HTML) Nút PICK THỦ
-      - [PICKTHU-MODAL] (HTML) Hộp thoại thêm / sửa Pick Thủ
-      - [PICKTHU-DATA] (JS  ) Dữ liệu Pick Thủ: màu VĐV, danh sách players, vdvs
-      - [PICKTHU-FUNCS] (JS  ) Thêm / sửa / xóa Pick Thủ + bảng Pick Thủ
-
-  ■ MODULE HOME · HOME (TRANG CHỦ & CÁC TAB NGÀY)
-      Trang chủ = ngày gần nhất. Bảng thống kê trận, kèo, VĐV XIN NGHỈ, Bảng Tổng Hợp Ngày.
-      - [CSS-ABSENT] (CSS ) Dòng chọn VĐV XIN NGHỈ + cột XIN NGHỈ
-      - [HOME-BTN] (HTML) Nút HOME
-      - [HOME-DATA] (JS  ) Dữ liệu ngày: dates, matchesData, dateKeoMode, paymentStatus, mức phạt nghỉ
-      - [HOME-NAV] (JS  ) Trang chủ: tìm ngày gần nhất + nút HOME
-      - [HOME-MATCH-OPS] (JS  ) Thao tác trận trong ngày: đổi kèo, thêm/xóa/sửa trận, tích nộp
-      - [HOME-KEO-HELPERS] (JS  ) Hàm hỗ trợ: danh sách VĐV màu + giá trị kèo
-      - [HOME-DAYTAB] (JS  ) Bảng thống kê trận pick của ngày (Trang Chủ / từng ngày)
-      - [HOME-ABSENT] (JS  ) VĐV XIN NGHỈ: chọn 2/3/4 VĐV, Nộp phạt / Không nộp phạt
-      - [HOME-SUMMARY] (JS  ) Bảng Tổng Hợp Ngày (gồm cột XIN NGHỈ)
-
-  ■ MODULE SETTING · SETTING
-      Thêm / sửa tên / xóa ngày, xuất Excel, sao lưu & phục hồi file JSON.
-      - [SETTING-BTN] (HTML) Nút SETTING (menu thả xuống) + ô chọn file phục hồi
-      - [SETTING-DATES] (JS  ) Thêm / sửa tên / xóa ngày
-      - [SETTING-EXCEL] (JS  ) Xuất dữ liệu Excel
-      - [SETTING-JSON-BACKUP] (JS  ) Sao lưu / phục hồi file JSON
-
-  ■ MODULE TONGHOP · TỔNG HỢP CÁC NGÀY
-      Menu danh sách ngày + Bảng Tổng Hợp Các Ngày.
-      - [TONGHOP-BTN] (HTML) Nút TỔNG HỢP CÁC NGÀY (menu thả xuống + danh sách ngày)
-      - [TONGHOP-MENU] (JS  ) Danh sách ngày trong menu
-      - [TONGHOP-TAB] (JS  ) Bảng Tổng Hợp Các Ngày
-
-  ■ MODULE MINIGAME · MINIGAME - DÙNG CHUNG
-      Thể lệ (hộp thoại), ô chọn kèo & tính kèo dùng chung cho Mini Game 1 và 2.
-      - [MINIGAME-MODAL] (HTML) Hộp thoại chỉnh sửa thể lệ Mini Game
-      - [MINIGAME-COMMON-DATA] (JS  ) Dữ liệu chung: nội dung thể lệ Game 1,2 + game đang sửa
-      - [MINIGAME-COMMON-FUNCS] (JS  ) Hộp thoại thể lệ + tính/chọn kèo dùng chung
-
-  ■ MODULE MINIGAME1 · MINIGAME 1
-      Gồm 3 phần: Lịch thi đấu Team A,B (TEAM) | Minigame 21 trận (SUB1) | Minigame 17 trận (SUB2).
-      - [MINIGAME1-BTN] (HTML) Nút MINI GAME 1 (Team A,B | 21 trận | 17 trận)
-      - [MINIGAME1-TEAM-DATA] (JS  ) Team A,B: dữ liệu (đội, kèo, lịch mặc định)
-      - [MINIGAME1-TEAM-FUNCS] (JS  ) Team A,B: thêm/xóa trận, VĐV, tỷ số, kèo, tích nộp
-      - [MINIGAME1-TEAM-TAB] (JS  ) Giao diện Lịch Thi Đấu Team A & B
-      - [MINIGAME1-SUB1-DATA] (JS  ) Minigame 21 trận: dữ liệu (đội, kèo, lịch)
-      - [MINIGAME1-SUB1-FUNCS] (JS  ) Minigame 21 trận: tạo lịch, VĐV, kèo, tích nộp
-      - [MINIGAME1-SUB1-TAB] (JS  ) Giao diện Minigame 21 trận
-      - [MINIGAME1-SUB2-DATA] (JS  ) Minigame 17 trận: dữ liệu (lịch mẫu 20/10, đội, kèo)
-      - [MINIGAME1-SUB2-FUNCS] (JS  ) Minigame 17 trận: đội hình, tạo lịch, trận, VĐV, kèo, tích nộp
-      - [MINIGAME1-SUB2-TAB] (JS  ) Giao diện Minigame 17 trận
-
-  ■ MODULE MINIGAME2 · MINIGAME 2
-      Giải đấu chia Bảng A,B + Giải đấu bổ sung 1, 2.
-      - [CSS-PAIR-BADGE] (CSS ) Nhãn cặp VĐV (badge)
-      - [MINIGAME2-BTN] (HTML) Nút GIẢI ĐẤU MINI GAME 2 (chia bảng + giải bổ sung)
-      - [MINIGAME2-DATA] (JS  ) Giải chia Bảng A,B: dữ liệu (cặp, lịch, knockout, kèo)
-      - [MINIGAME2-FUNCS] (JS  ) Giải chia Bảng A,B: lịch vòng tròn, cặp, tỷ số, kèo, xếp hạng, tích nộp
-      - [MINIGAME2-TOUR] (JS  ) Giải đấu bổ sung 1 & 2
-      - [MINIGAME2-TAB] (JS  ) Giao diện Mini Game 2 (chia Bảng A,B + bảng tổng hợp kèo)
-
-  ■ MODULE AUTOBACKUP · TỰ ĐỘNG SAO LƯU FIRESTORE ONLINE
-      Cấu hình Firebase, lắng nghe dữ liệu, tự động lưu lên Firestore, trạng thái đám mây.
-      - [LIB-FIREBASE-SDK] (HTML) Thư viện Firebase SDK (Firestore)
-      - [CSS-CLOUD-STATUS] (CSS ) Nhãn trạng thái Firestore (online / đang lưu / lỗi)
-      - [CLOUD-STATUS] (HTML) Nhãn trạng thái tự động lưu Firestore
-      - [AUTOBACKUP-CONFIG] (JS  ) Cấu hình Firebase + kết nối Firestore (db, docRef) + bản sao lưu bộ nhớ
-      - [AUTOBACKUP-FUNCS] (JS  ) Lắng nghe Firestore, khởi tạo dữ liệu mặc định, TỰ ĐỘNG LƯU
-
-  [TOC-END]-->
-  <!-- ▼▼▼ KHỐI [HEAD-META] · HTML · Thông tin trang (meta, tiêu đề) ▼▼▼ BẮT ĐẦU -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CLB PICKLEBALL - CMTD | Quản Lý & Thống Kê</title>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [HEAD-META] ▲▲▲ -->
   
-  <!-- ▼▼▼ KHỐI [LIB-FONTS-ICONS] · HTML · Thư viện Google Font + Font Awesome ▼▼▼ BẮT ĐẦU -->
+  <!-- ========================================================================== -->
+  <!-- [KHỐI 0]: THƯ VIỆN NGOÀI & CẤU HÌNH GIAO DIỆN CSS CHUNG                    -->
+  <!-- ========================================================================== -->
   <!-- Font Google & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- ▲▲▲ KẾT THÚC KHỐI [LIB-FONTS-ICONS] ▲▲▲ -->
 
-  <!-- ▼▼▼ KHỐI [LIB-TAILWIND-XLSX] · HTML · Thư viện Tailwind CSS + SheetJS (xuất Excel) ▼▼▼ BẮT ĐẦU -->
   <!-- Tailwind CSS & Excel Export SDK -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [LIB-TAILWIND-XLSX] ▲▲▲ -->
 
-  <!-- ▼▼▼ KHỐI [LIB-FIREBASE-SDK] · HTML · Thư viện Firebase SDK (Firestore) ▼▼▼ BẮT ĐẦU -->
   <!-- Firebase SDK Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [LIB-FIREBASE-SDK] ▲▲▲ -->
 
-  <!-- ▼▼▼ KHỐI [CSS-BASE] · CSS · Nền trang, font, khung chứa ▼▼▼ BẮT ĐẦU -->
   <style>
     :root {
       --primary-color: #0f172a;
@@ -153,11 +41,7 @@
     }
 
     .container { max-width: 1600px; margin: 0 auto; position: relative; }
-  </style>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CSS-BASE] ▲▲▲ -->
     
-  <!-- ▼▼▼ KHỐI [CSS-HEADER] · CSS · Banner đầu trang, header, logo ▼▼▼ BẮT ĐẦU -->
-  <style>
     .hero-banner {
       background-image: url('banner.jpg');
       background-size: 100% 100%;
@@ -200,11 +84,7 @@
       height: 36px; width: auto; object-fit: contain;
       filter: drop-shadow(0px 2px 5px rgba(255,255,255,0.3));
     }
-  </style>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CSS-HEADER] ▲▲▲ -->
 
-  <!-- ▼▼▼ KHỐI [CSS-NAV] · CSS · Thanh menu + menu thả xuống ▼▼▼ BẮT ĐẦU -->
-  <style>
     .top-nav {
       display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -239,11 +119,7 @@
     }
     .dropdown-item:hover { background-color: #eff6ff; color: var(--accent-color); padding-left: 16px; }
     .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 3px 0; }
-  </style>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CSS-NAV] ▲▲▲ -->
     
-  <!-- ▼▼▼ KHỐI [CSS-CLOUD-STATUS] · CSS · Nhãn trạng thái Firestore (online / đang lưu / lỗi) ▼▼▼ BẮT ĐẦU -->
-  <style>
     .cloud-status { 
       font-size: 10px; 
       padding: 4px 10px; 
@@ -257,21 +133,13 @@
     .cloud-online { background-color: #10b981; color: white; }
     .cloud-syncing { background-color: #f59e0b; color: white; }
     .cloud-error { background-color: #ef4444; color: white; }
-  </style>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CSS-CLOUD-STATUS] ▲▲▲ -->
 
-  <!-- ▼▼▼ KHỐI [CSS-BUTTON] · CSS · Nút bấm (.btn) ▼▼▼ BẮT ĐẦU -->
-  <style>
     .btn { background-color: var(--accent-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 11px; transition: all 0.2s; white-space: nowrap; }
     .btn:hover { opacity: 0.9; transform: translateY(-1px); }
     .btn-sm { padding: 4px 8px; font-size: 10px; }
     .btn-green { background-color: #10b981; }
     .btn-red { background-color: #ef4444; }
-  </style>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CSS-BUTTON] ▲▲▲ -->
 
-  <!-- ▼▼▼ KHỐI [CSS-TABLE] · CSS · Thẻ (card), bảng, tiêu đề cặp pick ▼▼▼ BẮT ĐẦU -->
-  <style>
     .card { background: var(--card-bg); padding: 12px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 14px; position: relative; z-index: 10; border: 1px solid #e2e8f0; }
     .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; flex-wrap: wrap; gap: 6px; }
     .card-title { font-size: 13px; font-weight: 800; color: #0f172a; margin: 0; text-transform: uppercase; letter-spacing: 0.3px; display: flex; align-items: center; gap: 6px; }
@@ -300,11 +168,7 @@
     .th-pick1 { background-color: #dcfce7; color: #166534; }
     .th-pick2 { background-color: #fee2e2; color: #991b1b; }
     .th-money { background-color: #fef3c7; color: #92400e; }
-  </style>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CSS-TABLE] ▲▲▲ -->
     
-  <!-- ▼▼▼ KHỐI [CSS-FORM] · CSS · Ô chọn, ô nhập, ô tỷ số, nhãn HẦM ▼▼▼ BẮT ĐẦU -->
-  <style>
     select { 
       width: 100%; 
       padding: 5px 4px; 
@@ -323,11 +187,7 @@
 
     .score-input { width: 36px !important; height: 24px; padding: 0 !important; font-weight: 800; text-align: center; font-size: 11px; border: 1.5px solid var(--score-border) !important; border-radius: 4px; background: #ffffff; display: inline-flex; align-items: center; justify-content: center; }
     .ham-text { background-color: #ef4444; color: white; font-weight: 900; font-size: 9px; padding: 2px 0; border-radius: 3px; display: block; width: 100%; text-align: center; line-height: 1; }
-  </style>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CSS-FORM] ▲▲▲ -->
 
-  <!-- ▼▼▼ KHỐI [CSS-STATUS-CHECKBOX] · CSS · Màu thắng/thua, ghi chú nộp, ô tích Admin, dòng tổng ▼▼▼ BẮT ĐẦU -->
-  <style>
     .txt-win { color: #16a34a; font-weight: 800; }
     .txt-lose { color: #dc2626; font-weight: 800; }
     .note-paid { color: #16a34a; font-weight: 800; }   
@@ -337,11 +197,7 @@
     .checkbox-cell.admin-active { opacity: 1; pointer-events: auto; }
 
     .total-summary-row { background-color: #f8fafc; font-weight: 800; }
-  </style>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CSS-STATUS-CHECKBOX] ▲▲▲ -->
 
-  <!-- ▼▼▼ KHỐI [CSS-ABSENT] · CSS · Dòng chọn VĐV XIN NGHỈ + cột XIN NGHỈ ▼▼▼ BẮT ĐẦU -->
-  <style>
     /* --- XIN NGHỈ: dòng chọn VĐV nghỉ + cột XIN NGHỈ trong Bảng Tổng Hợp Ngày --- */
     .absent-select-row td { background-color: #fff1f2; text-align: left; padding: 6px 8px; }
     .absent-select-row .absent-label { color: #be123c; font-weight: 800; font-size: 11px; margin-right: 6px; white-space: nowrap; }
@@ -350,22 +206,14 @@
     .absent-fine-cell { background-color: #fff1f2; }
     .absent-fine-cell select { font-size: 10px; padding: 2px 0; margin-top: 2px; }
     th.th-absent { background-color: #ffe4e6; color: #9f1239; }
-  </style>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CSS-ABSENT] ▲▲▲ -->
 
-  <!-- ▼▼▼ KHỐI [CSS-LAYOUT-MODAL] · CSS · Lưới 2 cột, hộp thoại (modal) ▼▼▼ BẮT ĐẦU -->
-  <style>
     .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     @media (max-width: 900px) { .grid-2col { grid-template-columns: 1fr; } }
 
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; }
     .modal.show { display: flex; }
     .modal-content { background: white; padding: 18px; border-radius: 12px; width: 92%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-  </style>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CSS-LAYOUT-MODAL] ▲▲▲ -->
 
-  <!-- ▼▼▼ KHỐI [CSS-PAIR-BADGE] · CSS · Nhãn cặp VĐV (badge) ▼▼▼ BẮT ĐẦU -->
-  <style>
     .pair-badge {
       display: inline-block;
       padding: 3px 10px;
@@ -383,11 +231,7 @@
     .badge-p2 { background: linear-gradient(135deg, #059669, #047857); }
     .badge-p3 { background: linear-gradient(135deg, #d97706, #b45309); }
     .badge-p4 { background: linear-gradient(135deg, #7c3aed, #6d28d9); }
-  </style>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CSS-PAIR-BADGE] ▲▲▲ -->
 
-  <!-- ▼▼▼ KHỐI [CSS-SCROLL-RESPONSIVE] · CSS · Cuộn ngang + giao diện điện thoại ▼▼▼ BẮT ĐẦU -->
-  <style>
     .smooth-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
     @media (max-width: 600px) {
@@ -403,53 +247,43 @@
       .score-input { width: 30px !important; height: 22px; }
     }
   </style>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CSS-SCROLL-RESPONSIVE] ▲▲▲ -->
 </head>
 <body>
-  <!-- ■■■ VÙNG GIAO DIỆN HTML: các khối theo vị trí hiển thị trên trang ■■■ -->
   <div class="container">
     <div class="hero-banner"></div>
 
+    <!-- ========================================================================== -->
+    <!-- [KHỐI 1]: HEADER, BRAND & THANH ĐIỀU HƯỚNG CHÍNH (NAVIGATION BAR)          -->
+    <!-- ========================================================================== -->
     <div class="header-section">
       <div class="header-top">
-        <!-- ▼▼▼ KHỐI [BRAND] · HTML · Logo + tên CLB ▼▼▼ BẮT ĐẦU -->
         <div class="brand-title">
           <img src="logo1.png" alt="Logo CMTD" class="title-logo-img">
           <h2 style="margin:0; font-weight:900; color:#fff; font-size:16px; letter-spacing:0.5px;">CLB PICKLEBALL - CMTD</h2>
         </div>
-        <!-- ▲▲▲ KẾT THÚC KHỐI [BRAND] ▲▲▲ -->
         <div style="display:flex; align-items:center; gap:8px;">
-          <!-- ▼▼▼ KHỐI [ADMIN-BUTTON] · HTML · Nút Đăng Nhập Admin ▼▼▼ BẮT ĐẦU -->
           <button id="adminAuthBtn" class="btn btn-sm" style="background-color: #334155; border: 1px solid rgba(255,255,255,0.3); font-size:10px;" onclick="toggleAdminPermission()">
             <i class="fa-solid fa-lock" id="adminLockIcon"></i> <span id="adminBtnText">Đăng Nhập Admin</span>
           </button>
-          <!-- ▲▲▲ KẾT THÚC KHỐI [ADMIN-BUTTON] ▲▲▲ -->
-          <!-- ▼▼▼ KHỐI [CLOUD-STATUS] · HTML · Nhãn trạng thái tự động lưu Firestore ▼▼▼ BẮT ĐẦU -->
           <div id="cloudStatus" class="cloud-status cloud-syncing">☁ Tự Động Lưu (Đang Khởi Tạo)...</div>
-          <!-- ▲▲▲ KẾT THÚC KHỐI [CLOUD-STATUS] ▲▲▲ -->
         </div>
       </div>
 
       <div class="top-nav">
-        <!-- ▼▼▼ KHỐI [HOME-BTN] · HTML · Nút HOME ▼▼▼ BẮT ĐẦU -->
         <div class="nav-item">
           <button class="nav-btn" onclick="goHome()">
             <i class="fa-solid fa-house"></i>
             <span>HOME</span>
           </button>
         </div>
-        <!-- ▲▲▲ KẾT THÚC KHỐI [HOME-BTN] ▲▲▲ -->
 
-        <!-- ▼▼▼ KHỐI [PICKTHU-BTN] · HTML · Nút PICK THỦ ▼▼▼ BẮT ĐẦU -->
         <div class="nav-item">
           <button class="nav-btn" onclick="switchTab('players')">
             <i class="fa-solid fa-users text-blue-400"></i>
             <span>PICK THỦ (<span id="vdvCountBtn">0</span>)</span>
           </button>
         </div>
-        <!-- ▲▲▲ KẾT THÚC KHỐI [PICKTHU-BTN] ▲▲▲ -->
 
-        <!-- ▼▼▼ KHỐI [SETTING-BTN] · HTML · Nút SETTING (menu thả xuống) + ô chọn file phục hồi ▼▼▼ BẮT ĐẦU -->
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuSetting', event)">
             <i class="fa-solid fa-gear"></i>
@@ -468,9 +302,7 @@
         </div>
 
         <input type="file" id="restoreFileInput" accept=".json" style="display:none;" onchange="handleRestoreJSON(event)">
-        <!-- ▲▲▲ KẾT THÚC KHỐI [SETTING-BTN] ▲▲▲ -->
 
-        <!-- ▼▼▼ KHỐI [TONGHOP-BTN] · HTML · Nút TỔNG HỢP CÁC NGÀY (menu thả xuống + danh sách ngày) ▼▼▼ BẮT ĐẦU -->
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuTongHop', event)">
             <i class="fa-solid fa-chart-pie"></i>
@@ -482,9 +314,7 @@
             <div class="dropdown-item" style="font-weight: 800; color: var(--accent-color);" onclick="switchTab('tonghop')"><i class="fa-solid fa-table"></i> Bảng Tổng Hợp Tất Cả Ngày</div>
           </div>
         </div>
-        <!-- ▲▲▲ KẾT THÚC KHỐI [TONGHOP-BTN] ▲▲▲ -->
 
-        <!-- ▼▼▼ KHỐI [MINIGAME1-BTN] · HTML · Nút MINI GAME 1 (Team A,B | 21 trận | 17 trận) ▼▼▼ BẮT ĐẦU -->
         <!-- MENU MINI GAME 1 -->
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuMini1', event)">
@@ -499,9 +329,7 @@
             <div class="dropdown-item" id="btn-minigame-2010" onclick="switchTab('minigame1_sub2'); handleMinigame2010Click();">🌸 <span id="subLabelSub2">Minigame 20/10 - 17 Trận</span></div>
           </div>
         </div>
-        <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-BTN] ▲▲▲ -->
 
-        <!-- ▼▼▼ KHỐI [MINIGAME2-BTN] · HTML · Nút GIẢI ĐẤU MINI GAME 2 (chia bảng + giải bổ sung) ▼▼▼ BẮT ĐẦU -->
         <!-- MENU GIẢI ĐẤU MINI GAME 2 -->
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuMini2', event)">
@@ -516,16 +344,18 @@
             <div class="dropdown-item" onclick="openGameModal(2)"><i class="fa-solid fa-gear text-slate-500"></i> ⚙️ Chỉnh Sửa Nội Dung Game 2</div>
           </div>
         </div>
-        <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-BTN] ▲▲▲ -->
       </div>
     </div>
     
-    <!-- ▼▼▼ KHỐI [TAB-CONTENT] · HTML · Vùng hiển thị nội dung các tab (#tabContent) ▼▼▼ BẮT ĐẦU -->
+    <!-- ========================================================================== -->
+    <!-- [KHỐI 2]: KHU VỰC HIỂN THỊ NỘI DUNG ĐỘNG (TAB CONTENT CONTAINER)           -->
+    <!-- ========================================================================== -->
     <div id="tabContent"></div>
-    <!-- ▲▲▲ KẾT THÚC KHỐI [TAB-CONTENT] ▲▲▲ -->
   </div>
 
-  <!-- ▼▼▼ KHỐI [MINIGAME-MODAL] · HTML · Hộp thoại chỉnh sửa thể lệ Mini Game ▼▼▼ BẮT ĐẦU -->
+  <!-- ========================================================================== -->
+  <!-- [KHỐI 3]: CÁC MODAL HỆ THỐNG (CHỈNH SỬA THỂ LỆ & QUẢN LÝ PICK THỦ)           -->
+  <!-- ========================================================================== -->
   <!-- MODAL CHỈNH SỬA MINI GAME -->
   <div class="modal" id="gameModal">
     <div class="modal-content">
@@ -537,9 +367,7 @@
       </div>
     </div>
   </div>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME-MODAL] ▲▲▲ -->
 
-  <!-- ▼▼▼ KHỐI [PICKTHU-MODAL] · HTML · Hộp thoại thêm / sửa Pick Thủ ▼▼▼ BẮT ĐẦU -->
   <!-- MODAL THÊM / SỬA PICK THỦ -->
   <div id="player-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center z-50">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 text-slate-800 border border-slate-100">
@@ -573,15 +401,68 @@
       </div>
     </div>
   </div>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [PICKTHU-MODAL] ▲▲▲ -->
 
-
-  <!-- ■■■ VÙNG JAVASCRIPT: các khối gom theo MODULE (mỗi khối = 1 thẻ script) ■■■ -->
-
-  <!-- ████████ MODULE CORE · LÕI HỆ THỐNG ████████ -->
-  <!-- ▼▼▼ KHỐI [CORE-DATA] · JS · Dữ liệu lõi: tiêu đề menu, tab hiện tại ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: titlesConfig, currentTab -->
+  <!-- ========================================================================== -->
+  <!-- [KHỐI 4]: KHỞI TẠO BIẾN DỮ LIỆU TOÀN CỤC & CẤU HÌNH FIREBASE                 -->
+  <!-- ========================================================================== -->
   <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
+      authDomain: "pickleball-cmtd.firebaseapp.com",
+      projectId: "pickleball-cmtd",
+      storageBucket: "pickleball-cmtd.appspot.com",
+      messagingSenderId: "648591152243",
+      appId: "1:648591152243:web:3343caf2da821373070606"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    
+    const db = firebase.firestore();
+    db.settings({ experimentalAutoDetectLongPolling: true });
+
+    const docRef = db.collection("clubs").doc("cmtd_main_data");
+
+    const VDV_COLORS = [
+      "#d97706", "#2563eb", "#059669", "#dc2626", "#7c3aed", 
+      "#db2777", "#0284c7", "#15803d", "#b45309", "#4338ca",
+      "#c026d3", "#0d9488", "#ea580c", "#4f46e5"
+    ];
+
+    let players = [
+      { id: 1, name: "Tiến Thọ", gender: "Nam" },
+      { id: 2, name: "Châu Sĩ", gender: "Nam" },
+      { id: 3, name: "Vân Đình", gender: "Nữ" },
+      { id: 4, name: "Cẩm Ly", gender: "Nữ" },
+      { id: 5, name: "Phú Mỗ", gender: "Nam" },
+      { id: 6, name: "Hà Giấy", gender: "Nam" },
+      { id: 7, name: "Long Diễn", gender: "Nam" },
+      { id: 8, name: "Tuấn La", gender: "Nam" },
+      { id: 9, name: "Trí Đỏ", gender: "Nam" },
+      { id: 10, name: "Thành Sóc", gender: "Nam" },
+      { id: 11, name: "Quỳnh Cool", gender: "Nữ" },
+      { id: 12, name: "Hải Hà", gender: "Nữ" },
+      { id: 13, name: "Dũng Ngạc", gender: "Nam" },
+      { id: 14, name: "Lợi Trí", gender: "Nam" },
+      { id: 15, name: "Thanh Đàm", gender: "Nam" },
+      { id: 16, name: "Điền Chèm", gender: "Nam" },
+      { id: 17, name: "Minh Hạnh", gender: "Nữ" },
+      { id: 18, name: "Minh Vượng", gender: "Nam" },
+      { id: 19, name: "Gà Tre", gender: "Nữ" },
+      { id: 20, name: "Trường Giang", gender: "Nam" }
+    ];
+
+    let vdvs = players.map(p => p.name);
+
+    let dates = [];
+    let matchesData = {};
+    let dateKeoMode = {}; 
+    let paymentStatus = {};
+    const ABSENT_FINE_K = 30; // Mức phạt VĐV xin nghỉ KHÔNG PHÉP (đơn vị K)
+    let miniGame1Content = "Lịch Thi Đấu Team A & Team B Xoay V vòng.";
+    let miniGame2Content = "Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.";
+    
     let titlesConfig = {
       navMini1: "MINI GAME 1",
       subMini1: "Lịch Thi Đấu Team A & B",
@@ -593,12 +474,98 @@
       subTour2: "Giải Đấu Bổ Sung 2 (Nội Dung Khác)"
     };
 
+    let mini1TeamA = ["Tiến Thọ", "Long Diễn", "Phú Mỗ", "Hà Giấy", "Tuấn La", "Châu Sĩ", "Vân Đình", "Cẩm Ly", "Minh Hạnh"];
+    let mini1TeamB = ["Trí Đỏ", "Thành Sóc", "Dũng Ngạc", "Lợi Trí", "Điền Chèm", "Quỳnh Cool", "Hải Hà", "Minh Vượng"];
+    let mini1KeoMode = "default";
+    let mini1Payment = {};
+
+    let mini1Sub1TeamA = ["Tuấn La", "Phú Mỗ", "Tiến Thọ", "Châu Sĩ", "Long Diễn", "Vân Đình", "Minh Hạnh", "Cẩm Ly"];
+    let mini1Sub1TeamB = ["Thành Sóc", "Trường Giang", "Trí Đỏ", "Lợi Trí", "Thanh Đàm", "Gà Tre", "Minh Vượng", "Hải Hà"];
+    let mini1Sub1KeoMode = "default";
+    let mini1Sub1Payment = {};
+    let miniGame1Sub1Matches = [];
+
+    const minigame2010Matches = [
+      { id: 1, code: "M01", teamAKey: "nam_1", teamBKey: "nam_2", type: "Nam - Nam", group: "Nam Cao" },
+      { id: 2, code: "M02", teamAKey: "nu_1", teamBKey: "nu_2", type: "Nữ - Nữ (Đơn)", group: "Nữ Đơn" },
+      { id: 3, code: "M03", teamAKey: "nam_3", teamBKey: "nam_3", type: "Nam - Nam", group: "Nam Cân" },
+      { id: 4, code: "M04", teamAKey: "nam_4", teamBKey: "nam_5", type: "Nam - Nam", group: "Nam Thấp" },
+      { id: 5, code: "M05", teamAKey: "nam_1", teamBKey: "nam_3", type: "Nam - Nam", group: "Nam Cao" },
+      { id: 6, code: "M06", teamAKey: "nu_1", teamBKey: "nam_1", type: "Nam - Nữ", group: "Hỗn Hợp" },
+      { id: 7, code: "M07", teamAKey: "nam_2", teamBKey: "nam_4", type: "Nam - Nam", group: "Chéo Hạng" },
+      { id: 8, code: "M08", teamAKey: "nu_2_doi", teamBKey: "nu_1_doi", type: "Nữ - Nữ (Đôi)", group: "Nữ Đôi" },
+      { id: 9, code: "M09", teamAKey: "nam_3", teamBKey: "nam_5", type: "Nam - Nam", group: "Chéo Hạng" },
+      { id: 10, code: "M10", teamAKey: "nam_1", teamBKey: "nam_2", type: "Nam - Nam", group: "Nam Cao" },
+      { id: 11, code: "M11", teamAKey: "nam_4", teamBKey: "nam_4", type: "Nam - Nam", group: "Nam Thấp" },
+      { id: 12, code: "M12", teamAKey: "nu_2", teamBKey: "nam_3", type: "Nam - Nữ", group: "Hỗn Hợp" },
+      { id: 13, code: "M13", teamAKey: "nam_2", teamBKey: "nam_3", type: "Nam - Nam", group: "Nam Cao" },
+      { id: 14, code: "M14", teamAKey: "nam_5", teamBKey: "nam_5", type: "Nam - Nam", group: "Nam Thấp" },
+      { id: 15, code: "M15", teamAKey: "nu_1", teamBKey: "nam_2", type: "Nam - Nữ", group: "Hỗn Hợp" },
+      { id: 16, code: "M16", teamAKey: "nam_1", teamBKey: "nam_5", type: "Nam - Nam", group: "Chéo Hạng" },
+      { id: 17, code: "M17", teamAKey: "nam_3", teamBKey: "nam_4", type: "Nam - Nam", group: "Chéo Hạng" }
+    ];
+
+    let mini1Sub2TeamA = ["Tuấn La", "Phú Mỗ", "Tiến Thọ", "Châu Sĩ", "Long Diễn", "Vân Đình", "Minh Hạnh", "Cẩm Ly"];
+    let mini1Sub2TeamB = ["Thành Sóc", "Trường Giang", "Trí Đỏ", "Lợi Trí", "Thanh Đàm", "Gà Tre", "Minh Vượng", "Hải Hà"];
+    let mini1Sub2KeoMode = "default";
+    let mini1Sub2Payment = {};
+    let miniGame1Sub2Matches = [];
+
+    let miniGame1Matches = [];
+    let mini2PairsA = [];
+    let mini2PairsB = [];
+    let mini2MatchesA = [];
+    let mini2MatchesB = [];
+    let mini2Knockout = {
+      bkc1: { p1: "Nhất A", p2: "Nhì B", s1: "", s2: "" },
+      bkc2: { p1: "Nhất B", p2: "Nhì A", s1: "", s2: "" },
+      rank34: { p1: "Thua BK1", p2: "Thua BK2", s1: "", s2: "" },
+      final: { p1: "Thắng BK1", p2: "Thắng BK2", s1: "", s2: "" },
+      champion: "",
+      runnerUp: "",
+      thirdPlace: ""
+    };
+
+    let mini2Tour1Content = "Nội dung chi tiết và lịch thi đấu của Giải Đấu Bổ Sung 1.";
+    let mini2Tour2Content = "Nội dung chi tiết và lịch thi đấu của Giải Đấu Bổ Sung 2.";
+    let mini2KeoMode = "default";
+    let mini2Payment = {};
+
+    const DEFAULT_MINI1_DATA = [
+      { id: 1, category: "Nam xoay vòng", a1: "Tiến Thọ", a2: "Long Diễn", scoreA: "8", scoreB: "11", b1: "Trí Đỏ", b2: "Thành Sóc", customWin: 5, customLose: -15 },
+      { id: 2, category: "Nam xoay vòng", a1: "Phú Mỗ", a2: "Hà Giấy", scoreA: "5", scoreB: "11", b1: "Dũng Ngạc", b2: "Lợi Trí", customWin: 5, customLose: -15 },
+      { id: 3, category: "Nam xoay vòng", a1: "Tuấn La", a2: "Châu Sĩ", scoreA: "6", scoreB: "11", b1: "Điền Chèm", b2: "Thành Sóc", customWin: 5, customLose: -15 }
+    ];
+
     let currentTab = "";
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CORE-DATA] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [CORE-NAV] · JS · Điều hướng: đổi tiêu đề menu, mở/đóng menu, chuyển tab, router vẽ tab ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: updateNavbarTitles, editTitlePrompt, toggleMenu, closeAllDropdowns, switchTab, renderCurrentTab -->
-  <script>
+    let activeGameEditing = 1;
+    let autoBackupMemory = null;
+
+    const ADMIN_PASSCODE = "123456";
+    let isAdminVerified = false;
+
+    // ========================================================================== -->
+    // [KHỐI 5]: CÁC HÀM LOGIC XỬ LÝ NGHIỆP VỤ VÀ RENDER GIAO DIỆN (BUSINESS LOGIC)  -->
+    // ========================================================================== -->
+    window.onload = function() {
+      document.addEventListener('click', closeAllDropdowns);
+      
+      setTimeout(() => {
+        const statusEl = document.getElementById("cloudStatus");
+        if (statusEl && statusEl.innerText.includes("Khởi Tạo")) {
+          initDefaultFirestore();
+        }
+      }, 3000);
+
+      listenToFirestore();
+    };
+
+    function syncVdvsFromPlayers() {
+      vdvs = players.map(p => p.name);
+      const btn = document.getElementById("vdvCountBtn");
+      if (btn) btn.innerText = players.length;
+    }
+
     function updateNavbarTitles() {
       if (document.getElementById("navLabelMini1")) document.getElementById("navLabelMini1").innerText = titlesConfig.navMini1;
       if (document.getElementById("subLabelMini1")) document.getElementById("subLabelMini1").innerText = titlesConfig.subMini1;
@@ -620,68 +587,130 @@
       }
     }
 
-    function toggleMenu(menuId, e) {
-      e.stopPropagation();
-      const targetMenu = document.getElementById(menuId);
-      const isAlreadyShow = targetMenu.classList.contains("show");
-      closeAllDropdowns();
-      if (!isAlreadyShow) {
-        targetMenu.classList.add("show");
+    function generateDynamicSub1Matches() {
+      let malesA = mini1Sub1TeamA.filter(name => {
+        let p = players.find(x => x.name === name);
+        return p ? p.gender === 'Nam' : true;
+      });
+      let femalesA = mini1Sub1TeamA.filter(name => !malesA.includes(name));
+
+      let malesB = mini1Sub1TeamB.filter(name => {
+        let p = players.find(x => x.name === name);
+        return p ? p.gender === 'Nam' : true;
+      });
+      let femalesB = mini1Sub1TeamB.filter(name => !malesB.includes(name));
+
+      while (malesA.length < 5) malesA.push(""); if (malesA.length > 5) malesA = malesA.slice(0, 5);
+      while (femalesA.length < 3) femalesA.push(""); if (femalesA.length > 3) femalesA = femalesA.slice(0, 3);
+      while (malesB.length < 5) malesB.push(""); if (malesB.length > 5) malesB = malesB.slice(0, 5);
+      while (femalesB.length < 3) femalesB.push(""); if (femalesB.length > 3) femalesB = femalesB.slice(0, 3);
+
+      let templateRaw = [
+        { cat: "Đôi Nam Nữ", a1: malesA[0], a2: femalesA[0], b1: malesB[0], b2: femalesB[0] },
+        { cat: "Đôi Nam Nữ", a1: malesA[1], a2: femalesA[1], b1: malesB[1], b2: femalesB[1] },
+        { cat: "Đôi Nam",     a1: malesA[2], a2: malesA[3], b1: malesB[2], b2: malesB[3] },
+        { cat: "Đôi Nam",     a1: malesA[0], a2: malesA[4], b1: malesB[0], b2: femalesB[4] },
+        { cat: "Đôi Nam Nữ", a1: malesA[2], a2: femalesA[2], b1: malesB[2], b2: femalesB[2] },
+        { cat: "Đôi Nam Nữ", a1: malesA[3], a2: femalesA[0], b1: malesB[3], b2: femalesB[0] },
+        { cat: "Đôi Nam",     a1: malesA[1], a2: femalesA[2], b1: malesB[1], b2: femalesB[2] },
+        { cat: "Đôi Nam Nữ", a1: malesA[4], a2: femalesA[1], b1: malesB[4], b2: femalesB[1] },
+        { cat: "Đôi Nam",     a1: malesA[0], a2: femalesA[3], b1: malesB[0], b2: femalesB[3] },
+        { cat: "Đôi Nam Nữ", a1: malesA[1], a2: femalesA[2], b1: malesB[1], b2: femalesB[2] },
+        { cat: "Đôi Nam Nữ", a1: malesA[0], a2: femalesA[1], b1: malesB[0], b2: femalesB[1] },
+        { cat: "Đôi Nam",     a1: malesA[2], a2: femalesA[4], b1: malesB[2], b2: femalesB[4] },
+        { cat: "Đôi Nam Nữ", a1: malesA[3], a2: femalesA[2], b1: malesB[3], b2: femalesB[2] },
+        { cat: "Đôi Nam Nữ", a1: malesA[1], a2: femalesA[0], b1: malesB[1], b2: femalesB[0] },
+        { cat: "Đôi Nam",     a1: malesA[0], a2: femalesA[1], b1: malesB[0], b2: femalesB[1] },
+        { cat: "Đôi Nam Nữ", a1: malesA[4], a2: femalesA[0], b1: malesB[4], b2: femalesB[0] },
+        { cat: "Đôi Nam",     a1: malesA[3], a2: femalesA[4], b1: malesB[3], b2: femalesB[4] },
+        { cat: "Đôi Nam Nữ", a1: malesA[2], a2: femalesA[1], b1: malesB[2], b2: femalesB[1] },
+        { cat: "Đôi Nam",     a1: malesA[0], a2: femalesA[2], b1: malesB[0], b2: femalesB[2] },
+        { cat: "Đôi Nam Nữ", a1: malesA[1], a2: femalesA[2], b1: malesB[1], b2: femalesB[2] },
+        { cat: "Đôi Nam",     a1: malesA[3], a2: femalesA[1], b1: malesB[3], b2: femalesB[1] }
+      ];
+
+      miniGame1Sub1Matches = templateRaw.map((t, idx) => {
+        let existing = miniGame1Sub1Matches[idx];
+        return {
+          id: idx + 1,
+          category: t.cat,
+          a1: existing && existing.a1 !== undefined ? existing.a1 : t.a1,
+          a2: existing && existing.a2 !== undefined ? existing.a2 : t.a2,
+          scoreA: existing ? existing.scoreA : "",
+          scoreB: existing ? existing.scoreB : "",
+          b1: existing && existing.b1 !== undefined ? existing.b1 : t.b1,
+          b2: existing && existing.b2 !== undefined ? existing.b2 : t.b2,
+          customWin: existing ? (existing.customWin !== undefined ? existing.customWin : 5) : 5,
+          customLose: existing ? (existing.customLose !== undefined ? existing.customLose : -15) : -15
+        };
+      });
+    }
+
+    window.getCurrentRoster = function() {
+      let malesA = mini1Sub2TeamA.filter(name => {
+        let p = players.find(x => x.name === name);
+        return p ? p.gender === 'Nam' : true;
+      });
+      let femalesA = mini1Sub2TeamA.filter(name => !malesA.includes(name));
+
+      let malesB = mini1Sub2TeamB.filter(name => {
+        let p = players.find(x => x.name === name);
+        return p ? p.gender === 'Nam' : true;
+      });
+      let femalesB = mini1Sub2TeamB.filter(name => !malesB.includes(name));
+
+      while (malesA.length < 5) malesA.push("");
+      while (femalesA.length < 3) femalesA.push("");
+      while (malesB.length < 5) malesB.push("");
+      while (femalesB.length < 3) femalesB.push("");
+
+      return {
+        "nam_1": malesA[0],
+        "nam_2": malesA[1],
+        "nam_3": malesA[2],
+        "nam_4": malesA[3],
+        "nam_5": malesA[4],
+        "nu_1": femalesA[0],
+        "nu_2": femalesA[1],
+        "nu_1_doi": femalesB[0] || femalesA[0],
+        "nu_2_doi": femalesB[1] || femalesA[1]
+      };
+    };
+
+    function generateDynamicSub2Matches() {
+      const currentRoster = window.getCurrentRoster ? window.getCurrentRoster() : {};
+
+      if (!miniGame1Sub2Matches || miniGame1Sub2Matches.length === 0) {
+        miniGame1Sub2Matches = minigame2010Matches.map((match, idx) => ({
+          id: match.id,
+          code: match.code,
+          category: match.type,
+          group: match.group,
+          a1: currentRoster[match.teamAKey] || "",
+          a2: "",
+          scoreA: "",
+          scoreB: "",
+          b1: currentRoster[match.teamBKey] || "",
+          b2: "",
+          customWin: 5,
+          customLose: -15
+        }));
       }
     }
 
-    function closeAllDropdowns() {
-      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
-    }
+    function handleMinigame2010Click() {
+      const currentRoster = window.getCurrentRoster ? window.getCurrentRoster() : {};
+      const synchronizedMatches = minigame2010Matches.map(match => ({
+        ...match,
+        teamA: currentRoster[match.teamAKey] || `[VDV ${match.teamAKey.toUpperCase()}]`,
+        teamB: currentRoster[match.teamBKey] || `[VDV ${match.teamBKey.toUpperCase()}]`
+      }));
 
-    function switchTab(tab) {
-      currentTab = tab;
-      closeAllDropdowns();
-      renderDatesMenu();
-      renderCurrentTab();
-    }
-
-    function renderCurrentTab() {
-      const content = document.getElementById("tabContent");
-      if (!content) return;
-      if (currentTab === "tonghop") {
-        renderTongHopTab(content);
-      } else if (currentTab === "players") {
-        renderPlayersTab(content);
-      } else if (currentTab === "minigame1") {
-        renderMiniGame1Tab(content);
-      } else if (currentTab === "minigame1_sub1") {
-        renderMiniGame1Sub1Tab(content);
-      } else if (currentTab === "minigame1_sub2") {
-        renderMiniGame1Sub2Tab(content);
-      } else if (currentTab === "minigame2") {
-        renderMiniGame2Tab(content);
-      } else if (currentTab === "minigame2_tour1") {
-        renderMiniGame2Tour1Tab(content);
-      } else if (currentTab === "minigame2_tour2") {
-        renderMiniGame2Tour2Tab(content);
-      } else {
-        renderSingleDayTab(content, currentTab);
+      if (typeof renderMatchTable === "function") {
+        renderMatchTable(synchronizedMatches);
       }
-      updateAdminUIState();
-      updateNavbarTitles();
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CORE-NAV] ▲▲▲ -->
 
-  <!-- ████████ MODULE ADMIN · ADMIN ████████ -->
-  <!-- ▼▼▼ KHỐI [ADMIN-DATA] · JS · Dữ liệu Admin: mật mã + trạng thái đăng nhập ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: ADMIN_PASSCODE, isAdminVerified -->
-  <script>
-    const ADMIN_PASSCODE = "123456";
-
-    let isAdminVerified = false;
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [ADMIN-DATA] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [ADMIN-FUNCS] · JS · Đăng nhập Admin, cập nhật giao diện khóa/mở, xác nhận BTC chuyển tổng ngày ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: toggleAdminPermission, updateAdminUIState, handleBtcNoteAdminChange -->
-  <!--   ↳ Gồm: updateBtcNoteAdminPermission -->
-  <script>
     function toggleAdminPermission() {
       if (!isAdminVerified) {
         const pass = prompt("🔑 Nhập mật khẩu Quản trị viên:");
@@ -718,79 +747,329 @@
       }
     }
 
-    function handleBtcNoteAdminChange(date, selectElement) {
-      const selectedValue = selectElement.value;
-      if (selectedValue === "YES") {
-        if (!isAdminVerified) {
-          alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
-          selectElement.value = "NO";
-          return;
+    function listenToFirestore() {
+      docRef.onSnapshot((doc) => {
+        const statusEl = document.getElementById("cloudStatus");
+        if (doc.exists) {
+          const data = doc.data();
+          if (data.players && data.players.length > 0) {
+            players = data.players;
+          } else if (data.vdvs && data.vdvs.length > 0) {
+            players = data.vdvs.map((v, idx) => ({ id: idx + 1, name: v, gender: "Nam" }));
+          }
+          syncVdvsFromPlayers();
+
+          if (data.titlesConfig) {
+            titlesConfig = Object.assign(titlesConfig, data.titlesConfig);
+          }
+          updateNavbarTitles();
+
+          dates = data.dates || [];
+          matchesData = data.matchesData || {};
+          dateKeoMode = data.dateKeoMode || {};
+          paymentStatus = data.paymentStatus || {};
+          miniGame1Content = data.miniGame1Content || miniGame1Content;
+          miniGame2Content = data.miniGame2Content || miniGame2Content;
+          
+          if (data.mini1TeamA) mini1TeamA = data.mini1TeamA;
+          if (data.mini1TeamB) mini1TeamB = data.mini1TeamB;
+          if (data.mini1KeoMode) mini1KeoMode = data.mini1KeoMode;
+          if (data.mini1Payment) mini1Payment = data.mini1Payment;
+
+          if (data.mini1Sub1TeamA) mini1Sub1TeamA = data.mini1Sub1TeamA;
+          if (data.mini1Sub1TeamB) mini1Sub1TeamB = data.mini1Sub1TeamB;
+          if (data.mini1Sub1KeoMode) mini1Sub1KeoMode = data.mini1Sub1KeoMode;
+          if (data.mini1Sub1Payment) mini1Sub1Payment = data.mini1Sub1Payment;
+
+          if (data.miniGame1Sub1Matches && data.miniGame1Sub1Matches.length > 0) {
+            miniGame1Sub1Matches = data.miniGame1Sub1Matches;
+          } else {
+            generateDynamicSub1Matches();
+          }
+
+          if (data.mini1Sub2TeamA) mini1Sub2TeamA = data.mini1Sub2TeamA;
+          if (data.mini1Sub2TeamB) mini1Sub2TeamB = data.mini1Sub2TeamB;
+          if (data.mini1Sub2KeoMode) mini1Sub2KeoMode = data.mini1Sub2KeoMode;
+          if (data.mini1Sub2Payment) mini1Sub2Payment = data.mini1Sub2Payment;
+
+          if (data.miniGame1Sub2Matches && data.miniGame1Sub2Matches.length > 0) {
+            miniGame1Sub2Matches = data.miniGame1Sub2Matches;
+          } else {
+            generateDynamicSub2Matches();
+          }
+
+          if (data.miniGame1Matches && data.miniGame1Matches.length > 0) {
+            miniGame1Matches = data.miniGame1Matches;
+          } else {
+            miniGame1Matches = DEFAULT_MINI1_DATA;
+          }
+
+          if (data.mini2PairsA) mini2PairsA = data.mini2PairsA;
+          if (data.mini2PairsB) mini2PairsB = data.mini2PairsB;
+          if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
+          if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
+          if (data.mini2Knockout) {
+            mini2Knockout = Object.assign(mini2Knockout, data.mini2Knockout);
+          }
+          if (data.mini2Tour1Content) mini2Tour1Content = data.mini2Tour1Content;
+          if (data.mini2Tour2Content) mini2Tour2Content = data.mini2Tour2Content;
+          if (data.mini2KeoMode) mini2KeoMode = data.mini2KeoMode;
+          if (data.mini2Payment) mini2Payment = data.mini2Payment;
+
+          if (!mini2MatchesA || mini2MatchesA.length === 0) generateMini2MatchesForGroup('A');
+          if (!mini2MatchesB || mini2MatchesB.length === 0) generateMini2MatchesForGroup('B');
+
+          autoBackupMemory = JSON.parse(JSON.stringify(data));
+
+          const validTabs = [...dates, "tonghop", "players", "minigame1", "minigame1_sub1", "minigame1_sub2", "minigame2", "minigame2_tour1", "minigame2_tour2"];
+          if (!currentTab || !validTabs.includes(currentTab)) {
+            currentTab = getClosestOrCurrentDate(dates);
+          }
+          statusEl.className = "cloud-status cloud-online";
+          statusEl.innerHTML = "☁️ Tự Động Lưu (Firestore Online)";
+          renderDatesMenu();
+          renderCurrentTab();
         } else {
-          updateBtcNoteAdminPermission(date, "YES");
+          initDefaultFirestore();
         }
-      } else {
-        updateBtcNoteAdminPermission(date, "NO");
-      }
+      }, (error) => {
+        console.error("Firestore error:", error);
+        initDefaultFirestore();
+      });
     }
 
-    function updateBtcNoteAdminPermission(date, status) {
-      if (!paymentStatus[date]) {
-        paymentStatus[date] = {};
-      } else if (typeof paymentStatus[date] !== 'object') {
-        const oldVal = paymentStatus[date];
-        paymentStatus[date] = { paid: oldVal };
-      }
-      paymentStatus[date].btcNoteAdminOption = status;
+    function getClosestOrCurrentDate(dateArray) {
+      if (!dateArray || dateArray.length === 0) return "tonghop";
+      const now = new Date();
+      const todayStr = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear().toString().substr(-2)}`;
+
+      if (dateArray.includes(todayStr)) return todayStr;
+
+      let closestDate = dateArray[0];
+      let minDiff = Infinity;
+
+      const parseDateStr = (str) => {
+        const parts = str.split('/');
+        if (parts.length === 3) {
+          let day = parseInt(parts[0], 10);
+          let month = parseInt(parts[1], 10) - 1;
+          let year = parseInt(parts[2], 10);
+          if (year < 100) year += 2000;
+          return new Date(year, month, day);
+        }
+        return new Date(0);
+      };
+
+      dateArray.forEach(dStr => {
+        const dObj = parseDateStr(dStr);
+        const diff = Math.abs(now - dObj);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestDate = dStr;
+        }
+      });
+      return closestDate;
+    }
+
+    function initDefaultFirestore() {
+      const nowObj = new Date();
+      const todayStr = `${nowObj.getDate()}/${nowObj.getMonth() + 1}/${nowObj.getFullYear().toString().substr(-2)}`;
+      dates = [todayStr];
+      matchesData = {};
+      matchesData[todayStr] = [
+        { id: 1, c1_p1: "Trí Đỏ", c1_p2: "Long Diễn", c2_p1: "Tuấn La", c2_p2: "Thành Sóc", score1: "11", score2: "9", customWin: 5, customLose: -15 }
+      ];
+      dateKeoMode[todayStr] = "default";
+
+      miniGame1Matches = DEFAULT_MINI1_DATA;
+      generateDynamicSub1Matches();
+      generateDynamicSub2Matches();
+      generateMini2MatchesForGroup('A');
+      generateMini2MatchesForGroup('B');
+      currentTab = todayStr;
+      
+      syncVdvsFromPlayers();
+      renderDatesMenu();
+      updateNavbarTitles();
+      renderCurrentTab();
       saveDataToFirestore();
+    }
+
+    function saveDataToFirestore() {
+      const statusEl = document.getElementById("cloudStatus");
+      if (statusEl) {
+        statusEl.className = "cloud-status cloud-syncing";
+        statusEl.innerHTML = "⏳ Đang tự động lưu...";
+      }
+
+      syncVdvsFromPlayers();
+
+      const payload = { 
+        players, vdvs, dates, matchesData, dateKeoMode, paymentStatus, 
+        miniGame1Content, miniGame2Content, titlesConfig,
+        mini1TeamA, mini1TeamB, mini1KeoMode, mini1Payment,
+        mini1Sub1TeamA, mini1Sub1TeamB, mini1Sub1KeoMode, mini1Sub1Payment, miniGame1Sub1Matches, 
+        mini1Sub2TeamA, mini1Sub2TeamB, mini1Sub2KeoMode, mini1Sub2Payment, miniGame1Sub2Matches,
+        miniGame1Matches,
+        mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout,
+        mini2Tour1Content, mini2Tour2Content, mini2KeoMode, mini2Payment
+      };
+
+      autoBackupMemory = JSON.parse(JSON.stringify(payload));
+
+      docRef.set(payload, { merge: true }).then(() => {
+        if (statusEl) {
+          statusEl.className = "cloud-status cloud-online";
+          statusEl.innerHTML = "☁️ Tự Động Lưu (Firestore Online)";
+        }
+      }).catch((err) => {
+        console.error("Lỗi khi tự động lưu dữ liệu:", err);
+        if (statusEl) {
+          statusEl.className = "cloud-status cloud-error";
+          statusEl.innerHTML = "⚠ Lỗi kết nối tự động lưu!";
+        }
+      });
+    }
+
+    function backupDataJSON() {
+      closeAllDropdowns();
+      const backupData = autoBackupMemory || {
+        players, vdvs, dates, matchesData, dateKeoMode, paymentStatus, 
+        miniGame1Content, miniGame2Content, titlesConfig, mini1TeamA, mini1TeamB, mini1KeoMode, mini1Payment, mini1Sub1TeamA, mini1Sub1TeamB, mini1Sub1KeoMode, mini1Sub1Payment, miniGame1Sub1Matches, mini1Sub2TeamA, mini1Sub2TeamB, mini1Sub2KeoMode, mini1Sub2Payment, miniGame1Sub2Matches, 
+        miniGame1Matches, mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout,
+        mini2Tour1Content, mini2Tour2Content, mini2KeoMode, mini2Payment,
+        exportAt: new Date().toISOString()
+      };
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+      const downloadAnchor = document.createElement('a');
+      const dateTag = new Date().toISOString().slice(0, 10);
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `CMTD_Pickleball_AutoBackup_${dateTag}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function triggerRestoreJSON() {
+      closeAllDropdowns();
+      document.getElementById('restoreFileInput').click();
+    }
+
+    function handleRestoreJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (confirm("⚠️ Bạn có chắc muốn khôi phục dữ liệu từ file sao lưu này? Dữ liệu hiện tại sẽ bị thay thế!")) {
+            if (data.players) players = data.players;
+            if (data.vdvs) vdvs = data.vdvs;
+            if (data.dates) dates = data.dates;
+            if (data.matchesData) matchesData = data.matchesData;
+            if (data.dateKeoMode) dateKeoMode = data.dateKeoMode;
+            if (data.paymentStatus) paymentStatus = data.paymentStatus;
+            if (data.miniGame1Content) miniGame1Content = data.miniGame1Content;
+            if (data.miniGame2Content) miniGame2Content = data.miniGame2Content;
+            if (data.titlesConfig) titlesConfig = Object.assign(titlesConfig, data.titlesConfig);
+            if (data.mini1TeamA) mini1TeamA = data.mini1TeamA;
+            if (data.mini1TeamB) mini1TeamB = data.mini1TeamB;
+            if (data.mini1KeoMode) mini1KeoMode = data.mini1KeoMode;
+            if (data.mini1Payment) mini1Payment = data.mini1Payment;
+            if (data.mini1Sub1TeamA) mini1Sub1TeamA = data.mini1Sub1TeamA;
+            if (data.mini1Sub1TeamB) mini1Sub1TeamB = data.mini1Sub1TeamB;
+            if (data.mini1Sub1KeoMode) mini1Sub1KeoMode = data.mini1Sub1KeoMode;
+            if (data.mini1Sub1Payment) mini1Sub1Payment = data.mini1Sub1Payment;
+            if (data.miniGame1Sub1Matches) miniGame1Sub1Matches = data.miniGame1Sub1Matches;
+            if (data.mini1Sub2TeamA) mini1Sub2TeamA = data.mini1Sub2TeamA;
+            if (data.mini1Sub2TeamB) mini1Sub2TeamB = data.mini1Sub2TeamB;
+            if (data.mini1Sub2KeoMode) mini1Sub2KeoMode = data.mini1Sub2KeoMode;
+            if (data.mini1Sub2Payment) mini1Sub2Payment = data.mini1Sub2Payment;
+            if (data.miniGame1Sub2Matches) miniGame1Sub2Matches = data.miniGame1Sub2Matches;
+            if (data.miniGame1Matches) miniGame1Matches = data.miniGame1Matches;
+            if (data.mini2PairsA) mini2PairsA = data.mini2PairsA;
+            if (data.mini2PairsB) mini2PairsB = data.mini2PairsB;
+            if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
+            if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
+            if (data.mini2Knockout) mini2Knockout = Object.assign(mini2Knockout, data.mini2Knockout);
+            if (data.miniGame2Tour1Content) mini2Tour1Content = data.miniGame2Tour1Content;
+            if (data.miniGame2Tour2Content) mini2Tour2Content = data.miniGame2Tour2Content;
+            if (data.mini2KeoMode) mini2KeoMode = data.mini2KeoMode;
+            if (data.mini2Payment) mini2Payment = data.mini2Payment;
+
+            syncVdvsFromPlayers();
+            updateNavbarTitles();
+            currentTab = getClosestOrCurrentDate(dates);
+            saveDataToFirestore();
+            alert("✅ Phục hồi dữ liệu thành công!");
+          }
+        } catch (err) {
+          alert("❌ File sao lưu không hợp lệ hoặc bị lỗi!");
+          console.error(err);
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function exportToExcel() {
+      closeAllDropdowns();
+      let wb = XLSX.utils.book_new();
+      
+      dates.forEach(d => {
+        let matches = matchesData[d] || [];
+        let rows = matches.map((m, idx) => ({
+          "Trận": idx + 1,
+          "Cặp 1 - VĐV 1": m.c1_p1 || "",
+          "Cặp 1 - VĐV 2": m.c1_p2 || "",
+          "Cặp 2 - VĐV 1": m.c2_p1 || "",
+          "Cặp 2 - VĐV 2": m.c2_p2 || "",
+          "Điểm 1": m.score1 || "",
+          "Điểm 2": m.score2 || ""
+        }));
+        let ws = XLSX.utils.json_to_sheet(rows);
+        XLSX.utils.book_append_sheet(wb, ws, d.replace(/\//g, "-"));
+      });
+
+      XLSX.writeFile(wb, `CLB_Pickleball_CMTD_ThongKe.xlsx`);
+    }
+
+    function goHome() {
+      currentTab = getClosestOrCurrentDate(dates);
       renderCurrentTab();
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [ADMIN-FUNCS] ▲▲▲ -->
 
-  <!-- ████████ MODULE PICKTHU · PICK THỦ ████████ -->
-  <!-- ▼▼▼ KHỐI [PICKTHU-DATA] · JS · Dữ liệu Pick Thủ: màu VĐV, danh sách players, vdvs ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: VDV_COLORS, players, vdvs -->
-  <script>
-    const VDV_COLORS = [
-      "#d97706", "#2563eb", "#059669", "#dc2626", "#7c3aed", 
-      "#db2777", "#0284c7", "#15803d", "#b45309", "#4338ca",
-      "#c026d3", "#0d9488", "#ea580c", "#4f46e5"
-    ];
+    function toggleMenu(menuId, e) {
+      e.stopPropagation();
+      const targetMenu = document.getElementById(menuId);
+      const isAlreadyShow = targetMenu.classList.contains("show");
+      closeAllDropdowns();
+      if (!isAlreadyShow) {
+        targetMenu.classList.add("show");
+      }
+    }
 
-    let players = [
-      { id: 1, name: "Tiến Thọ", gender: "Nam" },
-      { id: 2, name: "Châu Sĩ", gender: "Nam" },
-      { id: 3, name: "Vân Đình", gender: "Nữ" },
-      { id: 4, name: "Cẩm Ly", gender: "Nữ" },
-      { id: 5, name: "Phú Mỗ", gender: "Nam" },
-      { id: 6, name: "Hà Giấy", gender: "Nam" },
-      { id: 7, name: "Long Diễn", gender: "Nam" },
-      { id: 8, name: "Tuấn La", gender: "Nam" },
-      { id: 9, name: "Trí Đỏ", gender: "Nam" },
-      { id: 10, name: "Thành Sóc", gender: "Nam" },
-      { id: 11, name: "Quỳnh Cool", gender: "Nữ" },
-      { id: 12, name: "Hải Hà", gender: "Nữ" },
-      { id: 13, name: "Dũng Ngạc", gender: "Nam" },
-      { id: 14, name: "Lợi Trí", gender: "Nam" },
-      { id: 15, name: "Thanh Đàm", gender: "Nam" },
-      { id: 16, name: "Điền Chèm", gender: "Nam" },
-      { id: 17, name: "Minh Hạnh", gender: "Nữ" },
-      { id: 18, name: "Minh Vượng", gender: "Nam" },
-      { id: 19, name: "Gà Tre", gender: "Nữ" },
-      { id: 20, name: "Trường Giang", gender: "Nam" }
-    ];
+    function closeAllDropdowns() {
+      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+    }
 
-    let vdvs = players.map(p => p.name);
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [PICKTHU-DATA] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [PICKTHU-FUNCS] · JS · Thêm / sửa / xóa Pick Thủ + bảng Pick Thủ ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: syncVdvsFromPlayers, openPlayerModal, closePlayerModal, savePlayer, editPlayer, deletePlayer -->
-  <!--   ↳ Gồm: renderPlayersTab -->
-  <script>
-    function syncVdvsFromPlayers() {
-      vdvs = players.map(p => p.name);
-      const btn = document.getElementById("vdvCountBtn");
-      if (btn) btn.innerText = players.length;
+    function renderDatesMenu() {
+      const container = document.getElementById("datesMenuList");
+      if (!container) return;
+      container.innerHTML = dates.map(d => `
+        <div class="dropdown-item ${currentTab === d ? 'txt-win' : ''}" onclick="switchTab('${d}')">
+          📅 Ngày ${d}
+        </div>
+      `).join('');
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      closeAllDropdowns();
+      renderDatesMenu();
+      renderCurrentTab();
     }
 
     /* XỬ LÝ PICK THỦ */
@@ -909,69 +1188,55 @@
       `;
       container.innerHTML = html;
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [PICKTHU-FUNCS] ▲▲▲ -->
 
-  <!-- ████████ MODULE HOME · HOME (TRANG CHỦ & CÁC TAB NGÀY) ████████ -->
-  <!-- ▼▼▼ KHỐI [HOME-DATA] · JS · Dữ liệu ngày: dates, matchesData, dateKeoMode, paymentStatus, mức phạt nghỉ ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: dates, matchesData, dateKeoMode, paymentStatus, ABSENT_FINE_K -->
-  <script>
-    let dates = [];
-
-    let matchesData = {};
-
-    let dateKeoMode = {}; 
-
-    let paymentStatus = {};
-
-    const ABSENT_FINE_K = 30; // Mức phạt VĐV xin nghỉ KHÔNG PHÉP (đơn vị K)
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [HOME-DATA] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [HOME-NAV] · JS · Trang chủ: tìm ngày gần nhất + nút HOME ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: getClosestOrCurrentDate, goHome -->
-  <script>
-    function getClosestOrCurrentDate(dateArray) {
-      if (!dateArray || dateArray.length === 0) return "tonghop";
-      const now = new Date();
-      const todayStr = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear().toString().substr(-2)}`;
-
-      if (dateArray.includes(todayStr)) return todayStr;
-
-      let closestDate = dateArray[0];
-      let minDiff = Infinity;
-
-      const parseDateStr = (str) => {
-        const parts = str.split('/');
-        if (parts.length === 3) {
-          let day = parseInt(parts[0], 10);
-          let month = parseInt(parts[1], 10) - 1;
-          let year = parseInt(parts[2], 10);
-          if (year < 100) year += 2000;
-          return new Date(year, month, day);
-        }
-        return new Date(0);
-      };
-
-      dateArray.forEach(dStr => {
-        const dObj = parseDateStr(dStr);
-        const diff = Math.abs(now - dObj);
-        if (diff < minDiff) {
-          minDiff = diff;
-          closestDate = dStr;
-        }
-      });
-      return closestDate;
+    function addDateTab() {
+      closeAllDropdowns();
+      const dateStr = prompt("Nhập ngày đấu mới (VD: 28/9/26):");
+      if (dateStr && !dates.includes(dateStr)) {
+        dates.push(dateStr);
+        matchesData[dateStr] = Array.from({ length: 5 }, (_, i) => ({
+          id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "", customWin: 5, customLose: -15
+        }));
+        dateKeoMode[dateStr] = "default";
+        currentTab = dateStr;
+        saveDataToFirestore();
+      }
     }
 
-    function goHome() {
-      currentTab = getClosestOrCurrentDate(dates);
-      renderCurrentTab();
+    function renameCurrentDate() {
+      closeAllDropdowns();
+      const nonDateTabs = ["tonghop", "players", "minigame1", "minigame1_sub1", "minigame1_sub2", "minigame2", "minigame2_tour1", "minigame2_tour2"];
+      if (nonDateTabs.includes(currentTab)) return alert("⚠ Không thể đổi tên tab này!");
+      const oldDate = currentTab;
+      const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
+      if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
+        const trimmed = newDate.trim();
+        if (dates.includes(trimmed)) return alert("⚠ Tên ngày này đã tồn tại!");
+        const idx = dates.indexOf(oldDate);
+        if (idx !== -1) dates[idx] = trimmed;
+        matchesData[trimmed] = matchesData[oldDate];
+        dateKeoMode[trimmed] = dateKeoMode[oldDate];
+        delete matchesData[oldDate];
+        delete dateKeoMode[oldDate];
+        currentTab = trimmed;
+        saveDataToFirestore();
+      }
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [HOME-NAV] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [HOME-MATCH-OPS] · JS · Thao tác trận trong ngày: đổi kèo, thêm/xóa/sửa trận, tích nộp ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: changeKeoMode, addMatch, deleteSpecificMatch, updateMatch, togglePayment -->
-  <script>
+
+    function deleteCurrentDate() {
+      closeAllDropdowns();
+      const nonDateTabs = ["tonghop", "players", "minigame1", "minigame1_sub1", "minigame1_sub2", "minigame2", "minigame2_tour1", "minigame2_tour2"];
+      if (nonDateTabs.includes(currentTab)) return alert("⚠ Không thể xóa tab này!");
+      const dateToDelete = currentTab;
+      if (confirm(`❌ Bạn có chắc chắn muốn XÓA TOÀN BỘ dữ liệu ngày "${dateToDelete}"?`)) {
+        dates = dates.filter(d => d !== dateToDelete);
+        delete matchesData[dateToDelete];
+        delete dateKeoMode[dateToDelete];
+        currentTab = getClosestOrCurrentDate(dates);
+        saveDataToFirestore();
+      }
+    }
+
     function changeKeoMode(dateStr, mode) {
       dateKeoMode[dateStr] = mode;
       saveDataToFirestore();
@@ -1017,11 +1282,282 @@
       saveDataToFirestore();
       renderCurrentTab();
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [HOME-MATCH-OPS] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [HOME-KEO-HELPERS] · JS · Hàm hỗ trợ: danh sách VĐV màu + giá trị kèo ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: generateVdvOptionsHtml, getKeoValues -->
-  <script>
+
+    function toggleMini1Payment(payKey) {
+      if (!isAdminVerified) {
+        alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
+        return;
+      }
+      mini1Payment[payKey] = !mini1Payment[payKey];
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function toggleSub1Payment(payKey) {
+      if (!isAdminVerified) {
+        alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
+        return;
+      }
+      mini1Sub1Payment[payKey] = !mini1Sub1Payment[payKey];
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function toggleSub2Payment(payKey) {
+      if (!isAdminVerified) {
+        alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
+        return;
+      }
+      mini1Sub2Payment[payKey] = !mini1Sub2Payment[payKey];
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function toggleMini2Payment(payKey) {
+      if (!isAdminVerified) {
+        alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
+        return;
+      }
+      mini2Payment[payKey] = !mini2Payment[payKey];
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function handleBtcNoteAdminChange(date, selectElement) {
+      const selectedValue = selectElement.value;
+      if (selectedValue === "YES") {
+        if (!isAdminVerified) {
+          alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
+          selectElement.value = "NO";
+          return;
+        } else {
+          updateBtcNoteAdminPermission(date, "YES");
+        }
+      } else {
+        updateBtcNoteAdminPermission(date, "NO");
+      }
+    }
+
+    function updateBtcNoteAdminPermission(date, status) {
+      if (!paymentStatus[date]) {
+        paymentStatus[date] = {};
+      } else if (typeof paymentStatus[date] !== 'object') {
+        const oldVal = paymentStatus[date];
+        paymentStatus[date] = { paid: oldVal };
+      }
+      paymentStatus[date].btcNoteAdminOption = status;
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function openGameModal(gameId) {
+      closeAllDropdowns();
+      activeGameEditing = gameId;
+      document.getElementById("gameModalTitle").innerText = `Chỉnh Sửa Mini Game ${gameId}`;
+      document.getElementById("gameContentInput").value = gameId === 1 ? miniGame1Content : miniGame2Content;
+      document.getElementById("gameModal").classList.add("show");
+    }
+
+    function closeGameModal() {
+      document.getElementById("gameModal").classList.remove("show");
+    }
+
+    function saveGameContent() {
+      const val = document.getElementById("gameContentInput").value;
+      if (activeGameEditing === 1) miniGame1Content = val;
+      else miniGame2Content = val;
+      saveDataToFirestore();
+      closeGameModal();
+    }
+
+    function generateMini2MatchesForGroup(group) {
+      let pairs = group === 'A' ? mini2PairsA : mini2PairsB;
+      let matches = [];
+      let matchId = 1;
+      for (let i = 0; i < pairs.length; i++) {
+        for (let j = i + 1; j < pairs.length; j++) {
+          matches.push({
+            id: matchId++,
+            pair1Index: i,
+            pair2Index: j,
+            score1: "",
+            score2: "",
+            customWin: 5,
+            customLose: -15
+          });
+        }
+      }
+      if (group === 'A') mini2MatchesA = matches;
+      else mini2MatchesB = matches;
+    }
+
+    function setMini2PairCount(group, count) {
+      count = parseInt(count);
+      let pairs = group === 'A' ? mini2PairsA : mini2PairsB;
+      const defaultNames = group === 'A' 
+        ? ['Trí Đỏ - Tiến Thọ', 'Điền Chèm - Lợi Trí', 'Cẩm Ly - Hải Hà', 'Châu Sĩ - Long Diễn', 'Phú Mỗ - Dũng Ngạc'] 
+        : ['Thành Sóc - Thành Sóc', 'Tuấn La - Hà Giấy', 'Vân Đình - Quỳnh Cool', 'Minh Hạnh - Minh Vượng', 'Tự Do'];
+
+      if (pairs.length < count) {
+        while (pairs.length < count) {
+          let nextIdx = pairs.length;
+          pairs.push({ name: defaultNames[nextIdx] || (`Cặp ${nextIdx+1}`) });
+        }
+      } else if (pairs.length > count) {
+        pairs.splice(count);
+      }
+
+      generateMini2MatchesForGroup(group);
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function editMini2PairName(group, index) {
+      let pairs = group === 'A' ? mini2PairsA : mini2PairsB;
+      let oldName = pairs[index].name;
+      let newName = prompt(`Nhập tên mới cho Cặp/Đội (${oldName}):`, oldName);
+      if (newName !== null && newName.trim() !== "") {
+        pairs[index].name = newName.trim();
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function deleteMini2Pair(group, index) {
+      let pairs = group === 'A' ? mini2PairsA : mini2PairsB;
+      if (pairs.length <= 2) {
+        alert("Bảng phải có ít nhất 2 cặp VĐV!");
+        return;
+      }
+      if (confirm(`Bạn có chắc muốn xóa cặp VĐV "${pairs[index].name}"?`)) {
+        pairs.splice(index, 1);
+        generateMini2MatchesForGroup(group);
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function updateMini2MatchScore(group, matchIdx, field, val) {
+      let matches = group === 'A' ? mini2MatchesA : mini2MatchesB;
+      if (matches[matchIdx]) {
+        matches[matchIdx][field] = val;
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function updateMini2MatchKeo(group, matchIdx, field, val) {
+      let matches = group === 'A' ? mini2MatchesA : mini2MatchesB;
+      if (matches[matchIdx]) {
+        matches[matchIdx][field] = val;
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function changeMini2KeoMode(mode) {
+      mini2KeoMode = mode;
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function updateMini2Knockout(stage, field, val) {
+      if (mini2Knockout[stage] !== undefined) {
+        mini2Knockout[stage][field] = val;
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function updateMini2WinnerField(field, val) {
+      mini2Knockout[field] = val;
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function computeGroupStandings(pairs, matches) {
+      let stats = pairs.map((p, idx) => ({
+        index: idx,
+        name: p.name,
+        points: 0,
+        scoreFor: 0,
+        scoreAgainst: 0,
+        diff: 0
+      }));
+
+      let headToHead = {};
+      for (let i = 0; i < pairs.length; i++) {
+        headToHead[i] = {};
+      }
+
+      matches.forEach(m => {
+        let s1 = parseInt(m.score1);
+        let s2 = parseInt(m.score2);
+        if (!isNaN(s1) && !isNaN(s2)) {
+          let idx1 = m.pair1Index;
+          let idx2 = m.pair2Index;
+
+          if (stats[idx1] && stats[idx2]) {
+            stats[idx1].scoreFor += s1;
+            stats[idx1].scoreAgainst += s2;
+            stats[idx2].scoreFor += s2;
+            stats[idx2].scoreAgainst += s1;
+
+            if (s1 > s2) {
+              stats[idx1].points += 1;
+              headToHead[idx1][idx2] = 1;
+              headToHead[idx2][idx1] = -1;
+            } else if (s2 > s1) {
+              stats[idx2].points += 1;
+              headToHead[idx2][idx1] = 1;
+              headToHead[idx1][idx2] = -1;
+            }
+          }
+        }
+      });
+
+      stats.forEach(s => {
+        s.diff = s.scoreFor - s.scoreAgainst;
+      });
+
+      stats.sort((a, b) => {
+        if (b.points !== a.points) return b.points - a.points;
+        if (b.diff !== a.diff) return b.diff - a.diff;
+        if (headToHead[a.index] && headToHead[a.index][b.index]) {
+          return -headToHead[a.index][b.index];
+        }
+        return 0;
+      });
+
+      return stats;
+    }
+
+    function renderCurrentTab() {
+      const content = document.getElementById("tabContent");
+      if (!content) return;
+      if (currentTab === "tonghop") {
+        renderTongHopTab(content);
+      } else if (currentTab === "players") {
+        renderPlayersTab(content);
+      } else if (currentTab === "minigame1") {
+        renderMiniGame1Tab(content);
+      } else if (currentTab === "minigame1_sub1") {
+        renderMiniGame1Sub1Tab(content);
+      } else if (currentTab === "minigame1_sub2") {
+        renderMiniGame1Sub2Tab(content);
+      } else if (currentTab === "minigame2") {
+        renderMiniGame2Tab(content);
+      } else if (currentTab === "minigame2_tour1") {
+        renderMiniGame2Tour1Tab(content);
+      } else if (currentTab === "minigame2_tour2") {
+        renderMiniGame2Tour2Tab(content);
+      } else {
+        renderSingleDayTab(content, currentTab);
+      }
+      updateAdminUIState();
+      updateNavbarTitles();
+    }
+
     function generateVdvOptionsHtml(selectedValue, filterList = null) {
       const listToRender = filterList || vdvs;
       return listToRender.map((v) => {
@@ -1042,11 +1578,7 @@
       }
       return { winAmt, loseAmt };
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [HOME-KEO-HELPERS] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [HOME-DAYTAB] · JS · Bảng thống kê trận pick của ngày (Trang Chủ / từng ngày) ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: renderSingleDayTab -->
-  <script>
+
     function renderSingleDayTab(container, dateStr) {
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
@@ -1188,13 +1720,7 @@
 
       renderSingleDaySummaryTable(dateStr, html, container);
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [HOME-DAYTAB] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [HOME-ABSENT] · JS · VĐV XIN NGHỈ: chọn 2/3/4 VĐV, Nộp phạt / Không nộp phạt ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: ABSENT_COUNT_OPTIONS, escAbsentAttr, escAbsentJs, getDayStatusObj, getAbsentInfo -->
-  <!--   ↳ Gồm: getAbsentFineMap, persistAbsentChange, setAbsentCount, setAbsentPlayerSlot, setAbsentStatus -->
-  <!--   ↳ Gồm: buildAbsentFineCell, buildAbsentSelectorRow -->
-  <script>
+
     /* ==========================================================================
        XIN NGHỈ: chọn 2 / 3 / 4 VĐV nghỉ trong ngày + xác định NỘP PHẠT / KHÔNG NỘP PHẠT
        Dữ liệu lưu trong paymentStatus[<ngày>] (tự đồng bộ Firestore + nằm trong file sao lưu):
@@ -1208,7 +1734,6 @@
     function escAbsentAttr(str) {
       return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
-
     function escAbsentJs(str) {
       return String(str == null ? '' : str).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     }
@@ -1345,11 +1870,7 @@
           </td>
         </tr>`;
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [HOME-ABSENT] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [HOME-SUMMARY] · JS · Bảng Tổng Hợp Ngày (gồm cột XIN NGHỈ) ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: renderSingleDaySummaryTable -->
-  <script>
+
     /* ĐÃ KHẮC PHỤC LỖI LẶP VĐV TRONG BẢNG TỔNG HỢP */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const matches = matchesData[dateStr] || [];
@@ -1495,194 +2016,7 @@
 
       container.innerHTML = matchesHtml + summaryTableHtml;
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [HOME-SUMMARY] ▲▲▲ -->
 
-  <!-- ████████ MODULE SETTING · SETTING ████████ -->
-  <!-- ▼▼▼ KHỐI [SETTING-DATES] · JS · Thêm / sửa tên / xóa ngày ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: addDateTab, renameCurrentDate, deleteCurrentDate -->
-  <script>
-    function addDateTab() {
-      closeAllDropdowns();
-      const dateStr = prompt("Nhập ngày đấu mới (VD: 28/9/26):");
-      if (dateStr && !dates.includes(dateStr)) {
-        dates.push(dateStr);
-        matchesData[dateStr] = Array.from({ length: 5 }, (_, i) => ({
-          id: i + 1, c1_p1: "", c1_p2: "", c2_p1: "", c2_p2: "", score1: "", score2: "", customWin: 5, customLose: -15
-        }));
-        dateKeoMode[dateStr] = "default";
-        currentTab = dateStr;
-        saveDataToFirestore();
-      }
-    }
-
-    function renameCurrentDate() {
-      closeAllDropdowns();
-      const nonDateTabs = ["tonghop", "players", "minigame1", "minigame1_sub1", "minigame1_sub2", "minigame2", "minigame2_tour1", "minigame2_tour2"];
-      if (nonDateTabs.includes(currentTab)) return alert("⚠ Không thể đổi tên tab này!");
-      const oldDate = currentTab;
-      const newDate = prompt(`Nhập tên mới cho ngày "${oldDate}":`, oldDate);
-      if (newDate && newDate.trim() !== "" && newDate !== oldDate) {
-        const trimmed = newDate.trim();
-        if (dates.includes(trimmed)) return alert("⚠ Tên ngày này đã tồn tại!");
-        const idx = dates.indexOf(oldDate);
-        if (idx !== -1) dates[idx] = trimmed;
-        matchesData[trimmed] = matchesData[oldDate];
-        dateKeoMode[trimmed] = dateKeoMode[oldDate];
-        delete matchesData[oldDate];
-        delete dateKeoMode[oldDate];
-        currentTab = trimmed;
-        saveDataToFirestore();
-      }
-    }
-
-    function deleteCurrentDate() {
-      closeAllDropdowns();
-      const nonDateTabs = ["tonghop", "players", "minigame1", "minigame1_sub1", "minigame1_sub2", "minigame2", "minigame2_tour1", "minigame2_tour2"];
-      if (nonDateTabs.includes(currentTab)) return alert("⚠ Không thể xóa tab này!");
-      const dateToDelete = currentTab;
-      if (confirm(`❌ Bạn có chắc chắn muốn XÓA TOÀN BỘ dữ liệu ngày "${dateToDelete}"?`)) {
-        dates = dates.filter(d => d !== dateToDelete);
-        delete matchesData[dateToDelete];
-        delete dateKeoMode[dateToDelete];
-        currentTab = getClosestOrCurrentDate(dates);
-        saveDataToFirestore();
-      }
-    }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [SETTING-DATES] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [SETTING-EXCEL] · JS · Xuất dữ liệu Excel ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: exportToExcel -->
-  <script>
-    function exportToExcel() {
-      closeAllDropdowns();
-      let wb = XLSX.utils.book_new();
-      
-      dates.forEach(d => {
-        let matches = matchesData[d] || [];
-        let rows = matches.map((m, idx) => ({
-          "Trận": idx + 1,
-          "Cặp 1 - VĐV 1": m.c1_p1 || "",
-          "Cặp 1 - VĐV 2": m.c1_p2 || "",
-          "Cặp 2 - VĐV 1": m.c2_p1 || "",
-          "Cặp 2 - VĐV 2": m.c2_p2 || "",
-          "Điểm 1": m.score1 || "",
-          "Điểm 2": m.score2 || ""
-        }));
-        let ws = XLSX.utils.json_to_sheet(rows);
-        XLSX.utils.book_append_sheet(wb, ws, d.replace(/\//g, "-"));
-      });
-
-      XLSX.writeFile(wb, `CLB_Pickleball_CMTD_ThongKe.xlsx`);
-    }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [SETTING-EXCEL] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [SETTING-JSON-BACKUP] · JS · Sao lưu / phục hồi file JSON ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: backupDataJSON, triggerRestoreJSON, handleRestoreJSON -->
-  <script>
-    function backupDataJSON() {
-      closeAllDropdowns();
-      const backupData = autoBackupMemory || {
-        players, vdvs, dates, matchesData, dateKeoMode, paymentStatus, 
-        miniGame1Content, miniGame2Content, titlesConfig, mini1TeamA, mini1TeamB, mini1KeoMode, mini1Payment, mini1Sub1TeamA, mini1Sub1TeamB, mini1Sub1KeoMode, mini1Sub1Payment, miniGame1Sub1Matches, mini1Sub2TeamA, mini1Sub2TeamB, mini1Sub2KeoMode, mini1Sub2Payment, miniGame1Sub2Matches, 
-        miniGame1Matches, mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout,
-        mini2Tour1Content, mini2Tour2Content, mini2KeoMode, mini2Payment,
-        exportAt: new Date().toISOString()
-      };
-
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
-      const downloadAnchor = document.createElement('a');
-      const dateTag = new Date().toISOString().slice(0, 10);
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `CMTD_Pickleball_AutoBackup_${dateTag}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-    }
-
-    function triggerRestoreJSON() {
-      closeAllDropdowns();
-      document.getElementById('restoreFileInput').click();
-    }
-
-    function handleRestoreJSON(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const data = JSON.parse(e.target.result);
-          if (confirm("⚠️ Bạn có chắc muốn khôi phục dữ liệu từ file sao lưu này? Dữ liệu hiện tại sẽ bị thay thế!")) {
-            if (data.players) players = data.players;
-            if (data.vdvs) vdvs = data.vdvs;
-            if (data.dates) dates = data.dates;
-            if (data.matchesData) matchesData = data.matchesData;
-            if (data.dateKeoMode) dateKeoMode = data.dateKeoMode;
-            if (data.paymentStatus) paymentStatus = data.paymentStatus;
-            if (data.miniGame1Content) miniGame1Content = data.miniGame1Content;
-            if (data.miniGame2Content) miniGame2Content = data.miniGame2Content;
-            if (data.titlesConfig) titlesConfig = Object.assign(titlesConfig, data.titlesConfig);
-            if (data.mini1TeamA) mini1TeamA = data.mini1TeamA;
-            if (data.mini1TeamB) mini1TeamB = data.mini1TeamB;
-            if (data.mini1KeoMode) mini1KeoMode = data.mini1KeoMode;
-            if (data.mini1Payment) mini1Payment = data.mini1Payment;
-            if (data.mini1Sub1TeamA) mini1Sub1TeamA = data.mini1Sub1TeamA;
-            if (data.mini1Sub1TeamB) mini1Sub1TeamB = data.mini1Sub1TeamB;
-            if (data.mini1Sub1KeoMode) mini1Sub1KeoMode = data.mini1Sub1KeoMode;
-            if (data.mini1Sub1Payment) mini1Sub1Payment = data.mini1Sub1Payment;
-            if (data.miniGame1Sub1Matches) miniGame1Sub1Matches = data.miniGame1Sub1Matches;
-            if (data.mini1Sub2TeamA) mini1Sub2TeamA = data.mini1Sub2TeamA;
-            if (data.mini1Sub2TeamB) mini1Sub2TeamB = data.mini1Sub2TeamB;
-            if (data.mini1Sub2KeoMode) mini1Sub2KeoMode = data.mini1Sub2KeoMode;
-            if (data.mini1Sub2Payment) mini1Sub2Payment = data.mini1Sub2Payment;
-            if (data.miniGame1Sub2Matches) miniGame1Sub2Matches = data.miniGame1Sub2Matches;
-            if (data.miniGame1Matches) miniGame1Matches = data.miniGame1Matches;
-            if (data.mini2PairsA) mini2PairsA = data.mini2PairsA;
-            if (data.mini2PairsB) mini2PairsB = data.mini2PairsB;
-            if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
-            if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
-            if (data.mini2Knockout) mini2Knockout = Object.assign(mini2Knockout, data.mini2Knockout);
-            if (data.miniGame2Tour1Content) mini2Tour1Content = data.miniGame2Tour1Content;
-            if (data.miniGame2Tour2Content) mini2Tour2Content = data.miniGame2Tour2Content;
-            if (data.mini2KeoMode) mini2KeoMode = data.mini2KeoMode;
-            if (data.mini2Payment) mini2Payment = data.mini2Payment;
-
-            syncVdvsFromPlayers();
-            updateNavbarTitles();
-            currentTab = getClosestOrCurrentDate(dates);
-            saveDataToFirestore();
-            alert("✅ Phục hồi dữ liệu thành công!");
-          }
-        } catch (err) {
-          alert("❌ File sao lưu không hợp lệ hoặc bị lỗi!");
-          console.error(err);
-        }
-      };
-      reader.readAsText(file);
-      event.target.value = '';
-    }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [SETTING-JSON-BACKUP] ▲▲▲ -->
-
-  <!-- ████████ MODULE TONGHOP · TỔNG HỢP CÁC NGÀY ████████ -->
-  <!-- ▼▼▼ KHỐI [TONGHOP-MENU] · JS · Danh sách ngày trong menu ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: renderDatesMenu -->
-  <script>
-    function renderDatesMenu() {
-      const container = document.getElementById("datesMenuList");
-      if (!container) return;
-      container.innerHTML = dates.map(d => `
-        <div class="dropdown-item ${currentTab === d ? 'txt-win' : ''}" onclick="switchTab('${d}')">
-          📅 Ngày ${d}
-        </div>
-      `).join('');
-    }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [TONGHOP-MENU] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [TONGHOP-TAB] · JS · Bảng Tổng Hợp Các Ngày ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: renderTongHopTab -->
-  <script>
     function renderTongHopTab(container) {
       let activeDates = dates.filter(d => {
         const matches = matchesData[d] || [];
@@ -1848,42 +2182,6 @@
 
       container.innerHTML = html;
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [TONGHOP-TAB] ▲▲▲ -->
-
-  <!-- ████████ MODULE MINIGAME · MINIGAME - DÙNG CHUNG ████████ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME-COMMON-DATA] · JS · Dữ liệu chung: nội dung thể lệ Game 1,2 + game đang sửa ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: miniGame1Content, miniGame2Content, activeGameEditing -->
-  <script>
-    let miniGame1Content = "Lịch Thi Đấu Team A & Team B Xoay V vòng.";
-
-    let miniGame2Content = "Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.";
-
-    let activeGameEditing = 1;
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME-COMMON-DATA] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME-COMMON-FUNCS] · JS · Hộp thoại thể lệ + tính/chọn kèo dùng chung ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: openGameModal, closeGameModal, saveGameContent, getMiniKeoValues, renderKeoSelectDropdown -->
-  <script>
-    function openGameModal(gameId) {
-      closeAllDropdowns();
-      activeGameEditing = gameId;
-      document.getElementById("gameModalTitle").innerText = `Chỉnh Sửa Mini Game ${gameId}`;
-      document.getElementById("gameContentInput").value = gameId === 1 ? miniGame1Content : miniGame2Content;
-      document.getElementById("gameModal").classList.add("show");
-    }
-
-    function closeGameModal() {
-      document.getElementById("gameModal").classList.remove("show");
-    }
-
-    function saveGameContent() {
-      const val = document.getElementById("gameContentInput").value;
-      if (activeGameEditing === 1) miniGame1Content = val;
-      else miniGame2Content = val;
-      saveDataToFirestore();
-      closeGameModal();
-    }
 
     function getMiniKeoValues(mode, matchObj) {
       let winAmt = 5, loseAmt = -15;
@@ -1905,43 +2203,6 @@
           <option value="free" ${currentMode === 'free' ? 'selected' : ''}>Kèo Tự Do (Tùy Chỉnh)</option>
         </select>
       `;
-    }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME-COMMON-FUNCS] ▲▲▲ -->
-
-  <!-- ████████ MODULE MINIGAME1 · MINIGAME 1 ████████ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME1-TEAM-DATA] · JS · Team A,B: dữ liệu (đội, kèo, lịch mặc định) ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: mini1TeamA, mini1TeamB, mini1KeoMode, mini1Payment, miniGame1Matches, DEFAULT_MINI1_DATA -->
-  <script>
-    let mini1TeamA = ["Tiến Thọ", "Long Diễn", "Phú Mỗ", "Hà Giấy", "Tuấn La", "Châu Sĩ", "Vân Đình", "Cẩm Ly", "Minh Hạnh"];
-
-    let mini1TeamB = ["Trí Đỏ", "Thành Sóc", "Dũng Ngạc", "Lợi Trí", "Điền Chèm", "Quỳnh Cool", "Hải Hà", "Minh Vượng"];
-
-    let mini1KeoMode = "default";
-
-    let mini1Payment = {};
-
-    let miniGame1Matches = [];
-
-    const DEFAULT_MINI1_DATA = [
-      { id: 1, category: "Nam xoay vòng", a1: "Tiến Thọ", a2: "Long Diễn", scoreA: "8", scoreB: "11", b1: "Trí Đỏ", b2: "Thành Sóc", customWin: 5, customLose: -15 },
-      { id: 2, category: "Nam xoay vòng", a1: "Phú Mỗ", a2: "Hà Giấy", scoreA: "5", scoreB: "11", b1: "Dũng Ngạc", b2: "Lợi Trí", customWin: 5, customLose: -15 },
-      { id: 3, category: "Nam xoay vòng", a1: "Tuấn La", a2: "Châu Sĩ", scoreA: "6", scoreB: "11", b1: "Điền Chèm", b2: "Thành Sóc", customWin: 5, customLose: -15 }
-    ];
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-TEAM-DATA] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME1-TEAM-FUNCS] · JS · Team A,B: thêm/xóa trận, VĐV, tỷ số, kèo, tích nộp ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: toggleMini1Payment, addMini1Match, deleteMini1Match, addMini1Vdv, editMini1Vdv, removeMini1Vdv -->
-  <!--   ↳ Gồm: moveMini1Vdv, updateMini1Score, updateMini1Vdv, changeMini1KeoMode, updateMini1MatchKeo -->
-  <script>
-    function toggleMini1Payment(payKey) {
-      if (!isAdminVerified) {
-        alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
-        return;
-      }
-      mini1Payment[payKey] = !mini1Payment[payKey];
-      saveDataToFirestore();
-      renderCurrentTab();
     }
 
     function addMini1Match() {
@@ -2067,11 +2328,7 @@
         renderCurrentTab();
       }
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-TEAM-FUNCS] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME1-TEAM-TAB] · JS · Giao diện Lịch Thi Đấu Team A & B ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: renderMiniGame1Tab -->
-  <script>
+
     function renderMiniGame1Tab(container) {
       let winCountA = 0;
       let winCountB = 0;
@@ -2423,190 +2680,7 @@
 
       container.innerHTML = html;
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-TEAM-TAB] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME1-SUB1-DATA] · JS · Minigame 21 trận: dữ liệu (đội, kèo, lịch) ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: mini1Sub1TeamA, mini1Sub1TeamB, mini1Sub1KeoMode, mini1Sub1Payment, miniGame1Sub1Matches -->
-  <script>
-    let mini1Sub1TeamA = ["Tuấn La", "Phú Mỗ", "Tiến Thọ", "Châu Sĩ", "Long Diễn", "Vân Đình", "Minh Hạnh", "Cẩm Ly"];
 
-    let mini1Sub1TeamB = ["Thành Sóc", "Trường Giang", "Trí Đỏ", "Lợi Trí", "Thanh Đàm", "Gà Tre", "Minh Vượng", "Hải Hà"];
-
-    let mini1Sub1KeoMode = "default";
-
-    let mini1Sub1Payment = {};
-
-    let miniGame1Sub1Matches = [];
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB1-DATA] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME1-SUB1-FUNCS] · JS · Minigame 21 trận: tạo lịch, VĐV, kèo, tích nộp ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: generateDynamicSub1Matches, toggleSub1Payment, changeSub1KeoMode, updateSub1MatchKeo -->
-  <!--   ↳ Gồm: updateSub1MatchVdv, addSub1Vdv, editSub1Vdv, removeSub1Vdv, moveSub1Vdv, updateSub1Field -->
-  <script>
-    function generateDynamicSub1Matches() {
-      let malesA = mini1Sub1TeamA.filter(name => {
-        let p = players.find(x => x.name === name);
-        return p ? p.gender === 'Nam' : true;
-      });
-      let femalesA = mini1Sub1TeamA.filter(name => !malesA.includes(name));
-
-      let malesB = mini1Sub1TeamB.filter(name => {
-        let p = players.find(x => x.name === name);
-        return p ? p.gender === 'Nam' : true;
-      });
-      let femalesB = mini1Sub1TeamB.filter(name => !malesB.includes(name));
-
-      while (malesA.length < 5) malesA.push(""); if (malesA.length > 5) malesA = malesA.slice(0, 5);
-      while (femalesA.length < 3) femalesA.push(""); if (femalesA.length > 3) femalesA = femalesA.slice(0, 3);
-      while (malesB.length < 5) malesB.push(""); if (malesB.length > 5) malesB = malesB.slice(0, 5);
-      while (femalesB.length < 3) femalesB.push(""); if (femalesB.length > 3) femalesB = femalesB.slice(0, 3);
-
-      let templateRaw = [
-        { cat: "Đôi Nam Nữ", a1: malesA[0], a2: femalesA[0], b1: malesB[0], b2: femalesB[0] },
-        { cat: "Đôi Nam Nữ", a1: malesA[1], a2: femalesA[1], b1: malesB[1], b2: femalesB[1] },
-        { cat: "Đôi Nam",     a1: malesA[2], a2: malesA[3], b1: malesB[2], b2: malesB[3] },
-        { cat: "Đôi Nam",     a1: malesA[0], a2: malesA[4], b1: malesB[0], b2: femalesB[4] },
-        { cat: "Đôi Nam Nữ", a1: malesA[2], a2: femalesA[2], b1: malesB[2], b2: femalesB[2] },
-        { cat: "Đôi Nam Nữ", a1: malesA[3], a2: femalesA[0], b1: malesB[3], b2: femalesB[0] },
-        { cat: "Đôi Nam",     a1: malesA[1], a2: femalesA[2], b1: malesB[1], b2: femalesB[2] },
-        { cat: "Đôi Nam Nữ", a1: malesA[4], a2: femalesA[1], b1: malesB[4], b2: femalesB[1] },
-        { cat: "Đôi Nam",     a1: malesA[0], a2: femalesA[3], b1: malesB[0], b2: femalesB[3] },
-        { cat: "Đôi Nam Nữ", a1: malesA[1], a2: femalesA[2], b1: malesB[1], b2: femalesB[2] },
-        { cat: "Đôi Nam Nữ", a1: malesA[0], a2: femalesA[1], b1: malesB[0], b2: femalesB[1] },
-        { cat: "Đôi Nam",     a1: malesA[2], a2: femalesA[4], b1: malesB[2], b2: femalesB[4] },
-        { cat: "Đôi Nam Nữ", a1: malesA[3], a2: femalesA[2], b1: malesB[3], b2: femalesB[2] },
-        { cat: "Đôi Nam Nữ", a1: malesA[1], a2: femalesA[0], b1: malesB[1], b2: femalesB[0] },
-        { cat: "Đôi Nam",     a1: malesA[0], a2: femalesA[1], b1: malesB[0], b2: femalesB[1] },
-        { cat: "Đôi Nam Nữ", a1: malesA[4], a2: femalesA[0], b1: malesB[4], b2: femalesB[0] },
-        { cat: "Đôi Nam",     a1: malesA[3], a2: femalesA[4], b1: malesB[3], b2: femalesB[4] },
-        { cat: "Đôi Nam Nữ", a1: malesA[2], a2: femalesA[1], b1: malesB[2], b2: femalesB[1] },
-        { cat: "Đôi Nam",     a1: malesA[0], a2: femalesA[2], b1: malesB[0], b2: femalesB[2] },
-        { cat: "Đôi Nam Nữ", a1: malesA[1], a2: femalesA[2], b1: malesB[1], b2: femalesB[2] },
-        { cat: "Đôi Nam",     a1: malesA[3], a2: femalesA[1], b1: malesB[3], b2: femalesB[1] }
-      ];
-
-      miniGame1Sub1Matches = templateRaw.map((t, idx) => {
-        let existing = miniGame1Sub1Matches[idx];
-        return {
-          id: idx + 1,
-          category: t.cat,
-          a1: existing && existing.a1 !== undefined ? existing.a1 : t.a1,
-          a2: existing && existing.a2 !== undefined ? existing.a2 : t.a2,
-          scoreA: existing ? existing.scoreA : "",
-          scoreB: existing ? existing.scoreB : "",
-          b1: existing && existing.b1 !== undefined ? existing.b1 : t.b1,
-          b2: existing && existing.b2 !== undefined ? existing.b2 : t.b2,
-          customWin: existing ? (existing.customWin !== undefined ? existing.customWin : 5) : 5,
-          customLose: existing ? (existing.customLose !== undefined ? existing.customLose : -15) : -15
-        };
-      });
-    }
-
-    function toggleSub1Payment(payKey) {
-      if (!isAdminVerified) {
-        alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
-        return;
-      }
-      mini1Sub1Payment[payKey] = !mini1Sub1Payment[payKey];
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-
-    function changeSub1KeoMode(mode) {
-      mini1Sub1KeoMode = mode;
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-
-    function updateSub1MatchKeo(idx, field, val) {
-      if (miniGame1Sub1Matches[idx]) {
-        miniGame1Sub1Matches[idx][field] = val;
-        saveDataToFirestore();
-        renderCurrentTab();
-      }
-    }
-
-    function updateSub1MatchVdv(idx, field, val) {
-      if (miniGame1Sub1Matches[idx]) {
-        miniGame1Sub1Matches[idx][field] = val;
-        saveDataToFirestore();
-        renderCurrentTab();
-      }
-    }
-
-    function addSub1Vdv(team) {
-      const vdvName = prompt(`Nhập tên VĐV thêm vào Team ${team}:`);
-      if (vdvName && vdvName.trim() !== "") {
-        const name = vdvName.trim();
-        if (team === 'A') {
-          if (mini1Sub1TeamB.includes(name)) return alert("⚠️ VĐV này đã có trong Team B!");
-          if (!mini1Sub1TeamA.includes(name)) mini1Sub1TeamA.push(name);
-        } else {
-          if (mini1Sub1TeamA.includes(name)) return alert("⚠️ VĐV này đã có trong Team A!");
-          if (!mini1Sub1TeamB.includes(name)) mini1Sub1TeamB.push(name);
-        }
-        if (!vdvs.includes(name)) {
-          players.push({ id: players.length + 1, name: name, gender: "Nam" });
-          syncVdvsFromPlayers();
-        }
-        generateDynamicSub1Matches();
-        saveDataToFirestore();
-        renderCurrentTab();
-      }
-    }
-
-    function editSub1Vdv(team, oldName) {
-      const newName = prompt(`Sửa tên VĐV "${oldName}":`, oldName);
-      if (newName && newName.trim() !== "" && newName.trim() !== oldName) {
-        const trimmed = newName.trim();
-        if (team === 'A') {
-          let idx = mini1Sub1TeamA.indexOf(oldName);
-          if (idx !== -1) mini1Sub1TeamA[idx] = trimmed;
-        } else {
-          let idx = mini1Sub1TeamB.indexOf(oldName);
-          if (idx !== -1) mini1Sub1TeamB[idx] = trimmed;
-        }
-        let pObj = players.find(p => p.name === oldName);
-        if (pObj) pObj.name = trimmed;
-        syncVdvsFromPlayers();
-        generateDynamicSub1Matches();
-        saveDataToFirestore();
-        renderCurrentTab();
-      }
-    }
-
-    function removeSub1Vdv(team, name) {
-      if (confirm(`Xóa VĐV ${name} khỏi Team ${team}?`)) {
-        if (team === 'A') mini1Sub1TeamA = mini1Sub1TeamA.filter(v => v !== name);
-        else mini1Sub1TeamB = mini1Sub1TeamB.filter(v => v !== name);
-        generateDynamicSub1Matches();
-        saveDataToFirestore();
-        renderCurrentTab();
-      }
-    }
-
-    function moveSub1Vdv(team, index, direction) {
-      let list = team === 'A' ? mini1Sub1TeamA : mini1Sub1TeamB;
-      let targetIdx = index + direction;
-      if (targetIdx < 0 || targetIdx >= list.length) return;
-      let temp = list[index];
-      list[index] = list[targetIdx];
-      list[targetIdx] = temp;
-      generateDynamicSub1Matches();
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-
-    function updateSub1Field(idx, field, val) {
-      miniGame1Sub1Matches[idx][field] = val;
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB1-FUNCS] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME1-SUB1-TAB] · JS · Giao diện Minigame 21 trận ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: renderMiniGame1Sub1Tab -->
-  <script>
     function renderMiniGame1Sub1Tab(container) {
       generateDynamicSub1Matches();
 
@@ -2948,239 +3022,99 @@
 
       container.innerHTML = html;
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB1-TAB] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME1-SUB2-DATA] · JS · Minigame 17 trận: dữ liệu (lịch mẫu 20/10, đội, kèo) ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: minigame2010Matches, mini1Sub2TeamA, mini1Sub2TeamB, mini1Sub2KeoMode, mini1Sub2Payment -->
-  <!--   ↳ Gồm: miniGame1Sub2Matches -->
-  <script>
-    const minigame2010Matches = [
-      { id: 1, code: "M01", teamAKey: "nam_1", teamBKey: "nam_2", type: "Nam - Nam", group: "Nam Cao" },
-      { id: 2, code: "M02", teamAKey: "nu_1", teamBKey: "nu_2", type: "Nữ - Nữ (Đơn)", group: "Nữ Đơn" },
-      { id: 3, code: "M03", teamAKey: "nam_3", teamBKey: "nam_3", type: "Nam - Nam", group: "Nam Cân" },
-      { id: 4, code: "M04", teamAKey: "nam_4", teamBKey: "nam_5", type: "Nam - Nam", group: "Nam Thấp" },
-      { id: 5, code: "M05", teamAKey: "nam_1", teamBKey: "nam_3", type: "Nam - Nam", group: "Nam Cao" },
-      { id: 6, code: "M06", teamAKey: "nu_1", teamBKey: "nam_1", type: "Nam - Nữ", group: "Hỗn Hợp" },
-      { id: 7, code: "M07", teamAKey: "nam_2", teamBKey: "nam_4", type: "Nam - Nam", group: "Chéo Hạng" },
-      { id: 8, code: "M08", teamAKey: "nu_2_doi", teamBKey: "nu_1_doi", type: "Nữ - Nữ (Đôi)", group: "Nữ Đôi" },
-      { id: 9, code: "M09", teamAKey: "nam_3", teamBKey: "nam_5", type: "Nam - Nam", group: "Chéo Hạng" },
-      { id: 10, code: "M10", teamAKey: "nam_1", teamBKey: "nam_2", type: "Nam - Nam", group: "Nam Cao" },
-      { id: 11, code: "M11", teamAKey: "nam_4", teamBKey: "nam_4", type: "Nam - Nam", group: "Nam Thấp" },
-      { id: 12, code: "M12", teamAKey: "nu_2", teamBKey: "nam_3", type: "Nam - Nữ", group: "Hỗn Hợp" },
-      { id: 13, code: "M13", teamAKey: "nam_2", teamBKey: "nam_3", type: "Nam - Nam", group: "Nam Cao" },
-      { id: 14, code: "M14", teamAKey: "nam_5", teamBKey: "nam_5", type: "Nam - Nam", group: "Nam Thấp" },
-      { id: 15, code: "M15", teamAKey: "nu_1", teamBKey: "nam_2", type: "Nam - Nữ", group: "Hỗn Hợp" },
-      { id: 16, code: "M16", teamAKey: "nam_1", teamBKey: "nam_5", type: "Nam - Nam", group: "Chéo Hạng" },
-      { id: 17, code: "M17", teamAKey: "nam_3", teamBKey: "nam_4", type: "Nam - Nam", group: "Chéo Hạng" }
-    ];
 
-    let mini1Sub2TeamA = ["Tuấn La", "Phú Mỗ", "Tiến Thọ", "Châu Sĩ", "Long Diễn", "Vân Đình", "Minh Hạnh", "Cẩm Ly"];
-
-    let mini1Sub2TeamB = ["Thành Sóc", "Trường Giang", "Trí Đỏ", "Lợi Trí", "Thanh Đàm", "Gà Tre", "Minh Vượng", "Hải Hà"];
-
-    let mini1Sub2KeoMode = "default";
-
-    let mini1Sub2Payment = {};
-
-    let miniGame1Sub2Matches = [];
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB2-DATA] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME1-SUB2-FUNCS] · JS · Minigame 17 trận: đội hình, tạo lịch, trận, VĐV, kèo, tích nộp ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: getCurrentRoster, generateDynamicSub2Matches, handleMinigame2010Click, toggleSub2Payment -->
-  <!--   ↳ Gồm: changeSub2KeoMode, updateSub2MatchKeo, addSub2Match, deleteSub2Match, addSub2Vdv, editSub2Vdv -->
-  <!--   ↳ Gồm: removeSub2Vdv, moveSub2Vdv, updateSub2Field, updateSub2VdvField -->
-  <script>
-    window.getCurrentRoster = function() {
-      let malesA = mini1Sub2TeamA.filter(name => {
-        let p = players.find(x => x.name === name);
-        return p ? p.gender === 'Nam' : true;
-      });
-      let femalesA = mini1Sub2TeamA.filter(name => !malesA.includes(name));
-
-      let malesB = mini1Sub2TeamB.filter(name => {
-        let p = players.find(x => x.name === name);
-        return p ? p.gender === 'Nam' : true;
-      });
-      let femalesB = mini1Sub2TeamB.filter(name => !malesB.includes(name));
-
-      while (malesA.length < 5) malesA.push("");
-      while (femalesA.length < 3) femalesA.push("");
-      while (malesB.length < 5) malesB.push("");
-      while (femalesB.length < 3) femalesB.push("");
-
-      return {
-        "nam_1": malesA[0],
-        "nam_2": malesA[1],
-        "nam_3": malesA[2],
-        "nam_4": malesA[3],
-        "nam_5": malesA[4],
-        "nu_1": femalesA[0],
-        "nu_2": femalesA[1],
-        "nu_1_doi": femalesB[0] || femalesA[0],
-        "nu_2_doi": femalesB[1] || femalesA[1]
-      };
-    };
-
-    function generateDynamicSub2Matches() {
-      const currentRoster = window.getCurrentRoster ? window.getCurrentRoster() : {};
-
-      if (!miniGame1Sub2Matches || miniGame1Sub2Matches.length === 0) {
-        miniGame1Sub2Matches = minigame2010Matches.map((match, idx) => ({
-          id: match.id,
-          code: match.code,
-          category: match.type,
-          group: match.group,
-          a1: currentRoster[match.teamAKey] || "",
-          a2: "",
-          scoreA: "",
-          scoreB: "",
-          b1: currentRoster[match.teamBKey] || "",
-          b2: "",
-          customWin: 5,
-          customLose: -15
-        }));
-      }
-    }
-
-    function handleMinigame2010Click() {
-      const currentRoster = window.getCurrentRoster ? window.getCurrentRoster() : {};
-      const synchronizedMatches = minigame2010Matches.map(match => ({
-        ...match,
-        teamA: currentRoster[match.teamAKey] || `[VDV ${match.teamAKey.toUpperCase()}]`,
-        teamB: currentRoster[match.teamBKey] || `[VDV ${match.teamBKey.toUpperCase()}]`
-      }));
-
-      if (typeof renderMatchTable === "function") {
-        renderMatchTable(synchronizedMatches);
-      }
-    }
-
-    function toggleSub2Payment(payKey) {
-      if (!isAdminVerified) {
-        alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
-        return;
-      }
-      mini1Sub2Payment[payKey] = !mini1Sub2Payment[payKey];
+    function changeSub1KeoMode(mode) {
+      mini1Sub1KeoMode = mode;
       saveDataToFirestore();
       renderCurrentTab();
     }
 
-    function changeSub2KeoMode(mode) {
-      mini1Sub2KeoMode = mode;
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-
-    function updateSub2MatchKeo(idx, field, val) {
-      if (miniGame1Sub2Matches[idx]) {
-        miniGame1Sub2Matches[idx][field] = val;
+    function updateSub1MatchKeo(idx, field, val) {
+      if (miniGame1Sub1Matches[idx]) {
+        miniGame1Sub1Matches[idx][field] = val;
         saveDataToFirestore();
         renderCurrentTab();
       }
     }
 
-    function addSub2Match() {
-      const newId = miniGame1Sub2Matches.length + 1;
-      miniGame1Sub2Matches.push({
-        id: newId,
-        category: "Đôi Nam Nữ",
-        a1: "",
-        a2: "",
-        scoreA: "",
-        scoreB: "",
-        b1: "",
-        b2: "",
-        customWin: 5,
-        customLose: -15
-      });
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-
-    function deleteSub2Match(idx) {
-      if (confirm(`Bạn có chắc muốn xóa Trận ${idx + 1}?`)) {
-        miniGame1Sub2Matches.splice(idx, 1);
-        miniGame1Sub2Matches.forEach((m, i) => m.id = i + 1);
+    function updateSub1MatchVdv(idx, field, val) {
+      if (miniGame1Sub1Matches[idx]) {
+        miniGame1Sub1Matches[idx][field] = val;
         saveDataToFirestore();
         renderCurrentTab();
       }
     }
 
-    function addSub2Vdv(team) {
+    function addSub1Vdv(team) {
       const vdvName = prompt(`Nhập tên VĐV thêm vào Team ${team}:`);
       if (vdvName && vdvName.trim() !== "") {
         const name = vdvName.trim();
         if (team === 'A') {
-          if (mini1Sub2TeamB.includes(name)) return alert("⚠️ VĐV này đã có trong Team B!");
-          if (!mini1Sub2TeamA.includes(name)) mini1Sub2TeamA.push(name);
+          if (mini1Sub1TeamB.includes(name)) return alert("⚠️ VĐV này đã có trong Team B!");
+          if (!mini1Sub1TeamA.includes(name)) mini1Sub1TeamA.push(name);
         } else {
-          if (mini1Sub2TeamA.includes(name)) return alert("⚠️ VĐV này đã có trong Team A!");
-          if (!mini1Sub2TeamB.includes(name)) mini1Sub2TeamB.push(name);
+          if (mini1Sub1TeamA.includes(name)) return alert("⚠️ VĐV này đã có trong Team A!");
+          if (!mini1Sub1TeamB.includes(name)) mini1Sub1TeamB.push(name);
         }
         if (!vdvs.includes(name)) {
           players.push({ id: players.length + 1, name: name, gender: "Nam" });
           syncVdvsFromPlayers();
         }
+        generateDynamicSub1Matches();
         saveDataToFirestore();
         renderCurrentTab();
       }
     }
 
-    function editSub2Vdv(team, oldName) {
+    function editSub1Vdv(team, oldName) {
       const newName = prompt(`Sửa tên VĐV "${oldName}":`, oldName);
       if (newName && newName.trim() !== "" && newName.trim() !== oldName) {
         const trimmed = newName.trim();
         if (team === 'A') {
-          let idx = mini1Sub2TeamA.indexOf(oldName);
-          if (idx !== -1) mini1Sub2TeamA[idx] = trimmed;
+          let idx = mini1Sub1TeamA.indexOf(oldName);
+          if (idx !== -1) mini1Sub1TeamA[idx] = trimmed;
         } else {
-          let idx = mini1Sub2TeamB.indexOf(oldName);
-          if (idx !== -1) mini1Sub2TeamB[idx] = trimmed;
+          let idx = mini1Sub1TeamB.indexOf(oldName);
+          if (idx !== -1) mini1Sub1TeamB[idx] = trimmed;
         }
         let pObj = players.find(p => p.name === oldName);
         if (pObj) pObj.name = trimmed;
         syncVdvsFromPlayers();
+        generateDynamicSub1Matches();
         saveDataToFirestore();
         renderCurrentTab();
       }
     }
 
-    function removeSub2Vdv(team, name) {
+    function removeSub1Vdv(team, name) {
       if (confirm(`Xóa VĐV ${name} khỏi Team ${team}?`)) {
-        if (team === 'A') mini1Sub2TeamA = mini1Sub2TeamA.filter(v => v !== name);
-        else mini1Sub2TeamB = mini1Sub2TeamB.filter(v => v !== name);
+        if (team === 'A') mini1Sub1TeamA = mini1Sub1TeamA.filter(v => v !== name);
+        else mini1Sub1TeamB = mini1Sub1TeamB.filter(v => v !== name);
+        generateDynamicSub1Matches();
         saveDataToFirestore();
         renderCurrentTab();
       }
     }
 
-    function moveSub2Vdv(team, index, direction) {
-      let list = team === 'A' ? mini1Sub2TeamA : mini1Sub2TeamB;
+    function moveSub1Vdv(team, index, direction) {
+      let list = team === 'A' ? mini1Sub1TeamA : mini1Sub1TeamB;
       let targetIdx = index + direction;
       if (targetIdx < 0 || targetIdx >= list.length) return;
       let temp = list[index];
       list[index] = list[targetIdx];
       list[targetIdx] = temp;
+      generateDynamicSub1Matches();
       saveDataToFirestore();
       renderCurrentTab();
     }
 
-    function updateSub2Field(idx, field, val) {
-      miniGame1Sub2Matches[idx][field] = val;
+    function updateSub1Field(idx, field, val) {
+      miniGame1Sub1Matches[idx][field] = val;
       saveDataToFirestore();
       renderCurrentTab();
     }
 
-    function updateSub2VdvField(idx, field, val) {
-      miniGame1Sub2Matches[idx][field] = val;
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB2-FUNCS] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME1-SUB2-TAB] · JS · Giao diện Minigame 17 trận ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: renderMiniGame1Sub2Tab -->
-  <script>
+
     /* GIAO DIỆN TAB MINIGAME 17 TRẬN (SUB2) */
     function renderMiniGame1Sub2Tab(container) {
       generateDynamicSub2Matches();
@@ -3531,222 +3465,120 @@
 
       container.innerHTML = html;
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB2-TAB] ▲▲▲ -->
 
-  <!-- ████████ MODULE MINIGAME2 · MINIGAME 2 ████████ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME2-DATA] · JS · Giải chia Bảng A,B: dữ liệu (cặp, lịch, knockout, kèo) ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout, mini2Tour1Content -->
-  <!--   ↳ Gồm: mini2Tour2Content, mini2KeoMode, mini2Payment -->
-  <script>
-    let mini2PairsA = [];
-
-    let mini2PairsB = [];
-
-    let mini2MatchesA = [];
-
-    let mini2MatchesB = [];
-
-    let mini2Knockout = {
-      bkc1: { p1: "Nhất A", p2: "Nhì B", s1: "", s2: "" },
-      bkc2: { p1: "Nhất B", p2: "Nhì A", s1: "", s2: "" },
-      rank34: { p1: "Thua BK1", p2: "Thua BK2", s1: "", s2: "" },
-      final: { p1: "Thắng BK1", p2: "Thắng BK2", s1: "", s2: "" },
-      champion: "",
-      runnerUp: "",
-      thirdPlace: ""
-    };
-
-    let mini2Tour1Content = "Nội dung chi tiết và lịch thi đấu của Giải Đấu Bổ Sung 1.";
-
-    let mini2Tour2Content = "Nội dung chi tiết và lịch thi đấu của Giải Đấu Bổ Sung 2.";
-
-    let mini2KeoMode = "default";
-
-    let mini2Payment = {};
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-DATA] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME2-FUNCS] · JS · Giải chia Bảng A,B: lịch vòng tròn, cặp, tỷ số, kèo, xếp hạng, tích nộp ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: toggleMini2Payment, generateMini2MatchesForGroup, setMini2PairCount, editMini2PairName -->
-  <!--   ↳ Gồm: deleteMini2Pair, updateMini2MatchScore, updateMini2MatchKeo, changeMini2KeoMode -->
-  <!--   ↳ Gồm: updateMini2Knockout, updateMini2WinnerField, computeGroupStandings -->
-  <script>
-    function toggleMini2Payment(payKey) {
-      if (!isAdminVerified) {
-        alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
-        return;
-      }
-      mini2Payment[payKey] = !mini2Payment[payKey];
+    function changeSub2KeoMode(mode) {
+      mini1Sub2KeoMode = mode;
       saveDataToFirestore();
       renderCurrentTab();
     }
 
-    function generateMini2MatchesForGroup(group) {
-      let pairs = group === 'A' ? mini2PairsA : mini2PairsB;
-      let matches = [];
-      let matchId = 1;
-      for (let i = 0; i < pairs.length; i++) {
-        for (let j = i + 1; j < pairs.length; j++) {
-          matches.push({
-            id: matchId++,
-            pair1Index: i,
-            pair2Index: j,
-            score1: "",
-            score2: "",
-            customWin: 5,
-            customLose: -15
-          });
-        }
-      }
-      if (group === 'A') mini2MatchesA = matches;
-      else mini2MatchesB = matches;
-    }
-
-    function setMini2PairCount(group, count) {
-      count = parseInt(count);
-      let pairs = group === 'A' ? mini2PairsA : mini2PairsB;
-      const defaultNames = group === 'A' 
-        ? ['Trí Đỏ - Tiến Thọ', 'Điền Chèm - Lợi Trí', 'Cẩm Ly - Hải Hà', 'Châu Sĩ - Long Diễn', 'Phú Mỗ - Dũng Ngạc'] 
-        : ['Thành Sóc - Thành Sóc', 'Tuấn La - Hà Giấy', 'Vân Đình - Quỳnh Cool', 'Minh Hạnh - Minh Vượng', 'Tự Do'];
-
-      if (pairs.length < count) {
-        while (pairs.length < count) {
-          let nextIdx = pairs.length;
-          pairs.push({ name: defaultNames[nextIdx] || (`Cặp ${nextIdx+1}`) });
-        }
-      } else if (pairs.length > count) {
-        pairs.splice(count);
-      }
-
-      generateMini2MatchesForGroup(group);
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-
-    function editMini2PairName(group, index) {
-      let pairs = group === 'A' ? mini2PairsA : mini2PairsB;
-      let oldName = pairs[index].name;
-      let newName = prompt(`Nhập tên mới cho Cặp/Đội (${oldName}):`, oldName);
-      if (newName !== null && newName.trim() !== "") {
-        pairs[index].name = newName.trim();
+    function updateSub2MatchKeo(idx, field, val) {
+      if (miniGame1Sub2Matches[idx]) {
+        miniGame1Sub2Matches[idx][field] = val;
         saveDataToFirestore();
         renderCurrentTab();
       }
     }
 
-    function deleteMini2Pair(group, index) {
-      let pairs = group === 'A' ? mini2PairsA : mini2PairsB;
-      if (pairs.length <= 2) {
-        alert("Bảng phải có ít nhất 2 cặp VĐV!");
-        return;
-      }
-      if (confirm(`Bạn có chắc muốn xóa cặp VĐV "${pairs[index].name}"?`)) {
-        pairs.splice(index, 1);
-        generateMini2MatchesForGroup(group);
-        saveDataToFirestore();
-        renderCurrentTab();
-      }
-    }
-
-    function updateMini2MatchScore(group, matchIdx, field, val) {
-      let matches = group === 'A' ? mini2MatchesA : mini2MatchesB;
-      if (matches[matchIdx]) {
-        matches[matchIdx][field] = val;
-        saveDataToFirestore();
-        renderCurrentTab();
-      }
-    }
-
-    function updateMini2MatchKeo(group, matchIdx, field, val) {
-      let matches = group === 'A' ? mini2MatchesA : mini2MatchesB;
-      if (matches[matchIdx]) {
-        matches[matchIdx][field] = val;
-        saveDataToFirestore();
-        renderCurrentTab();
-      }
-    }
-
-    function changeMini2KeoMode(mode) {
-      mini2KeoMode = mode;
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-
-    function updateMini2Knockout(stage, field, val) {
-      if (mini2Knockout[stage] !== undefined) {
-        mini2Knockout[stage][field] = val;
-        saveDataToFirestore();
-        renderCurrentTab();
-      }
-    }
-
-    function updateMini2WinnerField(field, val) {
-      mini2Knockout[field] = val;
-      saveDataToFirestore();
-      renderCurrentTab();
-    }
-
-    function computeGroupStandings(pairs, matches) {
-      let stats = pairs.map((p, idx) => ({
-        index: idx,
-        name: p.name,
-        points: 0,
-        scoreFor: 0,
-        scoreAgainst: 0,
-        diff: 0
-      }));
-
-      let headToHead = {};
-      for (let i = 0; i < pairs.length; i++) {
-        headToHead[i] = {};
-      }
-
-      matches.forEach(m => {
-        let s1 = parseInt(m.score1);
-        let s2 = parseInt(m.score2);
-        if (!isNaN(s1) && !isNaN(s2)) {
-          let idx1 = m.pair1Index;
-          let idx2 = m.pair2Index;
-
-          if (stats[idx1] && stats[idx2]) {
-            stats[idx1].scoreFor += s1;
-            stats[idx1].scoreAgainst += s2;
-            stats[idx2].scoreFor += s2;
-            stats[idx2].scoreAgainst += s1;
-
-            if (s1 > s2) {
-              stats[idx1].points += 1;
-              headToHead[idx1][idx2] = 1;
-              headToHead[idx2][idx1] = -1;
-            } else if (s2 > s1) {
-              stats[idx2].points += 1;
-              headToHead[idx2][idx1] = 1;
-              headToHead[idx1][idx2] = -1;
-            }
-          }
-        }
+    function addSub2Match() {
+      const newId = miniGame1Sub2Matches.length + 1;
+      miniGame1Sub2Matches.push({
+        id: newId,
+        category: "Đôi Nam Nữ",
+        a1: "",
+        a2: "",
+        scoreA: "",
+        scoreB: "",
+        b1: "",
+        b2: "",
+        customWin: 5,
+        customLose: -15
       });
-
-      stats.forEach(s => {
-        s.diff = s.scoreFor - s.scoreAgainst;
-      });
-
-      stats.sort((a, b) => {
-        if (b.points !== a.points) return b.points - a.points;
-        if (b.diff !== a.diff) return b.diff - a.diff;
-        if (headToHead[a.index] && headToHead[a.index][b.index]) {
-          return -headToHead[a.index][b.index];
-        }
-        return 0;
-      });
-
-      return stats;
+      saveDataToFirestore();
+      renderCurrentTab();
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-FUNCS] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME2-TOUR] · JS · Giải đấu bổ sung 1 & 2 ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: renderMiniGame2Tour1Tab, saveTour1Content, renderMiniGame2Tour2Tab, saveTour2Content -->
-  <script>
+
+    function deleteSub2Match(idx) {
+      if (confirm(`Bạn có chắc muốn xóa Trận ${idx + 1}?`)) {
+        miniGame1Sub2Matches.splice(idx, 1);
+        miniGame1Sub2Matches.forEach((m, i) => m.id = i + 1);
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function addSub2Vdv(team) {
+      const vdvName = prompt(`Nhập tên VĐV thêm vào Team ${team}:`);
+      if (vdvName && vdvName.trim() !== "") {
+        const name = vdvName.trim();
+        if (team === 'A') {
+          if (mini1Sub2TeamB.includes(name)) return alert("⚠️ VĐV này đã có trong Team B!");
+          if (!mini1Sub2TeamA.includes(name)) mini1Sub2TeamA.push(name);
+        } else {
+          if (mini1Sub2TeamA.includes(name)) return alert("⚠️ VĐV này đã có trong Team A!");
+          if (!mini1Sub2TeamB.includes(name)) mini1Sub2TeamB.push(name);
+        }
+        if (!vdvs.includes(name)) {
+          players.push({ id: players.length + 1, name: name, gender: "Nam" });
+          syncVdvsFromPlayers();
+        }
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function editSub2Vdv(team, oldName) {
+      const newName = prompt(`Sửa tên VĐV "${oldName}":`, oldName);
+      if (newName && newName.trim() !== "" && newName.trim() !== oldName) {
+        const trimmed = newName.trim();
+        if (team === 'A') {
+          let idx = mini1Sub2TeamA.indexOf(oldName);
+          if (idx !== -1) mini1Sub2TeamA[idx] = trimmed;
+        } else {
+          let idx = mini1Sub2TeamB.indexOf(oldName);
+          if (idx !== -1) mini1Sub2TeamB[idx] = trimmed;
+        }
+        let pObj = players.find(p => p.name === oldName);
+        if (pObj) pObj.name = trimmed;
+        syncVdvsFromPlayers();
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function removeSub2Vdv(team, name) {
+      if (confirm(`Xóa VĐV ${name} khỏi Team ${team}?`)) {
+        if (team === 'A') mini1Sub2TeamA = mini1Sub2TeamA.filter(v => v !== name);
+        else mini1Sub2TeamB = mini1Sub2TeamB.filter(v => v !== name);
+        saveDataToFirestore();
+        renderCurrentTab();
+      }
+    }
+
+    function moveSub2Vdv(team, index, direction) {
+      let list = team === 'A' ? mini1Sub2TeamA : mini1Sub2TeamB;
+      let targetIdx = index + direction;
+      if (targetIdx < 0 || targetIdx >= list.length) return;
+      let temp = list[index];
+      list[index] = list[targetIdx];
+      list[targetIdx] = temp;
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function updateSub2Field(idx, field, val) {
+      miniGame1Sub2Matches[idx][field] = val;
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+    function updateSub2VdvField(idx, field, val) {
+      miniGame1Sub2Matches[idx][field] = val;
+      saveDataToFirestore();
+      renderCurrentTab();
+    }
+
+
     /* GIAO DIỆN CÁC GIẢI ĐẤU BỔ SUNG TRONG MINI GAME 2 */
     function renderMiniGame2Tour1Tab(container) {
       container.innerHTML = `
@@ -3799,11 +3631,7 @@
       alert("✅ Đã cập nhật thành công Giải Đấu Bổ Sung 2!");
       renderCurrentTab();
     }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-TOUR] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [MINIGAME2-TAB] · JS · Giao diện Mini Game 2 (chia Bảng A,B + bảng tổng hợp kèo) ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: renderMiniGame2Tab -->
-  <script>
+
     /* GIAO DIỆN MINI GAME 2 KÈM TÁCH CÁ NHÂN & BẢNG TỔNG HỢP KÈO */
     function renderMiniGame2Tab(container) {
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
@@ -4228,207 +4056,5 @@
       container.innerHTML = html;
     }
   </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-TAB] ▲▲▲ -->
-
-  <!-- ████████ MODULE AUTOBACKUP · TỰ ĐỘNG SAO LƯU FIRESTORE ONLINE ████████ -->
-  <!-- ▼▼▼ KHỐI [AUTOBACKUP-CONFIG] · JS · Cấu hình Firebase + kết nối Firestore (db, docRef) + bản sao lưu bộ nhớ ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: firebaseConfig, db, docRef, autoBackupMemory -->
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
-      authDomain: "pickleball-cmtd.firebaseapp.com",
-      projectId: "pickleball-cmtd",
-      storageBucket: "pickleball-cmtd.appspot.com",
-      messagingSenderId: "648591152243",
-      appId: "1:648591152243:web:3343caf2da821373070606"
-    };
-
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-
-    const db = firebase.firestore();
-    db.settings({ experimentalAutoDetectLongPolling: true });
-
-    const docRef = db.collection("clubs").doc("cmtd_main_data");
-
-    let autoBackupMemory = null;
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [AUTOBACKUP-CONFIG] ▲▲▲ -->
-  <!-- ▼▼▼ KHỐI [AUTOBACKUP-FUNCS] · JS · Lắng nghe Firestore, khởi tạo dữ liệu mặc định, TỰ ĐỘNG LƯU ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: listenToFirestore, initDefaultFirestore, saveDataToFirestore -->
-  <script>
-    function listenToFirestore() {
-      docRef.onSnapshot((doc) => {
-        const statusEl = document.getElementById("cloudStatus");
-        if (doc.exists) {
-          const data = doc.data();
-          if (data.players && data.players.length > 0) {
-            players = data.players;
-          } else if (data.vdvs && data.vdvs.length > 0) {
-            players = data.vdvs.map((v, idx) => ({ id: idx + 1, name: v, gender: "Nam" }));
-          }
-          syncVdvsFromPlayers();
-
-          if (data.titlesConfig) {
-            titlesConfig = Object.assign(titlesConfig, data.titlesConfig);
-          }
-          updateNavbarTitles();
-
-          dates = data.dates || [];
-          matchesData = data.matchesData || {};
-          dateKeoMode = data.dateKeoMode || {};
-          paymentStatus = data.paymentStatus || {};
-          miniGame1Content = data.miniGame1Content || miniGame1Content;
-          miniGame2Content = data.miniGame2Content || miniGame2Content;
-          
-          if (data.mini1TeamA) mini1TeamA = data.mini1TeamA;
-          if (data.mini1TeamB) mini1TeamB = data.mini1TeamB;
-          if (data.mini1KeoMode) mini1KeoMode = data.mini1KeoMode;
-          if (data.mini1Payment) mini1Payment = data.mini1Payment;
-
-          if (data.mini1Sub1TeamA) mini1Sub1TeamA = data.mini1Sub1TeamA;
-          if (data.mini1Sub1TeamB) mini1Sub1TeamB = data.mini1Sub1TeamB;
-          if (data.mini1Sub1KeoMode) mini1Sub1KeoMode = data.mini1Sub1KeoMode;
-          if (data.mini1Sub1Payment) mini1Sub1Payment = data.mini1Sub1Payment;
-
-          if (data.miniGame1Sub1Matches && data.miniGame1Sub1Matches.length > 0) {
-            miniGame1Sub1Matches = data.miniGame1Sub1Matches;
-          } else {
-            generateDynamicSub1Matches();
-          }
-
-          if (data.mini1Sub2TeamA) mini1Sub2TeamA = data.mini1Sub2TeamA;
-          if (data.mini1Sub2TeamB) mini1Sub2TeamB = data.mini1Sub2TeamB;
-          if (data.mini1Sub2KeoMode) mini1Sub2KeoMode = data.mini1Sub2KeoMode;
-          if (data.mini1Sub2Payment) mini1Sub2Payment = data.mini1Sub2Payment;
-
-          if (data.miniGame1Sub2Matches && data.miniGame1Sub2Matches.length > 0) {
-            miniGame1Sub2Matches = data.miniGame1Sub2Matches;
-          } else {
-            generateDynamicSub2Matches();
-          }
-
-          if (data.miniGame1Matches && data.miniGame1Matches.length > 0) {
-            miniGame1Matches = data.miniGame1Matches;
-          } else {
-            miniGame1Matches = DEFAULT_MINI1_DATA;
-          }
-
-          if (data.mini2PairsA) mini2PairsA = data.mini2PairsA;
-          if (data.mini2PairsB) mini2PairsB = data.mini2PairsB;
-          if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
-          if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
-          if (data.mini2Knockout) {
-            mini2Knockout = Object.assign(mini2Knockout, data.mini2Knockout);
-          }
-          if (data.mini2Tour1Content) mini2Tour1Content = data.mini2Tour1Content;
-          if (data.mini2Tour2Content) mini2Tour2Content = data.mini2Tour2Content;
-          if (data.mini2KeoMode) mini2KeoMode = data.mini2KeoMode;
-          if (data.mini2Payment) mini2Payment = data.mini2Payment;
-
-          if (!mini2MatchesA || mini2MatchesA.length === 0) generateMini2MatchesForGroup('A');
-          if (!mini2MatchesB || mini2MatchesB.length === 0) generateMini2MatchesForGroup('B');
-
-          autoBackupMemory = JSON.parse(JSON.stringify(data));
-
-          const validTabs = [...dates, "tonghop", "players", "minigame1", "minigame1_sub1", "minigame1_sub2", "minigame2", "minigame2_tour1", "minigame2_tour2"];
-          if (!currentTab || !validTabs.includes(currentTab)) {
-            currentTab = getClosestOrCurrentDate(dates);
-          }
-          statusEl.className = "cloud-status cloud-online";
-          statusEl.innerHTML = "☁️ Tự Động Lưu (Firestore Online)";
-          renderDatesMenu();
-          renderCurrentTab();
-        } else {
-          initDefaultFirestore();
-        }
-      }, (error) => {
-        console.error("Firestore error:", error);
-        initDefaultFirestore();
-      });
-    }
-
-    function initDefaultFirestore() {
-      const nowObj = new Date();
-      const todayStr = `${nowObj.getDate()}/${nowObj.getMonth() + 1}/${nowObj.getFullYear().toString().substr(-2)}`;
-      dates = [todayStr];
-      matchesData = {};
-      matchesData[todayStr] = [
-        { id: 1, c1_p1: "Trí Đỏ", c1_p2: "Long Diễn", c2_p1: "Tuấn La", c2_p2: "Thành Sóc", score1: "11", score2: "9", customWin: 5, customLose: -15 }
-      ];
-      dateKeoMode[todayStr] = "default";
-
-      miniGame1Matches = DEFAULT_MINI1_DATA;
-      generateDynamicSub1Matches();
-      generateDynamicSub2Matches();
-      generateMini2MatchesForGroup('A');
-      generateMini2MatchesForGroup('B');
-      currentTab = todayStr;
-      
-      syncVdvsFromPlayers();
-      renderDatesMenu();
-      updateNavbarTitles();
-      renderCurrentTab();
-      saveDataToFirestore();
-    }
-
-    function saveDataToFirestore() {
-      const statusEl = document.getElementById("cloudStatus");
-      if (statusEl) {
-        statusEl.className = "cloud-status cloud-syncing";
-        statusEl.innerHTML = "⏳ Đang tự động lưu...";
-      }
-
-      syncVdvsFromPlayers();
-
-      const payload = { 
-        players, vdvs, dates, matchesData, dateKeoMode, paymentStatus, 
-        miniGame1Content, miniGame2Content, titlesConfig,
-        mini1TeamA, mini1TeamB, mini1KeoMode, mini1Payment,
-        mini1Sub1TeamA, mini1Sub1TeamB, mini1Sub1KeoMode, mini1Sub1Payment, miniGame1Sub1Matches, 
-        mini1Sub2TeamA, mini1Sub2TeamB, mini1Sub2KeoMode, mini1Sub2Payment, miniGame1Sub2Matches,
-        miniGame1Matches,
-        mini2PairsA, mini2PairsB, mini2MatchesA, mini2MatchesB, mini2Knockout,
-        mini2Tour1Content, mini2Tour2Content, mini2KeoMode, mini2Payment
-      };
-
-      autoBackupMemory = JSON.parse(JSON.stringify(payload));
-
-      docRef.set(payload, { merge: true }).then(() => {
-        if (statusEl) {
-          statusEl.className = "cloud-status cloud-online";
-          statusEl.innerHTML = "☁️ Tự Động Lưu (Firestore Online)";
-        }
-      }).catch((err) => {
-        console.error("Lỗi khi tự động lưu dữ liệu:", err);
-        if (statusEl) {
-          statusEl.className = "cloud-status cloud-error";
-          statusEl.innerHTML = "⚠ Lỗi kết nối tự động lưu!";
-        }
-      });
-    }
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [AUTOBACKUP-FUNCS] ▲▲▲ -->
-
-  <!-- ████████ MODULE CORE · LÕI HỆ THỐNG ████████ -->
-  <!-- ▼▼▼ KHỐI [CORE-INIT] · JS · Khởi động: window.onload (chạy sau cùng) ▼▼▼ BẮT ĐẦU -->
-  <!--   ↳ Gồm: onload -->
-  <script>
-    window.onload = function() {
-      document.addEventListener('click', closeAllDropdowns);
-      
-      setTimeout(() => {
-        const statusEl = document.getElementById("cloudStatus");
-        if (statusEl && statusEl.innerText.includes("Khởi Tạo")) {
-          initDefaultFirestore();
-        }
-      }, 3000);
-
-      listenToFirestore();
-    };
-  </script>
-  <!-- ▲▲▲ KẾT THÚC KHỐI [CORE-INIT] ▲▲▲ -->
-
 </body>
 </html>

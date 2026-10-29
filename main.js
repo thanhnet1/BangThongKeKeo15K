@@ -45,6 +45,14 @@
       }
     }
 
+    // Hàm định dạng điểm số: nếu điểm bằng 0 thì hiển thị chữ HẦM màu đỏ
+    function formatScoreDisplay(score) {
+      if (score === 0 || score === "0" || score === 0) {
+        return '<span class="text-red-600 font-bold">HẦM</span>';
+      }
+      return score !== undefined && score !== null && score !== "" ? score : "";
+    }
+
     function mountShell() {
       const navItems = [
         { key: 'pickthu', part: 'pickthu.nav' },
@@ -906,7 +914,6 @@
           "Cặp 2 - VĐV 2": m.c2_p2 || "",
           "Điểm 1": m.score1 || "",
           "Điểm 2": m.score2 || ""
-         let scoreDisplay = (score == 0) ? '<span class="text-red-600 font-bold">HẦM</span>' : score;
         }));
         let ws = XLSX.utils.json_to_sheet(rows);
         XLSX.utils.book_append_sheet(wb, ws, d.replace(/\//g, "-"));

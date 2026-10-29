@@ -906,6 +906,7 @@
           "Cặp 2 - VĐV 2": m.c2_p2 || "",
           "Điểm 1": m.score1 || "",
           "Điểm 2": m.score2 || ""
+         let scoreDisplay = (score == 0) ? '<span class="text-red-600 font-bold">HẦM</span>' : score;
         }));
         let ws = XLSX.utils.json_to_sheet(rows);
         XLSX.utils.book_append_sheet(wb, ws, d.replace(/\//g, "-"));

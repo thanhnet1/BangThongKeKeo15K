@@ -480,7 +480,7 @@
       return { winAmt, loseAmt };
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-KEO-HELPERS] ▲▲▲ */
-/* ▼▼▼ KHỐI [HOME-DAYTAB] · Bảng thống kê trận pick của ngày (Đồng bộ chuẩn 100%) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-DAYTAB] · Bảng thống kê trận pick của ngày ▼▼▼ BẮT ĐẦU */
     function renderSingleDayTab(container, dateStr) {
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
@@ -516,14 +516,12 @@
           else { keo1 = 0; keo2 = 0; }
         }
 
-        // Chuyển đổi giá trị 0 thành chữ "HẦM"
         const displayScore1 = (s1 === 0 ? "HẦM" : (m.score1 || ''));
         const displayScore2 = (s2 === 0 ? "HẦM" : (m.score2 || ''));
 
         const score1ColorClass = (s1 === 0 ? "text-red-600 bg-red-50 font-black" : "text-slate-800 bg-white");
         const score2ColorClass = (s2 === 0 ? "text-red-600 bg-red-50 font-black" : "text-slate-800 bg-white");
 
-        // GỌI TRỰC TIẾP KHÔNG CÓ DẤU NGOẶC NHỌN THỪA
         const score1Inner = renderComponent('home.day-tab-input-1', {
           displayScore1,
           score1ColorClass,
@@ -580,7 +578,6 @@
       renderSingleDaySummaryTable(dateStr, html, container);
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-DAYTAB] ▲▲▲ */
-
 /* ▼▼▼ KHỐI [HOME-ABSENT] · VĐV XIN NGHỈ ▼▼▼ BẮT ĐẦU */
     const ABSENT_COUNT_OPTIONS = [0, 1, 2, 3, 4, 5];
 

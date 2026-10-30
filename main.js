@@ -591,7 +591,7 @@
     const ABSENT_COUNT_OPTIONS = [0, 1, 2, 3, 4, 5];
 
     function escAbsentAttr(str) {
-      return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace font(/>/g, '&gt;');
+      return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
     function escAbsentJs(str) {

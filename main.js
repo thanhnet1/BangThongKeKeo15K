@@ -821,22 +821,24 @@
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
 
           summaryRowsHtml += renderComponent('home.summary-tr-1', {
-           vColor,
-           v,
-           st_played: st.played,
-           if_st_winK_0: (st.winK > 0 ? `+${st.winK}K` : '-'),
-           if_if_st_loseK_0: (st.loseK < 0 ? `${st.loseK}K` : '-'),
-           if_bringBack_0: (bringBack > 0 ? `+${bringBack}K` : '-'),
-           if_st_total_0_class: (netTotal < 0 ? 'number-neg' : (netTotal > 0 ? 'number-pos' : 'number-zero')),
-           st_total: (netTotal > 0 ? `+${netTotal}K` : `${netTotal}K`),
-           checkboxClass,
-           if_isPaid: (isPaid ? 'checked' : ''),
-           payKey,
-           if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'),
-           noteText,
-           noteStyle,
-           noteClass
+            vColor,
+            v,
+            st_played: st.played,
+            if_st_winK_0: (st.winK > 0 ? `+${st.winK}K` : '-'),
+            if_st_loseK_0: (st.loseK < 0 ? `${st.loseK}K` : '-'),
+            if_bringBack_0: (bringBack > 0 ? `+${bringBack}K` : '-'),
+            if_st_total_0_class: (netTotal < 0 ? 'number-neg' : (netTotal > 0 ? 'number-pos' : 'number-zero')),
+            st_total: (netTotal > 0 ? `+${netTotal}K` : `${netTotal}K`),
+            checkboxClass,
+            if_isPaid: (isPaid ? 'checked' : ''),
+            payKey,
+            if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'),
+            noteText,
+            noteStyle,
+            noteClass
           });
+        }
+      });
 
       let btcThuVeCalculated = sumAmThucTe + sumBringBack; 
       let quyCon = sumThucThu - Math.abs(btcThuVeCalculated);

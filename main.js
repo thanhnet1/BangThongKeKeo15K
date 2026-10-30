@@ -726,8 +726,16 @@
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-ABSENT] ▲▲▲ */
 
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Chỉ cộng btcThuVeCalculated khi ô Thực Tế được tích) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (An toàn tuyệt đối) ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
+      // 1. Tìm container chính xác trên giao diện
+      const targetContainer = container || document.getElementById("tabContent");
+      
+      if (!targetContainer) {
+        console.error("❌ Không tìm thấy vùng chứa nội dung (tabContent) trên DOM!");
+        return;
+      }
+
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
       let stats = {};
@@ -759,7 +767,7 @@
       });
 
       let sumBringBack = 0, sumThucThu = 0, sumAmThucTe = 0, sumFine = 0;
-      let btcThuVeCalculated = 0; // TÍNH TỔNG BTC THU VỀ DỰA CHÍNH XÁC VÀO TÍCH CHỌN THỰC TẾ (ISPAID)
+      let btcThuVeCalculated = 0; 
       const fineMap = getAbsentFineMap(dateStr);
       let summaryRowsHtml = "";
 
@@ -783,7 +791,6 @@
           if (st.played >= 4 && netTotal > 0) { bringBack = netTotal; sumBringBack += bringBack; }
           if (netTotal < 0) { sumAmThucTe += netTotal; }
 
-          // ĐIỀU KIỆN QUAN TRỌNG: Chỉ cộng vào Tổng BTC thu về và Thực thu khi ô Checkbox isPaid được tích
           if (isPaid) {
             if (netTotal < 0) sumThucThu += Math.abs(netTotal);
             btcThuVeCalculated += netTotal;
@@ -802,34 +809,20 @@
               noteStyle = "color:#64748b;";
             }
           } else if (netTotal < 0) {
-            if (isPaid) {
-              noteText = "Đã nộp";
-              noteStyle = "color:#16a34a; font-weight:bold;";
-            } else {
-              noteText = "Chưa nộp";
-              noteStyle = "color:#dc2626; font-weight:bold;";
-            }
+            noteText = isPaid ? "Đã nộp" : "Chưa nộp";
+            noteStyle = isPaid ? "color:#16a34a; font-weight:bold;" : "color:#dc2626; font-weight:bold;";
           } else if (netTotal > 0) {
-            if (isPaid) {
-              noteText = "Đã nhận";
-              noteStyle = "color:#16a34a; font-weight:bold;";
-            } else {
-              noteText = "Chưa nhận";
-              noteStyle = "color:#0284c7; font-weight:bold;";
-            }
-          } else {
-            if (isAbsent) {
-              noteText = "Nghỉ phép";
-              noteStyle = "color:#64748b;";
-            }
+            noteText = isPaid ? "Đã nhận" : "Chưa nhận";
+            noteStyle = isPaid ? "color:#16a34a; font-weight:bold;" : "color:#0284c7; font-weight:bold;";
+          } else if (isAbsent) {
+            noteText = "Nghỉ phép";
+            noteStyle = "color:#64748b;";
           }
 
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
 
           summaryRowsHtml += renderComponent('home.summary-tr-1', {
-            vColor,
-            v,
-            st_played: st.played,
+            vColor, v, st_played: st.played,
             if_st_winK_0: (st.winK > 0 ? `+${st.winK}K` : '-'),
             if_st_loseK_0: (st.loseK < 0 ? `${st.loseK}K` : '-'),
             if_bringBack_0: (bringBack > 0 ? `+${bringBack}K` : '-'),
@@ -839,9 +832,7 @@
             if_isPaid: (isPaid ? 'checked' : ''),
             payKey,
             if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'),
-            noteText,
-            noteStyle,
-            noteClass
+            noteText, noteStyle, noteClass
           });
         }
       });
@@ -869,9 +860,16 @@
         quyCon: (quyCon > 0 ? `+${quyCon}K` : `${quyCon}K`)
       });
 
-      // Gán dữ liệu an toàn vào targetContainer
-        targetContainer.innerHTML = matchesHtml + summaryTableHtml;
-   }
+      // 2. Kiểm tra an toàn trước khi gán chuỗi HTML để tránh sập app
+      const safeMatchesHtml = matchesHtml || "";
+      const safeSummaryHtml = summaryTableHtml || "";
+
+      try {
+        targetContainer.innerHTML = safeMatchesHtml + safeSummaryHtml;
+      } catch (err) {
+        console.error("Lỗi khi render HTML vào container:", err);
+      }
+    }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-SUMMARY] ▲▲▲ */
 
 /* ████████████████ MODULE SETTING · SETTING ████████████████ */

@@ -4,9 +4,9 @@
    ========================================================================== */
 
 /* ████████████████ MODULE CORE · NẠP COMPONENT HTML ████████████████ */
-/* ▼▼▼ KHỐI [CORE-COMPONENTS] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [CORE-COMPONENTS] · Nạp & ghép các component (components/*.html) ▼▼▼ BẮT ĐẦU */
     const COMPONENT_FILES = ['header', 'admin', 'autobackup', 'home', 'players', 'pickthu', 'setting', 'tonghop', 'minigame1', 'minigame2', 'common'];
-    const COMPONENT_PARTS = {};   // 'home.day-tab' -> nội dung HTML
+    const COMPONENT_PARTS = {}; 
 
     async function loadComponents() {
       await Promise.all(COMPONENT_FILES.map(async (name) => {
@@ -40,13 +40,6 @@
       } else {
         return `<span class="number-zero">0</span>`;
       }
-    }
-
-    function formatScoreDisplay(score) {
-      if (score === 0 || score === "0") {
-        return '<span class="text-red-600 font-bold">HẦM</span>';
-      }
-      return score !== undefined && score !== null && score !== "" ? score : "";
     }
 
     function mountShell() {
@@ -99,7 +92,7 @@
 /* ▲▲▲ KẾT THÚC KHỐI [CORE-COMPONENTS] ▲▲▲ */
 
 /* ████████████████ MODULE CORE · LÕI HỆ THỐNG ████████████████ */
-/* ▼▼▼ KHỐI [CORE-DATA] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [CORE-DATA] · Dữ liệu lõi: tiêu đề menu, tab hiện tại ▼▼▼ BẮT ĐẦU */
     let titlesConfig = {
       navMini1: "MINI GAME 1",
       subMini1: "Lịch Thi Đấu Team A & B",
@@ -113,8 +106,7 @@
 
     let currentTab = "";
 /* ▲▲▲ KẾT THÚC KHỐI [CORE-DATA] ▲▲▲ */
-
-/* ▼▼▼ KHỐI [CORE-NAV] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [CORE-NAV] · Điều hướng: đổi tiêu đề menu, mở/đóng menu, chuyển tab, router vẽ tab ▼▼▼ BẮT ĐẦU */
     function updateNavbarTitles() {
       if (document.getElementById("navLabelMini1")) document.getElementById("navLabelMini1").innerText = titlesConfig.navMini1;
       if (document.getElementById("subLabelMini1")) document.getElementById("subLabelMini1").innerText = titlesConfig.subMini1;
@@ -185,12 +177,11 @@
 /* ▲▲▲ KẾT THÚC KHỐI [CORE-NAV] ▲▲▲ */
 
 /* ████████████████ MODULE ADMIN · ADMIN ████████████████ */
-/* ▼▼▼ KHỐI [ADMIN-DATA] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [ADMIN-DATA] · Dữ liệu Admin: mật mã + trạng thái đăng nhập ▼▼▼ BẮT ĐẦU */
     const ADMIN_PASSCODE = "123456";
     let isAdminVerified = false;
 /* ▲▲▲ KẾT THÚC KHỐI [ADMIN-DATA] ▲▲▲ */
-
-/* ▼▼▼ KHỐI [ADMIN-FUNCS] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [ADMIN-FUNCS] · Đăng nhập Admin, cập nhật giao diện khóa/mở, xác nhận BTC chuyển tổng ngày ▼▼▼ BẮT ĐẦU */
     function toggleAdminPermission() {
       if (!isAdminVerified) {
         const pass = prompt("🔑 Nhập mật khẩu Quản trị viên:");
@@ -256,7 +247,7 @@
 /* ▲▲▲ KẾT THÚC KHỐI [ADMIN-FUNCS] ▲▲▲ */
 
 /* ████████████████ MODULE PICKTHU · PICK THỦ ████████████████ */
-/* ▼▼▼ KHỐI [PICKTHU-DATA] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [PICKTHU-DATA] · Dữ liệu Pick Thủ: màu VĐV, danh sách players, vdvs ▼▼▼ BẮT ĐẦU */
     const VDV_COLORS = [
       "#d97706", "#2563eb", "#059669", "#dc2626", "#7c3aed", 
       "#db2777", "#0284c7", "#15803d", "#b45309", "#4338ca",
@@ -288,8 +279,7 @@
 
     let vdvs = players.map(p => p.name);
 /* ▲▲▲ KẾT THÚC KHỐI [PICKTHU-DATA] ▲▲▲ */
-
-/* ▼▼▼ KHỐI [PICKTHU-FUNCS] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [PICKTHU-FUNCS] · Thêm / sửa / xóa Pick Thủ + bảng Pick Thủ ▼▼▼ BẮT ĐẦU */
     function syncVdvsFromPlayers() {
       vdvs = players.map(p => p.name);
       const btn = document.getElementById("vdvCountBtn");
@@ -373,15 +363,14 @@
 /* ▲▲▲ KẾT THÚC KHỐI [PICKTHU-FUNCS] ▲▲▲ */
 
 /* ████████████████ MODULE HOME · HOME (TRANG CHỦ & CÁC TAB NGÀY) ████████████████ */
-/* ▼▼▼ KHỐI [HOME-DATA] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-DATA] · Dữ liệu ngày: dates, matchesData, dateKeoMode, paymentStatus, mức phạt nghỉ ▼▼▼ BẮT ĐẦU */
     let dates = [];
     let matchesData = {};
     let dateKeoMode = {}; 
     let paymentStatus = {};
     const ABSENT_FINE_K = 30;
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-DATA] ▲▲▲ */
-
-/* ▼▼▼ KHỐI [HOME-NAV] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-NAV] · Trang chủ: tìm ngày gần nhất + nút HOME ▼▼▼ BẮT ĐẦU */
     function getClosestOrCurrentDate(dateArray) {
       if (!dateArray || dateArray.length === 0) return "tonghop";
       const now = new Date();
@@ -420,8 +409,7 @@
       renderCurrentTab();
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-NAV] ▲▲▲ */
-
-/* ▼▼▼ KHỐI [HOME-MATCH-OPS] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-MATCH-OPS] · Thao tác trận trong ngày: đổi kèo, thêm/xóa/sửa trận, tích nộp ▼▼▼ BẮT ĐẦU */
     function changeKeoMode(dateStr, mode) {
       dateKeoMode[dateStr] = mode;
       saveDataToFirestore();
@@ -453,9 +441,7 @@
       if (!matchesData[dateStr]) matchesData[dateStr] = [];
       matchesData[dateStr][matchIndex][field] = value;
       saveDataToFirestore();
-      if (field === 'score1' || field === 'score2' || field === 'customWin' || field === 'customLose') {
-        renderCurrentTab();
-      }
+      renderCurrentTab();
     }
 
     function togglePayment(payKey) {
@@ -468,8 +454,7 @@
       renderCurrentTab();
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-MATCH-OPS] ▲▲▲ */
-
-/* ▼▼▼ KHỐI [HOME-KEO-HELPERS] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-KEO-HELPERS] · Hàm hỗ trợ: danh sách VĐV màu + giá trị kèo ▼▼▼ BẮT ĐẦU */
     function generateVdvOptionsHtml(selectedValue, filterList = null) {
       const listToRender = filterList || vdvs;
       return listToRender.map((v) => {
@@ -495,8 +480,7 @@
       return { winAmt, loseAmt };
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-KEO-HELPERS] ▲▲▲ */
-
-/* ▼▼▼ KHỐI [HOME-DAYTAB] · Bảng Thống Kê Trận Pick Ngày ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-DAYTAB] · Bảng thống kê trận pick của ngày ▼▼▼ BẮT ĐẦU */
     function renderSingleDayTab(container, dateStr) {
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
@@ -532,14 +516,23 @@
           else { keo1 = 0; keo2 = 0; }
         }
 
+        // Chuyển đổi giá trị 0 thành chữ "HẦM"
+        const displayScore1 = (s1 === 0 ? "HẦM" : (m.score1 || ''));
+        const displayScore2 = (s2 === 0 ? "HẦM" : (m.score2 || ''));
+
+        const score1ColorClass = (s1 === 0 ? "text-red-600 bg-red-50 font-black" : "text-slate-800 bg-white");
+        const score2ColorClass = (s2 === 0 ? "text-red-600 bg-red-50 font-black" : "text-slate-800 bg-white");
+
         const score1Inner = renderComponent('home.day-tab-input-1', {
-          m_score1: (m.score1 || ''),
+          displayScore1,
+          score1ColorClass,
           dateStr,
           idx
         });
 
         const score2Inner = renderComponent('home.day-tab-input-2', {
-          m_score2: (m.score2 || ''),
+          displayScore2,
+          score2ColorClass,
           dateStr,
           idx
         });
@@ -587,7 +580,7 @@
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-DAYTAB] ▲▲▲ */
 
-/* ▼▼▼ KHỐI [HOME-ABSENT] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-ABSENT] · VĐV XIN NGHỈ ▼▼▼ BẮT ĐẦU */
     const ABSENT_COUNT_OPTIONS = [0, 1, 2, 3, 4, 5];
 
     function escAbsentAttr(str) {
@@ -733,7 +726,7 @@
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-ABSENT] ▲▲▲ */
 
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Tính toán Thu Chi & Tổng BTC Thu Về ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Chỉ cộng btcThuVeCalculated khi ô Thực Tế được tích) ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
@@ -766,7 +759,7 @@
       });
 
       let sumBringBack = 0, sumThucThu = 0, sumAmThucTe = 0, sumFine = 0;
-      let btcThuVeCalculated = 0; // Tính tổng BTC thu về dựa vào ô Thực tế đã tích chọn
+      let btcThuVeCalculated = 0; // TÍNH TỔNG BTC THU VỀ DỰA CHÍNH XÁC VÀO TÍCH CHỌN THỰC TẾ (ISPAID)
       const fineMap = getAbsentFineMap(dateStr);
       let summaryRowsHtml = "";
 
@@ -787,17 +780,12 @@
           sumFine += fine;
 
           let bringBack = 0;
-          if (st.played >= 4 && netTotal > 0) { 
-            bringBack = netTotal; 
-            sumBringBack += bringBack; 
-          }
-          if (netTotal < 0) { 
-            sumAmThucTe += netTotal; 
-            if (isPaid) sumThucThu += Math.abs(netTotal); 
-          }
+          if (st.played >= 4 && netTotal > 0) { bringBack = netTotal; sumBringBack += bringBack; }
+          if (netTotal < 0) { sumAmThucTe += netTotal; }
 
-          // CHỈ CỘNG VÀO TỔNG BTC THU VỀ KHI ĐÃ ĐƯỢC TÍCH CHECKBOX THỰC TẾ
+          // ĐIỀU KIỆN QUAN TRỌNG: Chỉ cộng vào Tổng BTC thu về và Thực thu khi ô Checkbox isPaid được tích
           if (isPaid) {
+            if (netTotal < 0) sumThucThu += Math.abs(netTotal);
             btcThuVeCalculated += netTotal;
           }
 
@@ -869,7 +857,11 @@
       let summaryTableHtml = renderComponent('home.summary', {
         summaryRowsHtml,
         buildAbsentSelectorRow_dateStr_9: (buildAbsentSelectorRow(dateStr, 8)),
+        sumBringBack: (sumBringBack > 0 ? `+${sumBringBack}K` : `${sumBringBack}K`),
         btcThuVeCalculated: (btcThuVeCalculated !== 0 ? (btcThuVeCalculated > 0 ? `+${btcThuVeCalculated}K` : `${btcThuVeCalculated}K`) : '0K'),
+        sumFine_color: (sumFine < 0 ? '#dc2626' : '#64748b'),
+        sumFine_value: (sumFine < 0 ? `${sumFine}K` : '0K'),
+        sumThucThu: `${sumThucThu}K`,
         dateStr,
         isYes_color: (isYes ? '#16a34a' : '#dc2626'),
         selected_isYes: (isYes ? 'selected' : ''),
@@ -882,7 +874,7 @@
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-SUMMARY] ▲▲▲ */
 
 /* ████████████████ MODULE SETTING · SETTING ████████████████ */
-/* ▼▼▼ KHỐI [SETTING-DATES] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [SETTING-DATES] · Thêm / sửa tên / xóa ngày ▼▼▼ BẮT ĐẦU */
     function addDateTab() {
       closeAllDropdowns();
       const dateStr = prompt("Nhập ngày đấu mới (VD: 28/9/26):");
@@ -931,8 +923,7 @@
       }
     }
 /* ▲▲▲ KẾT THÚC KHỐI [SETTING-DATES] ▲▲▲ */
-
-/* ▼▼▼ KHỐI [SETTING-EXCEL] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [SETTING-EXCEL] · Xuất dữ liệu Excel ▼▼▼ BẮT ĐẦU */
     function exportToExcel() {
       closeAllDropdowns();
       let wb = XLSX.utils.book_new();
@@ -955,8 +946,7 @@
       XLSX.writeFile(wb, `CLB_Pickleball_CMTD_ThongKe.xlsx`);
     }
 /* ▲▲▲ KẾT THÚC KHỐI [SETTING-EXCEL] ▲▲▲ */
-
-/* ▼▼▼ KHỐI [SETTING-JSON-BACKUP] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [SETTING-JSON-BACKUP] · Sao lưu / phục hồi file JSON ▼▼▼ BẮT ĐẦU */
     function backupDataJSON() {
       closeAllDropdowns();
       const backupData = autoBackupMemory || {
@@ -1041,7 +1031,7 @@
 /* ▲▲▲ KẾT THÚC KHỐI [SETTING-JSON-BACKUP] ▲▲▲ */
 
 /* ████████████████ MODULE TONGHOP · TỔNG HỢP CÁC NGÀY ████████████████ */
-/* ▼▼▼ KHỐI [TONGHOP-MENU] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [TONGHOP-MENU] · Danh sách ngày trong menu ▼▼▼ BẮT ĐẦU */
     function renderDatesMenu() {
       const container = document.getElementById("datesMenuList");
       if (!container) return;
@@ -1051,8 +1041,7 @@
       })).join('');
     }
 /* ▲▲▲ KẾT THÚC KHỐI [TONGHOP-MENU] ▲▲▲ */
-
-/* ▼▼▼ KHỐI [TONGHOP-TAB] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [TONGHOP-TAB] · Bảng Tổng Hợp Các Ngày ▼▼▼ BẮT ĐẦU */
     function renderTongHopTab(container) {
       let activeDates = dates.filter(d => {
         const matches = matchesData[d] || [];
@@ -1196,13 +1185,12 @@
 /* ▲▲▲ KẾT THÚC KHỐI [TONGHOP-TAB] ▲▲▲ */
 
 /* ████████████████ MODULE MINIGAME · MINIGAME - DÙNG CHUNG ████████████████ */
-/* ▼▼▼ KHỐI [MINIGAME-COMMON-DATA] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME-COMMON-DATA] · Dữ liệu chung ▼▼▼ BẮT ĐẦU */
     let miniGame1Content = "Lịch Thi Đấu Team A & Team B Xoay V vòng.";
     let miniGame2Content = "Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.";
     let activeGameEditing = 1;
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME-COMMON-DATA] ▲▲▲ */
-
-/* ▼▼▼ KHỐI [MINIGAME-COMMON-FUNCS] ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME-COMMON-FUNCS] · Hộp thoại thể lệ + kèo ▼▼▼ BẮT ĐẦU */
     function openGameModal(gameId) {
       closeAllDropdowns();
       activeGameEditing = gameId;
@@ -1259,7 +1247,6 @@
       { id: 3, category: "Nam xoay vòng", a1: "Tuấn La", a2: "Châu Sĩ", scoreA: "6", scoreB: "11", b1: "Điền Chèm", b2: "Thành Sóc", customWin: 5, customLose: -15 }
     ];
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-TEAM-DATA] ▲▲▲ */
-
 /* ▼▼▼ KHỐI [MINIGAME1-TEAM-FUNCS] ▼▼▼ BẮT ĐẦU */
     function toggleMini1Payment(payKey) {
       if (!isAdminVerified) {
@@ -1386,7 +1373,6 @@
       }
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-TEAM-FUNCS] ▲▲▲ */
-
 /* ▼▼▼ KHỐI [MINIGAME1-TEAM-TAB] ▼▼▼ BẮT ĐẦU */
     function renderMiniGame1Tab(container) {
       let winCountA = 0, winCountB = 0, totalScoreA = 0, totalScoreB = 0, matchesPlayedCount = 0;
@@ -1558,7 +1544,6 @@
       container.innerHTML = html;
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-TEAM-TAB] ▲▲▲ */
-
 /* ▼▼▼ KHỐI [MINIGAME1-SUB1-DATA] ▼▼▼ BẮT ĐẦU */
     let mini1Sub1TeamA = ["Tuấn La", "Phú Mỗ", "Tiến Thọ", "Châu Sĩ", "Long Diễn", "Vân Đình", "Minh Hạnh", "Cẩm Ly"];
     let mini1Sub1TeamB = ["Thành Sóc", "Trường Giang", "Trí Đỏ", "Lợi Trí", "Thanh Đàm", "Gà Tre", "Minh Vượng", "Hải Hà"];
@@ -1566,7 +1551,6 @@
     let mini1Sub1Payment = {};
     let miniGame1Sub1Matches = [];
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB1-DATA] ▲▲▲ */
-
 /* ▼▼▼ KHỐI [MINIGAME1-SUB1-FUNCS] ▼▼▼ BẮT ĐẦU */
     function generateDynamicSub1Matches() {
       let malesA = mini1Sub1TeamA.filter(name => {

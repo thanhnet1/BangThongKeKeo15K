@@ -728,11 +728,10 @@
 
 /* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (An toàn tuyệt đối) ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
-      // 1. Tìm container chính xác trên giao diện
       const targetContainer = container || document.getElementById("tabContent");
       
       if (!targetContainer) {
-        console.error("❌ Không tìm thấy vùng chứa nội dung (tabContent) trên DOM!");
+        console.error("❌ Không tìm thấy vùng chứa (tabContent) trên giao diện!");
         return;
       }
 
@@ -791,6 +790,7 @@
           if (st.played >= 4 && netTotal > 0) { bringBack = netTotal; sumBringBack += bringBack; }
           if (netTotal < 0) { sumAmThucTe += netTotal; }
 
+          // Chỉ cộng vào tổng BTC thu về khi ô "Thực tế" (isPaid) được tích chọn
           if (isPaid) {
             if (netTotal < 0) sumThucThu += Math.abs(netTotal);
             btcThuVeCalculated += netTotal;
@@ -860,14 +860,21 @@
         quyCon: (quyCon > 0 ? `+${quyCon}K` : `${quyCon}K`)
       });
 
-      // 2. Kiểm tra an toàn trước khi gán chuỗi HTML để tránh sập app
       const safeMatchesHtml = matchesHtml || "";
       const safeSummaryHtml = summaryTableHtml || "";
+      const combinedHtml = safeMatchesHtml + safeSummaryHtml;
 
       try {
-        targetContainer.innerHTML = safeMatchesHtml + safeSummaryHtml;
+        targetContainer.innerHTML = "";
+        targetContainer.innerHTML = combinedHtml;
       } catch (err) {
-        console.error("Lỗi khi render HTML vào container:", err);
+        console.error("❌ Lỗi khi gán HTML vào container:", err);
+        targetContainer.textContent = "";
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = combinedHtml;
+        while (tempDiv.firstChild) {
+          targetContainer.appendChild(tempDiv.firstChild);
+        }
       }
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-SUMMARY] ▲▲▲ */

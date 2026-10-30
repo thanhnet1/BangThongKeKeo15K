@@ -585,8 +585,8 @@
       renderSingleDaySummaryTable(dateStr, html, container);
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-DAYTAB] ▲▲▲ */
-/* ▼▼▼ KHỐI [HOME-ABSENT] · VĐV XIN NGHỈ: chọn 2/3/4 VĐV, Nộp phạt / Không nộp phạt ▼▼▼ BẮT ĐẦU */
-    const ABSENT_COUNT_OPTIONS = [0, 2, 3, 4];
+/* ▼▼▼ KHỐI [HOME-ABSENT] · VĐV XIN NGHỈ: chọn VĐV nghỉ + Loại phạt tương ứng ▼▼▼ BẮT ĐẦU */
+    const ABSENT_COUNT_OPTIONS = [0, 1, 2, 3, 4, 5];
 
     function escAbsentAttr(str) {
       return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -667,29 +667,15 @@
       persistAbsentChange();
     }
 
-    function setAbsentStatus(dateStr, playerName, statusValue) {
+    function setAbsentStatus(dateStr, slotIdx, statusValue) {
       const o = getDayStatusObj(dateStr, true);
+      const info = getAbsentInfo(dateStr);
+      const playerName = info.players[slotIdx];
       if (!o.absentStatusMap) o.absentStatusMap = {};
-      o.absentStatusMap[playerName] = (statusValue === 'excused') ? 'excused' : 'unexcused';
+      if (playerName) {
+        o.absentStatusMap[playerName] = (statusValue === 'excused') ? 'excused' : 'unexcused';
+      }
       persistAbsentChange();
-    }
-
-    function buildAbsentFineCell(dateStr, playerName, isAbsent, fine) {
-      if (!isAbsent) return renderComponent('home.absent-fine-cell-td-1');
-      const unexcused = fine < 0;
-      const d = escAbsentJs(dateStr);
-      const n = escAbsentJs(playerName);
-      return renderComponent('home.absent-fine-cell', {
-        if_unexcused_class: (unexcused ? 'number-neg' : 'number-zero'),
-        if_unexcused: (unexcused ? '' : 'color:#64748b; font-weight:800;'),
-        if_unexcused_2: (unexcused ? fine : 0),
-        d,
-        n,
-        unexcused_color: (unexcused ? '#dc2626' : '#16a34a'),
-        selected_unexcused: (unexcused ? 'selected' : ''),
-        ABSENT_FINE_K,
-        selected_not_unexcused: (!unexcused ? 'selected' : '')
-      });
     }
 
     function buildAbsentSelectorRow(dateStr, colspan) {
@@ -713,30 +699,38 @@
           const idx = vdvs.indexOf(nm);
           const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : "#1e293b";
           const taken = info.players.some((p, j) => j !== i && p === nm);
-          return renderComponent('home.absent-select-row-option-2', {
+          return renderComponent('home.absent-select-row-option-3', {
             escAbsentAttr_nm: (escAbsentAttr(nm)),
             selected_cur_nm: (cur === nm ? 'selected' : ''),
             if_taken: (taken ? 'disabled' : ''),
-            color
+            color,
+            nm
           });
         }).join('');
-        return renderComponent('home.absent-select-row-select-2', {
+
+        const isUnexcused = (info.status[cur] !== 'excused');
+        const fineColor = isUnexcused ? '#dc2626' : '#16a34a';
+
+        return renderComponent('home.absent-select-row-option-2', {
           d,
           i,
           i_plus1: (i + 1),
-          opts
+          opts,
+          color: cur ? VDV_COLORS[vdvs.indexOf(cur) % VDV_COLORS.length] : '#334155',
+          fine_color: fineColor,
+          selected_unexcused: (isUnexcused ? 'selected' : ''),
+          selected_excused: (!isUnexcused ? 'selected' : '')
         });
       }).join('');
 
       return renderComponent('home.absent-select-row', {
         colspan,
         countSelect,
-        slots,
-        ABSENT_FINE_K
+        slots
       });
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-ABSENT] ▲▲▲ */
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (gồm cột XIN NGHỈ) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Tự động đưa VĐV xin nghỉ vào bảng) ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
@@ -777,6 +771,8 @@
       uniqueVdvs.forEach((v) => {
         const st = stats[v];
         const isAbsent = Object.prototype.hasOwnProperty.call(fineMap, v);
+        
+        // VĐV xuất hiện ở Bảng tổng hợp khi có đấu trận HOẶC nằm trong danh sách VĐV xin nghỉ
         if (st && (st.played > 0 || isAbsent)) {
           const payKey = `${dateStr}_${v}`;
           const isPaid = paymentStatus[payKey] || false;
@@ -792,7 +788,9 @@
           if (netTotal < 0) { sumAmThucTe += netTotal; if (isPaid) sumThucThu += Math.abs(netTotal); }
 
           let noteText = "";
-          if (netTotal < 0) {
+          if (isAbsent && st.played === 0) {
+            noteText = (fine < 0) ? `Nghỉ không phép (-${ABSENT_FINE_K}K)` : 'Nghỉ có phép (0K)';
+          } else if (netTotal < 0) {
             noteText = isPaid ? renderComponent('home.summary-span-1') : renderComponent('home.summary-span-2');
           } else if (netTotal > 0) {
             noteText = isPaid ? renderComponent('home.summary-span-3') : renderComponent('home.summary-span-4');
@@ -806,12 +804,11 @@
             vColor,
             v,
             st_played: st.played,
-            if_st_winK_0: (st.winK > 0 ? `+${st.winK}` : ''),
-            if_st_loseK_0: (st.loseK < 0 ? st.loseK : ''),
-            if_bringBack_0: (bringBack > 0 ? `+${bringBack}` : ''),
-            if_st_total_0_class: (st.total < 0 ? 'number-neg' : (st.total > 0 ? 'number-pos' : 'number-zero')),
-            st_total: (st.total > 0 ? `+${st.total}` : st.total),
-            buildAbsentFineCell_dateStr_v_isAbsent_fine: (buildAbsentFineCell(dateStr, v, isAbsent, fine)),
+            if_st_winK_0: (st.winK > 0 ? `+${st.winK}K` : '-'),
+            if_st_loseK_0: (st.loseK < 0 ? `${st.loseK}K` : '-'),
+            if_bringBack_0: (bringBack > 0 ? `+${bringBack}K` : '-'),
+            if_st_total_0_class: (netTotal < 0 ? 'number-neg' : (netTotal > 0 ? 'number-pos' : 'number-zero')),
+            st_total: (netTotal > 0 ? `+${netTotal}K` : `${netTotal}K`),
             checkboxClass,
             if_isPaid: (isPaid ? 'checked' : ''),
             payKey,
@@ -832,17 +829,17 @@
 
       let summaryTableHtml = renderComponent('home.summary', {
         summaryRowsHtml,
-        buildAbsentSelectorRow_dateStr_9: (buildAbsentSelectorRow(dateStr, 9)),
-        sumBringBack: (sumBringBack > 0 ? `+${sumBringBack}` : sumBringBack),
-        btcThuVeCalculated: (btcThuVeCalculated > 0 ? `+${btcThuVeCalculated}` : btcThuVeCalculated),
+        buildAbsentSelectorRow_dateStr_9: (buildAbsentSelectorRow(dateStr, 8)),
+        sumBringBack: (sumBringBack > 0 ? `+${sumBringBack}K` : `${sumBringBack}K`),
+        btcThuVeCalculated: (btcThuVeCalculated > 0 ? `+${btcThuVeCalculated}K` : `${btcThuVeCalculated}K`),
         sumFine_color: (sumFine < 0 ? '#dc2626' : '#64748b'),
-        sumFine_value: (sumFine < 0 ? sumFine : 0),
-        sumThucThu,
+        sumFine_value: (sumFine < 0 ? `${sumFine}K` : '0K'),
+        sumThucThu: `${sumThucThu}K`,
         dateStr,
         isYes_color: (isYes ? '#16a34a' : '#dc2626'),
         selected_isYes: (isYes ? 'selected' : ''),
         selected_not_isYes: (!isYes ? 'selected' : ''),
-        quyCon: (quyCon > 0 ? `+${quyCon}` : quyCon)
+        quyCon: (quyCon > 0 ? `+${quyCon}K` : `${quyCon}K`)
       });
 
       container.innerHTML = matchesHtml + summaryTableHtml;
@@ -1417,7 +1414,7 @@
             teamAPair.forEach(v => { if (mini1Stats[v]) { mini1Stats[v].played++; mini1Stats[v].winK += effWin; mini1Stats[v].total += effWin; } });
             teamBPair.forEach(v => { if (mini1Stats[v]) { mini1Stats[v].played++; mini1Stats[v].loseK += effLose; mini1Stats[v].total += effLose; } });
           } else if (sB > sA) {
-            teamBPair.forEach(v => { if (mini1Stats[v]) { mini1Stats[v].played++; mini1Stats[v].loseK += effWin; mini1Stats[v].total += effWin; } });
+            teamBPair.forEach(v => { if (mini1Stats[v]) { mini1Stats[v].played++; mini1Stats[v].winK += effWin; mini1Stats[v].total += effWin; } });
             teamAPair.forEach(v => { if (mini1Stats[v]) { mini1Stats[v].played++; mini1Stats[v].loseK += effLose; mini1Stats[v].total += effLose; } });
           }
         }

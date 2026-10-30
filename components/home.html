@@ -181,18 +181,18 @@
 </tr>
 <!-- [/PART] -->
 
-<!-- [PART: home.summary-tr-1] -->
-<tr class="hover:bg-slate-50 transition border-b border-slate-100">
-  <td class="py-2.5 px-3 font-bold text-xs border-r border-slate-200 whitespace-nowrap" style="color: {{vColor}};">{{v}}</td>
-  <td class="py-2.5 px-2 text-center text-slate-700 text-xs border-r border-slate-200">{{st_played}}</td>
-  <td class="py-2.5 px-2 text-center font-bold text-emerald-600 text-xs border-r border-slate-200">{{if_st_winK_0}}</td>
-  <td class="py-2.5 px-2 text-center font-bold text-red-600 text-xs border-r border-slate-200">{{if_if_st_loseK_0}}</td>
-  <td class="py-2.5 px-2 text-center font-bold text-emerald-600 text-xs border-r border-slate-200">{{if_bringBack_0}}</td>
-  <td class="py-2.5 px-2 text-center font-bold text-xs border-r border-slate-200 {{if_st_total_0_class}}">{{st_total}}</td>
-  <td class="py-2.5 px-2 text-center border-r border-slate-200">
+<!-- [PART: summary-tr-1] -->
+<tr class="hover:bg-slate-50 transition">
+  <td class="py-2.5 px-4 font-bold text-xs border-r border-slate-200" style="color: {{vColor}};">{{v}}</td>
+  <td class="py-2.5 px-3 text-center text-slate-700 text-xs border-r border-slate-200">{{st_played}}</td>
+  <td class="py-2.5 px-3 text-center font-bold text-emerald-600 text-xs border-r border-slate-200">{{if_st_winK_0}}</td>
+  <td class="py-2.5 px-3 text-center font-bold text-red-600 text-xs border-r border-slate-200">{{if_st_loseK_0}}</td>
+  <td class="py-2.5 px-3 text-center font-bold text-emerald-600 text-xs border-r border-slate-200">{{if_bringBack_0}}</td>
+  <td class="py-2.5 px-3 text-center font-bold text-xs border-r border-slate-200 {{if_st_total_0_class}}">{{st_total}}</td>
+  <td class="py-2.5 px-3 text-center border-r border-slate-200">
     <input type="checkbox" onclick="togglePayment('{{payKey}}')" class="{{checkboxClass}} w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" {{if_isPaid}} title="{{if_isAdminVerified}}">
   </td>
-  <td class="py-2.5 px-3 text-xs font-semibold whitespace-nowrap {{noteClass}}" style="{{noteStyle}}">{{noteText}}</td>
+  <td class="py-2.5 px-4 text-xs font-semibold {{noteClass}}" style="{{noteStyle}}">{{noteText}}</td>
 </tr>
 <!-- [/PART] -->
 

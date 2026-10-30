@@ -760,29 +760,31 @@
         }
       });
 
-      let sumBringBack = 0, sumThucThu = 0, sumAmThucTe = 0, sumFine = 0;
-      const fineMap = getAbsentFineMap(dateStr);
-      let summaryRowsHtml = "";
+      // Tìm đoạn khởi tạo biến tính toán trong renderSingleDaySummaryTable:
+let sumBringBack = 0, sumThucThu = 0, sumAmThucTe = 0, sumFine = 0;
+let btcThuVeCalculated = 0; // <-- Đảm bảo khởi tạo biến này
+const fineMap = getAbsentFineMap(dateStr);
+let summaryRowsHtml = "";
 
-      const uniqueVdvs = Array.from(new Set(vdvs));
+const uniqueVdvs = Array.from(new Set(vdvs));
 
-      uniqueVdvs.forEach((v) => {
-        const st = stats[v];
-        const isAbsent = Object.prototype.hasOwnProperty.call(fineMap, v);
-        
-        if (st && (st.played > 0 || isAbsent)) {
-          const payKey = `${dateStr}_${v}`;
-          const isPaid = paymentStatus[payKey] || false;
-          const vIndex = vdvs.indexOf(v);
-          const vColor = VDV_COLORS[vIndex % VDV_COLORS.length];
-
-          const fine = isAbsent ? fineMap[v] : 0;
-          const netTotal = st.total + fine;
-          sumFine += fine;
-
-          let bringBack = 0;
-          if (st.played >= 4 && netTotal > 0) { bringBack = netTotal; sumBringBack += bringBack; }
-          if (netTotal < 0) { sumAmThucTe += netTotal; if (isPaid) sumThucThu += Math.abs(netTotal); }
+uniqueVdvs.forEach((v) => {
+  const st = stats[v];
+  const isAbsent = Object.prototype.hasOwnProperty.call(fineMap, v);
+  
+  if (st && (st.played > 0 || isAbsent)) {
+    const payKey = `${dateStr}_${v}`;
+    const isPaid = paymentStatus[payKey] || false; // Trạng thái checkbox thực tế
+    // ...
+    
+    if (netTotal < 0) { 
+      sumAmThucTe += netTotal; 
+      if (isPaid) {
+        sumThucThu += Math.abs(netTotal);
+        btcThuVeCalculated += Math.abs(netTotal); // <-- Chỉ cộng vào tổng BTC thu về khi đã tích thực tế
+      }
+    }
+    // ...
 
           // --- LOGIC GÁN GHI CHÚ (NOTE) THEO YÊU CẦU ---
           let noteText = "";

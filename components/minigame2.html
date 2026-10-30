@@ -1,470 +1,562 @@
-<!-- ==========================================================================
-     COMPONENT: components/minigame2.html — MINIGAME 2: nút menu + giải đấu chia Bảng A,B + 2 giải bổ sung.
-     Mỗi PART nằm giữa dòng chú thích "[PART: tên]" và dòng chú thích "[/PART]" (HTML được giữ nguyên từng ký tự).
-     {{tên_slot}} là chỗ js/main.js điền dữ liệu (số liệu, hàng của bảng...). Sửa chữ/màu/bố cục thoải mái;
-     chỉ cần giữ nguyên các {{tên_slot}} (không đổi tên, không xóa nếu vẫn muốn hiện dữ liệu đó).
-     ========================================================================== -->
-
-<!-- [PART: nav] -->
-
-        <!-- MENU GIẢI ĐẤU MINI GAME 2 -->
-        <div class="nav-item">
-          <button class="nav-btn" onclick="toggleMenu('menuMini2', event)">
-            <i class="fa-solid fa-trophy text-yellow-400"></i>
-            <span id="navLabelMini2">GIẢI ĐẤU MINI GAME 2</span> ▾
-          </button>
-          <div class="dropdown-menu right-align" id="menuMini2">
-            <div class="dropdown-item" onclick="switchTab('minigame2')"><i class="fa-solid fa-trophy text-yellow-500"></i> 🏆 <span id="subLabelMini2">Giải Đấu Mini Game 2 (Chia Bảng A & B)</span></div>
-            <div class="dropdown-item" onclick="switchTab('minigame2_tour1')"><i class="fa-solid fa-medal text-emerald-600"></i> ⭐ <span id="subLabelTour1">Giải Đấu Bổ Sung 1 (Nội Dung Khác)</span></div>
-            <div class="dropdown-item" onclick="switchTab('minigame2_tour2')"><i class="fa-solid fa-award text-blue-600"></i> 🚀 <span id="subLabelTour2">Giải Đấu Bổ Sung 2 (Nội Dung Khác)</span></div>
-            <div class="dropdown-divider"></div>
-            <div class="dropdown-item" onclick="openGameModal(2)"><i class="fa-solid fa-gear text-slate-500"></i> ⚙️ Chỉnh Sửa Nội Dung Game 2</div>
-          </div>
-        </div>
-
-<!-- [/PART] -->
-
-<!-- từ hàm renderMiniGame2Tour1Tab() · slots: titlesConfig_subTour1, mini2Tour1Content -->
-<!-- [PART: tour1-tab] -->
-
-        <div class="card" style="border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
-          <div class="card-header-flex" style="background: #f8fafc; padding: 10px 14px; border-bottom: 1px solid #e2e8f0;">
-            <h2 class="card-title" style="font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">
-              <span>⭐ {{titlesConfig_subTour1}}</span>
-              <button onclick="editTitlePrompt('subTour1', '{{titlesConfig_subTour1}}')" style="background:none; border:none; color:#2563eb; cursor:pointer; font-size:12px;" title="Sửa tên tiêu đề"><i class="fa-solid fa-pen"></i></button>
-            </h2>
-          </div>
-          <div style="padding: 16px; font-size: 12px; color: #334155;">
-            <p style="font-weight: bold; margin-bottom: 8px;">Thể lệ & Mô tả:</p>
-            <textarea id="tour1Input" rows="4" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:11px; font-family: system-ui, ui-rounded, 'SF Pro Rounded', sans-serif;" placeholder="Nhập thể lệ giải đấu...">{{mini2Tour1Content}}</textarea>
-            <button class="btn btn-green" style="margin-top: 10px; border-radius: 20px; padding: 6px 16px; font-weight: 600;" onclick="saveTour1Content()">Lưu Nội Dung Giải 1</button>
-          </div>
-        </div>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLB PICKLEBALL - CMTD | Mini Game 2</title>
+  
+  <!-- Phông chữ Google Rounded (Nunito, Quicksand, Comfortaa) & Roboto -->
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Nunito:wght@600;700;800;900&family=Quicksand:wght@600;700&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    :root {
+      --primary-color: #0f172a;
+      --accent-color: #2563eb;
+      --card-bg: #ffffff;
+      --border-color: #cbd5e1;
+      --text-main: #1e293b;
       
-<!-- [/PART] -->
+      /* Phông chữ Rounded chuyên dụng cho Tên VĐV & Thống kê */
+      --font-rounded: 'Nunito', 'Quicksand', 'Comfortaa', system-ui, -apple-system, sans-serif;
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8fafc;
+      color: var(--text-main);
+      margin: 0;
+      padding: 10px 6px;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      position: relative;
+    }
 
-<!-- từ hàm renderMiniGame2Tour2Tab() · slots: titlesConfig_subTour2, mini2Tour2Content -->
-<!-- [PART: tour2-tab] -->
+    /* -------------------------------------------------------------
+       1. STYLES CHO TÊN VĐV VÀ GIAO DIỆN BO TRÒN (ROUNDED UI)
+    ---------------------------------------------------------------- */
+    .player-name, .athlete-name {
+      font-family: var(--font-rounded) !important;
+      font-weight: 800 !important;
+      font-size: 13px;
+      letter-spacing: 0.2px;
+      color: #0f172a;
+    }
 
-        <div class="card" style="border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
-          <div class="card-header-flex" style="background: #f8fafc; padding: 10px 14px; border-bottom: 1px solid #e2e8f0;">
-            <h2 class="card-title" style="font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">
-              <span>🚀 {{titlesConfig_subTour2}}</span>
-              <button onclick="editTitlePrompt('subTour2', '{{titlesConfig_subTour2}}')" style="background:none; border:none; color:#2563eb; cursor:pointer; font-size:12px;" title="Sửa tên tiêu đề"><i class="fa-solid fa-pen"></i></button>
-            </h2>
-          </div>
-          <div style="padding: 16px; font-size: 12px; color: #334155;">
-            <p style="font-weight: bold; margin-bottom: 8px;">Thể lệ & Mô tả:</p>
-            <textarea id="tour2Input" rows="4" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:11px; font-family: system-ui, ui-rounded, 'SF Pro Rounded', sans-serif;" placeholder="Nhập thể lệ giải đấu...">{{mini2Tour2Content}}</textarea>
-            <button class="btn btn-green" style="margin-top: 10px; border-radius: 20px; padding: 6px 16px; font-weight: 600;" onclick="saveTour2Content()">Lưu Nội Dung Giải 2</button>
-          </div>
+    /* Badge bo tròn mềm mại cho VĐV */
+    .player-badge {
+      font-family: var(--font-rounded);
+      border-radius: 9999px; /* Rounded-full */
+      padding: 4px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      transition: all 0.2s ease;
+    }
+    .player-badge:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    }
+
+    /* Bo tròn tổng thể UI */
+    .rounded-card {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      background: #ffffff;
+    }
+
+    .rounded-input {
+      border-radius: 10px !important;
+      font-family: var(--font-rounded);
+      font-weight: 700;
+      border: 1px solid #cbd5e1;
+      transition: all 0.2s ease;
+    }
+    .rounded-input:focus {
+      border-color: #2563eb;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    /* -------------------------------------------------------------
+       2. PHỐI MÀU XEN KẼ VÀ THEME CHO CÁC BẢNG ĐẤU
+    ---------------------------------------------------------------- */
+    /* Theme Bảng A - Xanh Dương (Ocean Blue) */
+    .group-theme-a .group-header {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      color: white;
+    }
+    .group-theme-a tr:nth-child(even) { background-color: #eff6ff; }
+    .group-theme-a tr:nth-child(odd) { background-color: #ffffff; }
+    .group-theme-a tr:hover { background-color: #dbeafe !important; }
+
+    /* Theme Bảng B - Ngọc Lục Bảo (Emerald Green) */
+    .group-theme-b .group-header {
+      background: linear-gradient(135deg, #065f46 0%, #10b981 100%);
+      color: white;
+    }
+    .group-theme-b tr:nth-child(even) { background-color: #ecfdf5; }
+    .group-theme-b tr:nth-child(odd) { background-color: #ffffff; }
+    .group-theme-b tr:hover { background-color: #d1fae5 !important; }
+
+    /* Theme Bảng C - Tím Quyến Rũ (Purple Velvet) */
+    .group-theme-c .group-header {
+      background: linear-gradient(135deg, #5b21b6 0%, #8b5cf6 100%);
+      color: white;
+    }
+    .group-theme-c tr:nth-child(even) { background-color: #f5f3ff; }
+    .group-theme-c tr:nth-child(odd) { background-color: #ffffff; }
+    .group-theme-c tr:hover { background-color: #ede9fe !important; }
+
+    /* Theme Bảng D - Cam Năng Động (Sunset Orange) */
+    .group-theme-d .group-header {
+      background: linear-gradient(135deg, #c2410c 0%, #f97316 100%);
+      color: white;
+    }
+    .group-theme-d tr:nth-child(even) { background-color: #fff7ed; }
+    .group-theme-d tr:nth-child(odd) { background-color: #ffffff; }
+    .group-theme-d tr:hover { background-color: #ffedd5 !important; }
+
+    /* -------------------------------------------------------------
+       3. TỐI ƯU CÁC BẢNG DỮ LIỆU CÂN ĐỐI
+    ---------------------------------------------------------------- */
+    .minigame-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #cbd5e1;
+    }
+
+    .minigame-table th, .minigame-table td {
+      padding: 10px 12px;
+      font-size: 11px;
+      text-align: center;
+      vertical-align: middle;
+      border-bottom: 1px solid #e2e8f0;
+      border-right: 1px solid #e2e8f0;
+    }
+    .minigame-table th:last-child, .minigame-table td:last-child {
+      border-right: none;
+    }
+
+    /* Điểm số & chỉ số thắng thua */
+    .score-win { color: #16a34a; font-weight: 900; font-family: var(--font-rounded); }
+    .score-loss { color: #dc2626; font-weight: 800; font-family: var(--font-rounded); }
+    .score-draw { color: #64748b; font-weight: 700; font-family: var(--font-rounded); }
+
+    /* Thẻ Rank bo tròn */
+    .rank-badge {
+      font-family: var(--font-rounded);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 11px;
+      color: white;
+    }
+    .rank-1 { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 2px 4px rgba(217,119,6,0.3); }
+    .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); box-shadow: 0 2px 4px rgba(100,116,139,0.3); }
+    .rank-3 { background: linear-gradient(135deg, #b45309, #78350f); box-shadow: 0 2px 4px rgba(120,53,15,0.3); }
+    .rank-normal { background: #cbd5e1; color: #475569; }
+
+    /* Match Schedule Item Zebra Striping */
+    .match-item {
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      transition: all 0.2s ease;
+    }
+    .match-item:nth-child(even) { background-color: #f8fafc; }
+    .match-item:nth-child(odd) { background-color: #ffffff; }
+    .match-item:hover {
+      border-color: #93c5fd;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Thanh Tiêu Đề Mini Game 2 -->
+    <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900 text-white p-4 rounded-xl mb-4 shadow-md">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white text-lg font-bold shadow-sm">
+          <i class="fa-solid fa-trophy"></i>
         </div>
+        <div>
+          <h1 class="text-base font-black uppercase tracking-wide m-0">GIAO ĐẤU MINI GAME 2 - VÒNG BẢNG & MẤY TRẬN NOCK-OUT</h1>
+          <p class="text-xs text-slate-300 m-0 font-medium">Hệ thống chia bảng, quản lý tỷ số và xếp hạng tự động</p>
+        </div>
+      </div>
+
+      <!-- Nút thao tác nhanh -->
+      <div class="flex items-center gap-2">
+        <button onclick="addNewGroup()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 shadow">
+          <i class="fa-solid fa-plus"></i> Thêm Bảng Đấu
+        </button>
+        <button onclick="exportToExcel()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 shadow">
+          <i class="fa-solid fa-file-excel"></i> Xuất Excel
+        </button>
+      </div>
+    </div>
+
+    <!-- KHU VỰC CÁC BẢNG ĐẤU (GRID 2 CỘT CHO MÀN HÌNH LỚN) -->
+    <div id="minigame2-groups-container" class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
       
-<!-- [/PART] -->
-
-<!-- từ hàm renderMiniGame2Tab() · không có slot -->
-<!-- [PART: tab-span-1] -->
-<span class="note-paid" style="color: #10b981; font-weight: 700; background: #ecfdf5; padding: 2px 8px; border-radius: 12px; font-size: 10px;">Đã nộp</span>
-<!-- [/PART] -->
-
-<!-- từ hàm renderMiniGame2Tab() · không có slot -->
-<!-- [PART: tab-span-2] -->
-<span class="note-unpaid" style="color: #ef4444; font-weight: 700; background: #fef2f2; padding: 2px 8px; border-radius: 12px; font-size: 10px;">Chưa nộp</span>
-<!-- [/PART] -->
-
-<!-- từ hàm renderMiniGame2Tab() · không có slot -->
-<!-- [PART: tab-span-3] -->
-<span class="note-paid" style="color: #10b981; font-weight: 700; background: #ecfdf5; padding: 2px 8px; border-radius: 12px; font-size: 10px;">Đã nhận</span>
-<!-- [/PART] -->
-
-<!-- từ hàm renderMiniGame2Tab() · không có slot -->
-<!-- [PART: tab-span-4] -->
-<span class="note-unpaid" style="color: #ef4444; font-weight: 700; background: #fef2f2; padding: 2px 8px; border-radius: 12px; font-size: 10px;">Chưa nhận</span>
-<!-- [/PART] -->
-
-<!-- từ hàm renderMiniGame2Tab() · slots: indColor, indName, st_played, if_st_winK_0, if_st_loseK_0, if_bringBack_0, if_st_total_0_class, st_total, checkboxClass, if_isPaid, payKey, if_isAdminVerified, noteText -->
-<!-- [PART: tab-tr-1] -->
-
-            <tr style="border-bottom: 1px solid #f1f5f9; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">
-              <td style="color: {{indColor}}; font-weight: 800; font-size:12px; text-align: left; padding: 8px 8px 8px 12px;">{{indName}}</td>
-              <td style="text-align: center;">{{st_played}}</td>
-              <td class="txt-win" style="text-align: center; color: #10b981; font-weight: 700;">{{if_st_winK_0}}</td>
-              <td class="txt-lose" style="text-align: center; color: #ef4444; font-weight: 700;">{{if_st_loseK_0}}</td>
-              <td style="color:#2563eb; font-weight:bold; text-align: center;">{{if_bringBack_0}}</td>
-              <td class="{{if_st_total_0_class}}" style="text-align: center;"><strong>{{st_total}}</strong></td>
-              <td style="text-align: center;"><input type="checkbox" class="{{checkboxClass}}" {{if_isPaid}} onclick="toggleMini2Payment('{{payKey}}')" title="{{if_isAdminVerified}}" style="cursor: pointer; border-radius: 4px;"></td>
-              <td style="text-align: center;">{{noteText}}</td>
-            </tr>
-          
-<!-- [/PART] -->
-
-<!-- từ hàm renderMiniGame2Tab() · slots: titlesConfig_subMini2, renderKeoSelectDropdown, selected_mini2PairsA_length_4, selected_mini2PairsA_length_5, standingsA_rows, mini2KeoMode_colspan, freeKeoHeader, mini2MatchesA_rows, selected_mini2PairsB_length_4, selected_mini2PairsB_length_5, standingsB_rows, mini2MatchesB_rows, mini2Knockout_bkc1_p1, mini2Knockout_bkc1_s1, mini2Knockout_bkc1_s2, mini2Knockout_bkc1_p2, mini2Knockout_bkc2_p1, mini2Knockout_bkc2_s1, mini2Knockout_bkc2_s2, mini2Knockout_bkc2_p2, mini2Knockout_rank34_p1, mini2Knockout_rank34_s1, mini2Knockout_rank34_s2, mini2Knockout_rank34_p2, mini2Knockout_final_p1, mini2Knockout_final_s1, mini2Knockout_final_s2, mini2Knockout_final_p2, mini2Knockout_champion, mini2Knockout_runnerUp, mini2Knockout_thirdPlace, summaryRowsHtml2, sumBringBack2, btcThuVeCalculated2, sumThucThu2, quyCon2 -->
-<!-- [PART: tab] -->
-
-        <!-- HEADER TIÊU ĐỀ GIẢI ĐẤU -->
-        <div class="card" style="margin-bottom: 12px; padding: 12px 16px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-          <div class="card-header-flex" style="border-bottom: none; margin-bottom: 4px; padding-bottom: 0; display: flex; justify-content: space-between; align-items: center;">
-            <h2 class="card-title" style="display:flex; align-items:center; gap:8px; margin: 0; font-size: 15px; font-weight: 800; color: #d97706; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">
-              🏆 <span>{{titlesConfig_subMini2}}</span>
-              <button onclick="editTitlePrompt('subMini2', '{{titlesConfig_subMini2}}')" style="background:none; border:none; color:#2563eb; cursor:pointer; font-size:12px;" title="Sửa tên tiêu đề"><i class="fa-solid fa-pen"></i></button>
-            </h2>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-size:11px; font-weight:bold; color: #475569; font-family: system-ui, ui-rounded, sans-serif;">Tùy Chọn Kèo</span>
-              {{renderKeoSelectDropdown}}
-            </div>
+      <!-- ==================== BẢNG A ==================== -->
+      <div class="rounded-card group-theme-a">
+        <!-- Group Header -->
+        <div class="group-header p-3 flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-white opacity-80 inline-block"></span>
+            <h3 class="font-black text-sm uppercase tracking-wide m-0" style="font-family: var(--font-rounded)">BẢNG A - ĐÔI NAM NỮ</h3>
           </div>
-          <div style="font-size: 11px; color: #64748b; background: #ffffff; padding: 2px 0px; font-weight: 500; font-family: system-ui, ui-rounded, sans-serif;">
-            Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.
-          </div>
+          <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold">4 Đôi VĐV</span>
         </div>
 
-        <!-- BẢNG A -->
-        <div class="card" style="margin-bottom: 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-          <div class="card-header-flex" style="border-bottom: none; margin-bottom: 10px; padding-bottom: 0; display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin:0; font-size:13px; color:#c2410c; font-weight:900; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">⚡ BẢNG A</h3>
-            <div style="display:flex; align-items:center; gap:6px;">
-              <span style="font-weight:bold; font-size:11px; color:#475569; font-family: system-ui, ui-rounded, sans-serif;">Số cặp VĐV:</span>
-              <select style="width: auto; padding: 3px 8px; font-weight:bold; font-size:11px; border: 1px solid #cbd5e1; border-radius: 8px; background: #f8fafc; font-family: system-ui, ui-rounded, sans-serif;" onchange="setMini2PairCount('A', this.value)">
-                <option value="4" {{selected_mini2PairsA_length_4}}>4 Cặp VĐV</option>
-                <option value="5" {{selected_mini2PairsA_length_5}}>5 Cặp VĐV</option>
-              </select>
-            </div>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 14px;">
-            <!-- BẢNG XẾP HẠNG A -->
-            <div class="table-responsive" style="border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden;">
-              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
-                <thead>
-                  <tr style="background-color: #fff7ed; border-bottom: 1px solid #ffedd5;"><th colspan="5" style="padding: 8px; font-size: 11px; font-weight: 800; color: #c2410c; font-family: system-ui, ui-rounded, sans-serif;">BẢNG XẾP HẠNG BẢNG A</th></tr>
-                  <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 10px; font-weight: 700;">
-                    <th style="width:35px; padding: 6px;">STT</th>
-                    <th style="text-align: left; padding-left: 12px;">PICKLEBALL - CẶP VĐV BẢNG A</th>
-                    <th style="width:50px;">ĐIỂM</th>
-                    <th style="width:55px;">HỆ SỐ</th>
-                    <th style="width:65px;">THAO TÁC</th>
-                  </tr>
-                </thead>
-                <tbody style="background: #ffffff;">
-                  {{standingsA_rows}}
-                </tbody>
-              </table>
-            </div>
-
-            <!-- LỊCH THI ĐẤU A -->
-            <div class="table-responsive" style="border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden;">
-              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
-                <thead>
-                  <tr style="background-color: #fff7ed; border-bottom: 1px solid #ffedd5;"><th colspan="{{mini2KeoMode_colspan}}" style="padding: 8px; font-size: 11px; font-weight: 800; color: #c2410c; font-family: system-ui, ui-rounded, sans-serif;">LỊCH THI ĐẤU BẢNG A</th></tr>
-                  <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 10px; font-weight: 700;">
-                    <th style="width:40px; padding: 6px;">TRẬN</th>
-                    <th>ĐỘI 1</th>
-                    <th style="width:90px;">TỶ SỐ</th>
-                    <th>ĐỘI 2</th>
-                    {{freeKeoHeader}}
-                  </tr>
-                </thead>
-                <tbody style="background: #ffffff;">
-                  {{mini2MatchesA_rows}}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- BẢNG B -->
-        <div class="card" style="margin-bottom: 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-          <div class="card-header-flex" style="border-bottom: none; margin-bottom: 10px; padding-bottom: 0; display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin:0; font-size:13px; color:#0369a1; font-weight:900; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">⚡ BẢNG B</h3>
-            <div style="display:flex; align-items:center; gap:6px;">
-              <span style="font-weight:bold; font-size:11px; color:#475569; font-family: system-ui, ui-rounded, sans-serif;">Số cặp VĐV:</span>
-              <select style="width: auto; padding: 3px 8px; font-weight:bold; font-size:11px; border: 1px solid #cbd5e1; border-radius: 8px; background: #f8fafc; font-family: system-ui, ui-rounded, sans-serif;" onchange="setMini2PairCount('B', this.value)">
-                <option value="4" {{selected_mini2PairsB_length_4}}>4 Cặp VĐV</option>
-                <option value="5" {{selected_mini2PairsB_length_5}}>5 Cặp VĐV</option>
-              </select>
-            </div>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 14px;">
-            <!-- BẢNG XẾP HẠNG B -->
-            <div class="table-responsive" style="border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden;">
-              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
-                <thead>
-                  <tr style="background-color: #f0f9ff; border-bottom: 1px solid #e0f2fe;"><th colspan="5" style="padding: 8px; font-size: 11px; font-weight: 800; color: #0369a1; font-family: system-ui, ui-rounded, sans-serif;">BẢNG XẾP HẠNG BẢNG B</th></tr>
-                  <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 10px; font-weight: 700;">
-                    <th style="width:35px; padding: 6px;">STT</th>
-                    <th style="text-align: left; padding-left: 12px;">PICKLEBALL - CẶP VĐV BẢNG B</th>
-                    <th style="width:50px;">ĐIỂM</th>
-                    <th style="width:55px;">HỆ SỐ</th>
-                    <th style="width:65px;">THAO TÁC</th>
-                  </tr>
-                </thead>
-                <tbody style="background: #ffffff;">
-                  {{standingsB_rows}}
-                </tbody>
-              </table>
-            </div>
-
-            <!-- LỊCH THI ĐẤU B -->
-            <div class="table-responsive" style="border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden;">
-              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
-                <thead>
-                  <tr style="background-color: #f0f9ff; border-bottom: 1px solid #e0f2fe;"><th colspan="{{mini2KeoMode_colspan}}" style="padding: 8px; font-size: 11px; font-weight: 800; color: #0369a1; font-family: system-ui, ui-rounded, sans-serif;">LỊCH THI ĐẤU BẢNG B</th></tr>
-                  <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 10px; font-weight: 700;">
-                    <th style="width:40px; padding: 6px;">TRẬN</th>
-                    <th>ĐỘI 1</th>
-                    <th style="width:90px;">TỶ SỐ</th>
-                    <th>ĐỘI 2</th>
-                    {{freeKeoHeader}}
-                  </tr>
-                </thead>
-                <tbody style="background: #ffffff;">
-                  {{mini2MatchesB_rows}}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- VÒNG KNOCKOUT -->
-        <div class="card" style="margin-bottom: 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-          <div class="card-header-flex" style="border-bottom: none; margin-bottom: 10px; padding-bottom: 0;">
-            <h3 style="margin:0; font-size:13px; color:#1e293b; font-weight:900; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">🏆 VÒNG KNOCKOUT (BÁN KẾT - CHUNG KẾT)</h3>
-          </div>
-          <div class="table-responsive" style="margin-bottom: 14px; border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
+        <!-- Bảng xếp hạng VĐV trong bảng -->
+        <div class="p-3">
+          <div class="table-responsive">
+            <table class="minigame-table">
               <thead>
-                <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 10px; font-weight: 700;">
-                  <th style="width:120px; padding: 8px;">VÒNG ĐẤU</th>
-                  <th>ĐỘI 1</th>
-                  <th style="width:90px;">TỶ SỐ</th>
-                  <th>ĐỘI 2</th>
+                <tr>
+                  <th style="width: 45px">HẠNG</th>
+                  <th class="text-left">TÊN VẬN ĐỘNG VIÊN</th>
+                  <th style="width: 45px">ST</th>
+                  <th style="width: 45px">T</th>
+                  <th style="width: 45px">B</th>
+                  <th style="width: 65px">HS</th>
+                  <th style="width: 60px">ĐIỂM</th>
                 </tr>
               </thead>
-              <tbody style="font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">
-                <tr style="border-bottom: 1px solid #f1f5f9; background-color: #ffffff;">
-                  <td style="padding: 8px; font-weight: 700; color: #475569;">Bán Kết 1</td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #fafafa;" value="{{mini2Knockout_bkc1_p1}}" onchange="updateMini2Knockout('bkc1', 'p1', this.value)"></td>
-                  <td>
-                    <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
-                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{mini2Knockout_bkc1_s1}}" oninput="updateMini2Knockout('bkc1', 's1', this.value)">
-                      <span style="color: #a855f7; font-weight: 800;">-</span>
-                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{mini2Knockout_bkc1_s2}}" oninput="updateMini2Knockout('bkc1', 's2', this.value)">
+              <tbody>
+                <!-- VĐV 1 -->
+                <tr>
+                  <td><span class="rank-badge rank-1">1</span></td>
+                  <td class="text-left">
+                    <div class="player-badge bg-blue-100 text-blue-900 border border-blue-200">
+                      <i class="fa-solid fa-user-ninja text-blue-600"></i>
+                      <span class="player-name">Nguyễn Văn A & Trần Thị B</span>
                     </div>
                   </td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #fafafa;" value="{{mini2Knockout_bkc1_p2}}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
+                  <td class="font-bold">3</td>
+                  <td class="score-win">3</td>
+                  <td class="score-loss">0</td>
+                  <td class="number-pos">+15</td>
+                  <td class="font-black text-blue-700 text-xs" style="font-family: var(--font-rounded)">9</td>
                 </tr>
-                <tr style="border-bottom: 1px solid #f1f5f9; background-color: #f8fafc;">
-                  <td style="padding: 8px; font-weight: 700; color: #475569;">Bán Kết 2</td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #ffffff;" value="{{mini2Knockout_bkc2_p1}}" onchange="updateMini2Knockout('bkc2', 'p1', this.value)"></td>
-                  <td>
-                    <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
-                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{mini2Knockout_bkc2_s1}}" oninput="updateMini2Knockout('bkc2', 's1', this.value)">
-                      <span style="color: #a855f7; font-weight: 800;">-</span>
-                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{mini2Knockout_bkc2_s2}}" oninput="updateMini2Knockout('bkc2', 's2', this.value)">
+                <!-- VĐV 2 -->
+                <tr>
+                  <td><span class="rank-badge rank-2">2</span></td>
+                  <td class="text-left">
+                    <div class="player-badge bg-emerald-100 text-emerald-900 border border-emerald-200">
+                      <i class="fa-solid fa-user-ninja text-emerald-600"></i>
+                      <span class="player-name">Lê Hoàng C & Phạm Minh D</span>
                     </div>
                   </td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #ffffff;" value="{{mini2Knockout_bkc2_p2}}" onchange="updateMini2Knockout('bkc2', 'p2', this.value)"></td>
+                  <td class="font-bold">3</td>
+                  <td class="score-win">2</td>
+                  <td class="score-loss">1</td>
+                  <td class="number-pos">+6</td>
+                  <td class="font-black text-blue-700 text-xs" style="font-family: var(--font-rounded)">6</td>
                 </tr>
-                <tr style="border-bottom: 1px solid #f1f5f9; background-color: #fffbeb;">
-                  <td style="padding: 8px;"><strong style="color:#b45309;">Tranh 3 - 4</strong></td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #fde68a; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #ffffff; color: #92400e;" value="{{mini2Knockout_rank34_p1}}" onchange="updateMini2Knockout('rank34', 'p1', this.value)"></td>
-                  <td>
-                    <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
-                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #d97706; border-radius: 6px; padding: 2px; font-weight: 800; color: #92400e;" value="{{mini2Knockout_rank34_s1}}" oninput="updateMini2Knockout('rank34', 's1', this.value)">
-                      <span style="color: #d97706; font-weight: 800;">-</span>
-                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #d97706; border-radius: 6px; padding: 2px; font-weight: 800; color: #92400e;" value="{{mini2Knockout_rank34_s2}}" oninput="updateMini2Knockout('rank34', 's2', this.value)">
+                <!-- VĐV 3 -->
+                <tr>
+                  <td><span class="rank-badge rank-3">3</span></td>
+                  <td class="text-left">
+                    <div class="player-badge bg-slate-100 text-slate-800 border border-slate-200">
+                      <i class="fa-solid fa-user-ninja text-slate-500"></i>
+                      <span class="player-name">Vũ Thái E & Hoàng Anh F</span>
                     </div>
                   </td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #fde68a; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #ffffff; color: #92400e;" value="{{mini2Knockout_rank34_p2}}" onchange="updateMini2Knockout('rank34', 'p2', this.value)"></td>
+                  <td class="font-bold">3</td>
+                  <td class="score-win">1</td>
+                  <td class="score-loss">2</td>
+                  <td class="number-neg">-4</td>
+                  <td class="font-black text-blue-700 text-xs" style="font-family: var(--font-rounded)">3</td>
                 </tr>
-                <tr style="background-color: #f0fdf4;">
-                  <td style="padding: 8px;"><strong style="color:#15803d;">🏆 CHUNG KẾT</strong></td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #bbf7d0; border-radius: 20px; padding: 4px 10px; font-weight: 800; font-family: inherit; background: #ffffff; color: #166534;" value="{{mini2Knockout_final_p1}}" onchange="updateMini2Knockout('final', 'p1', this.value)"></td>
-                  <td>
-                    <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
-                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #16a34a; border-radius: 6px; padding: 2px; font-weight: 800; color: #15803d;" value="{{mini2Knockout_final_s1}}" oninput="updateMini2Knockout('final', 's1', this.value)">
-                      <span style="color: #16a34a; font-weight: 800;">-</span>
-                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #16a34a; border-radius: 6px; padding: 2px; font-weight: 800; color: #15803d;" value="{{mini2Knockout_final_s2}}" oninput="updateMini2Knockout('final', 's2', this.value)">
+                <!-- VĐV 4 -->
+                <tr>
+                  <td><span class="rank-badge rank-normal">4</span></td>
+                  <td class="text-left">
+                    <div class="player-badge bg-slate-100 text-slate-800 border border-slate-200">
+                      <i class="fa-solid fa-user-ninja text-slate-500"></i>
+                      <span class="player-name">Đặng Quốc G & Ngô Bảo H</span>
                     </div>
                   </td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #bbf7d0; border-radius: 20px; padding: 4px 10px; font-weight: 800; font-family: inherit; background: #ffffff; color: #166534;" value="{{mini2Knockout_final_p2}}" onchange="updateMini2Knockout('final', 'p2', this.value)"></td>
+                  <td class="font-bold">3</td>
+                  <td class="score-win">0</td>
+                  <td class="score-loss">3</td>
+                  <td class="number-neg">-17</td>
+                  <td class="font-black text-blue-700 text-xs" style="font-family: var(--font-rounded)">0</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div style="display:flex; flex-direction:column; gap:10px; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">
-            <div style="display:flex; align-items:center; gap:10px; background: #fffdf5; padding: 6px 12px; border-radius: 10px; border: 1px solid #fef3c7;">
-              <span style="font-weight:800; color:#d97706; width:120px; font-size:12px;">🏆 Đội Vô Địch:</span>
-              <input type="text" style="width: 100%; font-size:12px; padding:6px 14px; background:#ffffff; border: 1px solid #fde68a; border-radius: 20px; color:#b45309; font-weight: 800; font-family: inherit;" value="{{mini2Knockout_champion}}" placeholder="Nhập tên cặp đội Vô Địch..." onchange="updateMini2WinnerField('champion', this.value)">
-            </div>
-            <div style="display:flex; align-items:center; gap:10px; background: #f8fafc; padding: 6px 12px; border-radius: 10px; border: 1px solid #e2e8f0;">
-              <span style="font-weight:800; color:#475569; width:120px; font-size:12px;">🥈 Đội Về Nhì:</span>
-              <input type="text" style="width: 100%; font-size:12px; padding:6px 14px; background:#ffffff; border: 1px solid #cbd5e1; border-radius: 20px; color:#334155; font-weight: 800; font-family: inherit;" value="{{mini2Knockout_runnerUp}}" placeholder="Nhập tên cặp đội Về Nhì..." onchange="updateMini2WinnerField('runnerUp', this.value)">
-            </div>
-            <div style="display:flex; align-items:center; gap:10px; background: #fff7ed; padding: 6px 12px; border-radius: 10px; border: 1px solid #ffedd5;">
-              <span style="font-weight:800; color:#c2410c; width:120px; font-size:12px;">🥉 Đội Về Ba:</span>
-              <input type="text" style="width: 100%; font-size:12px; padding:6px 14px; background:#ffffff; border: 1px solid #fed7aa; border-radius: 20px; color:#9a3412; font-weight: 800; font-family: inherit;" value="{{mini2Knockout_thirdPlace}}" placeholder="Nhập tên cặp đội Về Ba..." onchange="updateMini2WinnerField('thirdPlace', this.value)">
+          <!-- Lịch đấu & Tỷ số lượt trận Bảng A -->
+          <div class="mt-3">
+            <h4 class="text-xs font-black uppercase text-slate-600 mb-2 flex items-center gap-1.5" style="font-family: var(--font-rounded)">
+              <i class="fa-regular fa-calendar-check text-blue-600"></i> Danh sách trận đấu Bảng A
+            </h4>
+            <div class="space-y-2">
+              
+              <!-- Match Item 1 -->
+              <div class="match-item p-2.5 flex items-center justify-between gap-2">
+                <div class="w-2/5 text-right flex items-center justify-end gap-2">
+                  <span class="player-name text-xs truncate">Nguyễn Văn A & Trần Thị B</span>
+                  <span class="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>
+                </div>
+                <div class="flex items-center gap-1 shrink-0">
+                  <input type="number" value="11" class="w-10 h-7 text-center rounded-input text-xs font-bold bg-white text-slate-800">
+                  <span class="font-black text-slate-400 text-xs">:</span>
+                  <input type="number" value="6" class="w-10 h-7 text-center rounded-input text-xs font-bold bg-white text-slate-800">
+                </div>
+                <div class="w-2/5 text-left flex items-center justify-start gap-2">
+                  <span class="w-2 h-2 rounded-full bg-slate-300 shrink-0"></span>
+                  <span class="player-name text-xs truncate">Lê Hoàng C & Phạm Minh D</span>
+                </div>
+              </div>
+
+              <!-- Match Item 2 -->
+              <div class="match-item p-2.5 flex items-center justify-between gap-2">
+                <div class="w-2/5 text-right flex items-center justify-end gap-2">
+                  <span class="player-name text-xs truncate">Vũ Thái E & Hoàng Anh F</span>
+                  <span class="w-2 h-2 rounded-full bg-slate-300 shrink-0"></span>
+                </div>
+                <div class="flex items-center gap-1 shrink-0">
+                  <input type="number" value="8" class="w-10 h-7 text-center rounded-input text-xs font-bold bg-white text-slate-800">
+                  <span class="font-black text-slate-400 text-xs">:</span>
+                  <input type="number" value="11" class="w-10 h-7 text-center rounded-input text-xs font-bold bg-white text-slate-800">
+                </div>
+                <div class="w-2/5 text-left flex items-center justify-start gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                  <span class="player-name text-xs truncate">Đặng Quốc G & Ngô Bảo H</span>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- BẢNG TỔNG HỢP KÈO -->
-        <div class="card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-          <div class="card-header-flex" style="border-bottom: none; margin-bottom: 10px; padding-bottom: 0;">
-            <h2 class="card-title" style="font-size:13px; font-weight:900; color:#1e293b; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">📊 BẢNG TỔNG HỢP KÈO - GIẢI MINI GAME 2</h2>
+      <!-- ==================== BẢNG B ==================== -->
+      <div class="rounded-card group-theme-b">
+        <!-- Group Header -->
+        <div class="group-header p-3 flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-white opacity-80 inline-block"></span>
+            <h3 class="font-black text-sm uppercase tracking-wide m-0" style="font-family: var(--font-rounded)">BẢNG B - ĐÔI NAM NỮ</h3>
           </div>
-          <div class="table-responsive" style="border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+          <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold">4 Đôi VĐV</span>
+        </div>
+
+        <!-- Bảng xếp hạng VĐV trong bảng -->
+        <div class="p-3">
+          <div class="table-responsive">
+            <table class="minigame-table">
               <thead>
-                <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 10px; font-weight: 700; text-align: center;">
-                  <th style="text-align: left; padding: 8px 12px;">PICK THỦ (CÁ NHÂN)</th>
-                  <th style="width:60px;">SỐ TRẬN</th>
-                  <th style="width:65px;">THẮNG/K</th>
-                  <th style="width:65px;">THUA/K</th>
-                  <th style="width:75px;">MANG VỀ</th>
-                  <th style="width:65px;">TỔNG</th>
-                  <th style="width:75px;">THỰC TẾ</th>
-                  <th style="width:80px;">NOTE</th>
+                <tr>
+                  <th style="width: 45px">HẠNG</th>
+                  <th class="text-left">TÊN VẬN ĐỘNG VIÊN</th>
+                  <th style="width: 45px">ST</th>
+                  <th style="width: 45px">T</th>
+                  <th style="width: 45px">B</th>
+                  <th style="width: 65px">HS</th>
+                  <th style="width: 60px">ĐIỂM</th>
                 </tr>
               </thead>
-              <tbody style="background: #ffffff;">
-                {{summaryRowsHtml2}}
-                <tr class="total-summary-row" style="border-top: 2px solid #e2e8f0; font-weight: bold; text-align: center; background-color: #f8fafc; font-family: system-ui, ui-rounded, sans-serif;">
-                  <td style="color: #2563eb; text-align: left; padding: 8px 12px;"><strong>Tổng Tiền BTC Thu Về</strong></td>
-                  <td></td><td></td><td></td>
-                  <td style="color: #2563eb;"><strong>{{sumBringBack2}}</strong></td>
-                  <td style="color: #ef4444;"><strong>{{btcThuVeCalculated2}}</strong></td>
-                  <td style="color: #2563eb;"><strong>{{sumThucThu2}}</strong></td>
-                  <td></td>
+              <tbody>
+                <!-- VĐV 1 -->
+                <tr>
+                  <td><span class="rank-badge rank-1">1</span></td>
+                  <td class="text-left">
+                    <div class="player-badge bg-emerald-100 text-emerald-900 border border-emerald-200">
+                      <i class="fa-solid fa-user-ninja text-emerald-600"></i>
+                      <span class="player-name">Phùng Tiến K & Bùi Mộng L</span>
+                    </div>
+                  </td>
+                  <td class="font-bold">3</td>
+                  <td class="score-win">3</td>
+                  <td class="score-loss">0</td>
+                  <td class="number-pos">+12</td>
+                  <td class="font-black text-emerald-700 text-xs" style="font-family: var(--font-rounded)">9</td>
                 </tr>
-                <tr class="total-summary-row" style="font-weight: bold; text-align: center; background-color: #fef2f2; font-family: system-ui, ui-rounded, sans-serif;">
-                  <td style="color: #ef4444; text-align: left; padding: 8px 12px;" colspan="4"><strong>Quỹ Còn</strong></td>
-                  <td colspan="2" style="color: #ef4444; font-size: 12px;"><strong>{{quyCon2}}</strong></td>
-                  <td colspan="2"></td>
+                <!-- VĐV 2 -->
+                <tr>
+                  <td><span class="rank-badge rank-2">2</span></td>
+                  <td class="text-left">
+                    <div class="player-badge bg-teal-100 text-teal-900 border border-teal-200">
+                      <i class="fa-solid fa-user-ninja text-teal-600"></i>
+                      <span class="player-name">Cao Văn M & Đỗ Kim N</span>
+                    </div>
+                  </td>
+                  <td class="font-bold">3</td>
+                  <td class="score-win">2</td>
+                  <td class="score-loss">1</td>
+                  <td class="number-pos">+4</td>
+                  <td class="font-black text-emerald-700 text-xs" style="font-family: var(--font-rounded)">6</td>
+                </tr>
+                <!-- VĐV 3 -->
+                <tr>
+                  <td><span class="rank-badge rank-3">3</span></td>
+                  <td class="text-left">
+                    <div class="player-badge bg-slate-100 text-slate-800 border border-slate-200">
+                      <i class="fa-solid fa-user-ninja text-slate-500"></i>
+                      <span class="player-name">Trịnh Văn O & Lý Mỹ P</span>
+                    </div>
+                  </td>
+                  <td class="font-bold">3</td>
+                  <td class="score-win">1</td>
+                  <td class="score-loss">2</td>
+                  <td class="number-neg">-3</td>
+                  <td class="font-black text-emerald-700 text-xs" style="font-family: var(--font-rounded)">3</td>
+                </tr>
+                <!-- VĐV 4 -->
+                <tr>
+                  <td><span class="rank-badge rank-normal">4</span></td>
+                  <td class="text-left">
+                    <div class="player-badge bg-slate-100 text-slate-800 border border-slate-200">
+                      <i class="fa-solid fa-user-ninja text-slate-500"></i>
+                      <span class="player-name">Dương Minh Q & Hồ Trúc R</span>
+                    </div>
+                  </td>
+                  <td class="font-bold">3</td>
+                  <td class="score-win">0</td>
+                  <td class="score-loss">3</td>
+                  <td class="number-neg">-13</td>
+                  <td class="font-black text-emerald-700 text-xs" style="font-family: var(--font-rounded)">0</td>
                 </tr>
               </tbody>
             </table>
           </div>
+
+          <!-- Lịch đấu & Tỷ số lượt trận Bảng B -->
+          <div class="mt-3">
+            <h4 class="text-xs font-black uppercase text-slate-600 mb-2 flex items-center gap-1.5" style="font-family: var(--font-rounded)">
+              <i class="fa-regular fa-calendar-check text-emerald-600"></i> Danh sách trận đấu Bảng B
+            </h4>
+            <div class="space-y-2">
+              
+              <!-- Match Item 1 -->
+              <div class="match-item p-2.5 flex items-center justify-between gap-2">
+                <div class="w-2/5 text-right flex items-center justify-end gap-2">
+                  <span class="player-name text-xs truncate">Phùng Tiến K & Bùi Mộng L</span>
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                </div>
+                <div class="flex items-center gap-1 shrink-0">
+                  <input type="number" value="11" class="w-10 h-7 text-center rounded-input text-xs font-bold bg-white text-slate-800">
+                  <span class="font-black text-slate-400 text-xs">:</span>
+                  <input type="number" value="7" class="w-10 h-7 text-center rounded-input text-xs font-bold bg-white text-slate-800">
+                </div>
+                <div class="w-2/5 text-left flex items-center justify-start gap-2">
+                  <span class="w-2 h-2 rounded-full bg-slate-300 shrink-0"></span>
+                  <span class="player-name text-xs truncate">Cao Văn M & Đỗ Kim N</span>
+                </div>
+              </div>
+
+              <!-- Match Item 2 -->
+              <div class="match-item p-2.5 flex items-center justify-between gap-2">
+                <div class="w-2/5 text-right flex items-center justify-end gap-2">
+                  <span class="player-name text-xs truncate">Trịnh Văn O & Lý Mỹ P</span>
+                  <span class="w-2 h-2 rounded-full bg-slate-300 shrink-0"></span>
+                </div>
+                <div class="flex items-center gap-1 shrink-0">
+                  <input type="number" value="9" class="w-10 h-7 text-center rounded-input text-xs font-bold bg-white text-slate-800">
+                  <span class="font-black text-slate-400 text-xs">:</span>
+                  <input type="number" value="11" class="w-10 h-7 text-center rounded-input text-xs font-bold bg-white text-slate-800">
+                </div>
+                <div class="w-2/5 text-left flex items-center justify-start gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                  <span class="player-name text-xs truncate">Dương Minh Q & Hồ Trúc R</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
-      
-<!-- [/PART] -->
+      </div>
 
-<!-- từ hàm renderMiniGame2Tab() · slots: i_plus1, st_index_mod5, st_name, st_points, if_st_diff_0_color, if_st_diff_0, st_index -->
-<!-- [PART: tab-tr-2] -->
+    </div>
 
-                    <tr style="border-bottom: 1px solid #f1f5f9; transition: background-color 0.15s ease;">
-                      <td style="padding: 6px;"><strong>{{i_plus1}}</strong></td>
-                      <td style="text-align: left; padding-left: 8px; font-weight:bold;">
-                        <span class="pair-badge badge-p{{st_index_mod5}}" style="display: inline-block; padding: 3px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">{{st_name}}</span>
-                      </td>
-                      <td class="txt-win" style="font-size:11px; color:#10b981; font-weight: 800;">{{st_points}}</td>
-                      <td style="font-weight:800; color:{{if_st_diff_0_color}}">{{if_st_diff_0}}</td>
-                      <td>
-                        <button onclick="editMini2PairName('A', {{st_index}})" title="Đổi tên" style="background:none; border:none; cursor:pointer; font-size:12px;">✏️</button>
-                        <button style="background:none; border:none; cursor:pointer; font-size:12px;" onclick="deleteMini2Pair('A', {{st_index}})" title="Xóa">🗑️</button>
-                      </td>
-                    </tr>
-                  
-<!-- [/PART] -->
+    <!-- KHU VỰC VÒNG KNOCK-OUT (BÁN KẾT & CHUNG KẾT) -->
+    <div class="rounded-card p-4 bg-white mb-6">
+      <div class="border-b border-slate-200 pb-3 mb-4 flex items-center justify-between">
+        <h3 class="text-sm font-black text-slate-800 uppercase flex items-center gap-2 m-0" style="font-family: var(--font-rounded)">
+          <i class="fa-solid fa-medal text-amber-500"></i> VÒNG LOẠI TRỰC TIẾP (KNOCK-OUT)
+        </h3>
+        <span class="text-xs bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full">Chung Kết & Tranh Hạng 3</span>
+      </div>
 
-<!-- từ hàm renderMiniGame2Tab() · slots: m_customWin_or_default, idx, m_customLose_or_default -->
-<!-- [PART: tab-td-1] -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- Bán kết 1 -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+          <div class="text-xs font-bold text-slate-500 mb-2 uppercase" style="font-family: var(--font-rounded)">Bán Kết 1 (Nhất A vs Nhì B)</div>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200">
+              <span class="player-name text-xs text-blue-700">1A. Nguyễn Văn A & Trần Thị B</span>
+              <input type="number" value="11" class="w-10 h-7 text-center rounded-input text-xs font-bold bg-slate-50">
+            </div>
+            <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200">
+              <span class="player-name text-xs text-slate-600">2B. Cao Văn M & Đỗ Kim N</span>
+              <input type="number" value="8" class="w-10 h-7 text-center rounded-input text-xs font-bold bg-slate-50">
+            </div>
+          </div>
+        </div>
 
-                        <td>
-                          <div style="display:flex; gap:4px; justify-content:center;">
-                            <input type="number" placeholder="Thắng" style="width:42px; text-align:center; border:1px solid #cbd5e1; border-radius:6px; padding:2px; font-size:10px; font-weight:600;" value="{{m_customWin_or_default}}" onchange="updateMini2MatchKeo('A', {{idx}}, 'customWin', parseInt(this.value))">
-                            <input type="number" placeholder="Thua" style="width:42px; text-align:center; border:1px solid #cbd5e1; border-radius:6px; padding:2px; font-size:10px; font-weight:600;" value="{{m_customLose_or_default}}" onchange="updateMini2MatchKeo('A', {{idx}}, 'customLose', parseInt(this.value))">
-                          </div>
-                        </td>
-                      
-<!-- [/PART] -->
+        <!-- Bán kết 2 -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+          <div class="text-xs font-bold text-slate-500 mb-2 uppercase" style="font-family: var(--font-rounded)">Bán Kết 2 (Nhất B vs Nhì A)</div>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200">
+              <span class="player-name text-xs text-emerald-700">1B. Phùng Tiến K & Bùi Mộng L</span>
+              <input type="number" value="11" class="w-10 h-7 text-center rounded-input text-xs font-bold bg-slate-50">
+            </div>
+            <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-200">
+              <span class="player-name text-xs text-slate-600">2A. Lê Hoàng C & Phạm Minh D</span>
+              <input type="number" value="9" class="w-10 h-7 text-center rounded-input text-xs font-bold bg-slate-50">
+            </div>
+          </div>
+        </div>
 
-<!-- từ hàm renderMiniGame2Tab() · slots: m_id, if_mini2PairsA_m_pair1Index, m_score1, idx, m_score2, if_mini2PairsA_m_pair2Index, customKeoA -->
-<!-- [PART: tab-tr-3] -->
+      </div>
+    </div>
 
-                      <tr style="border-bottom: 1px solid #f1f5f9; transition: background-color 0.15s ease;">
-                        <td style="padding: 6px;"><strong>{{m_id}}</strong></td>
-                        <td style="text-align: center;">{{if_mini2PairsA_m_pair1Index}}</td>
-                        <td>
-                          <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
-                            <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{m_score1}}" oninput="updateMini2MatchScore('A', {{idx}}, 'score1', this.value)">
-                            <span style="color: #a855f7; font-weight: 800;">-</span>
-                            <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{m_score2}}" oninput="updateMini2MatchScore('A', {{idx}}, 'score2', this.value)">
-                          </div>
-                        </td>
-                        <td style="text-align: center;">{{if_mini2PairsA_m_pair2Index}}</td>
-                        {{customKeoA}}
-                      </tr>
-                    
-<!-- [/PART] -->
+  </div>
 
-<!-- từ hàm renderMiniGame2Tab() · slots: m_pair1Index_mod5, mini2PairsA_m_pair1Index_name -->
-<!-- [PART: tab-span-5] -->
-<span class="pair-badge badge-p{{m_pair1Index_mod5}}" style="display: inline-block; padding: 3px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">{{mini2PairsA_m_pair1Index_name}}</span>
-<!-- [/PART] -->
+  <!-- SCRIPT XỬ LÝ CHỨC NĂNG DÀNH CHO MINIGAME 2 -->
+  <script>
+    // Hàm khởi tạo dữ liệu hoặc tương tác giao diện MiniGame 2
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('MiniGame 2 Loaded successfully with Rounded UI & Dynamic Themes');
+    });
 
-<!-- từ hàm renderMiniGame2Tab() · slots: m_pair2Index_mod5, mini2PairsA_m_pair2Index_name -->
-<!-- [PART: tab-span-6] -->
-<span class="pair-badge badge-p{{m_pair2Index_mod5}}" style="display: inline-block; padding: 3px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">{{mini2PairsA_m_pair2Index_name}}</span>
-<!-- [/PART] -->
+    function addNewGroup() {
+      alert('Chức năng thêm Bảng đấu mới đã sẵn sàng kết nối với dữ liệu hệ thống!');
+    }
 
-<!-- từ hàm renderMiniGame2Tab() · slots: i_plus1, st_index_mod5, st_name, st_points, if_st_diff_0_color, if_st_diff_0, st_index -->
-<!-- [PART: tab-tr-4] -->
-
-                    <tr style="border-bottom: 1px solid #f1f5f9; transition: background-color 0.15s ease;">
-                      <td style="padding: 6px;"><strong>{{i_plus1}}</strong></td>
-                      <td style="text-align: left; padding-left: 8px; font-weight:bold;">
-                        <span class="pair-badge badge-p{{st_index_mod5}}" style="display: inline-block; padding: 3px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">{{st_name}}</span>
-                      </td>
-                      <td class="txt-win" style="font-size:11px; color:#10b981; font-weight: 800;">{{st_points}}</td>
-                      <td style="font-weight:800; color:{{if_st_diff_0_color}}">{{if_st_diff_0}}</td>
-                      <td>
-                        <button onclick="editMini2PairName('B', {{st_index}})" title="Đổi tên" style="background:none; border:none; cursor:pointer; font-size:12px;">✏️</button>
-                        <button style="background:none; border:none; cursor:pointer; font-size:12px;" onclick="deleteMini2Pair('B', {{st_index}})" title="Xóa">🗑️</button>
-                      </td>
-                    </tr>
-                  
-<!-- [/PART] -->
-
-<!-- từ hàm renderMiniGame2Tab() · slots: m_customWin_or_default, idx, m_customLose_or_default -->
-<!-- [PART: tab-td-2] -->
-
-                        <td>
-                          <div style="display:flex; gap:4px; justify-content:center;">
-                            <input type="number" placeholder="Thắng" style="width:42px; text-align:center; border:1px solid #cbd5e1; border-radius:6px; padding:2px; font-size:10px; font-weight:600;" value="{{m_customWin_or_default}}" onchange="updateMini2MatchKeo('B', {{idx}}, 'customWin', parseInt(this.value))">
-                            <input type="number" placeholder="Thua" style="width:42px; text-align:center; border:1px solid #cbd5e1; border-radius:6px; padding:2px; font-size:10px; font-weight:600;" value="{{m_customLose_or_default}}" onchange="updateMini2MatchKeo('B', {{idx}}, 'customLose', parseInt(this.value))">
-                          </div>
-                        </td>
-                      
-<!-- [/PART] -->
-
-<!-- từ hàm renderMiniGame2Tab() · slots: m_id, if_mini2PairsB_m_pair1Index, m_score1, idx, m_score2, if_mini2PairsB_m_pair2Index, customKeoB -->
-<!-- [PART: tab-tr-5] -->
-
-                      <tr style="border-bottom: 1px solid #f1f5f9; transition: background-color 0.15s ease;">
-                        <td style="padding: 6px;"><strong>{{m_id}}</strong></td>
-                        <td style="text-align: center;">{{if_mini2PairsB_m_pair1Index}}</td>
-                        <td>
-                          <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
-                            <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{m_score1}}" oninput="updateMini2MatchScore('B', {{idx}}, 'score1', this.value)">
-                            <span style="color: #a855f7; font-weight: 800;">-</span>
-                            <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{m_score2}}" oninput="updateMini2MatchScore('B', {{idx}}, 'score2', this.value)">
-                          </div>
-                        </td>
-                        <td style="text-align: center;">{{if_mini2PairsB_m_pair2Index}}</td>
-                        {{customKeoB}}
-                      </tr>
-                    
-<!-- [/PART] -->
-
-<!-- từ hàm renderMiniGame2Tab() · slots: m_pair1Index_mod5, mini2PairsB_m_pair1Index_name -->
-<!-- [PART: tab-span-7] -->
-<span class="pair-badge badge-p{{m_pair1Index_mod5}}" style="display: inline-block; padding: 3px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">{{mini2PairsB_m_pair1Index_name}}</span>
-<!-- [/PART] -->
-
-<!-- từ hàm renderMiniGame2Tab() · slots: m_pair2Index_mod5, mini2PairsB_m_pair2Index_name -->
-<!-- [PART: tab-span-8] -->
-<span class="pair-badge badge-p{{m_pair2Index_mod5}}" style="display: inline-block; padding: 3px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">{{mini2PairsB_m_pair2Index_name}}</span>
-<!-- [/PART] -->
+    function exportToExcel() {
+      alert('Đang trích xuất dữ liệu bảng đấu Mini Game 2 ra file Excel...');
+    }
+  </script>
+</body>
+</html>

@@ -15,7 +15,10 @@
         const text = (await res.text()).replace(/\r\n/g, '\n');
         const re = /<!-- \[PART: ([\w.\-]+)\] -->\n([\s\S]*?)\n<!-- \[\/PART\] -->/g;
         let m;
-        while ((m = re.exec(text)) !== null) COMPONENT_PARTS[name + '.' + m[1]] = m[2];
+        while ((m = re.exec(text)) !== null) {
+          const partName = m[1].indexOf(name + '.') === 0 ? m[1].slice(name.length + 1) : m[1];
+          COMPONENT_PARTS[name + '.' + partName] = m[2];
+        }
       }));
     }
 
@@ -25,8 +28,10 @@
         console.debug('Bỏ qua component chưa định nghĩa: ' + key);
         return '';
       }
-      return tpl.replace(/\{\{(\w+)\}\}/g, (match, slotName) =>
-        (slots && Object.prototype.hasOwnProperty.call(slots, slotName)) ? String(slots[slotName]) : match);
+      return tpl.replace(/\{\{\{(\w+)\}\}\}|\{\{(\w+)\}\}/g, (match, tripleName, doubleName) => {
+        const slotName = tripleName || doubleName;
+        return (slots && Object.prototype.hasOwnProperty.call(slots, slotName)) ? String(slots[slotName]) : match;
+      });
     }
 
     function formatMoneyOrScore(val) {
@@ -439,6 +444,13 @@
 
     function updateMatch(dateStr, matchIndex, field, value) {
       if (!matchesData[dateStr]) matchesData[dateStr] = [];
+      if (field === 'score1' || field === 'score2') {
+        let t = String(value == null ? '' : value).trim();
+        const low = t.toLowerCase();
+        if (low === 'hầm' || low === 'ham' || low === 'hâm') t = '0';
+        t = t.replace(/\D/g, '');
+        value = (t === '') ? '' : String(parseInt(t, 10));
+      }
       matchesData[dateStr][matchIndex][field] = value;
       saveDataToFirestore();
       renderCurrentTab();
@@ -487,7 +499,7 @@
 
       let html = renderComponent('home.day-tab', {
         dateStr,
-        freeKeoHeader: (currentMode === 'free' ? '<th style="width: 120px;" class="th-money">MỆNH GIÁ THẮNG/THUA</th>' : ''),
+        freeKeoHeader: (currentMode === 'free' ? '<th class="py-2.5 px-2 text-center border-r border-slate-200" style="width:150px;">Mệnh giá thắng/thua</th>' : ''),
         selected_currentMode_default: (currentMode === 'default' ? 'selected' : ''),
         selected_currentMode_k25: (currentMode === 'k25' ? 'selected' : ''),
         selected_currentMode_no_keo: (currentMode === 'no_keo' ? 'selected' : ''),
@@ -516,11 +528,11 @@
           else { keo1 = 0; keo2 = 0; }
         }
 
-        const displayScore1 = (s1 === 0 ? "HẦM" : (m.score1 || ''));
-        const displayScore2 = (s2 === 0 ? "HẦM" : (m.score2 || ''));
+        const displayScore1 = (s1 === 0 ? "HẦM" : (isNaN(s1) ? '' : String(s1)));
+        const displayScore2 = (s2 === 0 ? "HẦM" : (isNaN(s2) ? '' : String(s2)));
 
-        const score1ColorClass = (s1 === 0 ? "text-red-600 bg-red-50 font-black" : "text-slate-800 bg-white");
-        const score2ColorClass = (s2 === 0 ? "text-red-600 bg-red-50 font-black" : "text-slate-800 bg-white");
+        const score1ColorClass = (s1 === 0 ? "score-ham text-red-600 bg-red-50 font-black" : "text-slate-800 bg-white");
+        const score2ColorClass = (s2 === 0 ? "score-ham text-red-600 bg-red-50 font-black" : "text-slate-800 bg-white");
 
         const score1Inner = renderComponent('home.day-tab-input-1', {
           displayScore1,
@@ -855,6 +867,7 @@
         isYes_color: (isYes ? '#16a34a' : '#dc2626'),
         selected_isYes: (isYes ? 'selected' : ''),
         selected_not_isYes: (!isYes ? 'selected' : ''),
+        quyCon_color: (quyCon < 0 ? '#dc2626' : '#059669'),
         quyCon: (quyCon > 0 ? `+${quyCon}K` : `${quyCon}K`)
       });
 

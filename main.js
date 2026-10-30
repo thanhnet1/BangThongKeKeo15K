@@ -869,8 +869,9 @@
         quyCon: (quyCon > 0 ? `+${quyCon}K` : `${quyCon}K`)
       });
 
-      container.innerHTML = matchesHtml + summaryTableHtml;
-    }
+      // Gán dữ liệu an toàn vào targetContainer
+        targetContainer.innerHTML = matchesHtml + summaryTableHtml;
+   }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-SUMMARY] ▲▲▲ */
 
 /* ████████████████ MODULE SETTING · SETTING ████████████████ */

@@ -525,6 +525,10 @@
           else { keo1 = 0; keo2 = 0; }
         }
 
+        // Xử lý hiển thị chữ HẦM màu đỏ khi tỷ số = 0
+        const displayScore1 = (s1 === 0 ? '<span class="text-red-600 font-bold">HẦM</span>' : (m.score1 || ''));
+        const displayScore2 = (s2 === 0 ? '<span class="text-red-600 font-bold">HẦM</span>' : (m.score2 || ''));
+
         const score1Inner = renderComponent('home.day-tab-input-1', {
           m_score1: (m.score1 || ''),
           dateStr,

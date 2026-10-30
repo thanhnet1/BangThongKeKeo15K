@@ -1,3 +1,98 @@
+<style>
+/* ==========================================================================
+   MINIGAME 2 — giao diện CMTD theo ảnh mẫu
+   CSS chỉ tinh chỉnh phần tử của component, không đổi tên hàm hoặc slot JS.
+   ========================================================================== */
+:root {
+  --m2-navy:#17243a; --m2-navy2:#22344f; --m2-border:#c7d5e5;
+  --m2-line:#d8e2ee; --m2-text:#243449; --m2-muted:#64748b;
+  --m2-blue:#2563eb; --m2-green:#059669; --m2-red:#dc2626;
+  --m2-purple:#a855f7; --m2-bg:#f4f7fb;
+}
+.nav-item:has(#menuMini2) .nav-btn {
+  background:linear-gradient(180deg,var(--m2-navy2),var(--m2-navy)) !important;
+  color:#fff !important; border:1px solid #53647a !important;
+  border-radius:5px !important; font-size:10px !important; font-weight:800 !important;
+  padding:6px 9px !important; box-shadow:0 1px 2px #0f172a22;
+}
+#menuMini2 { border:1px solid var(--m2-border); border-radius:7px; box-shadow:0 8px 24px #17243a20; }
+#menuMini2 .dropdown-item { font-size:11px; padding:8px 10px; }
+.card:has(#tour1Input), .card:has(#tour2Input),
+.card:has(table), .card:has(textarea#tour1Input), .card:has(textarea#tour2Input) {
+  border:1px solid #d7e1ed !important; border-radius:8px !important;
+  background:#fff !important; box-shadow:0 1px 4px #18324d0c !important;
+}
+.card:has(#tour1Input) .card-title, .card:has(#tour2Input) .card-title,
+.card:has(table) .card-title { color:#1e3553; font-weight:900; letter-spacing:.15px; }
+.card:has(table) table {
+  width:100%; border-collapse:separate; border-spacing:0;
+  color:var(--m2-text); font-size:10px; background:#fff;
+}
+.card:has(table) table th {
+  background:#edf3f9; color:#31445d; font-weight:900; text-transform:none;
+  border:1px solid var(--m2-border); padding:5px 4px; white-space:normal;
+}
+.card:has(table) table td {
+  border:1px solid var(--m2-border); padding:4px 4px; text-align:center;
+  vertical-align:middle; background:#fff;
+}
+.card:has(table) table tbody tr:hover td { background:#f7faff; }
+.card:has(table) .table-responsive {
+  border:1px solid var(--m2-border); border-radius:5px; overflow-x:auto;
+  background:#fff; margin-bottom:7px;
+}
+.card:has(table) .table-responsive table { min-width:100%; }
+.card:has(table) .score-input {
+  width:25px !important; min-width:25px !important; height:22px !important;
+  padding:1px 2px !important; text-align:center !important;
+  border:2px solid #b45cff !important; border-radius:4px !important;
+  background:#fff !important; color:#27364a !important; font-weight:800 !important;
+  font-size:10px !important; box-shadow:inset 0 1px 2px #7c3aed12;
+}
+.card:has(table) input[type="text"], .card:has(table) input[type="number"],
+.card:has(table) select, .card:has(textarea) textarea {
+  border:1px solid #b9cadd; border-radius:4px; color:#26374c;
+  background:#fff; font-size:10px; padding:4px 5px; max-width:100%;
+}
+.card:has(table) input:focus, .card:has(table) select:focus,
+.card:has(textarea) textarea:focus {
+  outline:2px solid #bfdbfe; border-color:#3b82f6;
+}
+.card:has(table) .pair-badge {
+  display:inline-block; border-radius:20px; padding:2px 8px;
+  color:#fff !important; font-size:9px; line-height:1.25;
+  font-weight:900; white-space:nowrap; box-shadow:0 1px 2px #0f172a20;
+}
+.card:has(table) .badge-p0 { background:#e11d48 !important; }
+.card:has(table) .badge-p1 { background:#059669 !important; }
+.card:has(table) .badge-p2 { background:#d97706 !important; }
+.card:has(table) .badge-p3 { background:#7c3aed !important; }
+.card:has(table) .badge-p4 { background:#2563eb !important; }
+.card:has(table) .txt-win { color:#059669 !important; font-weight:900; }
+.card:has(table) .txt-lose { color:#dc2626 !important; font-weight:900; }
+.card:has(table) .total-summary-row td {
+  background:#f1f5f9 !important; font-weight:900; border-top:2px solid #9fb3c9;
+}
+.card:has(table) button {
+  border:1px solid #cbd5e1; border-radius:4px; background:#f8fafc;
+  padding:2px 5px; font-size:10px; cursor:pointer;
+}
+.card:has(table) button:hover { background:#eaf2fb; }
+.card:has(table) .card-header-flex { gap:8px; flex-wrap:wrap; }
+.card:has(table) h3 { letter-spacing:.2px; }
+.card:has(textarea) textarea { width:100%; min-height:80px; }
+.card:has(textarea) .btn-green {
+  background:#059669; color:white; border:0; border-radius:5px;
+  padding:7px 12px; font-size:10px; font-weight:800;
+}
+@media (max-width:640px) {
+  .card:has(table) table { font-size:9px; }
+  .card:has(table) table th, .card:has(table) table td { padding:3px 2px; }
+  .card:has(table) .score-input { width:23px !important; min-width:23px !important; }
+  .card:has(table) .pair-badge { font-size:8px; padding:2px 5px; }
+}
+</style>
+
 <!-- ==========================================================================
      COMPONENT: components/minigame2.html — MINIGAME 2: nút menu + giải đấu chia Bảng A,B + 2 giải bổ sung.
      Mỗi PART nằm giữa dòng chú thích "[PART: tên]" và dòng chú thích "[/PART]" (HTML được giữ nguyên từng ký tự).

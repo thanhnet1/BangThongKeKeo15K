@@ -8,7 +8,6 @@
     const COMPONENT_FILES = ['header', 'admin', 'autobackup', 'home', 'players', 'pickthu', 'setting', 'tonghop', 'minigame1', 'minigame2', 'common'];
     const COMPONENT_PARTS = {};   // 'home.day-tab' -> nội dung HTML
 
-    // Tải tất cả file component 1 lần khi khởi động, tách theo <!-- [PART: tên] -->
     async function loadComponents() {
       await Promise.all(COMPONENT_FILES.map(async (name) => {
         const res = await fetch('components/' + name + '.html', { cache: 'no-cache' });
@@ -20,7 +19,6 @@
       }));
     }
 
-    // Ghép 1 component: thay {{tên_slot}} bằng dữ liệu do main.js truyền vào
     function renderComponent(key, slots) {
       const tpl = COMPONENT_PARTS[key];
       if (tpl === undefined) {
@@ -31,7 +29,6 @@
         (slots && Object.prototype.hasOwnProperty.call(slots, slotName)) ? String(slots[slotName]) : match);
     }
 
-    // Hàm hỗ trợ tự động bọc thẻ màu sắc cho số Âm (Đỏ) và Dương (Xanh), in đậm chữ số trong bảng
     function formatMoneyOrScore(val) {
       const num = parseFloat(val);
       if (isNaN(num) || val === "" || val === null || val === undefined) return val || "";
@@ -45,7 +42,6 @@
       }
     }
 
-    // Hàm định dạng điểm số: nếu điểm bằng 0 thì hiển thị chữ HẦM màu đỏ
     function formatScoreDisplay(score) {
       if (score === 0 || score === "0" || score === 0) {
         return '<span class="text-red-600 font-bold">HẦM</span>';
@@ -67,9 +63,7 @@
         if (targetContainer) {
           try {
             const rendered = renderComponent(item.part);
-            if (rendered) {
-              targetContainer.innerHTML = rendered;
-            }
+            if (rendered) targetContainer.innerHTML = rendered;
           } catch (e) {
             console.debug(`Bỏ qua component nav: ${item.key}`);
           }
@@ -126,7 +120,7 @@
       if (document.getElementById("subLabelSub1")) document.getElementById("subLabelSub1").innerText = titlesConfig.subSub1;
       if (document.getElementById("subLabelSub2")) document.getElementById("subLabelSub2").innerText = titlesConfig.subSub2;
       if (document.getElementById("navLabelMini2")) document.getElementById("navLabelMini2").innerText = titlesConfig.navMini2;
-      if (document.getElementById("subLabelMini2")) document.getElementById("subLabelMini2").innerText = titlesConfig.subMini2;
+      if (document.getElementById("subLabelMini2")) document.getElementById("subLabelMini2").innerText = titlesConfig.subSub2;
       if (document.getElementById("subLabelTour1")) document.getElementById("subLabelTour1").innerText = titlesConfig.subTour1;
       if (document.getElementById("subLabelTour2")) document.getElementById("subLabelTour2").innerText = titlesConfig.subTour2;
     }
@@ -381,7 +375,7 @@
     let matchesData = {};
     let dateKeoMode = {}; 
     let paymentStatus = {};
-    const ABSENT_FINE_K = 30; // Mức phạt VĐV xin nghỉ KHÔNG PHÉP (đơn vị K)
+    const ABSENT_FINE_K = 30;
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-DATA] ▲▲▲ */
 /* ▼▼▼ KHỐI [HOME-NAV] · Trang chủ: tìm ngày gần nhất + nút HOME ▼▼▼ BẮT ĐẦU */
     function getClosestOrCurrentDate(dateArray) {
@@ -495,7 +489,7 @@
       return { winAmt, loseAmt };
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-KEO-HELPERS] ▲▲▲ */
-/* ▼▼▼ KHỐI [HOME-DAYTAB] · Bảng thống kê trận pick của ngày (Trang Chủ / từng ngày) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-DAYTAB] · Bảng thống kê trận pick của ngày ▼▼▼ BẮT ĐẦU */
     function renderSingleDayTab(container, dateStr) {
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
@@ -585,7 +579,7 @@
       renderSingleDaySummaryTable(dateStr, html, container);
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-DAYTAB] ▲▲▲ */
-/* ▼▼▼ KHỐI [HOME-ABSENT] · VĐV XIN NGHỈ: chọn VĐV nghỉ + Loại phạt tương ứng ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-ABSENT] · VĐV XIN NGHỈ ▼▼▼ BẮT ĐẦU */
     const ABSENT_COUNT_OPTIONS = [0, 1, 2, 3, 4, 5];
 
     function escAbsentAttr(str) {
@@ -730,7 +724,7 @@
       });
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-ABSENT] ▲▲▲ */
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Tự động đưa VĐV xin nghỉ vào bảng) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Cập nhật Note theo Trạng thái Checkbox Thực tế) ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
@@ -772,7 +766,6 @@
         const st = stats[v];
         const isAbsent = Object.prototype.hasOwnProperty.call(fineMap, v);
         
-        // VĐV xuất hiện ở Bảng tổng hợp khi có đấu trận HOẶC nằm trong danh sách VĐV xin nghỉ
         if (st && (st.played > 0 || isAbsent)) {
           const payKey = `${dateStr}_${v}`;
           const isPaid = paymentStatus[payKey] || false;
@@ -787,15 +780,42 @@
           if (st.played >= 4 && netTotal > 0) { bringBack = netTotal; sumBringBack += bringBack; }
           if (netTotal < 0) { sumAmThucTe += netTotal; if (isPaid) sumThucThu += Math.abs(netTotal); }
 
+          // --- LOGIC GÁN GHI CHÚ (NOTE) THEO YÊU CẦU ---
           let noteText = "";
+          let noteStyle = "";
+          let noteClass = "";
+
           if (isAbsent && st.played === 0) {
-            noteText = (fine < 0) ? `Nghỉ không phép (-${ABSENT_FINE_K}K)` : 'Nghỉ có phép (0K)';
+            if (fine < 0) {
+              noteText = isPaid ? "Đã nộp phạt" : `Nghỉ không phép (-${ABSENT_FINE_K}K)`;
+              noteStyle = isPaid ? "color:#16a34a; font-weight:bold;" : "color:#dc2626; font-weight:bold;";
+            } else {
+              noteText = "Nghỉ có phép (0K)";
+              noteStyle = "color:#64748b;";
+            }
           } else if (netTotal < 0) {
-            noteText = isPaid ? renderComponent('home.summary-span-1') : renderComponent('home.summary-span-2');
+            // Trường hợp Âm (Tiền phạt/thua): Chưa nộp (Đỏ) / Đã nộp (Xanh)
+            if (isPaid) {
+              noteText = "Đã nộp";
+              noteStyle = "color:#16a34a; font-weight:bold;";
+            } else {
+              noteText = "Chưa nộp";
+              noteStyle = "color:#dc2626; font-weight:bold;";
+            }
           } else if (netTotal > 0) {
-            noteText = isPaid ? renderComponent('home.summary-span-3') : renderComponent('home.summary-span-4');
-          } else if (isAbsent) {
-            noteText = renderComponent('home.summary-span-5');
+            // Trường hợp Dương (Thắng/quỹ): Chưa nhận quỹ (Xanh nhạt/đậm) / Đã nhận (Xanh lá)
+            if (isPaid) {
+              noteText = "Đã nhận";
+              noteStyle = "color:#16a34a; font-weight:bold;";
+            } else {
+              noteText = "Chưa nhận quỹ";
+              noteStyle = "color:#0284c7; font-weight:bold;";
+            }
+          } else {
+            if (isAbsent) {
+              noteText = "Nghỉ phép";
+              noteStyle = "color:#64748b;";
+            }
           }
 
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
@@ -813,7 +833,9 @@
             if_isPaid: (isPaid ? 'checked' : ''),
             payKey,
             if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'),
-            noteText
+            noteText,
+            noteStyle,
+            noteClass
           });
         }
       });
@@ -1158,12 +1180,12 @@
 /* ▲▲▲ KẾT THÚC KHỐI [TONGHOP-TAB] ▲▲▲ */
 
 /* ████████████████ MODULE MINIGAME · MINIGAME - DÙNG CHUNG ████████████████ */
-/* ▼▼▼ KHỐI [MINIGAME-COMMON-DATA] · Dữ liệu chung: nội dung thể lệ Game 1,2 + game đang sửa ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME-COMMON-DATA] · Dữ liệu chung ▼▼▼ BẮT ĐẦU */
     let miniGame1Content = "Lịch Thi Đấu Team A & Team B Xoay V vòng.";
     let miniGame2Content = "Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.";
     let activeGameEditing = 1;
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME-COMMON-DATA] ▲▲▲ */
-/* ▼▼▼ KHỐI [MINIGAME-COMMON-FUNCS] · Hộp thoại thể lệ + tính/chọn kèo dùng chung ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME-COMMON-FUNCS] · Hộp thoại thể lệ + kèo ▼▼▼ BẮT ĐẦU */
     function openGameModal(gameId) {
       closeAllDropdowns();
       activeGameEditing = gameId;
@@ -1207,7 +1229,7 @@
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME-COMMON-FUNCS] ▲▲▲ */
 
 /* ████████████████ MODULE MINIGAME1 · MINIGAME 1 ████████████████ */
-/* ▼▼▼ KHỐI [MINIGAME1-TEAM-DATA] · Team A,B: dữ liệu (đội, kèo, lịch mặc định) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME1-TEAM-DATA] ▼▼▼ BẮT ĐẦU */
     let mini1TeamA = ["Tiến Thọ", "Long Diễn", "Phú Mỗ", "Hà Giấy", "Tuấn La", "Châu Sĩ", "Vân Đình", "Cẩm Ly", "Minh Hạnh"];
     let mini1TeamB = ["Trí Đỏ", "Thành Sóc", "Dũng Ngạc", "Lợi Trí", "Điền Chèm", "Quỳnh Cool", "Hải Hà", "Minh Vượng"];
     let mini1KeoMode = "default";
@@ -1220,7 +1242,7 @@
       { id: 3, category: "Nam xoay vòng", a1: "Tuấn La", a2: "Châu Sĩ", scoreA: "6", scoreB: "11", b1: "Điền Chèm", b2: "Thành Sóc", customWin: 5, customLose: -15 }
     ];
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-TEAM-DATA] ▲▲▲ */
-/* ▼▼▼ KHỐI [MINIGAME1-TEAM-FUNCS] · Team A,B: thêm/xóa trận, VĐV, tỷ số, kèo, tích nộp ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME1-TEAM-FUNCS] ▼▼▼ BẮT ĐẦU */
     function toggleMini1Payment(payKey) {
       if (!isAdminVerified) {
         alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
@@ -1234,16 +1256,7 @@
     function addMini1Match() {
       const newId = miniGame1Matches.length + 1;
       miniGame1Matches.push({
-        id: newId,
-        category: "Trận tự chọn",
-        a1: "",
-        a2: "",
-        scoreA: "",
-        scoreB: "",
-        b1: "",
-        b2: "",
-        customWin: 5,
-        customLose: -15
+        id: newId, category: "Trận tự chọn", a1: "", a2: "", scoreA: "", scoreB: "", b1: "", b2: "", customWin: 5, customLose: -15
       });
       saveDataToFirestore();
       renderCurrentTab();
@@ -1355,23 +1368,17 @@
       }
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-TEAM-FUNCS] ▲▲▲ */
-/* ▼▼▼ KHỐI [MINIGAME1-TEAM-TAB] · Giao diện Lịch Thi Đấu Team A & B ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME1-TEAM-TAB] ▼▼▼ BẮT ĐẦU */
     function renderMiniGame1Tab(container) {
-      let winCountA = 0;
-      let winCountB = 0;
-      let totalScoreA = 0;
-      let totalScoreB = 0;
-      let matchesPlayedCount = 0;
+      let winCountA = 0, winCountB = 0, totalScoreA = 0, totalScoreB = 0, matchesPlayedCount = 0;
 
       miniGame1Matches.forEach(m => {
         let sA = parseInt(m.scoreA);
         let sB = parseInt(m.scoreB);
-
         if (!isNaN(sA) && !isNaN(sB)) {
           matchesPlayedCount++;
           totalScoreA += sA;
           totalScoreB += sB;
-
           if (sA > sB) winCountA++;
           else if (sB > sA) winCountB++;
         }
@@ -1399,13 +1406,11 @@
       miniGame1Matches.forEach(m => {
         let sA = parseInt(m.scoreA);
         let sB = parseInt(m.scoreB);
-
         let { winAmt, loseAmt } = getMiniKeoValues(mini1KeoMode, m);
 
         if (!isNaN(sA) && !isNaN(sB)) {
           let teamAPair = [m.a1, m.a2].filter(Boolean);
           let teamBPair = [m.b1, m.b2].filter(Boolean);
-
           let isHam = (sA === 0 || sB === 0);
           let effWin = isHam ? (winAmt > 0 ? winAmt * 2 : 0) : winAmt;
           let effLose = isHam ? loseAmt * 2 : loseAmt;
@@ -1414,7 +1419,7 @@
             teamAPair.forEach(v => { if (mini1Stats[v]) { mini1Stats[v].played++; mini1Stats[v].winK += effWin; mini1Stats[v].total += effWin; } });
             teamBPair.forEach(v => { if (mini1Stats[v]) { mini1Stats[v].played++; mini1Stats[v].loseK += effLose; mini1Stats[v].total += effLose; } });
           } else if (sB > sA) {
-            teamBPair.forEach(v => { if (mini1Stats[v]) { mini1Stats[v].played++; mini1Stats[v].winK += effWin; mini1Stats[v].total += effWin; } });
+            teamBPair.forEach(v => { if (mini1Stats[v]) { mini1Stats[v].played++; mini1Stats[v].loseK += effWin; mini1Stats[v].total += effWin; } });
             teamAPair.forEach(v => { if (mini1Stats[v]) { mini1Stats[v].played++; mini1Stats[v].loseK += effLose; mini1Stats[v].total += effLose; } });
           }
         }
@@ -1437,9 +1442,9 @@
 
           let noteText = "";
           if (st.total < 0) {
-            noteText = isPaid ? renderComponent('minigame1.team-tab-span-1') : renderComponent('minigame1.team-tab-span-2');
+            noteText = isPaid ? "Đã nộp" : "Chưa nộp";
           } else if (st.total > 0) {
-            noteText = isPaid ? renderComponent('minigame1.team-tab-span-3') : renderComponent('minigame1.team-tab-span-4');
+            noteText = isPaid ? "Đã nhận" : "Chưa nhận quỹ";
           }
 
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
@@ -1466,15 +1471,10 @@
       let quyCon1 = sumThucThu1 - Math.abs(btcThuVeCalculated1);
 
       let html = renderComponent('minigame1.team-tab', {
-        matchesPlayedCount,
-        totalMatches,
-        winCountA,
-        totalScoreA,
+        matchesPlayedCount, totalMatches, winCountA, totalScoreA,
         diffClass_totalScoreA: ((totalScoreA - totalScoreB) > 0 ? 'number-pos' : ((totalScoreA - totalScoreB) < 0 ? 'number-neg' : 'number-zero')),
         diffText_totalScoreA: ((totalScoreA - totalScoreB) > 0 ? `+${totalScoreA - totalScoreB}` : (totalScoreA - totalScoreB)),
-        statusA,
-        winCountB,
-        totalScoreB,
+        statusA, winCountB, totalScoreB,
         diffClass_totalScoreB: ((totalScoreB - totalScoreA) > 0 ? 'number-pos' : ((totalScoreB - totalScoreA) < 0 ? 'number-neg' : 'number-zero')),
         diffText_totalScoreB: ((totalScoreB - totalScoreA) > 0 ? `+${totalScoreB - totalScoreA}` : (totalScoreB - totalScoreA)),
         statusB,
@@ -1482,23 +1482,13 @@
         mini1TeamA_rows: (mini1TeamA.map((v, index) => {
           const idx = vdvs.indexOf(v);
           const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#15803d';
-          return renderComponent('minigame1.team-tab-div-1', {
-            color,
-            index_plus1: (index + 1),
-            v,
-            index
-          });
+          return renderComponent('minigame1.team-tab-div-1', { color, index_plus1: (index + 1), v, index });
         }).join('')),
         mini1TeamB_length: mini1TeamB.length,
         mini1TeamB_rows: (mini1TeamB.map((v, index) => {
           const idx = vdvs.indexOf(v);
           const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
-          return renderComponent('minigame1.team-tab-div-2', {
-            color,
-            index_plus1: (index + 1),
-            v,
-            index
-          });
+          return renderComponent('minigame1.team-tab-div-2', { color, index_plus1: (index + 1), v, index });
         }).join('')),
         titlesConfig_subMini1: titlesConfig.subMini1,
         renderKeoSelectDropdown: (renderKeoSelectDropdown(mini1KeoMode, 'changeMini1KeoMode')),
@@ -1524,29 +1514,19 @@
           let customKeoCell1 = "";
           if (mini1KeoMode === 'free') {
             customKeoCell1 = renderComponent('minigame1.team-tab-td-1', {
-              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
-              idx,
+              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5), idx,
               m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
             });
           }
 
           return renderComponent('minigame1.team-tab-tr-2', {
-            idx,
-            m_id: m.id,
-            m_category: m.category,
-            colorA1,
+            idx, m_id: m.id, m_category: m.category, colorA1,
             generateVdvOptionsHtml_m_a1_mini1TeamA: (generateVdvOptionsHtml(m.a1, mini1TeamA)),
-            colorA2,
-            generateVdvOptionsHtml_m_a2_mini1TeamA: (generateVdvOptionsHtml(m.a2, mini1TeamA)),
-            m_scoreA: (m.scoreA ?? ''),
-            m_scoreB: (m.scoreB ?? ''),
-            colorB1,
+            colorA2, generateVdvOptionsHtml_m_a2_mini1TeamA: (generateVdvOptionsHtml(m.a2, mini1TeamA)),
+            m_scoreA: (m.scoreA ?? ''), m_scoreB: (m.scoreB ?? ''), colorB1,
             generateVdvOptionsHtml_m_b1_mini1TeamB: (generateVdvOptionsHtml(m.b1, mini1TeamB)),
-            colorB2,
-            generateVdvOptionsHtml_m_b2_mini1TeamB: (generateVdvOptionsHtml(m.b2, mini1TeamB)),
-            customKeoCell1,
-            matchStatusHtml,
-            resText
+            colorB2, generateVdvOptionsHtml_m_b2_mini1TeamB: (generateVdvOptionsHtml(m.b2, mini1TeamB)),
+            customKeoCell1, matchStatusHtml, resText
           });
         }).join('') : ''),
         summaryRowsHtml1,
@@ -1559,14 +1539,14 @@
       container.innerHTML = html;
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-TEAM-TAB] ▲▲▲ */
-/* ▼▼▼ KHỐI [MINIGAME1-SUB1-DATA] · Minigame 21 trận: dữ liệu (đội, kèo, lịch) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME1-SUB1-DATA] ▼▼▼ BẮT ĐẦU */
     let mini1Sub1TeamA = ["Tuấn La", "Phú Mỗ", "Tiến Thọ", "Châu Sĩ", "Long Diễn", "Vân Đình", "Minh Hạnh", "Cẩm Ly"];
     let mini1Sub1TeamB = ["Thành Sóc", "Trường Giang", "Trí Đỏ", "Lợi Trí", "Thanh Đàm", "Gà Tre", "Minh Vượng", "Hải Hà"];
     let mini1Sub1KeoMode = "default";
     let mini1Sub1Payment = {};
     let miniGame1Sub1Matches = [];
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB1-DATA] ▲▲▲ */
-/* ▼▼▼ KHỐI [MINIGAME1-SUB1-FUNCS] · Minigame 21 trận: tạo lịch, VĐV, kèo, tích nộp ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME1-SUB1-FUNCS] ▼▼▼ BẮT ĐẦU */
     function generateDynamicSub1Matches() {
       let malesA = mini1Sub1TeamA.filter(name => {
         let p = players.find(x => x.name === name);
@@ -1727,7 +1707,7 @@
       renderCurrentTab();
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB1-FUNCS] ▲▲▲ */
-/* ▼▼▼ KHỐI [MINIGAME1-SUB1-TAB] · Giao diện Minigame 21 trận ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME1-SUB1-TAB] ▼▼▼ BẮT ĐẦU */
     function renderMiniGame1Sub1Tab(container) {
       generateDynamicSub1Matches();
 
@@ -1767,13 +1747,11 @@
       miniGame1Sub1Matches.forEach(m => {
         let sA = parseInt(m.scoreA);
         let sB = parseInt(m.scoreB);
-
         let { winAmt, loseAmt } = getMiniKeoValues(mini1Sub1KeoMode, m);
 
         if (!isNaN(sA) && !isNaN(sB)) {
           let teamAPair = [m.a1, m.a2].filter(Boolean);
           let teamBPair = [m.b1, m.b2].filter(Boolean);
-
           let isHam = (sA === 0 || sB === 0);
           let effWin = isHam ? (winAmt > 0 ? winAmt * 2 : 0) : winAmt;
           let effLose = isHam ? loseAmt * 2 : loseAmt;
@@ -1805,25 +1783,21 @@
 
           let noteText = "";
           if (st.total < 0) {
-            noteText = isPaid ? renderComponent('minigame1.sub1-tab-span-1') : renderComponent('minigame1.sub1-tab-span-2');
+            noteText = isPaid ? "Đã nộp" : "Chưa nộp";
           } else if (st.total > 0) {
-            noteText = isPaid ? renderComponent('minigame1.sub1-tab-span-3') : renderComponent('minigame1.sub1-tab-span-4');
+            noteText = isPaid ? "Đã nhận" : "Chưa nhận quỹ";
           }
 
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
 
           summaryRowsHtml += renderComponent('minigame1.sub1-tab-tr-1', {
-            vColor,
-            v,
-            st_played: st.played,
+            vColor, v, st_played: st.played,
             if_st_winK_0: (st.winK > 0 ? `+${st.winK}` : ''),
             if_st_loseK_0: (st.loseK < 0 ? st.loseK : ''),
             if_bringBack_0: (bringBack > 0 ? `+${bringBack}` : ''),
             if_st_total_0_class: (st.total < 0 ? 'number-neg' : (st.total > 0 ? 'number-pos' : 'number-zero')),
             st_total: (st.total > 0 ? `+${st.total}` : st.total),
-            checkboxClass,
-            if_isPaid: (isPaid ? 'checked' : ''),
-            payKey,
+            checkboxClass, if_isPaid: (isPaid ? 'checked' : ''), payKey,
             if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'),
             noteText
           });
@@ -1835,15 +1809,10 @@
 
       let html = renderComponent('minigame1.sub1-tab', {
         titlesConfig_subSub1: titlesConfig.subSub1,
-        playedCount,
-        totalM,
-        winA,
-        scoreAAll,
+        playedCount, totalM, winA, scoreAAll,
         diffClass_scoreAAll: ((scoreAAll - scoreBAll) > 0 ? 'number-pos' : ((scoreAAll - scoreBAll) < 0 ? 'number-neg' : 'number-zero')),
         diffText_scoreAAll: ((scoreAAll - scoreBAll) > 0 ? `+${scoreAAll - scoreBAll}` : (scoreAAll - scoreBAll)),
-        statusA,
-        winB,
-        scoreBAll,
+        statusA, winB, scoreBAll,
         diffClass_scoreBAll: ((scoreBAll - scoreAAll) > 0 ? 'number-pos' : ((scoreBAll - scoreAAll) < 0 ? 'number-neg' : 'number-zero')),
         diffText_scoreBAll: ((scoreBAll - scoreAAll) > 0 ? `+${scoreBAll - scoreAAll}` : (scoreBAll - scoreAAll)),
         statusB,
@@ -1851,23 +1820,13 @@
         mini1Sub1TeamA_rows: (mini1Sub1TeamA.map((v, index) => {
           const idx = vdvs.indexOf(v);
           const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#15803d';
-          return renderComponent('minigame1.sub1-tab-div-1', {
-            color,
-            index_plus1: (index + 1),
-            v,
-            index
-          });
+          return renderComponent('minigame1.sub1-tab-div-1', { color, index_plus1: (index + 1), v, index });
         }).join('')),
         mini1Sub1TeamB_length: mini1Sub1TeamB.length,
         mini1Sub1TeamB_rows: (mini1Sub1TeamB.map((v, index) => {
           const idx = vdvs.indexOf(v);
           const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
-          return renderComponent('minigame1.sub1-tab-div-2', {
-            color,
-            index_plus1: (index + 1),
-            v,
-            index
-          });
+          return renderComponent('minigame1.sub1-tab-div-2', { color, index_plus1: (index + 1), v, index });
         }).join('')),
         renderKeoSelectDropdown: (renderKeoSelectDropdown(mini1Sub1KeoMode, 'changeSub1KeoMode')),
         freeKeoHeader: (mini1Sub1KeoMode === 'free' ? '<th style="width:100px;" class="th-money">MỆNH GIÁ</th>' : ''),
@@ -1892,29 +1851,19 @@
           let customKeoCell = "";
           if (mini1Sub1KeoMode === 'free') {
             customKeoCell = renderComponent('minigame1.sub1-tab-td-1', {
-              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
-              idx,
+              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5), idx,
               m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
             });
           }
 
           return renderComponent('minigame1.sub1-tab-tr-2', {
-            m_id: m.id,
-            m_category: m.category,
-            colorA1,
-            idx,
+            m_id: m.id, m_category: m.category, colorA1, idx,
             generateVdvOptionsHtml_m_a1_mini1Sub1TeamA: (generateVdvOptionsHtml(m.a1, mini1Sub1TeamA)),
-            colorA2,
-            generateVdvOptionsHtml_m_a2_mini1Sub1TeamA: (generateVdvOptionsHtml(m.a2, mini1Sub1TeamA)),
-            m_scoreA: (m.scoreA ?? ''),
-            m_scoreB: (m.scoreB ?? ''),
-            colorB1,
+            colorA2, generateVdvOptionsHtml_m_a2_mini1Sub1TeamA: (generateVdvOptionsHtml(m.a2, mini1Sub1TeamA)),
+            m_scoreA: (m.scoreA ?? ''), m_scoreB: (m.scoreB ?? ''), colorB1,
             generateVdvOptionsHtml_m_b1_mini1Sub1TeamB: (generateVdvOptionsHtml(m.b1, mini1Sub1TeamB)),
-            colorB2,
-            generateVdvOptionsHtml_m_b2_mini1Sub1TeamB: (generateVdvOptionsHtml(m.b2, mini1Sub1TeamB)),
-            customKeoCell,
-            matchStatusHtml,
-            resText
+            colorB2, generateVdvOptionsHtml_m_b2_mini1Sub1TeamB: (generateVdvOptionsHtml(m.b2, mini1Sub1TeamB)),
+            customKeoCell, matchStatusHtml, resText
           });
         }).join('') : ''),
         summaryRowsHtml,
@@ -1927,7 +1876,7 @@
       container.innerHTML = html;
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB1-TAB] ▲▲▲ */
-/* ▼▼▼ KHỐI [MINIGAME1-SUB2-DATA] · Minigame 17 trận: dữ liệu (lịch mẫu 20/10, đội, kèo) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME1-SUB2-DATA] ▼▼▼ BẮT ĐẦU */
     const minigame2010Matches = [
       { id: 1, code: "M01", teamAKey: "nam_1", teamBKey: "nam_2", type: "Nam - Nam", group: "Nam Cao" },
       { id: 2, code: "M02", teamAKey: "nu_1", teamBKey: "nu_2", type: "Nữ - Nữ (Đơn)", group: "Nữ Đơn" },
@@ -1954,7 +1903,7 @@
     let mini1Sub2Payment = {};
     let miniGame1Sub2Matches = [];
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB2-DATA] ▲▲▲ */
-/* ▼▼▼ KHỐI [MINIGAME1-SUB2-FUNCS] · Minigame 17 trận: đội hình, tạo lịch, trận, VĐV, kèo, tích nộp ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME1-SUB2-FUNCS] ▼▼▼ BẮT ĐẦU */
     window.getCurrentRoster = function() {
       let malesA = mini1Sub2TeamA.filter(name => {
         let p = players.find(x => x.name === name);
@@ -1974,35 +1923,18 @@
       while (femalesB.length < 3) femalesB.push("");
 
       return {
-        "nam_1": malesA[0],
-        "nam_2": malesA[1],
-        "nam_3": malesA[2],
-        "nam_4": malesA[3],
-        "nam_5": malesA[4],
-        "nu_1": femalesA[0],
-        "nu_2": femalesA[1],
-        "nu_1_doi": femalesB[0] || femalesA[0],
-        "nu_2_doi": femalesB[1] || femalesA[1]
+        "nam_1": malesA[0], "nam_2": malesA[1], "nam_3": malesA[2], "nam_4": malesA[3], "nam_5": malesA[4],
+        "nu_1": femalesA[0], "nu_2": femalesA[1], "nu_1_doi": femalesB[0] || femalesA[0], "nu_2_doi": femalesB[1] || femalesA[1]
       };
     };
 
     function generateDynamicSub2Matches() {
       const currentRoster = window.getCurrentRoster ? window.getCurrentRoster() : {};
-
       if (!miniGame1Sub2Matches || miniGame1Sub2Matches.length === 0) {
         miniGame1Sub2Matches = minigame2010Matches.map((match, idx) => ({
-          id: match.id,
-          code: match.code,
-          category: match.type,
-          group: match.group,
-          a1: currentRoster[match.teamAKey] || "",
-          a2: "",
-          scoreA: "",
-          scoreB: "",
-          b1: currentRoster[match.teamBKey] || "",
-          b2: "",
-          customWin: 5,
-          customLose: -15
+          id: match.id, code: match.code, category: match.type, group: match.group,
+          a1: currentRoster[match.teamAKey] || "", a2: "", scoreA: "", scoreB: "",
+          b1: currentRoster[match.teamBKey] || "", b2: "", customWin: 5, customLose: -15
         }));
       }
     }
@@ -2034,16 +1966,7 @@
     function addSub2Match() {
       const newId = miniGame1Sub2Matches.length + 1;
       miniGame1Sub2Matches.push({
-        id: newId,
-        category: "Đôi Nam Nữ",
-        a1: "",
-        a2: "",
-        scoreA: "",
-        scoreB: "",
-        b1: "",
-        b2: "",
-        customWin: 5,
-        customLose: -15
+        id: newId, category: "Đôi Nam Nữ", a1: "", a2: "", scoreA: "", scoreB: "", b1: "", b2: "", customWin: 5, customLose: -15
       });
       saveDataToFirestore();
       renderCurrentTab();
@@ -2129,7 +2052,7 @@
       renderCurrentTab();
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB2-FUNCS] ▲▲▲ */
-/* ▼▼▼ KHỐI [MINIGAME1-SUB2-TAB] · Giao diện Minigame 17 trận ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME1-SUB2-TAB] ▼▼▼ BẮT ĐẦU */
     function renderMiniGame1Sub2Tab(container) {
       generateDynamicSub2Matches();
 
@@ -2169,13 +2092,11 @@
       miniGame1Sub2Matches.forEach(m => {
         let sA = parseInt(m.scoreA);
         let sB = parseInt(m.scoreB);
-
         let { winAmt, loseAmt } = getMiniKeoValues(mini1Sub2KeoMode, m);
 
         if (!isNaN(sA) && !isNaN(sB)) {
           let teamAPair = [m.a1, m.a2].filter(Boolean);
           let teamBPair = [m.b1, m.b2].filter(Boolean);
-
           let isHam = (sA === 0 || sB === 0);
           let effWin = isHam ? (winAmt > 0 ? winAmt * 2 : 0) : winAmt;
           let effLose = isHam ? loseAmt * 2 : loseAmt;
@@ -2207,25 +2128,21 @@
 
           let noteText = "";
           if (st.total < 0) {
-            noteText = isPaid ? renderComponent('minigame1.sub2-tab-span-1') : renderComponent('minigame1.sub2-tab-span-2');
+            noteText = isPaid ? "Đã nộp" : "Chưa nộp";
           } else if (st.total > 0) {
-            noteText = isPaid ? renderComponent('minigame1.sub2-tab-span-3') : renderComponent('minigame1.sub2-tab-span-4');
+            noteText = isPaid ? "Đã nhận" : "Chưa nhận quỹ";
           }
 
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
 
           summaryRowsHtml2 += renderComponent('minigame1.sub2-tab-tr-1', {
-            vColor,
-            v,
-            st_played: st.played,
+            vColor, v, st_played: st.played,
             if_st_winK_0: (st.winK > 0 ? `+${st.winK}` : ''),
             if_st_loseK_0: (st.loseK < 0 ? st.loseK : ''),
             if_bringBack_0: (bringBack > 0 ? `+${bringBack}` : ''),
             if_st_total_0_class: (st.total < 0 ? 'number-neg' : (st.total > 0 ? 'number-pos' : 'number-zero')),
             st_total: (st.total > 0 ? `+${st.total}` : st.total),
-            checkboxClass,
-            if_isPaid: (isPaid ? 'checked' : ''),
-            payKey,
+            checkboxClass, if_isPaid: (isPaid ? 'checked' : ''), payKey,
             if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'),
             noteText
           });
@@ -2237,15 +2154,10 @@
 
       let html = renderComponent('minigame1.sub2-tab', {
         titlesConfig_subSub2: titlesConfig.subSub2,
-        playedCount2,
-        totalM2,
-        winA2,
-        scoreAAll2,
+        playedCount2, totalM2, winA2, scoreAAll2,
         diffClass_scoreAAll2: ((scoreAAll2 - scoreBAll2) > 0 ? 'number-pos' : ((scoreAAll2 - scoreBAll2) < 0 ? 'number-neg' : 'number-zero')),
         diffText_scoreAAll2: ((scoreAAll2 - scoreBAll2) > 0 ? `+${scoreAAll2 - scoreBAll2}` : (scoreAAll2 - scoreBAll2)),
-        statusA2,
-        winB2,
-        scoreBAll2,
+        statusA2, winB2, scoreBAll2,
         diffClass_scoreBAll2: ((scoreBAll2 - scoreAAll2) > 0 ? 'number-pos' : ((scoreBAll2 - scoreAAll2) < 0 ? 'number-neg' : 'number-zero')),
         diffText_scoreBAll2: ((scoreBAll2 - scoreAAll2) > 0 ? `+${scoreBAll2 - scoreAAll2}` : (scoreBAll2 - scoreAAll2)),
         statusB2,
@@ -2253,23 +2165,13 @@
         mini1Sub2TeamA_rows: (mini1Sub2TeamA.map((v, index) => {
           const idx = vdvs.indexOf(v);
           const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#15803d';
-          return renderComponent('minigame1.sub2-tab-div-1', {
-            color,
-            index_plus1: (index + 1),
-            v,
-            index
-          });
+          return renderComponent('minigame1.sub2-tab-div-1', { color, index_plus1: (index + 1), v, index });
         }).join('')),
         mini1Sub2TeamB_length: mini1Sub2TeamB.length,
         mini1Sub2TeamB_rows: (mini1Sub2TeamB.map((v, index) => {
           const idx = vdvs.indexOf(v);
           const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : '#0369a1';
-          return renderComponent('minigame1.sub2-tab-div-2', {
-            color,
-            index_plus1: (index + 1),
-            v,
-            index
-          });
+          return renderComponent('minigame1.sub2-tab-div-2', { color, index_plus1: (index + 1), v, index });
         }).join('')),
         renderKeoSelectDropdown: (renderKeoSelectDropdown(mini1Sub2KeoMode, 'changeSub2KeoMode')),
         freeKeoHeader: (mini1Sub2KeoMode === 'free' ? '<th style="width:100px;" class="th-money">MỆNH GIÁ</th>' : ''),
@@ -2294,29 +2196,19 @@
           let customKeoCell = "";
           if (mini1Sub2KeoMode === 'free') {
             customKeoCell = renderComponent('minigame1.sub2-tab-td-1', {
-              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
-              idx,
+              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5), idx,
               m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
             });
           }
 
           return renderComponent('minigame1.sub2-tab-tr-2', {
-            idx,
-            m_id: m.id,
-            m_category: m.category,
-            colorA1,
+            idx, m_id: m.id, m_category: m.category, colorA1,
             generateVdvOptionsHtml_m_a1_mini1Sub2TeamA: (generateVdvOptionsHtml(m.a1, mini1Sub2TeamA)),
-            colorA2,
-            generateVdvOptionsHtml_m_a2_mini1Sub2TeamA: (generateVdvOptionsHtml(m.a2, mini1Sub2TeamA)),
-            m_scoreA: (m.scoreA ?? ''),
-            m_scoreB: (m.scoreB ?? ''),
-            colorB1,
+            colorA2, generateVdvOptionsHtml_m_a2_mini1Sub2TeamA: (generateVdvOptionsHtml(m.a2, mini1Sub2TeamA)),
+            m_scoreA: (m.scoreA ?? ''), m_scoreB: (m.scoreB ?? ''), colorB1,
             generateVdvOptionsHtml_m_b1_mini1Sub2TeamB: (generateVdvOptionsHtml(m.b1, mini1Sub2TeamB)),
-            colorB2,
-            generateVdvOptionsHtml_m_b2_mini1Sub2TeamB: (generateVdvOptionsHtml(m.b2, mini1Sub2TeamB)),
-            customKeoCell,
-            matchStatusHtml,
-            resText
+            colorB2, generateVdvOptionsHtml_m_b2_mini1Sub2TeamB: (generateVdvOptionsHtml(m.b2, mini1Sub2TeamB)),
+            customKeoCell, matchStatusHtml, resText
           });
         }).join('') : ''),
         summaryRowsHtml2,
@@ -2331,7 +2223,7 @@
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB2-TAB] ▲▲▲ */
 
 /* ████████████████ MODULE MINIGAME2 · MINIGAME 2 ████████████████ */
-/* ▼▼▼ KHỐI [MINIGAME2-DATA] · Giải chia Bảng A,B: dữ liệu (cặp, lịch, knockout, kèo) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME2-DATA] ▼▼▼ BẮT ĐẦU */
     let mini2PairsA = [];
     let mini2PairsB = [];
     let mini2MatchesA = [];
@@ -2341,16 +2233,14 @@
       bkc2: { p1: "Nhất B", p2: "Nhì A", s1: "", s2: "" },
       rank34: { p1: "Thua BK1", p2: "Thua BK2", s1: "", s2: "" },
       final: { p1: "Thắng BK1", p2: "Thắng BK2", s1: "", s2: "" },
-      champion: "",
-      runnerUp: "",
-      thirdPlace: ""
+      champion: "", runnerUp: "", thirdPlace: ""
     };
     let mini2Tour1Content = "Nội dung chi tiết và lịch thi đấu của Giải Đấu Bổ Sung 1.";
     let mini2Tour2Content = "Nội dung chi tiết và lịch thi đấu của Giải Đấu Bổ Sung 2.";
     let mini2KeoMode = "default";
     let mini2Payment = {};
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-DATA] ▲▲▲ */
-/* ▼▼▼ KHỐI [MINIGAME2-FUNCS] · Giải chia Bảng A,B: lịch vòng tròn, cặp, tỷ số, kèo, xếp hạng, tích nộp ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME2-FUNCS] ▼▼▼ BẮT ĐẦU */
     function toggleMini2Payment(payKey) {
       if (!isAdminVerified) {
         alert("🔒 Tính năng này đang bị khóa. Vui lòng bấm nút 'Đăng Nhập Admin' ở góc trên để mở khóa.");
@@ -2367,15 +2257,7 @@
       let matchId = 1;
       for (let i = 0; i < pairs.length; i++) {
         for (let j = i + 1; j < pairs.length; j++) {
-          matches.push({
-            id: matchId++,
-            pair1Index: i,
-            pair2Index: j,
-            score1: "",
-            score2: "",
-            customWin: 5,
-            customLose: -15
-          });
+          matches.push({ id: matchId++, pair1Index: i, pair2Index: j, score1: "", score2: "", customWin: 5, customLose: -15 });
         }
       }
       if (group === 'A') mini2MatchesA = matches;
@@ -2467,19 +2349,9 @@
     }
 
     function computeGroupStandings(pairs, matches) {
-      let stats = pairs.map((p, idx) => ({
-        index: idx,
-        name: p.name,
-        points: 0,
-        scoreFor: 0,
-        scoreAgainst: 0,
-        diff: 0
-      }));
-
+      let stats = pairs.map((p, idx) => ({ index: idx, name: p.name, points: 0, scoreFor: 0, scoreAgainst: 0, diff: 0 }));
       let headToHead = {};
-      for (let i = 0; i < pairs.length; i++) {
-        headToHead[i] = {};
-      }
+      for (let i = 0; i < pairs.length; i++) { headToHead[i] = {}; }
 
       matches.forEach(m => {
         let s1 = parseInt(m.score1);
@@ -2489,28 +2361,21 @@
           let idx2 = m.pair2Index;
 
           if (stats[idx1] && stats[idx2]) {
-            stats[idx1].scoreFor += s1;
-            stats[idx1].scoreAgainst += s2;
-            stats[idx2].scoreFor += s2;
-            stats[idx2].scoreAgainst += s1;
+            stats[idx1].scoreFor += s1; stats[idx1].scoreAgainst += s2;
+            stats[idx2].scoreFor += s2; stats[idx2].scoreAgainst += s1;
 
             if (s1 > s2) {
               stats[idx1].points += 1;
-              headToHead[idx1][idx2] = 1;
-              headToHead[idx2][idx1] = -1;
+              headToHead[idx1][idx2] = 1; headToHead[idx2][idx1] = -1;
             } else if (s2 > s1) {
               stats[idx2].points += 1;
-              headToHead[idx2][idx1] = 1;
-              headToHead[idx1][idx2] = -1;
+              headToHead[idx2][idx1] = 1; headToHead[idx1][idx2] = -1;
             }
           }
         }
       });
 
-      stats.forEach(s => {
-        s.diff = s.scoreFor - s.scoreAgainst;
-      });
-
+      stats.forEach(s => { s.diff = s.scoreFor - s.scoreAgainst; });
       stats.sort((a, b) => {
         if (b.points !== a.points) return b.points - a.points;
         if (b.diff !== a.diff) return b.diff - a.diff;
@@ -2523,11 +2388,10 @@
       return stats;
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-FUNCS] ▲▲▲ */
-/* ▼▼▼ KHỐI [MINIGAME2-TOUR] · Giải đấu bổ sung 1 & 2 ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME2-TOUR] ▼▼▼ BẮT ĐẦU */
     function renderMiniGame2Tour1Tab(container) {
       container.innerHTML = renderComponent('minigame2.tour1-tab', {
-        titlesConfig_subTour1: titlesConfig.subTour1,
-        mini2Tour1Content
+        titlesConfig_subTour1: titlesConfig.subTour1, mini2Tour1Content
       });
     }
 
@@ -2541,8 +2405,7 @@
 
     function renderMiniGame2Tour2Tab(container) {
       container.innerHTML = renderComponent('minigame2.tour2-tab', {
-        titlesConfig_subTour2: titlesConfig.subTour2,
-        mini2Tour2Content
+        titlesConfig_subTour2: titlesConfig.subTour2, mini2Tour2Content
       });
     }
 
@@ -2554,7 +2417,7 @@
       renderCurrentTab();
     }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-TOUR] ▲▲▲ */
-/* ▼▼▼ KHỐI [MINIGAME2-TAB] · Giao diện Mini Game 2 (chia Bảng A,B + bảng tổng hợp kèo) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [MINIGAME2-TAB] ▼▼▼ BẮT ĐẦU */
     function renderMiniGame2Tab(container) {
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
       let standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
@@ -2587,23 +2450,14 @@
 
           let team1Members = p1Obj.name.split('-').map(x => x.trim()).filter(x => x && x.toLowerCase() !== 'tự do');
           let team2Members = p2Obj.name.split('-').map(x => x.trim()).filter(x => x && x.toLowerCase() !== 'tự do');
-
           let { winAmt, loseAmt } = getMiniKeoValues(mini2KeoMode, m);
 
           if (s1 > s2) {
-            team1Members.forEach(ind => {
-              if (mini2Stats[ind]) { mini2Stats[ind].played++; mini2Stats[ind].winK += winAmt; mini2Stats[ind].total += winAmt; }
-            });
-            team2Members.forEach(ind => {
-              if (mini2Stats[ind]) { mini2Stats[ind].played++; mini2Stats[ind].loseK += loseAmt; mini2Stats[ind].total += loseAmt; }
-            });
+            team1Members.forEach(ind => { if (mini2Stats[ind]) { mini2Stats[ind].played++; mini2Stats[ind].winK += winAmt; mini2Stats[ind].total += winAmt; } });
+            team2Members.forEach(ind => { if (mini2Stats[ind]) { mini2Stats[ind].played++; mini2Stats[ind].loseK += loseAmt; mini2Stats[ind].total += loseAmt; } });
           } else if (s2 > s1) {
-            team2Members.forEach(ind => {
-              if (mini2Stats[ind]) { mini2Stats[ind].played++; mini2Stats[ind].winK += winAmt; mini2Stats[ind].total += winAmt; }
-            });
-            team1Members.forEach(ind => {
-              if (mini2Stats[ind]) { mini2Stats[ind].played++; mini2Stats[ind].loseK += loseAmt; mini2Stats[ind].total += loseAmt; }
-            });
+            team2Members.forEach(ind => { if (mini2Stats[ind]) { mini2Stats[ind].played++; mini2Stats[ind].winK += winAmt; mini2Stats[ind].total += winAmt; } });
+            team1Members.forEach(ind => { if (mini2Stats[ind]) { mini2Stats[ind].played++; mini2Stats[ind].loseK += loseAmt; mini2Stats[ind].total += loseAmt; } });
           }
         }
       };
@@ -2628,25 +2482,21 @@
 
           let noteText = "";
           if (st.total < 0) {
-            noteText = isPaid ? renderComponent('minigame2.tab-span-1') : renderComponent('minigame2.tab-span-2');
+            noteText = isPaid ? "Đã nộp" : "Chưa nộp";
           } else if (st.total > 0) {
-            noteText = isPaid ? renderComponent('minigame2.tab-span-3') : renderComponent('minigame2.tab-span-4');
+            noteText = isPaid ? "Đã nhận" : "Chưa nhận quỹ";
           }
 
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
 
           summaryRowsHtml2 += renderComponent('minigame2.tab-tr-1', {
-            indColor,
-            indName,
-            st_played: st.played,
+            indColor, indName, st_played: st.played,
             if_st_winK_0: (st.winK > 0 ? `+${st.winK}` : ''),
             if_st_loseK_0: (st.loseK < 0 ? st.loseK : ''),
             if_bringBack_0: (bringBack > 0 ? `+${bringBack}` : ''),
             if_st_total_0_class: (st.total < 0 ? 'number-neg' : (st.total > 0 ? 'number-pos' : 'number-zero')),
             st_total: (st.total > 0 ? `+${st.total}` : st.total),
-            checkboxClass,
-            if_isPaid: (isPaid ? 'checked' : ''),
-            payKey,
+            checkboxClass, if_isPaid: (isPaid ? 'checked' : ''), payKey,
             if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'),
             noteText
           });
@@ -2662,13 +2512,9 @@
         selected_mini2PairsA_length_4: (mini2PairsA.length === 4 ? 'selected' : ''),
         selected_mini2PairsA_length_5: (mini2PairsA.length === 5 ? 'selected' : ''),
         standingsA_rows: (standingsA.map((st, i) => renderComponent('minigame2.tab-tr-2', {
-          i_plus1: (i + 1),
-          st_index_mod5: (st.index % 5),
-          st_name: st.name,
-          st_points: st.points,
+          i_plus1: (i + 1), st_index_mod5: (st.index % 5), st_name: st.name, st_points: st.points,
           if_st_diff_0_color: (st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')),
-          if_st_diff_0: (st.diff > 0 ? `+${st.diff}` : st.diff),
-          st_index: st.index
+          if_st_diff_0: (st.diff > 0 ? `+${st.diff}` : st.diff), st_index: st.index
         })).join('')),
         mini2KeoMode_colspan: (mini2KeoMode === 'free' ? 5 : 4),
         freeKeoHeader: (mini2KeoMode === 'free' ? '<th style="width:110px;" class="th-money">MỆNH GIÁ</th>' : ''),
@@ -2676,23 +2522,18 @@
           let customKeoA = "";
           if (mini2KeoMode === 'free') {
             customKeoA = renderComponent('minigame2.tab-td-1', {
-              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
-              idx,
+              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5), idx,
               m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
             });
           }
           return renderComponent('minigame2.tab-tr-3', {
             m_id: m.id,
             if_mini2PairsA_m_pair1Index: (mini2PairsA[m.pair1Index] ? renderComponent('minigame2.tab-span-5', {
-              m_pair1Index_mod5: (m.pair1Index % 5),
-              mini2PairsA_m_pair1Index_name: (mini2PairsA[m.pair1Index].name)
+              m_pair1Index_mod5: (m.pair1Index % 5), mini2PairsA_m_pair1Index_name: (mini2PairsA[m.pair1Index].name)
             }) : ''),
-            m_score1: (m.score1 ?? ''),
-            idx,
-            m_score2: (m.score2 ?? ''),
+            m_score1: (m.score1 ?? ''), idx, m_score2: (m.score2 ?? ''),
             if_mini2PairsA_m_pair2Index: (mini2PairsA[m.pair2Index] ? renderComponent('minigame2.tab-span-6', {
-              m_pair2Index_mod5: (m.pair2Index % 5),
-              mini2PairsA_m_pair2Index_name: (mini2PairsA[m.pair2Index].name)
+              m_pair2Index_mod5: (m.pair2Index % 5), mini2PairsA_m_pair2Index_name: (mini2PairsA[m.pair2Index].name)
             }) : ''),
             customKeoA
           });
@@ -2700,35 +2541,26 @@
         selected_mini2PairsB_length_4: (mini2PairsB.length === 4 ? 'selected' : ''),
         selected_mini2PairsB_length_5: (mini2PairsB.length === 5 ? 'selected' : ''),
         standingsB_rows: (standingsB.map((st, i) => renderComponent('minigame2.tab-tr-4', {
-          i_plus1: (i + 1),
-          st_index_mod5: (st.index % 5),
-          st_name: st.name,
-          st_points: st.points,
+          i_plus1: (i + 1), st_index_mod5: (st.index % 5), st_name: st.name, st_points: st.points,
           if_st_diff_0_color: (st.diff > 0 ? '#16a34a' : (st.diff < 0 ? '#dc2626' : '#334155')),
-          if_st_diff_0: (st.diff > 0 ? `+${st.diff}` : st.diff),
-          st_index: st.index
+          if_st_diff_0: (st.diff > 0 ? `+${st.diff}` : st.diff), st_index: st.index
         })).join('')),
         mini2MatchesB_rows: (mini2MatchesB.map((m, idx) => {
           let customKeoB = "";
           if (mini2KeoMode === 'free') {
             customKeoB = renderComponent('minigame2.tab-td-2', {
-              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5),
-              idx,
+              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5), idx,
               m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
             });
           }
           return renderComponent('minigame2.tab-tr-5', {
             m_id: m.id,
             if_mini2PairsB_m_pair1Index: (mini2PairsB[m.pair1Index] ? renderComponent('minigame2.tab-span-7', {
-              m_pair1Index_mod5: (m.pair1Index % 5),
-              mini2PairsB_m_pair1Index_name: (mini2PairsB[m.pair1Index].name)
+              m_pair1Index_mod5: (m.pair1Index % 5), mini2PairsB_m_pair1Index_name: (mini2PairsB[m.pair1Index].name)
             }) : ''),
-            m_score1: (m.score1 ?? ''),
-            idx,
-            m_score2: (m.score2 ?? ''),
+            m_score1: (m.score1 ?? ''), idx, m_score2: (m.score2 ?? ''),
             if_mini2PairsB_m_pair2Index: (mini2PairsB[m.pair2Index] ? renderComponent('minigame2.tab-span-8', {
-              m_pair2Index_mod5: (m.pair2Index % 5),
-              mini2PairsB_m_pair2Index_name: (mini2PairsB[m.pair2Index].name)
+              m_pair2Index_mod5: (m.pair2Index % 5), mini2PairsB_m_pair2Index_name: (mini2PairsB[m.pair2Index].name)
             }) : ''),
             customKeoB
           });
@@ -2764,7 +2596,7 @@
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-TAB] ▲▲▲ */
 
 /* ████████████████ MODULE AUTOBACKUP · TỰ ĐỘNG SAO LƯU FIRESTORE ONLINE ████████████████ */
-/* ▼▼▼ KHỐI [AUTOBACKUP-CONFIG] · Cấu hình Firebase + kết nối Firestore (db, docRef) + bản sao lưu bộ nhớ ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [AUTOBACKUP-CONFIG] ▼▼▼ BẮT ĐẦU */
     const firebaseConfig = {
       apiKey: "AIzaSyCXxjGAHhAOtIo2DoqW6u8LW9NOUOI7PqY",
       authDomain: "pickleball-cmtd.firebaseapp.com",
@@ -2785,7 +2617,7 @@
 
     let autoBackupMemory = null;
 /* ▲▲▲ KẾT THÚC KHỐI [AUTOBACKUP-CONFIG] ▲▲▲ */
-/* ▼▼▼ KHỐI [AUTOBACKUP-FUNCS] · Lắng nghe Firestore, khởi tạo dữ liệu mặc định, TỰ ĐỘNG LƯU ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [AUTOBACKUP-FUNCS] ▼▼▼ BẮT ĐẦU */
     function listenToFirestore() {
       docRef.onSnapshot((doc) => {
         const statusEl = document.getElementById("cloudStatus");
@@ -2939,7 +2771,7 @@
 /* ▲▲▲ KẾT THÚC KHỐI [AUTOBACKUP-FUNCS] ▲▲▲ */
 
 /* ████████████████ MODULE CORE · LÕI HỆ THỐNG ████████████████ */
-/* ▼▼▼ KHỐI [CORE-INIT] · Khởi động: window.onload (chạy sau cùng) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [CORE-INIT] · Khởi động: window.onload ▼▼▼ BẮT ĐẦU */
     window.onload = async function() {
       try {
         await loadComponents();

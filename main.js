@@ -808,7 +808,7 @@
               noteText = "Đã nhận";
               noteStyle = "color:#16a34a; font-weight:bold;";
             } else {
-              noteText = "Chưa nhận quỹ";
+              noteText = "Chưa nhận";
               noteStyle = "color:#0284c7; font-weight:bold;";
             }
           } else {

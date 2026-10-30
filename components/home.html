@@ -1,265 +1,259 @@
-<!-- [PART: day-tab] -->
-<div class="card bg-white border border-slate-200 shadow-md rounded-xl overflow-hidden mb-6">
-  <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap justify-between items-center gap-4">
-    <div>
-      <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-        <span class="text-emerald-700 font-extrabold">BẢNG THỐNG KÊ TRẬN PICK - NGÀY {{dateStr}}</span>
-      </h2>
+<!-- [PART: home.vdv-option] -->
+<option value="{{v}}" {{isSelected}} style="color: {{color}}; font-weight: 600;">{{v}}</option>
+<!-- [/PART] -->
+
+<!-- [PART: home.day-tab] -->
+<div class="space-y-6">
+  <!-- Thanh công cụ & Kèo chọn ngày -->
+  <div class="bg-white p-3.5 sm:p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
+    <div class="flex items-center gap-2">
+      <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+      <h2 class="text-base sm:text-lg font-bold text-slate-800">Lịch Thi Đấu Ngày {{dateStr}}</h2>
     </div>
     
-    <div class="flex items-center gap-3 flex-wrap">
-      <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm">
-        <span class="text-xs font-semibold text-slate-600">Chế độ Kèo:</span>
-        <select onchange="changeKeoMode('{{dateStr}}', this.value)" class="bg-white text-slate-700 font-bold text-xs border border-slate-300 rounded px-2 py-1 focus:outline-none focus:border-emerald-500">
-          <option value="default" {{selected_currentMode_default}}>Mặc định (Thắng +5 / Thua -15)</option>
-          <option value="k25" {{selected_currentMode_k25}}>Kèo 0 / -25</option>
-          <option value="no_keo" {{selected_currentMode_no_keo}}>Không tính tiền (0 / 0)</option>
-          <option value="free" {{selected_currentMode_free}}>Kèo tùy chỉnh Mệnh Giá</option>
-        </select>
-      </div>
+    <div class="flex items-center justify-between sm:justify-end gap-2 bg-slate-50 p-1.5 rounded-lg border border-slate-200">
+      <label class="text-xs font-semibold text-slate-600 whitespace-nowrap">Chế độ kèo:</label>
+      <select onchange="changeKeoMode('{{dateStr}}', this.value)" class="text-xs font-bold text-slate-700 bg-white border border-slate-300 rounded px-2 py-1 focus:ring-emerald-500 focus:border-emerald-500">
+        <option value="default" {{selected_currentMode_default}}>Kèo 5k / -15k (Chuẩn)</option>
+        <option value="k25" {{selected_currentMode_k25}}>Kèo 0k / -25k</option>
+        <option value="no_keo" {{selected_currentMode_no_keo}}>Không tính kèo (0k/0k)</option>
+        <option value="free" {{selected_currentMode_free}}>Kèo tự do (Custom)</option>
+      </select>
+    </div>
+  </div>
 
-      <button onclick="addMatch('{{dateStr}}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1.5">
-        <i class="fa-solid fa-plus"></i> Thêm Trận
+  <!-- BẢNG DANH SÁCH TRẬN ĐẤU -->
+  <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+      <h3 class="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wide">Chi Tiết Các Trận Đấu</h3>
+      <button onclick="addMatch('{{dateStr}}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center gap-1">
+        <i class="fa-solid fa-plus"></i> Thêm trận
       </button>
     </div>
-  </div>
 
-  <div class="overflow-x-auto">
-    <table class="w-full text-left border-collapse bg-white text-slate-800 text-sm">
-      <thead>
-        <tr class="bg-slate-100 text-slate-700 text-xs font-bold border-b border-slate-200 uppercase tracking-wider">
-          <th style="width: 60px;" class="py-3 px-3 text-center border-r border-slate-200">STT</th>
-          <th class="py-3 px-4 border-r border-slate-200 text-center bg-emerald-100/60 text-emerald-900" colspan="1">CẶP PICK 1</th>
-          <th class="py-3 px-4 border-r border-slate-200 text-center bg-rose-100/60 text-rose-900" colspan="1">CẶP PICK 2</th>
-          <th style="width: 110px;" class="py-3 px-2 text-center border-r border-slate-200">TỶ SỐ</th>
-          <th style="width: 90px;" class="py-3 px-2 text-center border-r border-slate-200">KÈO</th>
-          {{freeKeoHeader}}
-          <th style="width: 60px;" class="py-3 px-2 text-center">XÓA</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-200 text-sm">
+    <!-- Khung cuộn ngang mượt cho Mobile -->
+    <div class="overflow-x-auto scrollbar-thin">
+      <table class="w-full text-left border-collapse min-w-[650px] sm:min-w-full">
+        <thead>
+          <tr class="bg-slate-100 text-slate-600 text-[11px] sm:text-xs uppercase font-bold border-b border-slate-200">
+            <th class="py-2.5 px-2 text-center w-10 border-r border-slate-200">#</th>
+            <th class="py-2.5 px-3 text-center w-1/3 border-r border-slate-200">Cặp Đấu 1</th>
+            <th class="py-2.5 px-2 text-center w-24 border-r border-slate-200">Tỷ Số</th>
+            <th class="py-2.5 px-3 text-center w-1/3 border-r border-slate-200">Cặp Đấu 2</th>
+            {{freeKeoHeader}}
+            <th class="py-2.5 px-3 text-center w-28 border-r border-slate-200">Kèo Cặp 1</th>
+            <th class="py-2.5 px-3 text-center w-28 border-r border-slate-200">Kèo Cặp 2</th>
+            <th class="py-2.5 px-2 text-center w-10">Xóa</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 text-xs sm:text-sm">
 <!-- [/PART] -->
 
-<!-- [PART: day-tab-tr-1] -->
-        <tr class="hover:bg-slate-50 transition">
-          <td class="py-2.5 px-3 text-center font-bold text-slate-700 border-r border-slate-200 text-xs">Trận {{m_id}}</td>
-          <td class="py-2.5 px-3 border-r border-slate-200">
-            <div class="flex gap-2">
-              <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p1', this.value)" style="color: {{c1_p1_color}};" class="w-1/2 bg-white text-xs font-bold border border-slate-300 rounded px-2 py-1.5 focus:outline-none focus:border-emerald-500 shadow-sm">
-                <option value="">-- VĐV 1 --</option>
-                {{generateVdvOptionsHtml_m_c1_p1}}
-              </select>
-              <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p2', this.value)" style="color: {{c1_p2_color}};" class="w-1/2 bg-white text-xs font-bold border border-slate-300 rounded px-2 py-1.5 focus:outline-none focus:border-emerald-500 shadow-sm">
-                <option value="">-- VĐV 2 --</option>
-                {{generateVdvOptionsHtml_m_c1_p2}}
-              </select>
-            </div>
-          </td>
-          <td class="py-2.5 px-3 border-r border-slate-200">
-            <div class="flex gap-2">
-              <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p1', this.value)" style="color: {{c2_p1_color}};" class="w-1/2 bg-white text-xs font-bold border border-slate-300 rounded px-2 py-1.5 focus:outline-none focus:border-emerald-500 shadow-sm">
-                <option value="">-- VĐV 1 --</option>
-                {{generateVdvOptionsHtml_m_c2_p1}}
-              </select>
-              <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p2', this.value)" style="color: {{c2_p2_color}};" class="w-1/2 bg-white text-xs font-bold border border-slate-300 rounded px-2 py-1.5 focus:outline-none focus:border-emerald-500 shadow-sm">
-                <option value="">-- VĐV 2 --</option>
-                {{generateVdvOptionsHtml_m_c2_p2}}
-              </select>
-            </div>
-          </td>
-          <td class="py-2.5 px-2 text-center border-r border-slate-200">
-            <div class="flex items-center justify-center gap-1.5">
-              {{score1Inner}}
-              <span class="text-slate-400 font-bold">-</span>
-              {{score2Inner}}
-            </div>
-          </td>
-          <td class="py-2.5 px-2 text-center border-r border-slate-200">
-            <div class="flex items-center justify-center gap-2">
-              <span class="font-bold text-xs {{winLoseClass_keo1}}">{{keo1}}</span>
-              <span class="font-bold text-xs {{winLoseClass_keo2}}">{{keo2}}</span>
-            </div>
-          </td>
-          {{customKeoInputHtml}}
-          <td class="py-2.5 px-2 text-center">
-            <button onclick="deleteSpecificMatch('{{dateStr}}', {{idx}})" class="text-slate-400 hover:text-red-600 p-1.5 transition rounded hover:bg-red-50" title="Xóa trận">
-              <i class="fa-solid fa-trash-can text-xs text-red-500"></i>
-            </button>
-          </td>
-        </tr>
+<!-- [PART: home.day-tab-input-1] -->
+<input type="number" inputmode="numeric" pattern="[0-9]*" value="{{m_score1}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'score1', this.value)" class="w-9 h-8 sm:w-11 sm:h-9 text-center font-bold text-slate-800 bg-white border border-slate-300 rounded focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 p-0 text-xs sm:text-sm">
 <!-- [/PART] -->
 
-<!-- [PART: day-tab-input-1] -->
-<input type="number" value="{{m_score1}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'score1', this.value)" class="w-10 text-center font-bold bg-white text-slate-800 border border-slate-300 rounded px-1 py-1 text-xs focus:outline-none focus:border-emerald-500 shadow-sm">
+<!-- [PART: home.day-tab-input-2] -->
+<input type="number" inputmode="numeric" pattern="[0-9]*" value="{{m_score2}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'score2', this.value)" class="w-9 h-8 sm:w-11 sm:h-9 text-center font-bold text-slate-800 bg-white border border-slate-300 rounded focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 p-0 text-xs sm:text-sm">
 <!-- [/PART] -->
 
-<!-- [PART: day-tab-input-2] -->
-<input type="number" value="{{m_score2}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'score2', this.value)" class="w-10 text-center font-bold bg-white text-slate-800 border border-slate-300 rounded px-1 py-1 text-xs focus:outline-none focus:border-emerald-500 shadow-sm">
-<!-- [/PART] -->
-
-<!-- [PART: day-tab-td-1] -->
-<td class="py-2.5 px-2 text-center">
+<!-- [PART: home.day-tab-td-1] -->
+<td class="py-2 px-2 border-r border-slate-200 text-center">
   <div class="flex items-center justify-center gap-1">
-    <input type="number" value="{{m_customWin_or_default}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'customWin', this.value)" class="w-12 text-center font-bold bg-white text-emerald-600 border border-slate-300 rounded px-1 py-1 text-xs" title="Thắng">
-    <span class="text-slate-400">/</span>
-    <input type="number" value="{{m_customLose_or_default}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'customLose', this.value)" class="w-12 text-center font-bold bg-white text-red-600 border border-slate-300 rounded px-1 py-1 text-xs" title="Thua">
+    <input type="number" value="{{m_customWin_or_default}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'customWin', this.value)" class="w-10 h-7 text-center text-xs font-bold text-emerald-600 bg-white border border-slate-300 rounded p-0" title="Tiền thắng">
+    <span class="text-slate-400 text-xs">/</span>
+    <input type="number" value="{{m_customLose_or_default}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'customLose', this.value)" class="w-10 h-7 text-center text-xs font-bold text-red-600 bg-white border border-slate-300 rounded p-0" title="Tiền thua">
   </div>
 </td>
 <!-- [/PART] -->
 
-<!-- [PART: day-tab-end-tbody-1] -->
-      </tbody>
-    </table>
-  </div>
-</div>
-<!-- [/PART] -->
-
-<!-- [PART: summary] -->
-<div class="card bg-white border border-slate-200 shadow-md rounded-xl overflow-hidden mt-6">
-  <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-    <h3 class="text-sm font-bold text-slate-800">
-      BẢNG TỔNG HỢP THÀNH TIỀN & THU CHI
-    </h3>
-  </div>
-
-  <div class="overflow-x-auto">
-    <table class="w-full text-left border-collapse bg-white text-sm text-slate-800">
-      <thead>
-        <tr class="bg-slate-100 text-slate-700 text-xs font-bold border-b border-slate-200 uppercase tracking-wider">
-          <th class="py-3 px-4 border-r border-slate-200">PICK THỦ</th>
-          <th class="py-3 px-3 text-center border-r border-slate-200">SỐ TRẬN</th>
-          <th class="py-3 px-3 text-center border-r border-slate-200">THẮNG/K</th>
-          <th class="py-3 px-3 text-center border-r border-slate-200">THUA/K</th>
-          <th class="py-3 px-3 text-center border-r border-slate-200">MANG VỀ</th>
-          <th class="py-3 px-3 text-center border-r border-slate-200">TỔNG</th>
-          <th class="py-3 px-3 text-center border-r border-slate-200">THỰC TẾ</th>
-          <th class="py-3 px-4">NOTE</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-200 text-sm">
-        {{summaryRowsHtml}}
-        {{buildAbsentSelectorRow_dateStr_9}}
-      </tbody>
-      <tfoot>
-        <tr class="bg-slate-50 font-bold text-xs border-t-2 border-slate-200">
-          <td colspan="5" class="py-3 px-4 text-left text-red-600 font-bold">Tổng Tiền BTC Thu Về</td>
-          <td class="py-3 px-3 text-center text-red-600 font-bold border-l border-slate-200">{{btcThuVeCalculated}}</td>
-          <td class="py-3 px-3 text-center text-blue-600 font-bold border-l border-slate-200">0</td>
-          <td class="py-3 px-4 border-l border-slate-200"></td>
-        </tr>
-        <tr class="bg-slate-50 text-xs border-t border-slate-200">
-          <td colspan="8" class="py-3 px-4">
-            <div class="flex flex-wrap items-center justify-between gap-4">
-              <div class="text-red-600 font-bold">
-                Quỹ Còn <span class="ml-4 text-red-600 font-extrabold text-sm">{{quyCon}}</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="text-slate-600 font-semibold">Xác nhận BTC chuyển tổng ngày:</span>
-                <select onchange="handleBtcNoteAdminChange('{{dateStr}}', this)" class="bg-white font-bold text-xs border border-slate-300 rounded px-2.5 py-1 focus:outline-none" style="color: {{isYes_color}};">
-                  <option value="NO" {{selected_not_isYes}}>❌ Chưa chuyển tổng</option>
-                  <option value="YES" {{selected_isYes}}>✅ Đã chuyển tổng</option>
-                </select>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
-</div>
-<!-- [/PART] -->
-
-<!-- [PART: absent-fine-cell] -->
-<td class="py-2.5 px-3 text-center border-r border-slate-200">
-  <select onchange="setAbsentStatus('{{d}}', '{{n}}', this.value)" class="bg-white text-xs font-bold border border-slate-300 rounded px-2 py-1 focus:outline-none" style="color: {{unexcused_color}};">
-    <option value="unexcused" {{selected_unexcused}}>Không phép (-{{ABSENT_FINE_K}}K)</option>
-    <option value="excused" {{selected_not_unexcused}}>Có phép (0K)</option>
-  </select>
-</td>
-<!-- [/PART] -->
-
-<!-- [PART: absent-fine-cell-td-1] -->
-<td class="py-2.5 px-3 text-center text-slate-400 border-r border-slate-200">-</td>
-<!-- [/PART] -->
-
-<!-- [PART: absent-select-row] -->
-<tr class="bg-slate-50 border-t border-slate-200">
-  <td colspan="{{colspan}}" class="py-3 px-4">
-    <div class="flex flex-wrap items-center gap-4">
-      <div class="flex items-center gap-2">
-        <span class="text-xs font-bold text-slate-700"><i class="fa-solid fa-user-slash text-amber-600"></i> Danh sách VĐV xin nghỉ:</span>
-        {{countSelect}}
-      </div>
-      <div class="flex flex-wrap items-center gap-3">
-        {{slots}}
-      </div>
+<!-- [PART: home.day-tab-tr-1] -->
+<tr class="hover:bg-slate-50 transition">
+  <td class="py-2 px-2 text-center font-bold text-slate-500 border-r border-slate-200 text-xs">{{m_id}}</td>
+  
+  <!-- Cặp 1 -->
+  <td class="py-1.5 px-2 border-r border-slate-200">
+    <div class="flex flex-col sm:flex-row gap-1">
+      <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p1', this.value)" class="w-full text-[11px] sm:text-xs font-semibold border border-slate-200 rounded px-1.5 py-1 bg-white focus:ring-1 focus:ring-emerald-500" style="color: {{c1_p1_color}};">
+        <option value="">-- VĐV 1 --</option>
+        {{{generateVdvOptionsHtml_m_c1_p1}}}
+      </select>
+      <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p2', this.value)" class="w-full text-[11px] sm:text-xs font-semibold border border-slate-200 rounded px-1.5 py-1 bg-white focus:ring-1 focus:ring-emerald-500" style="color: {{c1_p2_color}};">
+        <option value="">-- VĐV 2 --</option>
+        {{{generateVdvOptionsHtml_m_c1_p2}}}
+      </select>
     </div>
+  </td>
+
+  <!-- Tỷ số -->
+  <td class="py-1.5 px-2 text-center border-r border-slate-200 bg-slate-50/50">
+    <div class="flex items-center justify-center gap-1">
+      {{{score1Inner}}}
+      <span class="font-bold text-slate-400 text-xs">-</span>
+      {{{score2Inner}}}
+    </div>
+  </td>
+
+  <!-- Cặp 2 -->
+  <td class="py-1.5 px-2 border-r border-slate-200">
+    <div class="flex flex-col sm:flex-row gap-1">
+      <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p1', this.value)" class="w-full text-[11px] sm:text-xs font-semibold border border-slate-200 rounded px-1.5 py-1 bg-white focus:ring-1 focus:ring-emerald-500" style="color: {{c2_p1_color}};">
+        <option value="">-- VĐV 1 --</option>
+        {{{generateVdvOptionsHtml_m_c2_p1}}}
+      </select>
+      <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p2', this.value)" class="w-full text-[11px] sm:text-xs font-semibold border border-slate-200 rounded px-1.5 py-1 bg-white focus:ring-1 focus:ring-emerald-500" style="color: {{c2_p2_color}};">
+        <option value="">-- VĐV 2 --</option>
+        {{{generateVdvOptionsHtml_m_c2_p2}}}
+      </select>
+    </div>
+  </td>
+
+  {{{customKeoCellHtml}}}
+
+  <!-- Kèo Cặp 1 -->
+  <td class="py-2 px-2 text-center border-r border-slate-200 font-bold text-xs {{winLoseClass_keo1}}">
+    {{keo1}}
+  </td>
+
+  <!-- Kèo Cặp 2 -->
+  <td class="py-2 px-2 text-center border-r border-slate-200 font-bold text-xs {{winLoseClass_keo2}}">
+    {{keo2}}
+  </td>
+
+  <!-- Nút Xóa -->
+  <td class="py-2 px-2 text-center">
+    <button onclick="deleteSpecificMatch('{{dateStr}}', {{idx}})" class="text-slate-400 hover:text-red-600 p-1 rounded transition" title="Xóa trận này">
+      <i class="fa-solid fa-trash-can text-xs"></i>
+    </button>
   </td>
 </tr>
 <!-- [/PART] -->
 
-<!-- [PART: absent-select-row-select-1] -->
-<select onchange="setAbsentCount('{{d}}', this.value)" class="bg-white text-xs font-bold text-amber-700 border border-slate-300 rounded px-2.5 py-1 focus:outline-none focus:border-emerald-500 shadow-sm">
-  {{countOpts_rows}}
+<!-- [PART: home.day-tab-end-tbody-1] -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- [/PART] -->
+
+<!-- [PART: home.absent-select-row-select-1] -->
+<select onchange="setAbsentCount('{{d}}', this.value)" class="text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded px-2 py-1 focus:ring-emerald-500">
+  {{{countOpts_rows}}}
 </select>
 <!-- [/PART] -->
 
-<!-- [PART: absent-select-row-option-1] -->
+<!-- [PART: home.absent-select-row-option-1] -->
 <option value="{{n}}" {{selected_info_count_n}}>{{if_n_0}}</option>
 <!-- [/PART] -->
 
-<!-- [PART: absent-select-row-option-2] -->
-<div class="flex items-center gap-1.5 bg-white p-1 rounded-lg border border-slate-200 shadow-sm">
-  <select onchange="setAbsentPlayerSlot('{{d}}', {{i}}, this.value)" class="bg-white text-xs font-bold border border-slate-300 rounded px-2 py-1 focus:outline-none shadow-sm" style="color: {{color}};">
-    <option value="">-- Chọn VĐV nghỉ {{i_plus1}} --</option>
-    {{opts}}
+<!-- [PART: home.absent-select-row-option-2] -->
+<div class="flex items-center gap-1 bg-white border border-slate-200 rounded px-2 py-1 shadow-sm">
+  <span class="text-[10px] font-bold text-slate-400">#{{i_plus1}}</span>
+  <select onchange="setAbsentPlayerSlot('{{d}}', {{i}}, this.value)" class="text-xs font-bold border-none p-0 focus:ring-0 cursor-pointer" style="color: {{color}};">
+    <option value="">-- Chọn VĐV --</option>
+    {{{opts}}}
   </select>
-  <select onchange="setAbsentStatus('{{d}}', {{i}}, this.value)" class="bg-white text-xs font-bold border border-slate-300 rounded px-2 py-1 focus:outline-none shadow-sm" style="color: {{fine_color}};">
+  <select onchange="setAbsentStatus('{{d}}', {{i}}, this.value)" class="text-[11px] font-bold border-none p-0 focus:ring-0 cursor-pointer ml-1" style="color: {{fine_color}};">
     <option value="unexcused" {{selected_unexcused}}>Không phép (-30K)</option>
     <option value="excused" {{selected_excused}}>Có phép (0K)</option>
   </select>
 </div>
 <!-- [/PART] -->
 
-<!-- [PART: absent-select-row-option-3] -->
-<option value="{{escAbsentAttr_nm}}" {{selected_cur_nm}} {{if_taken}} style="color: {{color}};">{{nm}}</option>
+<!-- [PART: home.absent-select-row-option-3] -->
+<option value="{{escAbsentAttr_nm}}" {{selected_cur_nm}} {{if_taken}} style="color: {{color}}; font-weight: 600;">{{nm}}</option>
 <!-- [/PART] -->
 
-<!-- [PART: summary-span-1] -->
-<span class="text-xs font-semibold text-red-600">Chưa nộp phạt</span>
-<!-- [/PART] -->
-
-<!-- [PART: summary-span-2] -->
-<span class="text-xs font-semibold text-red-600">Chưa nộp âm</span>
-<!-- [/PART] -->
-
-<!-- [PART: summary-span-3] -->
-<span class="text-xs font-semibold text-emerald-600">Đã nhận </span>
-<!-- [/PART] -->
-
-<!-- [PART: summary-span-4] -->
-<span class="text-xs font-semibold text-blue-600">Chưa nhận quỹ</span>
-<!-- [/PART] -->
-
-<!-- [PART: summary-span-5] -->
-<span class="text-xs font-semibold text-slate-500">Nghỉ phép</span>
-<!-- [/PART] -->
-
-<!-- [PART: summary-tr-1] -->
-<tr class="hover:bg-slate-50 transition">
-  <td class="py-2.5 px-4 font-bold text-xs border-r border-slate-200" style="color: {{vColor}};">{{v}}</td>
-  <td class="py-2.5 px-3 text-center text-slate-700 text-xs border-r border-slate-200">{{st_played}}</td>
-  <td class="py-2.5 px-3 text-center font-bold text-emerald-600 text-xs border-r border-slate-200">{{if_st_winK_0}}</td>
-  <td class="py-2.5 px-3 text-center font-bold text-red-600 text-xs border-r border-slate-200">{{if_st_loseK_0}}</td>
-  <td class="py-2.5 px-3 text-center font-bold text-emerald-600 text-xs border-r border-slate-200">{{if_bringBack_0}}</td>
-  <td class="py-2.5 px-3 text-center font-bold text-xs border-r border-slate-200 {{if_st_total_0_class}}">{{st_total}}</td>
-  <td class="py-2.5 px-3 text-center border-r border-slate-200">
-    <input type="checkbox" onclick="togglePayment('{{payKey}}')" class="{{checkboxClass}} w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" {{if_isPaid}} title="{{if_isAdminVerified}}">
+<!-- [PART: home.absent-select-row] -->
+<tr class="bg-slate-50 border-t border-b border-slate-200">
+  <td colspan="{{colspan}}" class="py-2.5 px-3">
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
+        <i class="fa-solid fa-user-slash text-amber-500"></i> VĐV Xin Nghỉ:
+      </span>
+      {{{countSelect}}}
+      <div class="flex flex-wrap items-center gap-2 ml-1">
+        {{{slots}}}
+      </div>
+    </div>
   </td>
-  <td class="py-2.5 px-4 text-xs font-semibold {{noteClass}}" style="{{noteStyle}}">{{noteText}}</td>
 </tr>
 <!-- [/PART] -->
 
-<!-- [PART: vdv-option] -->
-<option value="{{v}}" {{isSelected}} style="color: {{color}};">{{v}}</option>
+<!-- [PART: home.summary-tr-1] -->
+<tr class="hover:bg-slate-50 transition border-b border-slate-100">
+  <td class="py-2.5 px-3 font-bold text-xs border-r border-slate-200 whitespace-nowrap" style="color: {{vColor}};">{{v}}</td>
+  <td class="py-2.5 px-2 text-center text-slate-700 text-xs border-r border-slate-200">{{st_played}}</td>
+  <td class="py-2.5 px-2 text-center font-bold text-emerald-600 text-xs border-r border-slate-200">{{if_st_winK_0}}</td>
+  <td class="py-2.5 px-2 text-center font-bold text-red-600 text-xs border-r border-slate-200">{{if_if_st_loseK_0}}</td>
+  <td class="py-2.5 px-2 text-center font-bold text-emerald-600 text-xs border-r border-slate-200">{{if_bringBack_0}}</td>
+  <td class="py-2.5 px-2 text-center font-bold text-xs border-r border-slate-200 {{if_st_total_0_class}}">{{st_total}}</td>
+  <td class="py-2.5 px-2 text-center border-r border-slate-200">
+    <input type="checkbox" onclick="togglePayment('{{payKey}}')" class="{{checkboxClass}} w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" {{if_isPaid}} title="{{if_isAdminVerified}}">
+  </td>
+  <td class="py-2.5 px-3 text-xs font-semibold whitespace-nowrap {{noteClass}}" style="{{noteStyle}}">{{noteText}}</td>
+</tr>
+<!-- [/PART] -->
+
+<!-- [PART: home.summary] -->
+<div class="mt-6 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+  <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+    <h3 class="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wide">Bảng Tổng Hợp Thống Kê Trong Ngày</h3>
+  </div>
+
+  <!-- Cuộn ngang cho Mobile -->
+  <div class="overflow-x-auto scrollbar-thin">
+    <table class="w-full text-left border-collapse min-w-[600px] sm:min-w-full">
+      <thead>
+        <tr class="bg-slate-100 text-slate-600 text-[11px] sm:text-xs uppercase font-bold border-b border-slate-200">
+          <th class="py-2.5 px-3 border-r border-slate-200">VĐV</th>
+          <th class="py-2.5 px-2 text-center border-r border-slate-200">Trận</th>
+          <th class="py-2.5 px-2 text-center border-r border-slate-200">Thắng</th>
+          <th class="py-2.5 px-2 text-center border-r border-slate-200">Thua</th>
+          <th class="py-2.5 px-2 text-center border-r border-slate-200">Thắng Quỹ</th>
+          <th class="py-2.5 px-2 text-center border-r border-slate-200">Tổng Kèo</th>
+          <th class="py-2.5 px-2 text-center border-r border-slate-200">Thực Tế</th>
+          <th class="py-2.5 px-3">Ghi Chú</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-200 text-xs sm:text-sm">
+        {{{buildAbsentSelectorRow_dateStr_9}}}
+        {{{summaryRowsHtml}}}
+      </tbody>
+      <!-- Tổng kết Quỹ ngày -->
+      <tfoot class="bg-slate-50 font-bold text-xs border-t-2 border-slate-200">
+        <tr class="border-b border-slate-200">
+          <td colspan="5" class="py-2.5 px-3 text-right text-slate-600">Thắng Mang Về Quỹ (>= 4 Trận):</td>
+          <td colspan="3" class="py-2.5 px-3 text-emerald-600 font-extrabold text-sm">{{sumBringBack}}</td>
+        </tr>
+        <tr class="border-b border-slate-200">
+          <td colspan="5" class="py-2.5 px-3 text-right text-slate-600">Tổng Tiền Phạt Nghỉ:</td>
+          <td colspan="3" class="py-2.5 px-3" style="color: {{sumFine_color}};">{{sumFine_value}}</td>
+        </tr>
+        <tr class="border-b border-slate-200">
+          <td colspan="5" class="py-2.5 px-3 text-right text-slate-600">BTC Cần Thu Về Ngày Này:</td>
+          <td colspan="3" class="py-2.5 px-3 text-slate-800 font-extrabold text-sm">{{btcThuVeCalculated}}</td>
+        </tr>
+        <tr class="border-b border-slate-200">
+          <td colspan="5" class="py-2.5 px-3 text-right text-slate-600">Thực Thu BTC Đã Nhận:</td>
+          <td colspan="3" class="py-2.5 px-3 text-emerald-600 font-extrabold text-sm">{{sumThucThu}}</td>
+        </tr>
+        <tr class="bg-emerald-50/50 border-b border-slate-200">
+          <td colspan="5" class="py-2.5 px-3 text-right text-slate-700">BTC Xác Nhận Chuyển Tổng Ngày:</td>
+          <td colspan="3" class="py-2.5 px-3">
+            <select onchange="handleBtcNoteAdminChange('{{dateStr}}', this)" class="text-xs font-bold rounded border-slate-300 px-2 py-1" style="color: {{isYes_color}};">
+              <option value="NO" {{selected_not_isYes}}>🔴 CHƯA CHUYỂN</option>
+              <option value="YES" {{selected_isYes}}>🟢 ĐÃ CHUYỂN QUỸ</option>
+            </select>
+          </td>
+        </tr>
+        <tr class="bg-slate-100">
+          <td colspan="5" class="py-3 px-3 text-right text-slate-800 text-sm">Quỹ Dư / Thiếu Ngày Này:</td>
+          <td colspan="3" class="py-3 px-3 text-base font-black text-emerald-600">{{quyCon}}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
 <!-- [/PART] -->

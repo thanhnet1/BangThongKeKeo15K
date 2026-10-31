@@ -1,6 +1,6 @@
 <!-- [PART: day-tab] -->
 <style>
-  /* ===== BẢNG TRẬN ĐẤU (home) ===== */
+  /* ===== TỐI ƯU GIAO DIỆN HỆ THỐNG ===== */
   .hm-table .score-input {
     width: 3.4rem;
     height: 2.25rem;
@@ -29,74 +29,119 @@
   }
   .hm-table td.m-k1, .hm-table td.m-k2 { font-size: 13px; }
 
-  /* Màn hình điện thoại dọc (< 640px) */
+  /* ===== HIỂN THỊ CHUẨN TRÊN MÀN HÌNH ĐIỆN THOẠI DỌC (< 640px) ===== */
   @media (max-width: 639px) {
-    .hm-table { display: block; width: 100%; min-width: 0 !important; }
-    .hm-table thead { display: none; }
-    .hm-table tbody { display: flex; flex-direction: column; gap: 10px; padding: 8px; }
+    /* 1. BẢNG TRẬN ĐẤU */
+    .hm-table { display: block; width: 100% !important; min-width: 0 !important; }
+    .hm-table thead { display: none !important; }
+    .hm-table tbody { display: flex; flex-direction: column; gap: 12px; padding: 6px; }
+    
     .hm-table tr.match-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      padding: 12px;
-      background: #ffffff;
-      border: 1px solid #e2e8f0 !important;
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 8px 10px !important;
+      padding: 12px !important;
+      background: #ffffff !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
       grid-template-areas:
         "id del"
         "c1 c2"
         "free free"
         "score score"
-        "k1 k2";
+        "k1 k2" !important;
     }
-    .hm-table tr.match-row:nth-child(even) { background: #ffffff; }
-    .hm-table td { display: block; border: 0 !important; padding: 0 !important; min-width: 0; }
+    .hm-table tr.match-row:nth-child(even) { background: #ffffff !important; }
+    .hm-table td { display: block !important; border: 0 !important; padding: 0 !important; min-width: 0; }
     
     .hm-table td.m-id { grid-area: id; text-align: left; font-size: 13px; font-weight: 800; color: #0f172a; align-self: center; }
-    .hm-table td.m-id::before { content: "Trận "; font-weight: 700; color: #64748b; }
-    .hm-table td.m-del { grid-area: del; text-align: right; }
-    .hm-table td.m-del button { padding: 4px 8px; }
+    .hm-table td.m-id::before { content: "Trận số "; color: #64748b; font-weight: 700; }
     
+    .hm-table td.m-del { grid-area: del; text-align: right; }
+    .hm-table td.m-del button { padding: 5px 10px; background: #fee2e2; border-radius: 6px; }
+
     .hm-table td.m-c1 { grid-area: c1; }
     .hm-table td.m-c2 { grid-area: c2; }
     .hm-table td.m-c1::before, .hm-table td.m-c2::before {
-      display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; margin-bottom: 4px;
+      display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 3px; letter-spacing: .03em;
     }
     .hm-table td.m-c1::before { content: "Cặp đấu 1"; color: #059669; }
     .hm-table td.m-c2::before { content: "Cặp đấu 2"; color: #db2777; }
-    
-    .hm-table .pair-wrap { display: flex; flex-direction: column; gap: 4px; }
-    .hm-table select, .hm-table input { font-size: 16px !important; } /* Ngừa tự động zoom màn hình iOS */
-    .hm-table .pair-wrap select { height: 38px; padding: 0 8px; border-radius: 6px; }
-    
-    .hm-table td.m-free { grid-area: free; }
-    .hm-table td.m-free::before {
-      content: attr(data-label); display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 3px; text-align: center;
-    }
-    .hm-table td.m-free input { width: 70px !important; height: 36px !important; }
-    
+
+    .hm-table .pair-wrap { display: flex !important; flex-direction: column !important; gap: 4px !important; }
+    .hm-table select, .hm-table input { font-size: 16px !important; } /* Chống iOS tự phóng to màn hình */
+    .hm-table .pair-wrap select { width: 100% !important; height: 38px !important; padding: 0 6px !important; border-radius: 6px; }
+
+    .hm-table td.m-free { grid-area: free; text-align: center; background: #f8fafc; padding: 6px !important; border-radius: 8px !important; border: 1px solid #e2e8f0 !important; }
+    .hm-table td.m-free::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 2px; text-transform: uppercase; }
+    .hm-table td.m-free input { width: 64px !important; height: 34px !important; font-size: 14px !important; }
+
     .hm-table td.m-score {
       grid-area: score;
-      background: #faf5ff;
+      background: #faf5ff !important;
       border: 1px solid #e9d5ff !important;
-      border-radius: 10px;
+      border-radius: 10px !important;
       padding: 8px !important;
-      margin-top: 2px;
+      text-align: center;
     }
-    .hm-table td.m-score::before {
-      content: "Tỷ số trận đấu"; display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #7e22ce; text-align: center; margin-bottom: 4px;
-    }
-    .hm-table .score-input { width: 4.5rem; height: 2.75rem; font-size: 18px !important; }
-    
+    .hm-table td.m-score::before { content: "Tỷ số trận đấu"; display: block; font-size: 10px; font-weight: 700; color: #7e22ce; margin-bottom: 4px; text-transform: uppercase; }
+    .hm-table .score-input { width: 4.8rem !important; height: 2.6rem !important; font-size: 18px !important; }
+
     .hm-table td.m-k1 { grid-area: k1; }
     .hm-table td.m-k2 { grid-area: k2; }
     .hm-table td.m-k1, .hm-table td.m-k2 {
-      text-align: center; background: #f8fafc; border: 1px solid #e2e8f0 !important; border-radius: 8px; padding: 6px 4px !important; font-size: 15px;
+      text-align: center; background: #f8fafc !important; border: 1px solid #cbd5e1 !important; border-radius: 8px !important; padding: 6px 4px !important; font-size: 14px !important;
     }
-    .hm-table td.m-k1::before, .hm-table td.m-k2::before {
-      content: attr(data-label); display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 2px;
+    .hm-table td.m-k1::before, .hm-table td.m-k2::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 2px; }
+
+    /* 2. BẢNG TỔNG HỢP THỐNG KÊ */
+    .sum-table { display: block; width: 100% !important; min-width: 0 !important; }
+    .sum-table thead { display: none !important; }
+    .sum-table tbody { display: flex; flex-direction: column; gap: 8px; padding: 6px; }
+    
+    .sum-table tr.sum-row {
+      display: grid !important;
+      grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+      gap: 6px 4px !important;
+      padding: 10px 12px !important;
+      background: #ffffff !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 10px !important;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      grid-template-areas:
+        "name name name chk chk"
+        "played win lose bring total"
+        "note note note note note" !important;
     }
+    
+    .sum-table td { display: block !important; border: 0 !important; padding: 0 !important; min-width: 0; }
+    .sum-table td.s-name { grid-area: name; font-size: 14px; font-weight: 800; align-self: center; }
+    
+    .sum-table td.s-chk {
+      grid-area: chk;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+    .sum-table td.s-chk::before { content: attr(data-label); font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .sum-table td.s-chk input { width: 1.35rem !important; height: 1.35rem !important; }
+
+    .sum-table td.s-played { grid-area: played; }
+    .sum-table td.s-win { grid-area: win; }
+    .sum-table td.s-lose { grid-area: lose; }
+    .sum-table td.s-bring { grid-area: bring; }
+    .sum-table td.s-total { grid-area: total; }
+
+    .sum-table td.s-played, .sum-table td.s-win, .sum-table td.s-lose, .sum-table td.s-bring, .sum-table td.s-total {
+      text-align: center; background: #f8fafc; border-radius: 6px; padding: 5px 2px !important; font-size: 12px;
+    }
+    .sum-table td[data-label]:not(.s-chk)::before {
+      content: attr(data-label); display: block; font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 1px;
+    }
+    .sum-table td.s-note { grid-area: note; font-size: 11px; white-space: normal !important; margin-top: 2px; }
+    .sum-table td.s-note:empty { display: none !important; }
   }
 </style>
 
@@ -198,7 +243,7 @@
 
   {{customKeoInputHtml}}
 
-  <!-- Tỷ số -->
+  <!-- Tỷ số (nằm ngay cạnh cột Kèo) -->
   <td class="m-score py-1.5 px-2 text-center border-r border-slate-200 bg-purple-50/30">
     <div class="flex items-center justify-center gap-1.5">
       {{score1Inner}}
@@ -294,49 +339,6 @@
 <!-- [/PART] -->
 
 <!-- [PART: summary] -->
-<style>
-  /* ===== BẢNG TỔNG HỢP NGÀY ===== */
-  @media (max-width:639px){
-    .sum-table { display: block; width: 100%; min-width: 0 !important; }
-    .sum-table thead { display: none; }
-    .sum-table tbody { display: flex; flex-direction: column; gap: 8px; padding: 8px; }
-    .sum-table tr.sum-row {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 6px 4px;
-      padding: 10px 12px;
-      background: #ffffff;
-      border: 1px solid #e2e8f0 !important;
-      border-radius: 10px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-      grid-template-areas:
-        "name name name chk chk"
-        "played win lose bring total"
-        "note note note note note";
-    }
-    .sum-table td { display: block; border: 0 !important; padding: 0 !important; min-width: 0; }
-    .sum-table td.s-name { grid-area: name; font-size: 15px; font-weight: 800; align-self: center; }
-    .sum-table td.s-chk { grid-area: chk; text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
-    .sum-table td.s-chk::before { content: attr(data-label); font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; }
-    .sum-table td.s-chk input { width: 1.35rem !important; height: 1.35rem !important; }
-    
-    .sum-table td.s-played { grid-area: played; }
-    .sum-table td.s-win { grid-area: win; }
-    .sum-table td.s-lose { grid-area: lose; }
-    .sum-table td.s-bring { grid-area: bring; }
-    .sum-table td.s-total { grid-area: total; }
-    
-    .sum-table td.s-played, .sum-table td.s-win, .sum-table td.s-lose, .sum-table td.s-bring, .sum-table td.s-total {
-      text-align: center; background: #f8fafc; border-radius: 8px; padding: 6px 2px !important; font-size: 13px;
-    }
-    .sum-table td[data-label]:not(.s-chk)::before {
-      content: attr(data-label); display: block; font-size: 9px; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 2px;
-    }
-    .sum-table td.s-note { grid-area: note; white-space: normal !important; font-size: 12px; margin-top: 2px; }
-    .sum-table td.s-note:empty { display: none; }
-  }
-</style>
-
 <div class="mt-4 sm:mt-6 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
   <div class="px-3 sm:px-4 py-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
     <h3 class="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wide">Bảng Tổng Hợp Thống Kê Trong Ngày</h3>
@@ -370,7 +372,7 @@
     </table>
   </div>
 
-  <!-- Tổng kết Quỹ ngày (dạng dòng, xem tốt cả điện thoại lẫn máy tính) -->
+  <!-- Tổng kết Quỹ ngày -->
   <div class="border-t-2 border-slate-200 bg-slate-50 text-xs sm:text-sm font-bold divide-y divide-slate-200">
     <div class="flex items-center justify-between gap-3 px-3 sm:px-4 py-2.5">
       <span class="text-slate-600">Thắng Mang Về Quỹ (&gt;= 4 Trận):</span>

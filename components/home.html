@@ -65,7 +65,7 @@
     </div>
   </div>
 
-  <!-- BẢNG DANH SÁCH TRẬN ĐẤU (GIỮ NGUYÊN NỘI DUNG, CẤU TRÚC, THANH TRƯỢT CUỘN NGANG) -->
+  <!-- BẢNG DANH SÁCH TRẬN ĐẤU -->
   <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
     <div class="px-3 sm:px-4 py-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center gap-2">
       <h3 class="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wide">Chi Tiết Các Trận Đấu</h3>
@@ -173,6 +173,11 @@
       </table>
     </div>
   </div>
+
+  <!-- KHỐI QUẢN LÝ VĐV XIN NGHỈ (ĐƯỢC TÁCH XUỐNG DƯỚI BẢNG TRẬN, HỖ TRỢ THANH TRƯỢT NGANG) -->
+  <div class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200">
+    {{absentSelectorStandalone}}
+  </div>
 </div>
 <!-- [/PART] -->
 
@@ -209,24 +214,23 @@
 <!-- [/PART] -->
 
 <!-- [PART: absent-select-row] -->
-<!-- DÒNG VĐV XIN NGHỈ: HIỂN THỊ TRÊN 1 DÒNG DUY NHẤT (CÓ CUỘN NGANG NẾU DÀI) -->
-<tr class="bg-slate-50 border-t border-b border-slate-200">
-  <td colspan="{{colspan}}" class="py-2 px-2 sm:px-3">
-    <div class="flex items-center gap-2 overflow-x-auto scrollbar-none flex-nowrap w-full">
-      <span class="text-xs font-bold text-slate-700 flex items-center gap-1 whitespace-nowrap shrink-0">
-        <i class="fa-solid fa-user-slash text-amber-500"></i> VĐV Xin Nghỉ:
-      </span>
+<!-- DÒNG VĐV XIN NGHỈ ĐỘC LẬP: HIỂN THỊ TRÊN 1 HÀNG NGANG (CÓ THANH CUỘN NGANG KHI DÀI) -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+  <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5 whitespace-nowrap shrink-0">
+    <i class="fa-solid fa-user-slash text-amber-500"></i> Quản Lý Pick Thủ Xin Nghỉ:
+  </span>
+  <div class="w-full overflow-x-auto scrollbar-thin pb-1">
+    <div class="flex items-center gap-2 flex-nowrap min-w-max">
       <div class="shrink-0">{{countSelect}}</div>
       <div class="flex items-center gap-1.5 flex-nowrap shrink-0">
         {{slots}}
       </div>
     </div>
-  </td>
-</tr>
+  </div>
+</div>
 <!-- [/PART] -->
 
 <!-- [PART: summary-tr-1] -->
-<!-- HIỂN THỊ SỐ TRẬN THẮNG (st_wincount) & THUA (st_losecount) BẰNG SỐ NGUYÊN -->
 <tr class="hover:bg-slate-50 transition border-b border-slate-100">
   <td class="py-2 sm:py-2.5 px-1.5 sm:px-3 font-bold text-xs border-r border-slate-200 whitespace-nowrap" style="color: {{vColor}};">{{v}}</td>
   <td class="py-2 sm:py-2.5 px-1 text-center text-slate-700 text-xs border-r border-slate-200">{{st_played}}</td>
@@ -246,13 +250,6 @@
   <div class="px-3 sm:px-4 py-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
     <h3 class="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wide">Bảng Tổng Hợp Thống Kê Trong Ngày</h3>
   </div>
-
-  <!-- VĐV xin nghỉ -->
-  <table class="w-full border-collapse">
-    <tbody>
-      {{buildAbsentSelectorRow_dateStr_9}}
-    </tbody>
-  </table>
 
   <!-- Bảng thống kê ngày: Tự co dãn vừa khít màn hình dọc di động mà KHÔNG CẦN TRƯỢT NGANG -->
   <div class="w-full sum-table-container">
@@ -275,7 +272,7 @@
     </table>
   </div>
 
-  <!-- Tổng kết Quỹ ngày (Dàn hàng cân đối, co dãn mượt trên di động) -->
+  <!-- Tổng kết Quỹ ngày -->
   <div class="border-t-2 border-slate-200 bg-slate-50 text-xs sm:text-sm font-bold divide-y divide-slate-200">
     <div class="flex items-center justify-between gap-2 px-3 sm:px-4 py-2">
       <span class="text-slate-600">Thắng Mang Về Quỹ (&gt;= 4 Trận):</span>

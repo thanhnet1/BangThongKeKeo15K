@@ -1,11 +1,11 @@
 <!-- [PART: day-tab] -->
 <style>
-  /* ===== TỐI ƯU HIỂN THỊ 1 DÒNG CHO BẢNG TRẬN ĐẤU & TỔNG HỢP ===== */
+  /* ===== CSS HỆ THỐNG TRẬN ĐẤU & TỔNG HỢP ===== */
   .hm-table .score-input {
-    width: 3.2rem;
-    height: 2.1rem;
+    width: 3.4rem;
+    height: 2.25rem;
     padding: 0;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1;
   }
   .hm-table .score-input.score-ham {
@@ -13,18 +13,135 @@
     background: #fef2f2 !important;
     border-color: #f87171 !important;
     font-weight: 900 !important;
+    letter-spacing: .02em;
   }
   .hm-table .pair-wrap {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 4px;
   }
   .hm-table .pair-wrap select {
     width: 100%;
     min-width: 0;
   }
-  .hm-table select, .hm-table input {
-    font-size: 12px;
+  @media (min-width: 1024px) {
+    .hm-table .pair-wrap { flex-direction: row; }
+  }
+  .hm-table td.m-k1, .hm-table td.m-k2 { font-size: 13px; }
+
+  /* Màn hình điện thoại dọc (< 640px) cho Bảng Trận Đấu */
+  @media (max-width: 639px) {
+    .hm-table { display: block; width: 100% !important; min-width: 0 !important; }
+    .hm-table thead { display: none !important; }
+    .hm-table tbody { display: flex; flex-direction: column; gap: 12px; padding: 4px; }
+    
+    .hm-table tr.match-row {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 8px 10px !important;
+      padding: 12px !important;
+      background: #ffffff !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      grid-template-areas:
+        "id del"
+        "c1 c2"
+        "free free"
+        "score score"
+        "k1 k2" !important;
+    }
+    .hm-table td { display: block !important; border: 0 !important; padding: 0 !important; min-width: 0; }
+    
+    .hm-table td.m-id { grid-area: id; text-align: left; font-size: 13px; font-weight: 800; color: #0f172a; align-self: center; }
+    .hm-table td.m-id::before { content: "Trận số "; color: #64748b; font-weight: 700; }
+    
+    .hm-table td.m-del { grid-area: del; text-align: right; }
+    .hm-table td.m-del button { padding: 4px 8px; background: #fee2e2; border-radius: 6px; }
+
+    .hm-table td.m-c1 { grid-area: c1; }
+    .hm-table td.m-c2 { grid-area: c2; }
+    .hm-table td.m-c1::before, .hm-table td.m-c2::before {
+      display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 3px;
+    }
+    .hm-table td.m-c1::before { content: "Cặp đấu 1"; color: #059669; }
+    .hm-table td.m-c2::before { content: "Cặp đấu 2"; color: #db2777; }
+
+    .hm-table .pair-wrap { display: flex !important; flex-direction: column !important; gap: 4px !important; }
+    .hm-table select, .hm-table input { font-size: 16px !important; }
+    .hm-table .pair-wrap select { width: 100% !important; height: 38px !important; padding: 0 6px !important; border-radius: 6px; }
+
+    .hm-table td.m-free { grid-area: free; text-align: center; background: #f8fafc; padding: 6px !important; border-radius: 8px !important; border: 1px solid #e2e8f0 !important; }
+    .hm-table td.m-free::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 700; color: #64748b; margin-bottom: 2px; text-transform: uppercase; }
+    .hm-table td.m-free input { width: 64px !important; height: 34px !important; font-size: 14px !important; }
+
+    .hm-table td.m-score {
+      grid-area: score;
+      background: #faf5ff !important;
+      border: 1px solid #e9d5ff !important;
+      border-radius: 10px !important;
+      padding: 8px !important;
+      text-align: center;
+    }
+    .hm-table td.m-score::before { content: "Tỷ số trận đấu"; display: block; font-size: 10px; font-weight: 700; color: #7e22ce; margin-bottom: 4px; text-transform: uppercase; }
+    .hm-table .score-input { width: 4.5rem !important; height: 2.5rem !important; font-size: 18px !important; }
+
+    .hm-table td.m-k1 { grid-area: k1; }
+    .hm-table td.m-k2 { grid-area: k2; }
+    .hm-table td.m-k1, .hm-table td.m-k2 {
+      text-align: center; background: #f8fafc !important; border: 1px solid #cbd5e1 !important; border-radius: 8px !important; padding: 6px 4px !important; font-size: 14px !important;
+    }
+    .hm-table td.m-k1::before, .hm-table td.m-k2::before { content: attr(data-label); display: block; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 2px; }
+  }
+
+  /* ===== TỐI ƯU BẢNG TỔNG HỢP TRÊN MÀN HÌNH DỌC ĐIỆN THOẠI (< 640px) ===== */
+  @media (max-width: 639px) {
+    .sum-table { display: block; width: 100% !important; min-width: 0 !important; }
+    .sum-table thead { display: none !important; }
+    .sum-table tbody { display: flex; flex-direction: column; gap: 8px; padding: 4px; }
+    
+    .sum-table tr.sum-row {
+      display: grid !important;
+      grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+      gap: 6px 4px !important;
+      padding: 10px 12px !important;
+      background: #ffffff !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 10px !important;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      grid-template-areas:
+        "name name name chk chk"
+        "played win lose bring total"
+        "note note note note note" !important;
+    }
+    
+    .sum-table td { display: block !important; border: 0 !important; padding: 0 !important; min-width: 0; }
+    .sum-table td.s-name { grid-area: name; font-size: 14px; font-weight: 800; align-self: center; }
+    
+    .sum-table td.s-chk {
+      grid-area: chk;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+    .sum-table td.s-chk::before { content: attr(data-label); font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .sum-table td.s-chk input { width: 1.35rem !important; height: 1.35rem !important; }
+
+    .sum-table td.s-played { grid-area: played; }
+    .sum-table td.s-win { grid-area: win; }
+    .sum-table td.s-lose { grid-area: lose; }
+    .sum-table td.s-bring { grid-area: bring; }
+    .sum-table td.s-total { grid-area: total; }
+
+    .sum-table td.s-played, .sum-table td.s-win, .sum-table td.s-lose, .sum-table td.s-bring, .sum-table td.s-total {
+      text-align: center; background: #f8fafc; border-radius: 6px; padding: 5px 2px !important; font-size: 12px;
+    }
+    .sum-table td[data-label]:not(.s-chk)::before {
+      content: attr(data-label); display: block; font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 1px;
+    }
+    .sum-table td.s-note { grid-area: note; font-size: 11px; white-space: normal !important; margin-top: 2px; }
+    .sum-table td.s-note:empty { display: none !important; }
   }
 </style>
 
@@ -56,9 +173,8 @@
       </button>
     </div>
 
-    <!-- Bảng dạng 1 dòng, hỗ trợ cuộn ngang trên màn hình dọc điện thoại -->
     <div class="overflow-x-auto scrollbar-thin">
-      <table class="hm-table w-full text-left border-collapse min-w-[750px]">
+      <table class="hm-table w-full text-left border-collapse sm:min-w-[750px]">
         <thead>
           <tr class="bg-slate-100 text-slate-600 text-[11px] sm:text-xs uppercase font-bold border-b border-slate-200">
             <th class="py-2.5 px-2 text-center w-10 border-r border-slate-200">#</th>
@@ -83,7 +199,7 @@
 <!-- [/PART] -->
 
 <!-- [PART: day-tab-td-1] -->
-<td class="py-2 px-2 border-r border-slate-200 text-center whitespace-nowrap">
+<td class="m-free py-2 px-2 border-r border-slate-200 text-center whitespace-nowrap" data-label="Mệnh giá thắng / thua">
   <div class="flex items-center justify-center gap-1">
     <input type="number" value="{{m_customWin_or_default}}" onchange="updateMatch('{{dateStr}}', {{idx}}, 'customWin', this.value)" class="w-10 h-7 text-center text-xs font-bold text-emerald-600 bg-white border border-slate-300 rounded p-0" title="Tiền thắng">
     <span class="text-slate-400 text-xs">/</span>
@@ -94,10 +210,10 @@
 
 <!-- [PART: day-tab-tr-1] -->
 <tr class="match-row hover:bg-slate-50 transition whitespace-nowrap">
-  <td class="py-2 px-2 text-center font-bold text-slate-500 border-r border-slate-200 text-xs">{{m_id}}</td>
+  <td class="m-id py-2 px-2 text-center font-bold text-slate-500 border-r border-slate-200 text-xs">{{m_id}}</td>
 
   <!-- Cặp 1 -->
-  <td class="py-1.5 px-2 border-r border-slate-200">
+  <td class="m-c1 py-1.5 px-2 border-r border-slate-200">
     <div class="pair-wrap">
       <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c1_p1', this.value)" class="text-[11px] font-semibold border border-slate-200 rounded px-1.5 py-1 bg-white focus:ring-1 focus:ring-emerald-500" style="color: {{c1_p1_color}};">
         <option value="">-- VĐV 1 --</option>
@@ -111,7 +227,7 @@
   </td>
 
   <!-- Cặp 2 -->
-  <td class="py-1.5 px-2 border-r border-slate-200">
+  <td class="m-c2 py-1.5 px-2 border-r border-slate-200">
     <div class="pair-wrap">
       <select onchange="updateMatch('{{dateStr}}', {{idx}}, 'c2_p1', this.value)" class="text-[11px] font-semibold border border-slate-200 rounded px-1.5 py-1 bg-white focus:ring-1 focus:ring-emerald-500" style="color: {{c2_p1_color}};">
         <option value="">-- VĐV 1 --</option>
@@ -127,7 +243,7 @@
   {{customKeoInputHtml}}
 
   <!-- Tỷ số -->
-  <td class="py-1.5 px-2 text-center border-r border-slate-200 bg-purple-50/20">
+  <td class="m-score py-1.5 px-2 text-center border-r border-slate-200 bg-purple-50/20">
     <div class="flex items-center justify-center gap-1">
       {{score1Inner}}
       <span class="font-bold text-slate-400 text-sm">-</span>
@@ -136,13 +252,13 @@
   </td>
 
   <!-- Kèo Cặp 1 -->
-  <td class="py-2 px-2 text-center border-r border-slate-200 font-bold text-xs {{winLoseClass_keo1}}">{{keo1}}</td>
+  <td class="m-k1 py-2 px-2 text-center border-r border-slate-200 font-bold text-xs {{winLoseClass_keo1}}" data-label="Kèo C1">{{keo1}}</td>
 
   <!-- Kèo Cặp 2 -->
-  <td class="py-2 px-2 text-center border-r border-slate-200 font-bold text-xs {{winLoseClass_keo2}}">{{keo2}}</td>
+  <td class="m-k2 py-2 px-2 text-center border-r border-slate-200 font-bold text-xs {{winLoseClass_keo2}}" data-label="Kèo C2">{{keo2}}</td>
 
   <!-- Nút Xóa -->
-  <td class="py-2 px-2 text-center">
+  <td class="m-del py-2 px-2 text-center">
     <button onclick="deleteSpecificMatch('{{dateStr}}', {{idx}})" class="text-slate-400 hover:text-red-600 p-1 rounded transition" title="Xóa trận này">
       <i class="fa-solid fa-trash-can text-xs"></i>
     </button>
@@ -207,17 +323,17 @@
 <!-- [/PART] -->
 
 <!-- [PART: summary-tr-1] -->
-<tr class="hover:bg-slate-50 transition border-b border-slate-100 whitespace-nowrap">
-  <td class="py-2.5 px-3 font-bold text-xs border-r border-slate-200" style="color: {{vColor}};">{{v}}</td>
-  <td class="py-2.5 px-2 text-center text-slate-700 text-xs border-r border-slate-200">{{st_played}}</td>
-  <td class="py-2.5 px-2 text-center font-bold text-emerald-600 text-xs border-r border-slate-200">{{st_win}}</td>
-  <td class="py-2.5 px-2 text-center font-bold text-red-600 text-xs border-r border-slate-200">{{st_lose}}</td>
-  <td class="py-2.5 px-2 text-center font-bold text-emerald-600 text-xs border-r border-slate-200">{{if_bringBack_0}}</td>
-  <td class="py-2.5 px-2 text-center font-bold text-xs border-r border-slate-200 {{if_st_total_0_class}}">{{st_total}}</td>
-  <td class="py-2.5 px-2 text-center border-r border-slate-200">
+<tr class="sum-row hover:bg-slate-50 transition border-b border-slate-100 whitespace-nowrap">
+  <td class="s-name py-2.5 px-3 font-bold text-xs border-r border-slate-200" style="color: {{vColor}};">{{v}}</td>
+  <td class="s-played py-2.5 px-2 text-center text-slate-700 text-xs border-r border-slate-200" data-label="Trận">{{st_played}}</td>
+  <td class="s-win py-2.5 px-2 text-center font-bold text-emerald-600 text-xs border-r border-slate-200" data-label="Số Trận Thắng">{{st_win}}</td>
+  <td class="s-lose py-2.5 px-2 text-center font-bold text-red-600 text-xs border-r border-slate-200" data-label="Số Trận Thua">{{st_lose}}</td>
+  <td class="s-bring py-2.5 px-2 text-center font-bold text-emerald-600 text-xs border-r border-slate-200" data-label="Tiền Mang Về">{{if_bringBack_0}}</td>
+  <td class="s-total py-2.5 px-2 text-center font-bold text-xs border-r border-slate-200 {{if_st_total_0_class}}" data-label="Tổng Kèo">{{st_total}}</td>
+  <td class="s-chk py-2.5 px-2 text-center border-r border-slate-200" data-label="Thực Tế">
     <input type="checkbox" onclick="togglePayment('{{payKey}}')" class="{{checkboxClass}} w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" {{if_isPaid}} title="{{if_isAdminVerified}}">
   </td>
-  <td class="py-2.5 px-3 text-xs font-semibold {{noteClass}}" style="{{noteStyle}}">{{noteText}}</td>
+  <td class="s-note py-2.5 px-3 text-xs font-semibold {{noteClass}}" style="{{noteStyle}}">{{noteText}}</td>
 </tr>
 <!-- [/PART] -->
 
@@ -234,9 +350,9 @@
     </tbody>
   </table>
 
-  <!-- Bảng thống kê dạng 1 dòng, hỗ trợ cuộn ngang -->
+  <!-- Bảng thống kê (Hỗ trợ card grid thông minh trên di động, bảng ngang trên máy tính) -->
   <div class="overflow-x-auto scrollbar-thin">
-    <table class="w-full text-left border-collapse min-w-[700px]">
+    <table class="sum-table w-full text-left border-collapse sm:min-w-[700px]">
       <thead>
         <tr class="bg-slate-100 text-slate-600 text-[11px] sm:text-xs uppercase font-bold border-b border-slate-200 whitespace-nowrap">
           <th class="py-2.5 px-3 border-r border-slate-200">VĐV</th>

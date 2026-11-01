@@ -749,8 +749,8 @@
       const currentMode = dateKeoMode[dateStr] || "default";
       let stats = {};
 
-      // Khởi tạo winCount và loseCount là số nguyên đếm số trận
-      vdvs.forEach(v => { stats[v] = { played: 0, winCount: 0, loseCount: 0, winK: 0, loseK: 0, total: 0 }; });
+      // Khởi tạo wincount và losecount là số nguyên đếm số trận
+      vdvs.forEach(v => { stats[v] = { played: 0, wincount: 0, losecount: 0, winK: 0, loseK: 0, total: 0 }; });
 
       matches.forEach(m => {
         const s1 = parseInt(m.score1);
@@ -767,11 +767,11 @@
           let effectiveLose = isHam ? loseAmt * 2 : loseAmt;
 
           if (s1 > s2) {
-            pair1.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].winCount++; stats[v].winK += effectiveWin; stats[v].total += effectiveWin; } });
-            pair2.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].loseCount++; stats[v].loseK += effectiveLose; stats[v].total += effectiveLose; } });
+            pair1.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].wincount++; stats[v].winK += effectiveWin; stats[v].total += effectiveWin; } });
+            pair2.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].losecount++; stats[v].loseK += effectiveLose; stats[v].total += effectiveLose; } });
           } else if (s2 > s1) {
-            pair2.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].winCount++; stats[v].winK += effectiveWin; stats[v].total += effectiveWin; } });
-            pair1.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].loseCount++; stats[v].loseK += effectiveLose; stats[v].total += effectiveLose; } });
+            pair2.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].wincount++; stats[v].winK += effectiveWin; stats[v].total += effectiveWin; } });
+            pair1.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].losecount++; stats[v].loseK += effectiveLose; stats[v].total += effectiveLose; } });
           }
         }
       });
@@ -835,8 +835,8 @@
           summaryRowsHtml += renderComponent('home.summary-tr-1', {
             vColor, v, 
             st_played: st.played,
-            st_wincount: st.winCount,
-            st_losecount: st.loseCount,
+            st_wincount: st.wincount,
+            st_losecount: st.losecount,
             if_st_winK_0: (st.winK > 0 ? `+${st.winK}K` : '-'),
             if_st_loseK_0: (st.loseK < 0 ? `${st.loseK}K` : '-'),
             if_bringBack_0: (bringBack > 0 ? `+${bringBack}K` : '-'),

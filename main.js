@@ -831,12 +831,12 @@
 
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
 
-          // Truyền đúng st_winCount và st_loseCount dạng số nguyên vào template
+          // Truyền đúng các khóa chữ thường st_wincount và st_losecount khớp với template HTML
           summaryRowsHtml += renderComponent('home.summary-tr-1', {
             vColor, v, 
             st_played: st.played,
-            st_winCount: st.winCount,
-            st_loseCount: st.loseCount,
+            st_wincount: st.winCount,
+            st_losecount: st.loseCount,
             if_st_winK_0: (st.winK > 0 ? `+${st.winK}K` : '-'),
             if_st_loseK_0: (st.loseK < 0 ? `${st.loseK}K` : '-'),
             if_bringBack_0: (bringBack > 0 ? `+${bringBack}K` : '-'),
@@ -2563,7 +2563,7 @@
             }) : ''),
             customKeoA
           });
-        }).join('')),
+        })().join('')),
         selected_mini2PairsB_length_4: (mini2PairsB.length === 4 ? 'selected' : ''),
         selected_mini2PairsB_length_5: (mini2PairsB.length === 5 ? 'selected' : ''),
         standingsB_rows: (standingsB.map((st, i) => renderComponent('minigame2.tab-tr-4', {

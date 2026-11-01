@@ -1396,7 +1396,7 @@
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-TEAM-FUNCS] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME1-TEAM-TAB] ▼▼▼ BẮT ĐẦU */
     function renderMiniGame1Tab(container) {
-      let winCountA = 0, winCountB = 0, totalScoreA = 0, totalScoreB = 0, matchesPlayedCount = 0;
+      let wincountA = 0, wincountB = 0, totalScoreA = 0, totalScoreB = 0, matchesPlayedCount = 0;
 
       miniGame1Matches.forEach(m => {
         let sA = parseInt(m.scoreA);
@@ -1414,10 +1414,10 @@
       const isCompletedAll = (matchesPlayedCount === totalMatches && totalMatches > 0);
       let statusA = "", statusB = "";
 
-      if (winCountA > winCountB) {
+      if (wincountA > wincountB) {
         statusA = isCompletedAll ? "🏆 THẮNG CHUNG CUỘC" : "🟢 TẠM DẪN TRƯỚC";
         statusB = isCompletedAll ? "❌ THUA CHUNG CUỘC" : "🔴 TẠM BỊ DẪN";
-      } else if (winCountB > winCountA) {
+      } else if (wincountB > wincountA) {
         statusB = isCompletedAll ? "🏆 THẮNG CHUNG CUỘC" : "🟢 TẠM DẪN TRƯỚC";
         statusA = isCompletedAll ? "❌ THUA CHUNG CUỘC" : "🔴 TẠM BỊ DẪN";
       } else {

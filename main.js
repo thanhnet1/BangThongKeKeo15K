@@ -749,7 +749,7 @@
       const currentMode = dateKeoMode[dateStr] || "default";
       let stats = {};
 
-      vdvs.forEach(v => { stats[v] = { played: 0, winK: 0, loseK: 0, total: 0 }; });
+      vdvs.forEach(v => { stats[v] = { played: 0, winCount: 0, loseCount: 0, winK: 0, loseK: 0, total: 0 }; });
 
       matches.forEach(m => {
         const s1 = parseInt(m.score1);
@@ -766,11 +766,11 @@
           let effectiveLose = isHam ? loseAmt * 2 : loseAmt;
 
           if (s1 > s2) {
-            pair1.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].winK += effectiveWin; stats[v].total += effectiveWin; } });
-            pair2.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].loseK += effectiveLose; stats[v].total += effectiveLose; } });
+            pair1.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].winCount++; stats[v].winK += effectiveWin; stats[v].total += effectiveWin; } });
+            pair2.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].loseCount++; stats[v].loseK += effectiveLose; stats[v].total += effectiveLose; } });
           } else if (s2 > s1) {
-            pair2.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].winK += effectiveWin; stats[v].total += effectiveWin; } });
-            pair1.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].loseK += effectiveLose; stats[v].total += effectiveLose; } });
+            pair2.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].winCount++; stats[v].winK += effectiveWin; stats[v].total += effectiveWin; } });
+            pair1.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].loseCount++; stats[v].loseK += effectiveLose; stats[v].total += effectiveLose; } });
           }
         }
       });
@@ -800,7 +800,6 @@
           if (st.played >= 4 && netTotal > 0) { bringBack = netTotal; sumBringBack += bringBack; }
           if (netTotal < 0) { sumAmThucTe += netTotal; }
 
-          // Chỉ cộng vào tổng BTC thu về khi ô "Thực tế" (isPaid) được tích chọn
           if (isPaid) {
             if (netTotal < 0) sumThucThu += Math.abs(netTotal);
             btcThuVeCalculated += netTotal;
@@ -831,8 +830,12 @@
 
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
 
+          // SỬA LỖI: Truyền số trận thắng (st.winCount) và số trận thua (st.loseCount) dạng số nguyên
           summaryRowsHtml += renderComponent('home.summary-tr-1', {
-            vColor, v, st_played: st.played,
+            vColor, v, 
+            st_played: st.played,
+            st_winCount: st.winCount,
+            st_loseCount: st.loseCount,
             if_st_winK_0: (st.winK > 0 ? `+${st.winK}K` : '-'),
             if_st_loseK_0: (st.loseK < 0 ? `${st.loseK}K` : '-'),
             if_bringBack_0: (bringBack > 0 ? `+${bringBack}K` : '-'),

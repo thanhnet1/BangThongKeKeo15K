@@ -497,7 +497,7 @@
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
 
-      // Xây dựng sẵn khung chọn VĐV xin nghỉ độc lập (để đưa xuống dưới bảng chi tiết trận)
+      // Xây dựng sẵn khung chọn VĐV xin nghỉ độc lập để truyền vào template home.day-tab
       const absentSelectorStandalone = buildAbsentSelectorRow(dateStr, 0);
 
       let html = renderComponent('home.day-tab', {
@@ -753,7 +753,6 @@
       const currentMode = dateKeoMode[dateStr] || "default";
       let stats = {};
 
-      // Khởi tạo wincount và losecount là số nguyên đếm số trận
       vdvs.forEach(v => { stats[v] = { played: 0, wincount: 0, losecount: 0, winK: 0, loseK: 0, total: 0 }; });
 
       matches.forEach(m => {
@@ -835,7 +834,6 @@
 
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
 
-          // Truyền đúng các khóa chữ thường st_wincount và st_losecount khớp với template HTML
           summaryRowsHtml += renderComponent('home.summary-tr-1', {
             vColor, v, 
             st_played: st.played,
@@ -863,9 +861,9 @@
         : "NO";
       const isYes = currentBtcAdminOption === "YES";
 
+      // Đã loại bỏ buildAbsentSelectorRow khỏi template summary bên dưới
       let summaryTableHtml = renderComponent('home.summary', {
         summaryRowsHtml,
-        buildAbsentSelectorRow_dateStr_9: (buildAbsentSelectorRow(dateStr, 8)),
         sumBringBack: (sumBringBack > 0 ? `+${sumBringBack}K` : `${sumBringBack}K`),
         btcThuVeCalculated: (btcThuVeCalculated !== 0 ? (btcThuVeCalculated > 0 ? `+${btcThuVeCalculated}K` : `${btcThuVeCalculated}K`) : '0K'),
         sumFine_color: (sumFine < 0 ? '#dc2626' : '#64748b'),

@@ -497,12 +497,9 @@
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
 
-      // Xây dựng sẵn khung chọn VĐV xin nghỉ độc lập để truyền vào template home.day-tab
-      const absentSelectorStandalone = buildAbsentSelectorRow(dateStr, 0);
-
+      // 1. Render khung bảng trận đấu
       let html = renderComponent('home.day-tab', {
         dateStr,
-        absentSelectorStandalone,
         freeKeoHeader: (currentMode === 'free' ? '<th class="py-2.5 px-2 text-center border-r border-slate-200" style="width:150px;">Mệnh giá thắng/thua</th>' : ''),
         selected_currentMode_default: (currentMode === 'default' ? 'selected' : ''),
         selected_currentMode_k25: (currentMode === 'k25' ? 'selected' : ''),
@@ -510,6 +507,7 @@
         selected_currentMode_free: (currentMode === 'free' ? 'selected' : '')
       });
 
+      // 2. Render từng dòng trận đấu
       matches.forEach((m, idx) => {
         const val1 = (m.score1 || "").toString().trim();
         const val2 = (m.score2 || "").toString().trim();
@@ -589,8 +587,13 @@
         });
       });
 
+      // 3. Đóng thẻ tbody/table của chi tiết các trận
       html += renderComponent('home.day-tab-end-tbody-1');
 
+      // 4. Ghép trực tiếp đoạn HTML Quản Lý VĐV Xin Nghỉ đã render xong bên dưới
+      html += buildAbsentSelectorRow(dateStr, 0);
+
+      // 5. Render tiếp Bảng tổng hợp
       renderSingleDaySummaryTable(dateStr, html, container);
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-DAYTAB] ▲▲▲ */

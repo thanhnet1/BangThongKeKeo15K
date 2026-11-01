@@ -749,6 +749,7 @@
       const currentMode = dateKeoMode[dateStr] || "default";
       let stats = {};
 
+      // Khởi tạo winCount và loseCount là số nguyên đếm số trận
       vdvs.forEach(v => { stats[v] = { played: 0, winCount: 0, loseCount: 0, winK: 0, loseK: 0, total: 0 }; });
 
       matches.forEach(m => {
@@ -830,7 +831,7 @@
 
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
 
-          // SỬA LỖI: Truyền số trận thắng (st.winCount) và số trận thua (st.loseCount) dạng số nguyên
+          // Truyền đúng st_winCount và st_loseCount dạng số nguyên vào template
           summaryRowsHtml += renderComponent('home.summary-tr-1', {
             vColor, v, 
             st_played: st.played,

@@ -27,10 +27,10 @@
     font-size: 12px;
   }
 
-  /* Tối ưu hiển thị bảng tổng hợp trên mobile (co dãn vừa khít màn hình dọc) */
+  /* Tối ưu hiển thị bảng tổng hợp trên mobile (co dãn vừa khít màn hình dọc, không cuộn ngang) */
   @media (max-width: 639px) {
     .sum-table-container {
-      overflow-x: hidden !important; /* Không bắt cuộn ngang bảng tổng hợp */
+      overflow-x: hidden !important;
     }
     .sum-table-responsive {
       width: 100% !important;
@@ -226,7 +226,7 @@
 <!-- [/PART] -->
 
 <!-- [PART: summary-tr-1] -->
-<!-- HIỂN THỊ SỐ TRẬN THẮNG & THUA BẰNG SỐ NGUYÊN (NHƯ CỘT TRẬN) -->
+<!-- HIỂN THỊ SỐ TRẬN THẮNG (st_winCount) & THUA (st_loseCount) BẰNG SỐ NGUYÊN -->
 <tr class="hover:bg-slate-50 transition border-b border-slate-100">
   <td class="py-2 sm:py-2.5 px-1.5 sm:px-3 font-bold text-xs border-r border-slate-200 whitespace-nowrap" style="color: {{vColor}};">{{v}}</td>
   <td class="py-2 sm:py-2.5 px-1 text-center text-slate-700 text-xs border-r border-slate-200">{{st_played}}</td>

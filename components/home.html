@@ -209,12 +209,12 @@
 <!-- [PART: summary-tr-1] -->
 <tr class="hover:bg-slate-50 transition border-b border-slate-100 whitespace-nowrap">
   <td class="py-2.5 px-3 font-bold text-xs border-r border-slate-200" style="color: {{vColor}};">{{v}}</td>
-  <td class="py-2.5 px-2 text-center text-slate-700 text-xs border-r border-slate-200">{{st_played}}</td>
-  <td class="py-2.5 px-2 text-center font-bold text-emerald-600 text-xs border-r border-slate-200">{{if_st_winK_0}}</td>
-  <td class="py-2.5 px-2 text-center font-bold text-red-600 text-xs border-r border-slate-200">{{if_st_loseK_0}}</td>
-  <td class="py-2.5 px-2 text-center font-bold text-emerald-600 text-xs border-r border-slate-200">{{if_bringBack_0}}</td>
-  <td class="py-2.5 px-2 text-center font-bold text-xs border-r border-slate-200 {{if_st_total_0_class}}">{{st_total}}</td>
-  <td class="py-2.5 px-2 text-center border-r border-slate-200">
+  <td class="py-2.5 px-2 text-center text-slate-700 text-xs border-r border-slate-200" data-label="Trận">{{st_played}}</td>
+  <td class="py-2.5 px-2 text-center font-bold text-emerald-600 text-xs border-r border-slate-200" data-label="Số Trận Thắng">{{st_win}}</td>
+  <td class="py-2.5 px-2 text-center font-bold text-red-600 text-xs border-r border-slate-200" data-label="Số Trận Thua">{{st_lose}}</td>
+  <td class="py-2.5 px-2 text-center font-bold text-emerald-600 text-xs border-r border-slate-200" data-label="Tiền Mang Về">{{if_bringBack_0}}</td>
+  <td class="py-2.5 px-2 text-center font-bold text-xs border-r border-slate-200 {{if_st_total_0_class}}" data-label="Tổng Kèo">{{st_total}}</td>
+  <td class="py-2.5 px-2 text-center border-r border-slate-200" data-label="Thực Tế">
     <input type="checkbox" onclick="togglePayment('{{payKey}}')" class="{{checkboxClass}} w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" {{if_isPaid}} title="{{if_isAdminVerified}}">
   </td>
   <td class="py-2.5 px-3 text-xs font-semibold {{noteClass}}" style="{{noteStyle}}">{{noteText}}</td>
@@ -236,14 +236,14 @@
 
   <!-- Bảng thống kê dạng 1 dòng, hỗ trợ cuộn ngang -->
   <div class="overflow-x-auto scrollbar-thin">
-    <table class="w-full text-left border-collapse min-w-[650px]">
+    <table class="w-full text-left border-collapse min-w-[700px]">
       <thead>
         <tr class="bg-slate-100 text-slate-600 text-[11px] sm:text-xs uppercase font-bold border-b border-slate-200 whitespace-nowrap">
           <th class="py-2.5 px-3 border-r border-slate-200">VĐV</th>
           <th class="py-2.5 px-2 text-center border-r border-slate-200">Trận</th>
-          <th class="py-2.5 px-2 text-center border-r border-slate-200">Thắng</th>
-          <th class="py-2.5 px-2 text-center border-r border-slate-200">Thua</th>
-          <th class="py-2.5 px-2 text-center border-r border-slate-200">Thắng Quỹ</th>
+          <th class="py-2.5 px-2 text-center border-r border-slate-200">Số Trận Thắng</th>
+          <th class="py-2.5 px-2 text-center border-r border-slate-200">Số Trận Thua</th>
+          <th class="py-2.5 px-2 text-center border-r border-slate-200">Tiền Mang Về</th>
           <th class="py-2.5 px-2 text-center border-r border-slate-200">Tổng Kèo</th>
           <th class="py-2.5 px-2 text-center border-r border-slate-200">Thực Tế</th>
           <th class="py-2.5 px-3">Ghi Chú</th>

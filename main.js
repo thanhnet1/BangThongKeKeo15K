@@ -1961,12 +1961,33 @@
 
     function generateDynamicSub2Matches() {
       const currentRoster = window.getCurrentRoster ? window.getCurrentRoster() : {};
-      if (!miniGame1Sub2Matches || miniGame1Sub2Matches.length === 0) {
+      
+      // SỬA ĐỔI QUAN TRỌNG: Kiểm tra nếu chưa đủ 17 trận thì tự tạo mảng 17 trận chuẩn
+      if (!miniGame1Sub2Matches || miniGame1Sub2Matches.length < 17) {
         miniGame1Sub2Matches = minigame2010Matches.map((match, idx) => ({
-          id: match.id, code: match.code, category: match.type, group: match.group,
-          a1: currentRoster[match.teamAKey] || "", a2: "", scoreA: "", scoreB: "",
-          b1: currentRoster[match.teamBKey] || "", b2: "", customWin: 5, customLose: -15
+          id: match.id, 
+          code: match.code, 
+          category: match.type, 
+          group: match.group,
+          a1: currentRoster[match.teamAKey] || "", 
+          a2: "", 
+          scoreA: "", 
+          scoreB: "",
+          b1: currentRoster[match.teamBKey] || "", 
+          b2: "", 
+          customWin: 5, 
+          customLose: -15
         }));
+      } else {
+        // Cập nhật lại danh sách VĐV mặc định vào mảng nếu chưa chọn VĐV
+        miniGame1Sub2Matches.forEach((m, idx) => {
+          if (minigame2010Matches[idx]) {
+            const matchInfo = minigame2010Matches[idx];
+            if (!m.a1) m.a1 = currentRoster[matchInfo.teamAKey] || "";
+            if (!m.b1) m.b1 = currentRoster[matchInfo.teamBKey] || "";
+            if (!m.category) m.category = matchInfo.type;
+          }
+        });
       }
     }
 
@@ -2694,7 +2715,8 @@
           if (data.mini1Sub2KeoMode) mini1Sub2KeoMode = data.mini1Sub2KeoMode;
           if (data.mini1Sub2Payment) mini1Sub2Payment = data.mini1Sub2Payment;
 
-          if (data.miniGame1Sub2Matches && data.miniGame1Sub2Matches.length > 0) {
+          // SỬA ĐỔI QUAN TRỌNG: Gọi tạo lại 17 trận nếu nhận mảng rỗng từ Firestore
+          if (data.miniGame1Sub2Matches && data.miniGame1Sub2Matches.length >= 17) {
             miniGame1Sub2Matches = data.miniGame1Sub2Matches;
           } else {
             generateDynamicSub2Matches();

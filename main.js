@@ -497,8 +497,12 @@
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
 
+      // Xây dựng sẵn khung chọn VĐV xin nghỉ độc lập (để đưa xuống dưới bảng chi tiết trận)
+      const absentSelectorStandalone = buildAbsentSelectorRow(dateStr, 0);
+
       let html = renderComponent('home.day-tab', {
         dateStr,
+        absentSelectorStandalone,
         freeKeoHeader: (currentMode === 'free' ? '<th class="py-2.5 px-2 text-center border-r border-slate-200" style="width:150px;">Mệnh giá thắng/thua</th>' : ''),
         selected_currentMode_default: (currentMode === 'default' ? 'selected' : ''),
         selected_currentMode_k25: (currentMode === 'k25' ? 'selected' : ''),

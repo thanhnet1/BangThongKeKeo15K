@@ -1497,10 +1497,10 @@
       let quyCon1 = sumThucThu1 - Math.abs(btcThuVeCalculated1);
 
       let html = renderComponent('minigame1.team-tab', {
-        matchesPlayedCount, totalMatches, winCountA, totalScoreA,
+        matchesPlayedCount, totalMatches, wincountA, totalScoreA,
         diffClass_totalScoreA: ((totalScoreA - totalScoreB) > 0 ? 'number-pos' : ((totalScoreA - totalScoreB) < 0 ? 'number-neg' : 'number-zero')),
         diffText_totalScoreA: ((totalScoreA - totalScoreB) > 0 ? `+${totalScoreA - totalScoreB}` : (totalScoreA - totalScoreB)),
-        statusA, winCountB, totalScoreB,
+        statusA, wincountB, totalScoreB,
         diffClass_totalScoreB: ((totalScoreB - totalScoreA) > 0 ? 'number-pos' : ((totalScoreB - totalScoreA) < 0 ? 'number-neg' : 'number-zero')),
         diffText_totalScoreB: ((totalScoreB - totalScoreA) > 0 ? `+${totalScoreB - totalScoreA}` : (totalScoreB - totalScoreA)),
         statusB,

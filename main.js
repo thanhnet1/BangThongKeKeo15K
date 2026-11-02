@@ -118,7 +118,7 @@
       if (document.getElementById("subLabelSub1")) document.getElementById("subLabelSub1").innerText = titlesConfig.subSub1;
       if (document.getElementById("subLabelSub2")) document.getElementById("subLabelSub2").innerText = titlesConfig.subSub2;
       if (document.getElementById("navLabelMini2")) document.getElementById("navLabelMini2").innerText = titlesConfig.navMini2;
-      if (document.getElementById("subLabelMini2")) document.getElementById("subLabelMini2").innerText = titlesConfig.subSub2;
+      if (document.getElementById("subLabelMini2")) document.getElementById("subLabelMini2").innerText = titlesConfig.subMini2;
       if (document.getElementById("subLabelTour1")) document.getElementById("subLabelTour1").innerText = titlesConfig.subTour1;
       if (document.getElementById("subLabelTour2")) document.getElementById("subLabelTour2").innerText = titlesConfig.subTour2;
     }
@@ -535,17 +535,11 @@
         const score2ColorClass = (s2 === 0 ? "score-ham text-red-600 bg-red-50 font-black" : "text-slate-800 bg-white");
 
         const score1Inner = renderComponent('home.day-tab-input-1', {
-          displayScore1,
-          score1ColorClass,
-          dateStr,
-          idx
+          displayScore1, score1ColorClass, dateStr, idx
         });
 
         const score2Inner = renderComponent('home.day-tab-input-2', {
-          displayScore2,
-          score2ColorClass,
-          dateStr,
-          idx
+          displayScore2, score2ColorClass, dateStr, idx
         });
 
         const c1_p1_color = m.c1_p1 ? VDV_COLORS[vdvs.indexOf(m.c1_p1) % VDV_COLORS.length] : "#334155";
@@ -556,28 +550,17 @@
         let customKeoInputHtml = "";
         if (currentMode === 'free') {
           customKeoInputHtml = renderComponent('home.day-tab-td-1', {
-            m_customWin_or_default: (m.customWin !== undefined ? m.customWin : winAmt),
-            dateStr,
-            idx,
+            m_customWin_or_default: (m.customWin !== undefined ? m.customWin : winAmt), dateStr, idx,
             m_customLose_or_default: (m.customLose !== undefined ? m.customLose : loseAmt)
           });
         }
 
         html += renderComponent('home.day-tab-tr-1', {
-          dateStr,
-          idx,
-          m_id: m.id,
-          c1_p1_color,
-          generateVdvOptionsHtml_m_c1_p1: (generateVdvOptionsHtml(m.c1_p1)),
-          c1_p2_color,
-          generateVdvOptionsHtml_m_c1_p2: (generateVdvOptionsHtml(m.c1_p2)),
-          c2_p1_color,
-          generateVdvOptionsHtml_m_c2_p1: (generateVdvOptionsHtml(m.c2_p1)),
-          c2_p2_color,
-          generateVdvOptionsHtml_m_c2_p2: (generateVdvOptionsHtml(m.c2_p2)),
-          score1Inner,
-          score2Inner,
-          customKeoInputHtml,
+          dateStr, idx, m_id: m.id, c1_p1_color,
+          generateVdvOptionsHtml_m_c1_p1: (generateVdvOptionsHtml(m.c1_p1)), c1_p2_color,
+          generateVdvOptionsHtml_m_c1_p2: (generateVdvOptionsHtml(m.c1_p2)), c2_p1_color,
+          generateVdvOptionsHtml_m_c2_p1: (generateVdvOptionsHtml(m.c2_p1)), c2_p2_color,
+          generateVdvOptionsHtml_m_c2_p2: (generateVdvOptionsHtml(m.c2_p2)), score1Inner, score2Inner, customKeoInputHtml,
           winLoseClass_keo1: (keo1 > 0 ? 'number-pos' : (keo1 < 0 ? 'number-neg' : 'number-zero')),
           keo1: (keo1 > 0 ? `+${keo1}` : keo1),
           winLoseClass_keo2: (keo2 > 0 ? 'number-pos' : (keo2 < 0 ? 'number-neg' : 'number-zero')),
@@ -693,9 +676,7 @@
       const countSelect = renderComponent('home.absent-select-row-select-1', {
         d,
         countOpts_rows: (countOpts.map(n => renderComponent('home.absent-select-row-option-1', {
-          n,
-          selected_info_count_n: (info.count === n ? 'selected' : ''),
-          if_n_0: (n === 0 ? 'Không có VĐV nghỉ' : n + ' VĐV nghỉ')
+          n, selected_info_count_n: (info.count === n ? 'selected' : ''), if_n_0: (n === 0 ? 'Không có VĐV nghỉ' : n + ' VĐV nghỉ')
         })).join(''))
       });
 
@@ -705,11 +686,7 @@
           const color = idx !== -1 ? VDV_COLORS[idx % VDV_COLORS.length] : "#1e293b";
           const taken = info.players.some((p, j) => j !== i && p === nm);
           return renderComponent('home.absent-select-row-option-3', {
-            escAbsentAttr_nm: (escAbsentAttr(nm)),
-            selected_cur_nm: (cur === nm ? 'selected' : ''),
-            if_taken: (taken ? 'disabled' : ''),
-            color,
-            nm
+            escAbsentAttr_nm: (escAbsentAttr(nm)), selected_cur_nm: (cur === nm ? 'selected' : ''), if_taken: (taken ? 'disabled' : ''), color, nm
           });
         }).join('');
 
@@ -717,33 +694,19 @@
         const fineColor = isUnexcused ? '#dc2626' : '#16a34a';
 
         return renderComponent('home.absent-select-row-option-2', {
-          d,
-          i,
-          i_plus1: (i + 1),
-          opts,
-          color: cur ? VDV_COLORS[vdvs.indexOf(cur) % VDV_COLORS.length] : '#334155',
-          fine_color: fineColor,
-          selected_unexcused: (isUnexcused ? 'selected' : ''),
-          selected_excused: (!isUnexcused ? 'selected' : '')
+          d, i, i_plus1: (i + 1), opts, color: cur ? VDV_COLORS[vdvs.indexOf(cur) % VDV_COLORS.length] : '#334155', fine_color: fineColor,
+          selected_unexcused: (isUnexcused ? 'selected' : ''), selected_excused: (!isUnexcused ? 'selected' : '')
         });
       }).join('');
 
-      return renderComponent('home.absent-select-row', {
-        colspan,
-        countSelect,
-        slots
-      });
+      return renderComponent('home.absent-select-row', { colspan, countSelect, slots });
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-ABSENT] ▲▲▲ */
 
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (An toàn tuyệt đối) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const targetContainer = container || document.getElementById("tabContent");
-      
-      if (!targetContainer) {
-        console.error("❌ Không tìm thấy vùng chứa (tabContent) trên giao diện!");
-        return;
-      }
+      if (!targetContainer) return;
 
       const matches = matchesData[dateStr] || [];
       const currentMode = dateKeoMode[dateStr] || "default";
@@ -754,13 +717,11 @@
       matches.forEach(m => {
         const s1 = parseInt(m.score1);
         const s2 = parseInt(m.score2);
-
         let { winAmt, loseAmt } = getKeoValues(currentMode, m);
 
         if (!isNaN(s1) && !isNaN(s2)) {
           const pair1 = [m.c1_p1, m.c1_p2].filter(Boolean);
           const pair2 = [m.c2_p1, m.c2_p2].filter(Boolean);
-
           let isHam = (s1 === 0 || s2 === 0);
           let effectiveWin = isHam ? (winAmt > 0 ? winAmt * 2 : 0) : winAmt;
           let effectiveLose = isHam ? loseAmt * 2 : loseAmt;
@@ -831,30 +792,21 @@
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
 
           summaryRowsHtml += renderComponent('home.summary-tr-1', {
-            vColor, v, 
-            st_played: st.played,
-            st_wincount: st.wincount,
-            st_losecount: st.losecount,
+            vColor, v, st_played: st.played, st_wincount: st.wincount, st_losecount: st.losecount,
             if_st_winK_0: (st.winK > 0 ? `+${st.winK}K` : '-'),
             if_st_loseK_0: (st.loseK < 0 ? `${st.loseK}K` : '-'),
             if_bringBack_0: (bringBack > 0 ? `+${bringBack}K` : '-'),
             if_st_total_0_class: (netTotal < 0 ? 'number-neg' : (netTotal > 0 ? 'number-pos' : 'number-zero')),
             st_total: (netTotal > 0 ? `+${netTotal}K` : `${netTotal}K`),
-            checkboxClass,
-            if_isPaid: (isPaid ? 'checked' : ''),
-            payKey,
-            if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'),
-            noteText, noteStyle, noteClass
+            checkboxClass, if_isPaid: (isPaid ? 'checked' : ''), payKey,
+            if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'), noteText, noteStyle, noteClass
           });
         }
       });
 
       let quyCon = sumThucThu - Math.abs(sumAmThucTe + sumBringBack);
-
       const pStatus = paymentStatus[dateStr];
-      const currentBtcAdminOption = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption) 
-        ? pStatus.btcNoteAdminOption 
-        : "NO";
+      const currentBtcAdminOption = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption) ? pStatus.btcNoteAdminOption : "NO";
       const isYes = currentBtcAdminOption === "YES";
 
       let summaryTableHtml = renderComponent('home.summary', {
@@ -863,8 +815,7 @@
         btcThuVeCalculated: (btcThuVeCalculated !== 0 ? (btcThuVeCalculated > 0 ? `+${btcThuVeCalculated}K` : `${btcThuVeCalculated}K`) : '0K'),
         sumFine_color: (sumFine < 0 ? '#dc2626' : '#64748b'),
         sumFine_value: (sumFine < 0 ? `${sumFine}K` : '0K'),
-        sumThucThu: `${sumThucThu}K`,
-        dateStr,
+        sumThucThu: `${sumThucThu}K`, dateStr,
         isYes_color: (isYes ? '#16a34a' : '#dc2626'),
         selected_isYes: (isYes ? 'selected' : ''),
         selected_not_isYes: (!isYes ? 'selected' : ''),
@@ -872,22 +823,7 @@
         quyCon: (quyCon > 0 ? `+${quyCon}K` : `${quyCon}K`)
       });
 
-      const safeMatchesHtml = matchesHtml || "";
-      const safeSummaryHtml = summaryTableHtml || "";
-      const combinedHtml = safeMatchesHtml + safeSummaryHtml;
-
-      try {
-        targetContainer.innerHTML = "";
-        targetContainer.innerHTML = combinedHtml;
-      } catch (err) {
-        console.error("❌ Lỗi khi gán HTML vào container:", err);
-        targetContainer.textContent = "";
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = combinedHtml;
-        while (tempDiv.firstChild) {
-          targetContainer.appendChild(tempDiv.firstChild);
-        }
-      }
+      targetContainer.innerHTML = (matchesHtml || "") + (summaryTableHtml || "");
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-SUMMARY] ▲▲▲ */
 
@@ -1054,8 +990,7 @@
       const container = document.getElementById("datesMenuList");
       if (!container) return;
       container.innerHTML = dates.map(d => renderComponent('tonghop.dates-menu-item', {
-        if_currentTab_d_class: (currentTab === d ? 'number-pos font-bold' : ''),
-        d
+        if_currentTab_d_class: (currentTab === d ? 'number-pos font-bold' : ''), d
       })).join('');
     }
 /* ▲▲▲ KẾT THÚC KHỐI [TONGHOP-MENU] ▲▲▲ */
@@ -1172,10 +1107,7 @@
         let vdvColor = VDV_COLORS[index % VDV_COLORS.length];
 
         html += renderComponent('tonghop.tab-head-tr-1', {
-          vdvColor,
-          v,
-          dayCells,
-          totalCls,
+          vdvColor, v, dayCells, totalCls,
           rowSum_text: (rowSum !== 0 ? (rowSum > 0 ? `+${rowSum}K` : `${rowSum}K`) : '0K')
         });
       });
@@ -1185,16 +1117,14 @@
         grandTotalAllDays += val;
         let cls = val < 0 ? 'number-neg' : (val > 0 ? 'number-pos' : 'number-zero');
         return renderComponent('tonghop.tab-head-td-1', {
-          cls,
-          val_text: (val !== 0 ? (val > 0 ? `+${val}K` : `${val}K`) : '0K')
+          cls, val_text: (val !== 0 ? (val > 0 ? `+${val}K` : `${val}K`) : '0K')
         });
       }).join('');
 
       let grandTotalCls = grandTotalAllDays < 0 ? 'number-neg' : (grandTotalAllDays > 0 ? 'number-pos' : 'number-zero');
 
       html += renderComponent('tonghop.tab-head-tr-2', {
-        daySumCells,
-        grandTotalCls,
+        daySumCells, grandTotalCls,
         grandTotalAllDays_text: (grandTotalAllDays !== 0 ? (grandTotalAllDays > 0 ? `+${grandTotalAllDays}K` : `${grandTotalAllDays}K`) : '0K')
       });
 
@@ -1402,8 +1332,8 @@
           matchesPlayedCount++;
           totalScoreA += sA;
           totalScoreB += sB;
-          if (sA > sB) winCountA++;
-          else if (sB > sA) winCountB++;
+          if (sA > sB) wincountA++;
+          else if (sB > sA) wincountB++;
         }
       });
 
@@ -1473,19 +1403,14 @@
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
 
           summaryRowsHtml1 += renderComponent('minigame1.team-tab-tr-1', {
-            vColor,
-            v,
-            st_played: st.played,
+            vColor, v, st_played: st.played,
             if_st_winK_0: (st.winK > 0 ? `+${st.winK}` : ''),
             if_st_loseK_0: (st.loseK < 0 ? st.loseK : ''),
             if_bringBack_0: (bringBack > 0 ? `+${bringBack}` : ''),
             if_st_total_0_class: (st.total < 0 ? 'number-neg' : (st.total > 0 ? 'number-pos' : 'number-zero')),
             st_total: (st.total > 0 ? `+${st.total}` : st.total),
-            checkboxClass,
-            if_isPaid: (isPaid ? 'checked' : ''),
-            payKey,
-            if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'),
-            noteText
+            checkboxClass, if_isPaid: (isPaid ? 'checked' : ''), payKey,
+            if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'), noteText
           });
         }
       });
@@ -1821,8 +1746,7 @@
             if_st_total_0_class: (st.total < 0 ? 'number-neg' : (st.total > 0 ? 'number-pos' : 'number-zero')),
             st_total: (st.total > 0 ? `+${st.total}` : st.total),
             checkboxClass, if_isPaid: (isPaid ? 'checked' : ''), payKey,
-            if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'),
-            noteText
+            if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'), noteText
           });
         }
       });
@@ -2185,8 +2109,7 @@
             if_st_total_0_class: (st.total < 0 ? 'number-neg' : (st.total > 0 ? 'number-pos' : 'number-zero')),
             st_total: (st.total > 0 ? `+${st.total}` : st.total),
             checkboxClass, if_isPaid: (isPaid ? 'checked' : ''), payKey,
-            if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'),
-            noteText
+            if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'), noteText
           });
         }
       });
@@ -2217,7 +2140,42 @@
         }).join('')),
         renderKeoSelectDropdown: (renderKeoSelectDropdown(mini1Sub2KeoMode, 'changeSub2KeoMode')),
         freeKeoHeader: (mini1Sub2KeoMode === 'free' ? '<th style="width:100px;" class="th-money">MỆNH GIÁ</th>' : ''),
-        miniGame1Sub2Matches_rows: (mini1Sub2TeamA.length > 0 && mini1Sub2TeamB.length > 0 ? mini1Sub2Team2RowsRender(mini1Sub2KeoMode) : ''),
+        miniGame1Sub2Matches_rows: (mini1Sub2TeamA.length > 0 && mini1Sub2TeamB.length > 0 ? miniGame1Sub2Matches.map((m, idx) => {
+          let sA = parseInt(m.scoreA);
+          let sB = parseInt(m.scoreB);
+          let resText = "-";
+          let matchStatusHtml = renderComponent('minigame1.sub2-tab-span-5');
+
+          if (!isNaN(sA) && !isNaN(sB)) {
+            matchStatusHtml = renderComponent('minigame1.sub2-tab-span-6');
+            if (sA > sB) resText = "<span class='number-pos'>Đội A</span>";
+            else if (sB > sA) resText = "<span style='color:#0284c7; font-weight:bold;'>Đội B</span>";
+            else resText = "Hòa";
+          }
+
+          const colorA1 = m.a1 ? VDV_COLORS[vdvs.indexOf(m.a1) % VDV_COLORS.length] : "#334155";
+          const colorA2 = m.a2 ? VDV_COLORS[vdvs.indexOf(m.a2) % VDV_COLORS.length] : "#334155";
+          const colorB1 = m.b1 ? VDV_COLORS[vdvs.indexOf(m.b1) % VDV_COLORS.length] : "#334155";
+          const colorB2 = m.b2 ? VDV_COLORS[vdvs.indexOf(m.b2) % VDV_COLORS.length] : "#334155";
+
+          let customKeoCell = "";
+          if (mini1Sub2KeoMode === 'free') {
+            customKeoCell = renderComponent('minigame1.sub2-tab-td-1', {
+              m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5), idx,
+              m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
+            });
+          }
+
+          return renderComponent('minigame1.sub2-tab-tr-2', {
+            idx, m_id: m.id, m_category: m.category, colorA1,
+            generateVdvOptionsHtml_m_a1_mini1Sub2TeamA: (generateVdvOptionsHtml(m.a1, mini1Sub2TeamA)),
+            colorA2, generateVdvOptionsHtml_m_a2_mini1Sub2TeamA: (generateVdvOptionsHtml(m.a2, mini1Sub2TeamA)),
+            m_scoreA: (m.scoreA ?? ''), m_scoreB: (m.scoreB ?? ''), colorB1,
+            generateVdvOptionsHtml_m_b1_mini1Sub2TeamB: (generateVdvOptionsHtml(m.b1, mini1Sub2TeamB)),
+            colorB2, generateVdvOptionsHtml_m_b2_mini1Sub2TeamB: (generateVdvOptionsHtml(m.b2, mini1Sub2TeamB)),
+            customKeoCell, matchStatusHtml, resText
+          });
+        }).join('') : ''),
         summaryRowsHtml2,
         sumBringBack2: (sumBringBack2 > 0 ? `+${sumBringBack2}` : sumBringBack2),
         btcThuVeCalculated2: (btcThuVeCalculated2 > 0 ? `+${btcThuVeCalculated2}` : btcThuVeCalculated2),
@@ -2227,51 +2185,24 @@
 
       container.innerHTML = html;
     }
-
-    function mini1Sub2Team2RowsRender(mode) {
-      return miniGame1Sub2Matches.map((m, idx) => {
-        let sA = parseInt(m.scoreA);
-        let sB = parseInt(m.scoreB);
-        let resText = "-";
-        let matchStatusHtml = renderComponent('minigame1.sub2-tab-span-5');
-
-        if (!isNaN(sA) && !isNaN(sB)) {
-          matchStatusHtml = renderComponent('minigame1.sub2-tab-span-6');
-          if (sA > sB) resText = "<span class='number-pos'>Đội A</span>";
-          else if (sB > sA) resText = "<span style='color:#0284c7; font-weight:bold;'>Đội B</span>";
-          else resText = "Hòa";
-        }
-
-        const colorA1 = m.a1 ? VDV_COLORS[vdvs.indexOf(m.a1) % VDV_COLORS.length] : "#334155";
-        const colorA2 = m.a2 ? VDV_COLORS[vdvs.indexOf(m.a2) % VDV_COLORS.length] : "#334155";
-        const colorB1 = m.b1 ? VDV_COLORS[vdvs.indexOf(m.b1) % VDV_COLORS.length] : "#334155";
-        const colorB2 = m.b2 ? VDV_COLORS[vdvs.indexOf(m.b2) % VDV_COLORS.length] : "#334155";
-
-        let customKeoCell = "";
-        if (mode === 'free') {
-          customKeoCell = renderComponent('minigame1.sub2-tab-td-1', {
-            m_customWin_or_default: (m.customWin !== undefined ? m.customWin : 5), idx,
-            m_customLose_or_default: (m.customLose !== undefined ? m.customLose : -15)
-          });
-        }
-
-        return renderComponent('minigame1.sub2-tab-tr-2', {
-          idx, m_id: m.id, m_category: m.category, colorA1,
-          generateVdvOptionsHtml_m_a1_mini1Sub2TeamA: (generateVdvOptionsHtml(m.a1, mini1Sub2TeamA)),
-          colorA2, generateVdvOptionsHtml_m_a2_mini1Sub2TeamA: (generateVdvOptionsHtml(m.a2, mini1Sub2TeamA)),
-          m_scoreA: (m.scoreA ?? ''), m_scoreB: (m.scoreB ?? ''), colorB1,
-          generateVdvOptionsHtml_m_b1_mini1Sub2TeamB: (generateVdvOptionsHtml(m.b1, mini1Sub2TeamB)),
-          colorB2, generateVdvOptionsHtml_m_b2_mini1Sub2TeamB: (generateVdvOptionsHtml(m.b2, mini1Sub2TeamB)),
-          customKeoCell, matchStatusHtml, resText
-        });
-      }).join('');
-    }
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME1-SUB2-TAB] ▲▲▲ */
 
 /* ████████████████ MODULE MINIGAME2 · MINIGAME 2 ████████████████ */
 /* ▼▼▼ KHỐI [MINIGAME2-DATA] ▼▼▼ BẮT ĐẦU */
-    let mini2PairsA = [];
-    let mini2PairsB = [];
+    let mini2PairsA = [
+      { name: "Trí Đỏ - Tiến Thọ" },
+      { name: "Điền Chèm - Lợi Trí" },
+      { name: "Cẩm Ly - Hải Hà" },
+      { name: "Châu Sĩ - Long Diễn" },
+      { name: "Phú Mỗ - Dũng Ngạc" }
+    ];
+    let mini2PairsB = [
+      { name: "Thành Sóc - Thành Sóc" },
+      { name: "Tuấn La - Hà Giấy" },
+      { name: "Vân Đình - Quỳnh Cool" },
+      { name: "Minh Hạnh - Minh Vượng" },
+      { name: "Tự Do" }
+    ];
     let mini2MatchesA = [];
     let mini2MatchesB = [];
     let mini2Knockout = {
@@ -2465,9 +2396,6 @@
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME2-TOUR] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME2-TAB] ▼▼▼ BẮT ĐẦU */
     function renderMiniGame2Tab(container) {
-      if (!mini2PairsA || mini2PairsA.length === 0) setMini2PairCount('A', 5);
-      if (!mini2PairsB || mini2PairsB.length === 0) setMini2PairCount('B', 5);
-
       let standingsA = computeGroupStandings(mini2PairsA, mini2MatchesA);
       let standingsB = computeGroupStandings(mini2PairsB, mini2MatchesB);
 
@@ -2531,9 +2459,9 @@
 
           let noteText = "";
           if (st.total < 0) {
-            noteText = isPaid ? "Đã nộp" : "Chưa nộp";
+            noteText = isPaid ? renderComponent('minigame2.tab-span-1') : renderComponent('minigame2.tab-span-2');
           } else if (st.total > 0) {
-            noteText = isPaid ? "Đã nhận" : "Chưa nhận quỹ";
+            noteText = isPaid ? renderComponent('minigame2.tab-span-3') : renderComponent('minigame2.tab-span-4');
           }
 
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
@@ -2712,6 +2640,7 @@
           if (data.mini1Sub2KeoMode) mini1Sub2KeoMode = data.mini1Sub2KeoMode;
           if (data.mini1Sub2Payment) mini1Sub2Payment = data.mini1Sub2Payment;
 
+          // SỬA ĐỔI QUAN TRỌNG: Gọi tạo lại 17 trận nếu nhận mảng rỗng từ Firestore
           if (data.miniGame1Sub2Matches && data.miniGame1Sub2Matches.length >= 17) {
             miniGame1Sub2Matches = data.miniGame1Sub2Matches;
           } else {
@@ -2724,18 +2653,8 @@
             miniGame1Matches = DEFAULT_MINI1_DATA;
           }
 
-          if (data.mini2PairsA && data.mini2PairsA.length > 0) {
-            mini2PairsA = data.mini2PairsA;
-          } else {
-            setMini2PairCount('A', 5);
-          }
-
-          if (data.mini2PairsB && data.mini2PairsB.length > 0) {
-            mini2PairsB = data.mini2PairsB;
-          } else {
-            setMini2PairCount('B', 5);
-          }
-
+          if (data.mini2PairsA) mini2PairsA = data.mini2PairsA;
+          if (data.mini2PairsB) mini2PairsB = data.mini2PairsB;
           if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
           if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
           if (data.mini2Knockout) {
@@ -2781,8 +2700,8 @@
       miniGame1Matches = DEFAULT_MINI1_DATA;
       generateDynamicSub1Matches();
       generateDynamicSub2Matches();
-      setMini2PairCount('A', 5);
-      setMini2PairCount('B', 5);
+      generateMini2MatchesForGroup('A');
+      generateMini2MatchesForGroup('B');
       currentTab = todayStr;
       
       syncVdvsFromPlayers();

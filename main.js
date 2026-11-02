@@ -2603,8 +2603,14 @@
 
       const freeKeoHeader = (currentMode === 'free' ? '<th style="width: 120px;" class="th-money">MỆNH GIÁ THẮNG/THUA</th>' : '');
       const mini2KeoMode_colspan = (currentMode === 'free' ? 5 : 4);
-      const renderKeoSelectDropdownHtml = renderKeoSelectDropdown(currentMode, 'changeMini2KeoMode');
-
+      const renderKeoSelectDropdown = `
+         <select onchange="changeMini2KeoMode(this.value)" style="font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif; font-size: 11px; font-weight: 700; color: #1e293b; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 4px 8px; outline: none;">
+            <option value="default" ${mode === 'default' ? 'selected' : ''}>Kèo 5k / -15k (Chuẩn)</option>
+            <option value="k25" ${mode === 'k25' ? 'selected' : ''}>Kèo 0k / -25k</option>
+            <option value="no_keo" ${mode === 'no_keo' ? 'selected' : ''}>Không tính kèo (0k/0k)</option>
+            <option value="free" ${mode === 'free' ? 'selected' : ''}>Kèo tự do (Custom)</option>
+         </select>
+      `;
       let html = renderComponent('minigame2.tab', {
         titlesConfig_subMini2: titlesConfig.subMini2,
         renderKeoSelectDropdown: renderKeoSelectDropdownHtml,

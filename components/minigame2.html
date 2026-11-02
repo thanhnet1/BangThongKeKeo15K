@@ -10,7 +10,7 @@
         <div class="nav-item">
           <button class="nav-btn" onclick="toggleMenu('menuMini2', event)">
             <i class="fa-solid fa-trophy text-yellow-400"></i>
-            <span id="navLabelMini2">GIẢI ĐẤU MINI GAME 2</span> ▾
+            <span id="navLabelMini2" style="font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif; font-weight: 700;">GIẢI ĐẤU MINI GAME 2</span> ▾
           </button>
           <div class="dropdown-menu right-align" id="menuMini2">
             <div class="dropdown-item" onclick="switchTab('minigame2')"><i class="fa-solid fa-trophy text-yellow-500"></i> 🏆 <span id="subLabelMini2">Giải Đấu Mini Game (Chia Bảng A & B)</span></div>
@@ -26,17 +26,17 @@
 <!-- từ hàm renderMiniGame2Tour1Tab() · slots: titlesConfig_subTour1, mini2Tour1Content -->
 <!-- [PART: tour1-tab] -->
 
-        <div class="card" style="border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
+        <div class="card" style="border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; background: #ffffff;">
           <div class="card-header-flex" style="background: #f8fafc; padding: 10px 14px; border-bottom: 1px solid #e2e8f0;">
-            <h2 class="card-title" style="font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">
+            <h2 class="card-title" style="font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif; font-weight: 800; color: #1e293b;">
               <span>⭐ {{titlesConfig_subTour1}}</span>
               <button onclick="editTitlePrompt('subTour1', '{{titlesConfig_subTour1}}')" style="background:none; border:none; color:#2563eb; cursor:pointer; font-size:12px;" title="Sửa tên tiêu đề"><i class="fa-solid fa-pen"></i></button>
             </h2>
           </div>
-          <div style="padding: 16px; font-size: 12px; color: #334155;">
-            <p style="font-weight: bold; margin-bottom: 8px;">Thể lệ & Mô tả:</p>
+          <div style="padding: 16px; font-size: 12px; color: #334155; font-family: system-ui, ui-rounded, 'SF Pro Rounded', sans-serif;">
+            <p style="font-weight: 700; margin-bottom: 8px; color: #1e293b;">Thể lệ & Mô tả:</p>
             <textarea id="tour1Input" rows="4" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:11px; font-family: system-ui, ui-rounded, 'SF Pro Rounded', sans-serif;" placeholder="Nhập thể lệ giải đấu...">{{mini2Tour1Content}}</textarea>
-            <button class="btn btn-green" style="margin-top: 10px; border-radius: 20px; padding: 6px 16px; font-weight: 600;" onclick="saveTour1Content()">Lưu Nội Dung Giải 1</button>
+            <button class="btn btn-green" style="margin-top: 10px; border-radius: 20px; padding: 6px 16px; font-weight: 700; font-family: system-ui, ui-rounded, sans-serif;" onclick="saveTour1Content()">Lưu Nội Dung Giải 1</button>
           </div>
         </div>
       
@@ -45,17 +45,17 @@
 <!-- từ hàm renderMiniGame2Tour2Tab() · slots: titlesConfig_subTour2, mini2Tour2Content -->
 <!-- [PART: tour2-tab] -->
 
-        <div class="card" style="border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
+        <div class="card" style="border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; background: #ffffff;">
           <div class="card-header-flex" style="background: #f8fafc; padding: 10px 14px; border-bottom: 1px solid #e2e8f0;">
-            <h2 class="card-title" style="font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">
+            <h2 class="card-title" style="font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif; font-weight: 800; color: #1e293b;">
               <span>🚀 {{titlesConfig_subTour2}}</span>
               <button onclick="editTitlePrompt('subTour2', '{{titlesConfig_subTour2}}')" style="background:none; border:none; color:#2563eb; cursor:pointer; font-size:12px;" title="Sửa tên tiêu đề"><i class="fa-solid fa-pen"></i></button>
             </h2>
           </div>
-          <div style="padding: 16px; font-size: 12px; color: #334155;">
-            <p style="font-weight: bold; margin-bottom: 8px;">Thể lệ & Mô tả:</p>
+          <div style="padding: 16px; font-size: 12px; color: #334155; font-family: system-ui, ui-rounded, 'SF Pro Rounded', sans-serif;">
+            <p style="font-weight: 700; margin-bottom: 8px; color: #1e293b;">Thể lệ & Mô tả:</p>
             <textarea id="tour2Input" rows="4" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:11px; font-family: system-ui, ui-rounded, 'SF Pro Rounded', sans-serif;" placeholder="Nhập thể lệ giải đấu...">{{mini2Tour2Content}}</textarea>
-            <button class="btn btn-green" style="margin-top: 10px; border-radius: 20px; padding: 6px 16px; font-weight: 600;" onclick="saveTour2Content()">Lưu Nội Dung Giải 2</button>
+            <button class="btn btn-green" style="margin-top: 10px; border-radius: 20px; padding: 6px 16px; font-weight: 700; font-family: system-ui, ui-rounded, sans-serif;" onclick="saveTour2Content()">Lưu Nội Dung Giải 2</button>
           </div>
         </div>
       
@@ -63,22 +63,22 @@
 
 <!-- từ hàm renderMiniGame2Tab() · không có slot -->
 <!-- [PART: tab-span-1] -->
-<span class="note-paid" style="color: #10b981; font-weight: 700; background: #ecfdf5; padding: 2px 8px; border-radius: 12px; font-size: 10px;">Đã nộp</span>
+<span class="note-paid" style="color: #10b981; font-weight: 700; background: #ecfdf5; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-family: system-ui, ui-rounded, sans-serif;">Đã nộp</span>
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · không có slot -->
 <!-- [PART: tab-span-2] -->
-<span class="note-unpaid" style="color: #ef4444; font-weight: 700; background: #fef2f2; padding: 2px 8px; border-radius: 12px; font-size: 10px;">Chưa nộp</span>
+<span class="note-unpaid" style="color: #ef4444; font-weight: 700; background: #fef2f2; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-family: system-ui, ui-rounded, sans-serif;">Chưa nộp</span>
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · không có slot -->
 <!-- [PART: tab-span-3] -->
-<span class="note-paid" style="color: #10b981; font-weight: 700; background: #ecfdf5; padding: 2px 8px; border-radius: 12px; font-size: 10px;">Đã nhận</span>
+<span class="note-paid" style="color: #10b981; font-weight: 700; background: #ecfdf5; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-family: system-ui, ui-rounded, sans-serif;">Đã nhận</span>
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · không có slot -->
 <!-- [PART: tab-span-4] -->
-<span class="note-unpaid" style="color: #ef4444; font-weight: 700; background: #fef2f2; padding: 2px 8px; border-radius: 12px; font-size: 10px;">Chưa nhận</span>
+<span class="note-unpaid" style="color: #ef4444; font-weight: 700; background: #fef2f2; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-family: system-ui, ui-rounded, sans-serif;">Chưa nhận</span>
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · slots: indColor, indName, st_played, if_st_winK_0, if_st_loseK_0, if_bringBack_0, if_st_total_0_class, st_total, checkboxClass, if_isPaid, payKey, if_isAdminVerified, noteText -->
@@ -86,7 +86,7 @@
 
             <tr style="border-bottom: 1px solid #f1f5f9; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">
               <td style="color: {{indColor}}; font-weight: 800; font-size:12px; text-align: left; padding: 8px 8px 8px 12px;">{{indName}}</td>
-              <td style="text-align: center;">{{st_played}}</td>
+              <td style="text-align: center; color: #334155; font-weight: 600;">{{st_played}}</td>
               <td class="txt-win" style="text-align: center; color: #10b981; font-weight: 700;">{{if_st_winK_0}}</td>
               <td class="txt-lose" style="text-align: center; color: #ef4444; font-weight: 700;">{{if_st_loseK_0}}</td>
               <td style="color:#2563eb; font-weight:bold; text-align: center;">{{if_bringBack_0}}</td>
@@ -116,10 +116,10 @@
         <!-- BẢNG A -->
         <div class="card" style="margin-bottom: 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
           <div class="card-header-flex" style="border-bottom: none; margin-bottom: 10px; padding-bottom: 0; display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin:0; font-size:13px; color:#c2410c; font-weight:900; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">⚡ BẢNG A</h3>
+            <h3 style="margin:0; font-size:13px; color:#1e293b; font-weight:900; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">⚡ BẢNG A</h3>
             <div style="display:flex; align-items:center; gap:6px;">
               <span style="font-weight:bold; font-size:11px; color:#475569; font-family: system-ui, ui-rounded, sans-serif;">Số cặp VĐV:</span>
-              <select style="width: auto; padding: 3px 8px; font-weight:bold; font-size:11px; border: 1px solid #cbd5e1; border-radius: 8px; background: #f8fafc; font-family: system-ui, ui-rounded, sans-serif;" onchange="setMini2PairCount('A', this.value)">
+              <select style="width: auto; padding: 3px 8px; font-weight:bold; font-size:11px; border: 1px solid #cbd5e1; border-radius: 8px; background: #f8fafc; font-family: system-ui, ui-rounded, sans-serif; color: #1e293b;" onchange="setMini2PairCount('A', this.value)">
                 <option value="4" {{selected_mini2PairsA_length_4}}>4 Cặp VĐV</option>
                 <option value="5" {{selected_mini2PairsA_length_5}}>5 Cặp VĐV</option>
               </select>
@@ -129,9 +129,9 @@
           <div style="display: flex; flex-direction: column; gap: 14px;">
             <!-- BẢNG XẾP HẠNG A -->
             <div class="table-responsive" style="border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden;">
-              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
+              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px; font-family: system-ui, ui-rounded, 'SF Pro Rounded', sans-serif;">
                 <thead>
-                  <tr style="background-color: #fff7ed; border-bottom: 1px solid #ffedd5;"><th colspan="5" style="padding: 8px; font-size: 11px; font-weight: 800; color: #c2410c; font-family: system-ui, ui-rounded, sans-serif;">BẢNG XẾP HẠNG BẢNG A</th></tr>
+                  <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;"><th colspan="5" style="padding: 8px; font-size: 11px; font-weight: 800; color: #1e293b; font-family: system-ui, ui-rounded, sans-serif;">BẢNG XẾP HẠNG BẢNG A</th></tr>
                   <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 10px; font-weight: 700;">
                     <th style="width:35px; padding: 6px;">STT</th>
                     <th style="text-align: left; padding-left: 12px;">PICKLEBALL - CẶP VĐV BẢNG A</th>
@@ -148,9 +148,9 @@
 
             <!-- LỊCH THI ĐẤU A -->
             <div class="table-responsive" style="border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden;">
-              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
+              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px; font-family: system-ui, ui-rounded, 'SF Pro Rounded', sans-serif;">
                 <thead>
-                  <tr style="background-color: #fff7ed; border-bottom: 1px solid #ffedd5;"><th colspan="{{mini2KeoMode_colspan}}" style="padding: 8px; font-size: 11px; font-weight: 800; color: #c2410c; font-family: system-ui, ui-rounded, sans-serif;">LỊCH THI ĐẤU BẢNG A</th></tr>
+                  <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;"><th colspan="{{mini2KeoMode_colspan}}" style="padding: 8px; font-size: 11px; font-weight: 800; color: #1e293b; font-family: system-ui, ui-rounded, sans-serif;">LỊCH THI ĐẤU BẢNG A</th></tr>
                   <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 10px; font-weight: 700;">
                     <th style="width:40px; padding: 6px;">TRẬN</th>
                     <th>ĐỘI 1</th>
@@ -170,10 +170,10 @@
         <!-- BẢNG B -->
         <div class="card" style="margin-bottom: 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
           <div class="card-header-flex" style="border-bottom: none; margin-bottom: 10px; padding-bottom: 0; display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin:0; font-size:13px; color:#0369a1; font-weight:900; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">⚡ BẢNG B</h3>
+            <h3 style="margin:0; font-size:13px; color:#1e293b; font-weight:900; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">⚡ BẢNG B</h3>
             <div style="display:flex; align-items:center; gap:6px;">
               <span style="font-weight:bold; font-size:11px; color:#475569; font-family: system-ui, ui-rounded, sans-serif;">Số cặp VĐV:</span>
-              <select style="width: auto; padding: 3px 8px; font-weight:bold; font-size:11px; border: 1px solid #cbd5e1; border-radius: 8px; background: #f8fafc; font-family: system-ui, ui-rounded, sans-serif;" onchange="setMini2PairCount('B', this.value)">
+              <select style="width: auto; padding: 3px 8px; font-weight:bold; font-size:11px; border: 1px solid #cbd5e1; border-radius: 8px; background: #f8fafc; font-family: system-ui, ui-rounded, sans-serif; color: #1e293b;" onchange="setMini2PairCount('B', this.value)">
                 <option value="4" {{selected_mini2PairsB_length_4}}>4 Cặp VĐV</option>
                 <option value="5" {{selected_mini2PairsB_length_5}}>5 Cặp VĐV</option>
               </select>
@@ -183,9 +183,9 @@
           <div style="display: flex; flex-direction: column; gap: 14px;">
             <!-- BẢNG XẾP HẠNG B -->
             <div class="table-responsive" style="border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden;">
-              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
+              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px; font-family: system-ui, ui-rounded, 'SF Pro Rounded', sans-serif;">
                 <thead>
-                  <tr style="background-color: #f0f9ff; border-bottom: 1px solid #e0f2fe;"><th colspan="5" style="padding: 8px; font-size: 11px; font-weight: 800; color: #0369a1; font-family: system-ui, ui-rounded, sans-serif;">BẢNG XẾP HẠNG BẢNG B</th></tr>
+                  <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;"><th colspan="5" style="padding: 8px; font-size: 11px; font-weight: 800; color: #1e293b; font-family: system-ui, ui-rounded, sans-serif;">BẢNG XẾP HẠNG BẢNG B</th></tr>
                   <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 10px; font-weight: 700;">
                     <th style="width:35px; padding: 6px;">STT</th>
                     <th style="text-align: left; padding-left: 12px;">PICKLEBALL - CẶP VĐV BẢNG B</th>
@@ -202,9 +202,9 @@
 
             <!-- LỊCH THI ĐẤU B -->
             <div class="table-responsive" style="border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden;">
-              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px;">
+              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px; font-family: system-ui, ui-rounded, 'SF Pro Rounded', sans-serif;">
                 <thead>
-                  <tr style="background-color: #f0f9ff; border-bottom: 1px solid #e0f2fe;"><th colspan="{{mini2KeoMode_colspan}}" style="padding: 8px; font-size: 11px; font-weight: 800; color: #0369a1; font-family: system-ui, ui-rounded, sans-serif;">LỊCH THI ĐẤU BẢNG B</th></tr>
+                  <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;"><th colspan="{{mini2KeoMode_colspan}}" style="padding: 8px; font-size: 11px; font-weight: 800; color: #1e293b; font-family: system-ui, ui-rounded, sans-serif;">LỊCH THI ĐẤU BẢNG B</th></tr>
                   <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 10px; font-weight: 700;">
                     <th style="width:40px; padding: 6px;">TRẬN</th>
                     <th>ĐỘI 1</th>
@@ -239,7 +239,7 @@
               <tbody style="font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">
                 <tr style="border-bottom: 1px solid #f1f5f9; background-color: #ffffff;">
                   <td style="padding: 8px; font-weight: 700; color: #475569;">Bán Kết 1</td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #fafafa;" value="{{mini2Knockout_bkc1_p1}}" onchange="updateMini2Knockout('bkc1', 'p1', this.value)"></td>
+                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #fafafa; color: #1e293b;" value="{{mini2Knockout_bkc1_p1}}" onchange="updateMini2Knockout('bkc1', 'p1', this.value)"></td>
                   <td>
                     <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
                       <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{mini2Knockout_bkc1_s1}}" oninput="updateMini2Knockout('bkc1', 's1', this.value)">
@@ -247,11 +247,11 @@
                       <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{mini2Knockout_bkc1_s2}}" oninput="updateMini2Knockout('bkc1', 's2', this.value)">
                     </div>
                   </td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #fafafa;" value="{{mini2Knockout_bkc1_p2}}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
+                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #fafafa; color: #1e293b;" value="{{mini2Knockout_bkc1_p2}}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
                 </tr>
                 <tr style="border-bottom: 1px solid #f1f5f9; background-color: #f8fafc;">
                   <td style="padding: 8px; font-weight: 700; color: #475569;">Bán Kết 2</td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #ffffff;" value="{{mini2Knockout_bkc2_p1}}" onchange="updateMini2Knockout('bkc2', 'p1', this.value)"></td>
+                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #ffffff; color: #1e293b;" value="{{mini2Knockout_bkc2_p1}}" onchange="updateMini2Knockout('bkc2', 'p1', this.value)"></td>
                   <td>
                     <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
                       <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{mini2Knockout_bkc2_s1}}" oninput="updateMini2Knockout('bkc2', 's1', this.value)">
@@ -259,48 +259,48 @@
                       <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{mini2Knockout_bkc2_s2}}" oninput="updateMini2Knockout('bkc2', 's2', this.value)">
                     </div>
                   </td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #ffffff;" value="{{mini2Knockout_bkc2_p2}}" onchange="updateMini2Knockout('bkc2', 'p2', this.value)"></td>
+                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #ffffff; color: #1e293b;" value="{{mini2Knockout_bkc2_p2}}" onchange="updateMini2Knockout('bkc2', 'p2', this.value)"></td>
                 </tr>
-                <tr style="border-bottom: 1px solid #f1f5f9; background-color: #fffbeb;">
-                  <td style="padding: 8px;"><strong style="color:#b45309;">Tranh 3 - 4</strong></td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #fde68a; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #ffffff; color: #92400e;" value="{{mini2Knockout_rank34_p1}}" onchange="updateMini2Knockout('rank34', 'p1', this.value)"></td>
+                <tr style="border-bottom: 1px solid #f1f5f9; background-color: #ffffff;">
+                  <td style="padding: 8px;"><strong style="color:#475569;">Tranh 3 - 4</strong></td>
+                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #ffffff; color: #1e293b;" value="{{mini2Knockout_rank34_p1}}" onchange="updateMini2Knockout('rank34', 'p1', this.value)"></td>
                   <td>
                     <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
-                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #d97706; border-radius: 6px; padding: 2px; font-weight: 800; color: #92400e;" value="{{mini2Knockout_rank34_s1}}" oninput="updateMini2Knockout('rank34', 's1', this.value)">
-                      <span style="color: #d97706; font-weight: 800;">-</span>
-                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #d97706; border-radius: 6px; padding: 2px; font-weight: 800; color: #92400e;" value="{{mini2Knockout_rank34_s2}}" oninput="updateMini2Knockout('rank34', 's2', this.value)">
+                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{mini2Knockout_rank34_s1}}" oninput="updateMini2Knockout('rank34', 's1', this.value)">
+                      <span style="color: #a855f7; font-weight: 800;">-</span>
+                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{mini2Knockout_rank34_s2}}" oninput="updateMini2Knockout('rank34', 's2', this.value)">
                     </div>
                   </td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #fde68a; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #ffffff; color: #92400e;" value="{{mini2Knockout_rank34_p2}}" onchange="updateMini2Knockout('rank34', 'p2', this.value)"></td>
+                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 700; font-family: inherit; background: #ffffff; color: #1e293b;" value="{{mini2Knockout_rank34_p2}}" onchange="updateMini2Knockout('rank34', 'p2', this.value)"></td>
                 </tr>
-                <tr style="background-color: #f0fdf4;">
-                  <td style="padding: 8px;"><strong style="color:#15803d;">🏆 CHUNG KẾT</strong></td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #bbf7d0; border-radius: 20px; padding: 4px 10px; font-weight: 800; font-family: inherit; background: #ffffff; color: #166534;" value="{{mini2Knockout_final_p1}}" onchange="updateMini2Knockout('final', 'p1', this.value)"></td>
+                <tr style="background-color: #f8fafc;">
+                  <td style="padding: 8px;"><strong style="color:#1e293b;">🏆 CHUNG KẾT</strong></td>
+                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 800; font-family: inherit; background: #ffffff; color: #1e293b;" value="{{mini2Knockout_final_p1}}" onchange="updateMini2Knockout('final', 'p1', this.value)"></td>
                   <td>
                     <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
-                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #16a34a; border-radius: 6px; padding: 2px; font-weight: 800; color: #15803d;" value="{{mini2Knockout_final_s1}}" oninput="updateMini2Knockout('final', 's1', this.value)">
-                      <span style="color: #16a34a; font-weight: 800;">-</span>
-                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #16a34a; border-radius: 6px; padding: 2px; font-weight: 800; color: #15803d;" value="{{mini2Knockout_final_s2}}" oninput="updateMini2Knockout('final', 's2', this.value)">
+                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{mini2Knockout_final_s1}}" oninput="updateMini2Knockout('final', 's1', this.value)">
+                      <span style="color: #a855f7; font-weight: 800;">-</span>
+                      <input type="number" min="0" class="score-input" style="width: 32px; text-align: center; border: 1px solid #a855f7; border-radius: 6px; padding: 2px; font-weight: 800; color: #6b21a8;" value="{{mini2Knockout_final_s2}}" oninput="updateMini2Knockout('final', 's2', this.value)">
                     </div>
                   </td>
-                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #bbf7d0; border-radius: 20px; padding: 4px 10px; font-weight: 800; font-family: inherit; background: #ffffff; color: #166534;" value="{{mini2Knockout_final_p2}}" onchange="updateMini2Knockout('final', 'p2', this.value)"></td>
+                  <td><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 20px; padding: 4px 10px; font-weight: 800; font-family: inherit; background: #ffffff; color: #1e293b;" value="{{mini2Knockout_final_p2}}" onchange="updateMini2Knockout('final', 'p2', this.value)"></td>
                 </tr>
               </tbody>
             </table>
           </div>
 
           <div style="display:flex; flex-direction:column; gap:10px; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif;">
-            <div style="display:flex; align-items:center; gap:10px; background: #fffdf5; padding: 6px 12px; border-radius: 10px; border: 1px solid #fef3c7;">
-              <span style="font-weight:800; color:#d97706; width:120px; font-size:12px;">🏆 Đội Vô Địch:</span>
-              <input type="text" style="width: 100%; font-size:12px; padding:6px 14px; background:#ffffff; border: 1px solid #fde68a; border-radius: 20px; color:#b45309; font-weight: 800; font-family: inherit;" value="{{mini2Knockout_champion}}" placeholder="Nhập tên cặp đội Vô Địch..." onchange="updateMini2WinnerField('champion', this.value)">
+            <div style="display:flex; align-items:center; gap:10px; background: #f8fafc; padding: 6px 12px; border-radius: 10px; border: 1px solid #e2e8f0;">
+              <span style="font-weight:800; color:#475569; width:120px; font-size:12px;">🏆 Đội Vô Địch:</span>
+              <input type="text" style="width: 100%; font-size:12px; padding:6px 14px; background:#ffffff; border: 1px solid #cbd5e1; border-radius: 20px; color:#1e293b; font-weight: 800; font-family: inherit;" value="{{mini2Knockout_champion}}" placeholder="Nhập tên cặp đội Vô Địch..." onchange="updateMini2WinnerField('champion', this.value)">
             </div>
             <div style="display:flex; align-items:center; gap:10px; background: #f8fafc; padding: 6px 12px; border-radius: 10px; border: 1px solid #e2e8f0;">
               <span style="font-weight:800; color:#475569; width:120px; font-size:12px;">🥈 Đội Về Nhì:</span>
               <input type="text" style="width: 100%; font-size:12px; padding:6px 14px; background:#ffffff; border: 1px solid #cbd5e1; border-radius: 20px; color:#334155; font-weight: 800; font-family: inherit;" value="{{mini2Knockout_runnerUp}}" placeholder="Nhập tên cặp đội Về Nhì..." onchange="updateMini2WinnerField('runnerUp', this.value)">
             </div>
-            <div style="display:flex; align-items:center; gap:10px; background: #fff7ed; padding: 6px 12px; border-radius: 10px; border: 1px solid #ffedd5;">
-              <span style="font-weight:800; color:#c2410c; width:120px; font-size:12px;">🥉 Đội Về Ba:</span>
-              <input type="text" style="width: 100%; font-size:12px; padding:6px 14px; background:#ffffff; border: 1px solid #fed7aa; border-radius: 20px; color:#9a3412; font-weight: 800; font-family: inherit;" value="{{mini2Knockout_thirdPlace}}" placeholder="Nhập tên cặp đội Về Ba..." onchange="updateMini2WinnerField('thirdPlace', this.value)">
+            <div style="display:flex; align-items:center; gap:10px; background: #f8fafc; padding: 6px 12px; border-radius: 10px; border: 1px solid #e2e8f0;">
+              <span style="font-weight:800; color:#475569; width:120px; font-size:12px;">🥉 Đội Về Ba:</span>
+              <input type="text" style="width: 100%; font-size:12px; padding:6px 14px; background:#ffffff; border: 1px solid #cbd5e1; border-radius: 20px; color:#334155; font-weight: 800; font-family: inherit;" value="{{mini2Knockout_thirdPlace}}" placeholder="Nhập tên cặp đội Về Ba..." onchange="updateMini2WinnerField('thirdPlace', this.value)">
             </div>
           </div>
         </div>
@@ -315,7 +315,7 @@
             </div>
           </div>
           <div class="table-responsive" style="border-radius: 10px; border: 1px solid #e2e8f0; overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 11px; font-family: system-ui, ui-rounded, 'SF Pro Rounded', sans-serif;">
               <thead>
                 <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 10px; font-weight: 700; text-align: center;">
                   <th style="text-align: left; padding: 8px 12px;">PICK THỦ (CÁ NHÂN)</th>
@@ -354,7 +354,7 @@
 <!-- [PART: tab-tr-2] -->
 
                     <tr style="border-bottom: 1px solid #f1f5f9; transition: background-color 0.15s ease;">
-                      <td style="padding: 6px;"><strong>{{i_plus1}}</strong></td>
+                      <td style="padding: 6px; color: #1e293b; font-weight: 700;">{{i_plus1}}</td>
                       <td style="text-align: left; padding-left: 8px; font-weight:bold;">
                         <span class="pair-badge badge-p{{st_index_mod5}}" style="display: inline-block; padding: 3px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">{{st_name}}</span>
                       </td>
@@ -373,8 +373,8 @@
 
                         <td>
                           <div style="display:flex; gap:4px; justify-content:center;">
-                            <input type="number" placeholder="Thắng" style="width:42px; text-align:center; border:1px solid #cbd5e1; border-radius:6px; padding:2px; font-size:10px; font-weight:600;" value="{{m_customWin_or_default}}" onchange="updateMini2MatchKeo('A', {{idx}}, 'customWin', parseInt(this.value))">
-                            <input type="number" placeholder="Thua" style="width:42px; text-align:center; border:1px solid #cbd5e1; border-radius:6px; padding:2px; font-size:10px; font-weight:600;" value="{{m_customLose_or_default}}" onchange="updateMini2MatchKeo('A', {{idx}}, 'customLose', parseInt(this.value))">
+                            <input type="number" placeholder="Thắng" style="width:42px; text-align:center; border:1px solid #cbd5e1; border-radius:6px; padding:2px; font-size:10px; font-weight:600; color: #1e293b;" value="{{m_customWin_or_default}}" onchange="updateMini2MatchKeo('A', {{idx}}, 'customWin', parseInt(this.value))">
+                            <input type="number" placeholder="Thua" style="width:42px; text-align:center; border:1px solid #cbd5e1; border-radius:6px; padding:2px; font-size:10px; font-weight:600; color: #1e293b;" value="{{m_customLose_or_default}}" onchange="updateMini2MatchKeo('A', {{idx}}, 'customLose', parseInt(this.value))">
                           </div>
                         </td>
                       
@@ -384,7 +384,7 @@
 <!-- [PART: tab-tr-3] -->
 
                       <tr style="border-bottom: 1px solid #f1f5f9; transition: background-color 0.15s ease;">
-                        <td style="padding: 6px;"><strong>{{m_id}}</strong></td>
+                        <td style="padding: 6px; color: #1e293b; font-weight: 700;">{{m_id}}</td>
                         <td style="text-align: center;">{{if_mini2PairsA_m_pair1Index}}</td>
                         <td>
                           <div style="display:flex; align-items:center; justify-content:center; gap:3px;">
@@ -413,7 +413,7 @@
 <!-- [PART: tab-tr-4] -->
 
                     <tr style="border-bottom: 1px solid #f1f5f9; transition: background-color 0.15s ease;">
-                      <td style="padding: 6px;"><strong>{{i_plus1}}</strong></td>
+                      <td style="padding: 6px; color: #1e293b; font-weight: 700;">{{i_plus1}}</td>
                       <td style="text-align: left; padding-left: 8px; font-weight:bold;">
                         <span class="pair-badge badge-p{{st_index_mod5}}" style="display: inline-block; padding: 3px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: system-ui, ui-rounded, 'SF Pro Rounded', 'Nunito', 'Quicksand', sans-serif; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">{{st_name}}</span>
                       </td>
@@ -432,8 +432,8 @@
 
                         <td>
                           <div style="display:flex; gap:4px; justify-content:center;">
-                            <input type="number" placeholder="Thắng" style="width:42px; text-align:center; border:1px solid #cbd5e1; border-radius:6px; padding:2px; font-size:10px; font-weight:600;" value="{{m_customWin_or_default}}" onchange="updateMini2MatchKeo('B', {{idx}}, 'customWin', parseInt(this.value))">
-                            <input type="number" placeholder="Thua" style="width:42px; text-align:center; border:1px solid #cbd5e1; border-radius:6px; padding:2px; font-size:10px; font-weight:600;" value="{{m_customLose_or_default}}" onchange="updateMini2MatchKeo('B', {{idx}}, 'customLose', parseInt(this.value))">
+                            <input type="number" placeholder="Thắng" style="width:42px; text-align:center; border:1px solid #cbd5e1; border-radius:6px; padding:2px; font-size:10px; font-weight:600; color: #1e293b;" value="{{m_customWin_or_default}}" onchange="updateMini2MatchKeo('B', {{idx}}, 'customWin', parseInt(this.value))">
+                            <input type="number" placeholder="Thua" style="width:42px; text-align:center; border:1px solid #cbd5e1; border-radius:6px; padding:2px; font-size:10px; font-weight:600; color: #1e293b;" value="{{m_customLose_or_default}}" onchange="updateMini2MatchKeo('B', {{idx}}, 'customLose', parseInt(this.value))">
                           </div>
                         </td>
                       
@@ -443,7 +443,7 @@
 <!-- [PART: tab-tr-5] -->
 
                       <tr style="border-bottom: 1px solid #f1f5f9; transition: background-color 0.15s ease;">
-                        <td style="padding: 6px;"><strong>{{m_id}}</strong></td>
+                        <td style="padding: 6px; color: #1e293b; font-weight: 700;">{{m_id}}</td>
                         <td style="text-align: center;">{{if_mini2PairsB_m_pair1Index}}</td>
                         <td>
                           <div style="display:flex; align-items:center; justify-content:center; gap:3px;">

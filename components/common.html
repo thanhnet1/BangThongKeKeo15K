@@ -1,5 +1,23 @@
 <!-- [PART: game-modal] -->
 <!-- Modal Chỉnh Sửa Mini Game Chung -->
+<div id="gameModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-[9999] p-4">
+  <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
+    <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white px-5 py-4 flex justify-between items-center">
+      <h3 id="gameModalTitle" class="font-bold text-sm uppercase tracking-wider">Chỉnh Sửa Mini Game</h3>
+      <button onclick="closeGameModal()" class="text-slate-400 hover:text-white transition-colors text-lg font-bold px-2">&times;</button>
+    </div>
+    <div class="p-6 space-y-4">
+      <div>
+        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Thể lệ & Mô tả Mini Game</label>
+        <textarea id="gameContentInput" rows="4" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:border-blue-600 resize-vertical" placeholder="Nhập thể lệ giải đấu..."></textarea>
+      </div>
+      <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+        <button onclick="closeGameModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-xs font-bold transition-colors">Hủy</button>
+        <button onclick="saveGameContent()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-colors shadow-sm">Lưu Lại</button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- [/PART] -->
 
 <!-- [PART: players.modal] -->

@@ -1139,46 +1139,47 @@
     let activeGameEditing = 1;
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME-COMMON-DATA] ▲▲▲ */
 /* ▼▼▼ KHỐI [MINIGAME-COMMON-FUNCS] · Hộp thoại thể lệ + kèo ▼▼▼ BẮT ĐẦU */
-    function openGameModal(gameId) {
-      closeAllDropdowns();
-      activeGameEditing = gameId;
-      document.getElementById("gameModalTitle").innerText = `Chỉnh Sửa Mini Game ${gameId}`;
-      document.getElementById("gameContentInput").value = gameId === 1 ? miniGame1Content : miniGame2Content;
-      document.getElementById("gameModal").classList.add("show");
-    }
+function openGameModal(gameId) {
+  closeAllDropdowns();
+  activeGameEditing = gameId;
+  
+  // Kiểm tra an toàn sự tồn tại của phần tử tiêu đề modal
+  const modalTitleEl = document.getElementById("gameModalTitle");
+  if (modalTitleEl) {
+    modalTitleEl.innerText = `Chỉnh Sửa Mini Game ${gameId}`;
+  }
+  
+  // Kiểm tra an toàn phần tử ô nhập nội dung
+  const contentInputEl = document.getElementById("gameContentInput");
+  if (contentInputEl) {
+    contentInputEl.value = (gameId === 1 ? mini1Content : mini2Content);
+  }
+  
+  // Hiển thị modal
+  const modalEl = document.getElementById("gameModal");
+  if (modalEl) {
+    modalEl.classList.add("show");
+  }
+}
 
-    function closeGameModal() {
-      document.getElementById("gameModal").classList.remove("show");
-    }
+function closeGameModal() {
+  const modalEl = document.getElementById("gameModal");
+  if (modalEl) {
+    modalEl.classList.remove("show");
+  }
+}
 
-    function saveGameContent() {
-      const val = document.getElementById("gameContentInput").value;
-      if (activeGameEditing === 1) miniGame1Content = val;
-      else miniGame2Content = val;
-      saveDataToFirestore();
-      closeGameModal();
-    }
-
-    function getMiniKeoValues(mode, matchObj) {
-      let winAmt = 5, loseAmt = -15;
-      if (mode === "k25") { winAmt = 0; loseAmt = -25; }
-      else if (mode === "no_keo") { winAmt = 0; loseAmt = 0; }
-      else if (mode === "free") {
-        winAmt = matchObj && matchObj.customWin !== undefined ? parseInt(matchObj.customWin) : 5;
-        loseAmt = matchObj && matchObj.customLose !== undefined ? parseInt(matchObj.customLose) : -15;
-      }
-      return { winAmt, loseAmt };
-    }
-
-    function renderKeoSelectDropdown(currentMode, onChangeFuncStr) {
-      return renderComponent('common.keo-select', {
-        onChangeFuncStr,
-        selected_currentMode_default: (currentMode === 'default' ? 'selected' : ''),
-        selected_currentMode_k25: (currentMode === 'k25' ? 'selected' : ''),
-        selected_currentMode_no_keo: (currentMode === 'no_keo' ? 'selected' : ''),
-        selected_currentMode_free: (currentMode === 'free' ? 'selected' : '')
-      });
-    }
+function saveGameContent() {
+  const contentInputEl = document.getElementById("gameContentInput");
+  if (!contentInputEl) return;
+  
+  const val = contentInputEl.value;
+  if (activeGameEditing === 1) mini1Content = val;
+  else mini2Content = val;
+  
+  savedataToFirestore();
+  closeGameModal();
+}
 /* ▲▲▲ KẾT THÚC KHỐI [MINIGAME-COMMON-FUNCS] ▲▲▲ */
 
 /* ████████████████ MODULE MINIGAME1 · MINIGAME 1 ████████████████ */

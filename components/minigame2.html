@@ -1,19 +1,29 @@
 <!-- ==========================================================================
      COMPONENT: components/minigame2.html — MINIGAME 2: nút menu + giải đấu chia Bảng A,B + 2 giải bổ sung.
      Mỗi PART nằm giữa dòng chú thích "[PART: tên]" và dòng chú thích "[/PART]" (HTML được giữ nguyên từng ký tự).
-     {{tên_slot}} là chỗ js/main.js điền dữ liệu (số liệu, hàng của bảng...).
+     {{tên_slot}} là chỗ js/main.js điền dữ liệu (số liệu, hàng của bảng...). Sửa chữ/màu/bố cục thoải mái;
+     chỉ cần giữ nguyên các {{tên_slot}} (không đổi tên, không xóa nếu vẫn muốn hiện dữ liệu đó).
+
+     BẢN CẬP NHẬT GIAO DIỆN (không cần sửa main.js):
+       • "Tùy chọn kèo" nằm cùng hàng với tiêu đề "BẢNG TỔNG HỢP KÈO - GIẢI MINI GAME 2".
+       • Tên cặp VĐV hiển thị dạng "viên thuốc" nền màu đậm, chữ trắng đậm, font tròn (5 màu theo badge-p0..p4).
+       • Toàn bộ CSS nằm trong khối <style> của PART "tab", chỉ áp dụng trong vùng <div class="m2">
+         nên KHÔNG ảnh hưởng các tab khác (Mini Game 1, Home...).
+       • Màn hình rộng: Bảng A và Bảng B đặt cạnh nhau; điện thoại: xếp dọc, lịch đấu / tổng hợp thành dạng thẻ gọn.
+       • Ô tỷ số dùng onchange (nhập xong rồi bấm Enter / chạm ra ngoài mới lưu) thay cho oninput,
+         vì oninput làm vẽ lại cả trang sau MỖI chữ số → mất con trỏ, không gõ được số 2 chữ số (vd 11).
      ========================================================================== -->
 
 <!-- [PART: nav] -->
 
         <!-- MENU GIẢI ĐẤU MINI GAME 2 -->
         <div class="nav-item">
-          <button class="nav-btn" onclick="toggleMenu('menuMini2', event)" style="font-family: 'Roboto', sans-serif; font-weight: 700;">
+          <button class="nav-btn" onclick="toggleMenu('menuMini2', event)">
             <i class="fa-solid fa-trophy text-yellow-400"></i>
             <span id="navLabelMini2">GIẢI ĐẤU MINI GAME 2</span> ▾
           </button>
           <div class="dropdown-menu right-align" id="menuMini2">
-            <div class="dropdown-item" onclick="switchTab('minigame2')"><i class="fa-solid fa-trophy text-yellow-500"></i> 🏆 <span id="subLabelMini2">Giải Đấu Mini Game (Chia Bảng A & B)</span></div>
+            <div class="dropdown-item" onclick="switchTab('minigame2')"><i class="fa-solid fa-trophy text-yellow-500"></i> 🏆 <span id="subLabelMini2">Giải Đấu Mini Game 2 (Chia Bảng A & B)</span></div>
             <div class="dropdown-item" onclick="switchTab('minigame2_tour1')"><i class="fa-solid fa-medal text-emerald-600"></i> ⭐ <span id="subLabelTour1">Giải Đấu Bổ Sung 1 (Nội Dung Khác)</span></div>
             <div class="dropdown-item" onclick="switchTab('minigame2_tour2')"><i class="fa-solid fa-award text-blue-600"></i> 🚀 <span id="subLabelTour2">Giải Đấu Bổ Sung 2 (Nội Dung Khác)</span></div>
             <div class="dropdown-divider"></div>
@@ -26,444 +36,622 @@
 <!-- từ hàm renderMiniGame2Tour1Tab() · slots: titlesConfig_subTour1, mini2Tour1Content -->
 <!-- [PART: tour1-tab] -->
 
-        <div class="card" style="border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; font-family: 'Roboto', sans-serif;">
-          <div class="card-header-flex" style="background: #f8fafc; padding: 10px 14px; border-bottom: 1px solid #e2e8f0;">
-            <h2 class="card-title" style="font-family: 'Roboto', sans-serif;">
+        <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; overflow:hidden; box-sizing:border-box; font-family:'Nunito','Quicksand','SF Pro Rounded',ui-rounded,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;">
+          <div style="background:#f8fafc; padding:8px 12px; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; gap:8px;">
+            <h2 style="margin:0; font-size:14px; font-weight:900; color:#1e293b; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
               <span>⭐ {{titlesConfig_subTour1}}</span>
-              <button onclick="editTitlePrompt('subTour1', '{{titlesConfig_subTour1}}')" style="background:none; border:none; color:#2563eb; cursor:pointer; font-size:12px;" title="Sửa tên tiêu đề"><i class="fa-solid fa-pen"></i></button>
+              <button onclick="editTitlePrompt('subTour1', '{{titlesConfig_subTour1}}')" style="background:none; border:none; color:#2563eb; cursor:pointer; font-size:12px; padding:4px;" title="Sửa tên tiêu đề"><i class="fa-solid fa-pen"></i></button>
             </h2>
           </div>
-          <div style="padding: 16px; font-size: 12px; color: #1e293b;">
-            <p style="font-weight: 700; margin-bottom: 8px;">Thể lệ & Mô tả:</p>
-            <textarea id="tour1Input" rows="4" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:11px; font-family: 'Roboto', sans-serif;" placeholder="Nhập thể lệ giải đấu...">{{mini2Tour1Content}}</textarea>
-            <button class="btn btn-green" style="margin-top: 10px; border-radius: 20px; padding: 6px 16px; font-weight: 700;" onclick="saveTour1Content()">Lưu Nội Dung Giải 1</button>
+          <div style="padding:10px 12px 12px; font-size:12px; color:#334155;">
+            <p style="font-weight:800; margin:0 0 6px;">Thể lệ & Mô tả:</p>
+            <textarea id="tour1Input" rows="4" style="display:block; width:100%; box-sizing:border-box; padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:14px; font-family:inherit; resize:vertical;" placeholder="Nhập thể lệ giải đấu...">{{mini2Tour1Content}}</textarea>
+            <button class="btn btn-green" style="margin-top:8px; border-radius:20px; padding:6px 16px; font-weight:700;" onclick="saveTour1Content()">Lưu Nội Dung Giải 1</button>
           </div>
         </div>
-      
+
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tour2Tab() · slots: titlesConfig_subTour2, mini2Tour2Content -->
 <!-- [PART: tour2-tab] -->
 
-        <div class="card" style="border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; font-family: 'Roboto', sans-serif;">
-          <div class="card-header-flex" style="background: #f8fafc; padding: 10px 14px; border-bottom: 1px solid #e2e8f0;">
-            <h2 class="card-title" style="font-family: 'Roboto', sans-serif;">
+        <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; overflow:hidden; box-sizing:border-box; font-family:'Nunito','Quicksand','SF Pro Rounded',ui-rounded,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;">
+          <div style="background:#f8fafc; padding:8px 12px; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; gap:8px;">
+            <h2 style="margin:0; font-size:14px; font-weight:900; color:#1e293b; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
               <span>🚀 {{titlesConfig_subTour2}}</span>
-              <button onclick="editTitlePrompt('subTour2', '{{titlesConfig_subTour2}}')" style="background:none; border:none; color:#2563eb; cursor:pointer; font-size:12px;" title="Sửa tên tiêu đề"><i class="fa-solid fa-pen"></i></button>
+              <button onclick="editTitlePrompt('subTour2', '{{titlesConfig_subTour2}}')" style="background:none; border:none; color:#2563eb; cursor:pointer; font-size:12px; padding:4px;" title="Sửa tên tiêu đề"><i class="fa-solid fa-pen"></i></button>
             </h2>
           </div>
-          <div style="padding: 16px; font-size: 12px; color: #1e293b;">
-            <p style="font-weight: 700; margin-bottom: 8px;">Thể lệ & Mô tả:</p>
-            <textarea id="tour2Input" rows="4" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:11px; font-family: 'Roboto', sans-serif;" placeholder="Nhập thể lệ giải đấu...">{{mini2Tour2Content}}</textarea>
-            <button class="btn btn-green" style="margin-top: 10px; border-radius: 20px; padding: 6px 16px; font-weight: 700;" onclick="saveTour2Content()">Lưu Nội Dung Giải 2</button>
+          <div style="padding:10px 12px 12px; font-size:12px; color:#334155;">
+            <p style="font-weight:800; margin:0 0 6px;">Thể lệ & Mô tả:</p>
+            <textarea id="tour2Input" rows="4" style="display:block; width:100%; box-sizing:border-box; padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; font-size:14px; font-family:inherit; resize:vertical;" placeholder="Nhập thể lệ giải đấu...">{{mini2Tour2Content}}</textarea>
+            <button class="btn btn-green" style="margin-top:8px; border-radius:20px; padding:6px 16px; font-weight:700;" onclick="saveTour2Content()">Lưu Nội Dung Giải 2</button>
           </div>
         </div>
-      
+
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · không có slot -->
 <!-- [PART: tab-span-1] -->
-<span class="note-paid" style="color: #10b981; font-weight: 700; background: #ecfdf5; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-family: 'Roboto', sans-serif;">Đã nộp</span>
+<span class="note-paid" style="color: #10b981; font-weight: 700; background: #ecfdf5; padding: 2px 8px; border-radius: 12px; font-size: 10px;">Đã nộp</span>
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · không có slot -->
 <!-- [PART: tab-span-2] -->
-<span class="note-unpaid" style="color: #ef4444; font-weight: 700; background: #fef2f2; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-family: 'Roboto', sans-serif;">Chưa nộp</span>
+<span class="note-unpaid" style="color: #ef4444; font-weight: 700; background: #fef2f2; padding: 2px 8px; border-radius: 12px; font-size: 10px;">Chưa nộp</span>
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · không có slot -->
 <!-- [PART: tab-span-3] -->
-<span class="note-paid" style="color: #10b981; font-weight: 700; background: #ecfdf5; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-family: 'Roboto', sans-serif;">Đã nhận</span>
+<span class="note-paid" style="color: #10b981; font-weight: 700; background: #ecfdf5; padding: 2px 8px; border-radius: 12px; font-size: 10px;">Đã nhận</span>
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · không có slot -->
 <!-- [PART: tab-span-4] -->
-<span class="note-unpaid" style="color: #ef4444; font-weight: 700; background: #fef2f2; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-family: 'Roboto', sans-serif;">Chưa nhận</span>
+<span class="note-unpaid" style="color: #ef4444; font-weight: 700; background: #fef2f2; padding: 2px 8px; border-radius: 12px; font-size: 10px;">Chưa nhận</span>
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · slots: indColor, indName, st_played, if_st_winK_0, if_st_loseK_0, if_bringBack_0, if_st_total_0_class, st_total, checkboxClass, if_isPaid, payKey, if_isAdminVerified, noteText -->
 <!-- [PART: tab-tr-1] -->
 
-            <tr style="border-bottom: 1px solid #cbd5e1; font-family: 'Roboto', sans-serif;">
-              <td style="color: {{indColor}}; font-weight: 700; font-size:11px; text-align: left; padding: 6px 8px;">{{indName}}</td>
-              <td style="text-align: center; padding: 6px 4px;">{{st_played}}</td>
-              <td class="txt-win" style="text-align: center; color: #10b981; font-weight: 700; padding: 6px 4px;">{{if_st_winK_0}}</td>
-              <td class="txt-lose" style="text-align: center; color: #ef4444; font-weight: 700; padding: 6px 4px;">{{if_st_loseK_0}}</td>
-              <td style="color:#2563eb; font-weight:700; text-align: center; padding: 6px 4px;">{{if_bringBack_0}}</td>
-              <td class="{{if_st_total_0_class}}" style="text-align: center; padding: 6px 4px;"><strong>{{st_total}}</strong></td>
-              <td style="text-align: center; padding: 6px 4px;"><input type="checkbox" class="{{checkboxClass}}" {{if_isPaid}} onclick="toggleMini2Payment('{{payKey}}')" title="{{if_isAdminVerified}}" style="cursor: pointer; border-radius: 4px;"></td>
-              <td style="text-align: center; padding: 6px 4px;">{{noteText}}</td>
+            <tr class="s-row">
+              <td class="s-name" style="color: {{indColor}};">{{indName}}</td>
+              <td class="s-played" data-label="Số trận">{{st_played}}</td>
+              <td class="s-win txt-win" data-label="Thắng/K">{{if_st_winK_0}}</td>
+              <td class="s-lose txt-lose" data-label="Thua/K">{{if_st_loseK_0}}</td>
+              <td class="s-bring" data-label="Mang về">{{if_bringBack_0}}</td>
+              <td class="s-total {{if_st_total_0_class}}" data-label="Tổng"><strong>{{st_total}}</strong></td>
+              <td class="s-chk" data-label="Thực tế"><input type="checkbox" class="{{checkboxClass}}" {{if_isPaid}} onclick="toggleMini2Payment('{{payKey}}')" title="{{if_isAdminVerified}}"></td>
+              <td class="s-note" data-label="Note">{{noteText}}</td>
             </tr>
-          
+
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · slots: titlesConfig_subMini2, renderKeoSelectDropdown, selected_mini2PairsA_length_4, selected_mini2PairsA_length_5, standingsA_rows, mini2KeoMode_colspan, freeKeoHeader, mini2MatchesA_rows, selected_mini2PairsB_length_4, selected_mini2PairsB_length_5, standingsB_rows, mini2MatchesB_rows, mini2Knockout_bkc1_p1, mini2Knockout_bkc1_s1, mini2Knockout_bkc1_s2, mini2Knockout_bkc1_p2, mini2Knockout_bkc2_p1, mini2Knockout_bkc2_s1, mini2Knockout_bkc2_s2, mini2Knockout_bkc2_p2, mini2Knockout_rank34_p1, mini2Knockout_rank34_s1, mini2Knockout_rank34_s2, mini2Knockout_rank34_p2, mini2Knockout_final_p1, mini2Knockout_final_s1, mini2Knockout_final_s2, mini2Knockout_final_p2, mini2Knockout_champion, mini2Knockout_runnerUp, mini2Knockout_thirdPlace, summaryRowsHtml2, sumBringBack2, btcThuVeCalculated2, sumThucThu2, quyCon2 -->
 <!-- [PART: tab] -->
 
-        <!-- HEADER TIÊU ĐỀ GIẢI ĐẤU -->
-        <div class="card" style="margin-bottom: 8px; padding: 10px 12px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); font-family: 'Roboto', sans-serif;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2 style="display:flex; align-items:center; gap:6px; margin: 0; font-size: 13px; font-weight: 900; color: #1e293b; text-transform: uppercase;">
-              🏆 <span>{{titlesConfig_subMini2}}</span>
-              <button onclick="editTitlePrompt('subMini2', '{{titlesConfig_subMini2}}')" style="background:none; border:none; color:#2563eb; cursor:pointer; font-size:11px;" title="Sửa tên tiêu đề"><i class="fa-solid fa-pen"></i></button>
-            </h2>
-          </div>
-          <div style="font-size: 11px; color: #64748b; margin-top: 2px; font-weight: 500;">
-            Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.
-          </div>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
+
+  /* ================= KHUNG CHUNG ================= */
+  .m2{--f:'Nunito','Quicksand','SF Pro Rounded',ui-rounded,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+      font-family:var(--f);font-size:12px;line-height:1.35;color:#334155;width:100%;max-width:100%}
+  .m2 *,.m2 *::before,.m2 *::after{box-sizing:border-box}
+  .m2 button,.m2 input,.m2 select,.m2 textarea{font-family:inherit}
+  .m2-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:10px 12px;margin:0 0 10px;
+           box-shadow:0 1px 3px rgba(15,23,42,.05);min-width:0}
+  .m2-hd{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 12px;margin:0 0 8px}
+  .m2-ttl{margin:0;display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:14px;font-weight:900;color:#1e293b}
+  .m2-sub{font-size:11px;color:#64748b;font-weight:600;margin-top:-2px}
+  .m2-lbl{font-size:11px;font-weight:800;color:#475569;white-space:nowrap}
+  .m2-ctl{display:flex;align-items:center;gap:6px}
+  .m2 select,.m2-keo select{padding:3px 8px;min-height:28px;font-size:11px;font-weight:800;color:#334155;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc;max-width:100%}
+  .m2-pen{background:none;border:0;color:#2563eb;cursor:pointer;font-size:12px;padding:4px}
+
+  /* ================= BẢNG A | BẢNG B ================= */
+  .m2-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr));gap:10px;align-items:start;margin:0 0 10px}
+  .m2-groups .m2-card{margin:0}
+  .m2-a{--tint:#fff7ed;--tc:#c2410c;--tb:#ffedd5}
+  .m2-b{--tint:#f0f9ff;--tc:#0369a1;--tb:#e0f2fe}
+  .m2-gname{margin:0;font-size:13px;font-weight:900;color:var(--tc)}
+  .m2-stack{display:flex;flex-direction:column;gap:8px}
+  .m2-box{border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff}
+  .m2-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  .m2 table.m2-t{width:100%;border-collapse:collapse;text-align:center;font-size:11px}
+  .m2 .m2-t th{background:#f8fafc;color:#64748b;font-size:10px;font-weight:800;padding:5px 4px;border-bottom:1px solid #e2e8f0;text-transform:uppercase;letter-spacing:.2px;white-space:nowrap}
+  .m2 .m2-t th.ttl{background:var(--tint);color:var(--tc);border-bottom:1px solid var(--tb);font-size:11px;padding:6px;letter-spacing:.3px}
+  .m2 .m2-t td{padding:4px 6px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+  .m2 .m2-t tbody tr:last-child td{border-bottom:0}
+  .m2 .m2-t tbody tr:hover{background:#f8fafc}
+  .m2 .th-money{width:112px}
+
+  /* --- bảng xếp hạng --- */
+  .m2 .c-stt{width:34px;font-weight:900;color:#475569}
+  .m2-st tbody tr:nth-child(-n+2) .c-stt{color:#15803d}
+  .m2 .c-pair{text-align:left;padding-left:8px}
+  .m2 .c-pts{width:48px;font-weight:900;color:#10b981}
+  .m2 .c-diff{width:52px;font-weight:900}
+  .m2 .c-act{width:68px;white-space:nowrap}
+  .m2-ico{background:none;border:0;cursor:pointer;font-size:13px;line-height:1;padding:4px;border-radius:6px}
+  .m2-ico:hover{background:#f1f5f9}
+
+  /* --- tên cặp VĐV: viên thuốc màu đậm, chữ trắng đậm (theo ảnh mẫu) --- */
+  .m2 .pair-badge{display:inline-block;max-width:100%;padding:3px 11px;border-radius:999px;font-family:var(--f);font-size:11px;font-weight:800;line-height:1.25;
+    letter-spacing:.1px;color:#fff !important;text-align:center;white-space:normal;overflow-wrap:anywhere;text-shadow:0 1px 1px rgba(0,0,0,.2);
+    box-shadow:0 1px 2px rgba(15,23,42,.22),inset 0 1px 0 rgba(255,255,255,.2);border:0}
+  .m2 .badge-p0{background:linear-gradient(135deg,#e11d48,#be123c) !important}
+  .m2 .badge-p1{background:linear-gradient(135deg,#2563eb,#1d4ed8) !important}
+  .m2 .badge-p2{background:linear-gradient(135deg,#059669,#047857) !important}
+  .m2 .badge-p3{background:linear-gradient(135deg,#d97706,#b45309) !important}
+  .m2 .badge-p4{background:linear-gradient(135deg,#8b5cf6,#6d28d9) !important}
+
+  /* --- lịch thi đấu --- */
+  .m2 .c-id{width:38px;font-weight:900;color:#475569}
+  .m2 .c-t1{text-align:right}
+  .m2 .c-t2{text-align:left}
+  .m2 .c-sc{width:92px;padding-left:2px;padding-right:2px}
+  .m2-score{display:flex;align-items:center;justify-content:center;gap:3px}
+  .m2-score span{color:#a855f7;font-weight:900}
+  .m2 .score-input{width:34px;height:28px;padding:0;text-align:center;font-size:13px;font-weight:900;color:#6b21a8;background:#fff;
+    border:1.5px solid #a855f7;border-radius:7px;-moz-appearance:textfield;appearance:textfield}
+  .m2 .score-input::-webkit-outer-spin-button,.m2 .score-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .m2 .score-input:focus{outline:0;box-shadow:0 0 0 3px rgba(168,85,247,.25)}
+  .m2-money{display:flex;gap:4px;justify-content:center}
+  .m2-money input{width:44px;height:26px;padding:0;text-align:center;font-size:11px;font-weight:800;border:1px solid #cbd5e1;border-radius:6px;background:#fff}
+
+  /* --- knockout --- */
+  .m2 table.m2-ko{table-layout:fixed;width:100%;border-collapse:collapse;text-align:center;font-size:11px}
+  .m2-ko col.k1{width:112px} .m2-ko col.k2{width:96px}
+  .m2-ko th{background:#f8fafc;color:#64748b;font-size:10px;font-weight:800;padding:6px;border-bottom:1px solid #e2e8f0}
+  .m2-ko td{padding:5px 6px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+  .m2-ko tr:last-child td{border-bottom:0}
+  .m2-ko .k-lbl{font-weight:800;color:#475569;text-align:left;padding-left:10px}
+  .m2-ko input[type=text]{display:block;width:100%;min-width:0;text-align:center;border:1px solid #cbd5e1;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:800;background:#fafafa;color:#1e293b}
+  .m2-ko .ko-bk:nth-of-type(even){background:#f8fafc}
+  .m2-ko .ko-34{background:#fffbeb}
+  .m2-ko .ko-34 .k-lbl{color:#b45309}
+  .m2-ko .ko-34 input[type=text]{border-color:#fde68a;background:#fff;color:#92400e}
+  .m2-ko .ko-34 .score-input{border-color:#d97706;color:#92400e}
+  .m2-ko .ko-34 .m2-score span{color:#d97706}
+  .m2-ko .ko-fin{background:#f0fdf4}
+  .m2-ko .ko-fin .k-lbl{color:#15803d}
+  .m2-ko .ko-fin input[type=text]{border-color:#bbf7d0;background:#fff;color:#166534}
+  .m2-ko .ko-fin .score-input{border-color:#16a34a;color:#15803d}
+  .m2-ko .ko-fin .m2-score span{color:#16a34a}
+
+  .m2-pod{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+  .m2-pod label{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;padding:5px 10px;border-radius:10px;border:1px solid}
+  .m2-pod b{flex:0 0 112px;font-size:12px;font-weight:900}
+  .m2-pod input{flex:1 1 150px;min-width:0;padding:5px 12px;font-size:12px;font-weight:800;background:#fff;border:1px solid;border-radius:999px}
+  .m2-pod .p1{background:#fffdf5;border-color:#fef3c7} .m2-pod .p1 b{color:#d97706} .m2-pod .p1 input{border-color:#fde68a;color:#b45309}
+  .m2-pod .p2{background:#f8fafc;border-color:#e2e8f0} .m2-pod .p2 b{color:#475569} .m2-pod .p2 input{border-color:#cbd5e1;color:#334155}
+  .m2-pod .p3{background:#fff7ed;border-color:#ffedd5} .m2-pod .p3 b{color:#c2410c} .m2-pod .p3 input{border-color:#fed7aa;color:#9a3412}
+
+  /* --- tổng hợp kèo --- */
+  .m2 .m2-sum{min-width:600px}
+  .m2 .m2-sum th{white-space:nowrap}
+  .m2 .s-name{text-align:left;padding:6px 8px 6px 12px !important;font-weight:900;font-size:12px}
+  .m2 .s-played,.m2 .s-win,.m2 .s-lose,.m2 .s-bring,.m2 .s-total,.m2 .s-chk,.m2 .s-note{text-align:center}
+  .m2 .s-win{color:#10b981;font-weight:800} .m2 .s-lose{color:#ef4444;font-weight:800}
+  .m2 .s-bring{color:#2563eb;font-weight:900}
+  .m2 .s-chk input{width:16px;height:16px;cursor:pointer}
+  .m2 .s-note{font-weight:700;font-size:11px;white-space:nowrap}
+  .m2-foot{margin-top:8px;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;font-weight:800}
+  .m2-foot .fr{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;padding:7px 12px;background:#f8fafc}
+  .m2-foot .fr+.fr{border-top:1px solid #e2e8f0}
+  .m2-foot .quy{background:#fef2f2}
+  .m2-foot .lbl{color:#2563eb;font-size:12px}
+  .m2-foot .quy .lbl,.m2-foot .quy b{color:#ef4444}
+  .m2-foot .vals{display:flex;gap:6px}
+  .m2-foot .vals span{display:flex;flex-direction:column;align-items:center;min-width:72px;padding:3px 8px;border-radius:8px;background:#fff;border:1px solid #e2e8f0}
+  .m2-foot .vals em{font-style:normal;font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase}
+  .m2-foot .vals b{font-size:13px;color:#2563eb} .m2-foot .vals span.red b{color:#ef4444}
+  .m2-foot .quy b{font-size:15px}
+
+  /* ================= ĐIỆN THOẠI ================= */
+  @media (max-width:640px){
+    .m2-card{padding:8px 8px;margin-bottom:8px;border-radius:10px}
+    .m2-groups{gap:8px;margin-bottom:8px}
+    .m2 select,.m2 input[type=text],.m2 input[type=number],.m2-keo select{font-size:16px !important}
+    .m2 .hide-sm{display:none}
+    .m2 .m2-sub{margin-top:0}
+
+    /* bảng xếp hạng gọn */
+    .m2 .c-stt{width:28px} .m2 .c-pts{width:38px} .m2 .c-diff{width:42px} .m2 .c-act{width:60px}
+    .m2 .m2-t td{padding:4px 3px}
+
+    /* lịch đấu: mỗi trận 1 dòng lưới  [Trận | Đội 1 | Tỷ số | Đội 2] (+ dòng kèo tự do bên dưới) */
+    .m2 table.m2-match,.m2 .m2-match thead,.m2 .m2-match tbody{display:block;width:100%}
+    .m2 .m2-match tr{display:grid;grid-template-columns:34px minmax(0,1fr) 80px minmax(0,1fr);align-items:center;border-bottom:1px solid #f1f5f9;padding:3px 0}
+    .m2 .m2-match tbody tr:last-child{border-bottom:0}
+    .m2 .m2-match thead tr{padding:0;border-bottom:0}
+    .m2 .m2-match td{border-bottom:0 !important}
+    .m2 .m2-match th.ttl{grid-column:1/-1}
+    .m2 .m2-match th.th-money{display:none}
+    .m2 .m2-match td.td-money{grid-column:1/-1;padding:0 6px 6px !important}
+    .m2 .m2-match .c-id{width:auto}
+    .m2 .m2-match .c-sc{width:auto}
+    .m2 .m2-match th,.m2 .m2-match td{min-width:0}
+    .m2 .score-input{width:34px;height:34px;font-size:16px !important}
+    .m2-money input{width:70px;height:34px}
+    .m2-money{justify-content:flex-start;padding-left:30px}
+    .m2 .pair-badge{font-size:10px;padding:3px 7px;letter-spacing:0}
+    .m2 .c-pair .pair-badge{font-size:11px;padding:3px 10px}
+    .m2 .m2-t th{font-size:9px;padding:5px 2px}
+    .m2 .m2-t th.ttl{font-size:11px}
+
+    /* knockout: mỗi trận 2 dòng lưới */
+    .m2 table.m2-ko,.m2 .m2-ko thead,.m2 .m2-ko tbody{display:block;width:100%}
+    .m2 .m2-ko thead{display:none}
+    .m2 .m2-ko tr{display:grid;grid-template-columns:minmax(0,1fr) 88px minmax(0,1fr);align-items:center;padding:4px 0 6px;border-bottom:1px solid #f1f5f9}
+    .m2 .m2-ko tr:last-child{border-bottom:0}
+    .m2 .m2-ko td{border:0;padding:2px 4px}
+    .m2 .m2-ko td.k-lbl{grid-column:1/-1;padding:2px 8px;font-size:12px}
+    .m2 .m2-ko input[type=text]{padding:6px 8px}
+    .m2-pod b{flex-basis:100%}
+
+    /* tổng hợp kèo: mỗi VĐV 1 thẻ */
+    .m2 .m2-sum{min-width:0}
+    .m2 table.m2-sum,.m2 .m2-sum thead,.m2 .m2-sum tbody{display:block;width:100%}
+    .m2 .m2-sum thead{display:none}
+    .m2 .m2-sum tr.s-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px 4px;padding:8px 8px;border-bottom:1px solid #f1f5f9;
+      grid-template-areas:"name name name chk chk" "played win lose bring total" "note note note note note"}
+    .m2 .m2-sum td{display:block;border:0 !important;padding:0 !important;min-width:0}
+    .m2 .m2-sum td.s-name{grid-area:name;font-size:14px;padding:0 !important;align-self:center}
+    .m2 .m2-sum td.s-chk{grid-area:chk;display:flex;align-items:center;justify-content:flex-end;gap:6px}
+    .m2 .m2-sum td.s-chk::before{content:attr(data-label);font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase}
+    .m2 .m2-sum td.s-chk input{width:22px;height:22px}
+    .m2 .m2-sum td.s-played{grid-area:played} .m2 .m2-sum td.s-win{grid-area:win} .m2 .m2-sum td.s-lose{grid-area:lose}
+    .m2 .m2-sum td.s-bring{grid-area:bring} .m2 .m2-sum td.s-total{grid-area:total}
+    .m2 .m2-sum td.s-played,.m2 .m2-sum td.s-win,.m2 .m2-sum td.s-lose,.m2 .m2-sum td.s-bring,.m2 .m2-sum td.s-total{
+      background:#f8fafc;border-radius:8px;padding:5px 2px !important;font-size:13px}
+    .m2 .m2-sum td[data-label]:not(.s-chk):not(.s-note)::before{content:attr(data-label);display:block;font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase}
+    .m2 .m2-sum td.s-note{grid-area:note;text-align:left;white-space:normal;font-size:12px}
+    .m2 .m2-sum td.s-note:empty{display:none}
+    .m2-foot .vals{width:100%} .m2-foot .vals span{flex:1;min-width:0}
+  }
+</style>
+
+<div class="m2">
+
+  <!-- HEADER TIÊU ĐỀ GIẢI ĐẤU -->
+  <div class="m2-card">
+    <div class="m2-hd" style="margin-bottom:2px;">
+      <h2 class="m2-ttl" style="color:#d97706;">
+        🏆 <span>{{titlesConfig_subMini2}}</span>
+        <button class="m2-pen" onclick="editTitlePrompt('subMini2', '{{titlesConfig_subMini2}}')" title="Sửa tên tiêu đề"><i class="fa-solid fa-pen"></i></button>
+      </h2>
+    </div>
+    <div class="m2-sub">Giải đấu Chia 2 Bảng A & B Thi đấu vòng tròn.</div>
+  </div>
+
+  <!-- BẢNG A + BẢNG B (màn hình rộng: đặt cạnh nhau) -->
+  <div class="m2-groups">
+
+    <!-- BẢNG A -->
+    <section class="m2-card m2-a">
+      <div class="m2-hd">
+        <h3 class="m2-gname">⚡ BẢNG A</h3>
+        <div class="m2-ctl">
+          <span class="m2-lbl">Số cặp VĐV:</span>
+          <select onchange="setMini2PairCount('A', this.value)">
+            <option value="4" {{selected_mini2PairsA_length_4}}>4 Cặp VĐV</option>
+            <option value="5" {{selected_mini2PairsA_length_5}}>5 Cặp VĐV</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="m2-stack">
+        <!-- BẢNG XẾP HẠNG A -->
+        <div class="m2-box">
+          <table class="m2-t m2-st">
+            <thead>
+              <tr><th class="ttl" colspan="5">BẢNG XẾP HẠNG BẢNG A</th></tr>
+              <tr>
+                <th>STT</th>
+                <th style="text-align:left; padding-left:8px;"><span class="hide-sm">PICKLEBALL - </span>CẶP VĐV BẢNG A</th>
+                <th>ĐIỂM</th>
+                <th>HỆ SỐ</th>
+                <th>THAO TÁC</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{standingsA_rows}}
+            </tbody>
+          </table>
         </div>
 
-        <!-- BẢNG A -->
-        <div class="card" style="margin-bottom: 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 10px; font-family: 'Roboto', sans-serif;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <h3 style="margin:0; font-size:12px; color:#c2410c; font-weight:900; text-transform: uppercase;">⚡ BẢNG A - VÒNG TRÒN TÍNH ĐIỂM</h3>
-            <div style="display:flex; align-items:center; gap:6px;">
-              <span style="font-weight:700; font-size:11px; color: #475569;">Số cặp:</span>
-              <select style="padding: 2px 6px; font-weight:700; font-size:11px; border: 1px solid #cbd5e1; border-radius: 6px; background: #f8fafc;" onchange="setMini2PairCount('A', this.value)">
-                <option value="4" {{selected_mini2PairsA_length_4}}>4 Cặp</option>
-                <option value="5" {{selected_mini2PairsA_length_5}}>5 Cặp</option>
-              </select>
-            </div>
-          </div>
+        <!-- LỊCH THI ĐẤU A -->
+        <div class="m2-box">
+          <table class="m2-t m2-match">
+            <thead>
+              <tr><th class="ttl" colspan="{{mini2KeoMode_colspan}}">LỊCH THI ĐẤU BẢNG A</th></tr>
+              <tr>
+                <th>TRẬN</th>
+                <th>ĐỘI 1</th>
+                <th>TỶ SỐ</th>
+                <th>ĐỘI 2</th>
+                {{freeKeoHeader}}
+              </tr>
+            </thead>
+            <tbody>
+              {{mini2MatchesA_rows}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <!-- BẢNG XẾP HẠNG A -->
-            <div style="border-radius: 8px; border: 1px solid #cbd5e1; overflow-x: auto;">
-              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px; min-width: 300px;">
-                <thead>
-                  <tr style="background-color: #f8fafc; color: #1e293b; font-weight: 900;"><th colspan="5" style="padding: 6px; border-bottom: 1px solid #cbd5e1;">BẢNG XẾP HẠNG BẢNG A</th></tr>
-                  <tr style="background-color: #f1f5f9; color: #475569; font-weight: 700;">
-                    <th style="width:35px; padding: 6px 4px; border: 1px solid #cbd5e1;">STT</th>
-                    <th style="text-align: left; padding-left: 8px; border: 1px solid #cbd5e1;">CẶP VĐV BẢNG A</th>
-                    <th style="width:45px; padding: 6px 4px; border: 1px solid #cbd5e1;">ĐIỂM</th>
-                    <th style="width:50px; padding: 6px 4px; border: 1px solid #cbd5e1;">HỆ SỐ</th>
-                    <th style="width:60px; padding: 6px 4px; border: 1px solid #cbd5e1;">THAO TÁC</th>
-                  </tr>
-                </thead>
-                <tbody style="background: #ffffff;">
-                  {{standingsA_rows}}
-                </tbody>
-              </table>
-            </div>
+    <!-- BẢNG B -->
+    <section class="m2-card m2-b">
+      <div class="m2-hd">
+        <h3 class="m2-gname">⚡ BẢNG B</h3>
+        <div class="m2-ctl">
+          <span class="m2-lbl">Số cặp VĐV:</span>
+          <select onchange="setMini2PairCount('B', this.value)">
+            <option value="4" {{selected_mini2PairsB_length_4}}>4 Cặp VĐV</option>
+            <option value="5" {{selected_mini2PairsB_length_5}}>5 Cặp VĐV</option>
+          </select>
+        </div>
+      </div>
 
-            <!-- LỊCH THI ĐẤU A -->
-            <div style="border-radius: 8px; border: 1px solid #cbd5e1; overflow-x: auto;">
-              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px; min-width: 300px;">
-                <thead>
-                  <tr style="background-color: #f8fafc; color: #1e293b; font-weight: 900;"><th colspan="{{mini2KeoMode_colspan}}" style="padding: 6px; border-bottom: 1px solid #cbd5e1;">LỊCH THI ĐẤU BẢNG A</th></tr>
-                  <tr style="background-color: #f1f5f9; color: #475569; font-weight: 700;">
-                    <th style="width:35px; padding: 6px 4px; border: 1px solid #cbd5e1;">TRẬN</th>
-                    <th style="border: 1px solid #cbd5e1;">ĐỘI 1</th>
-                    <th style="width:85px; padding: 6px 4px; border: 1px solid #cbd5e1;">TỶ SỐ</th>
-                    <th style="border: 1px solid #cbd5e1;">ĐỘI 2</th>
-                    {{freeKeoHeader}}
-                  </tr>
-                </thead>
-                <tbody style="background: #ffffff;">
-                  {{mini2MatchesA_rows}}
-                </tbody>
-              </table>
-            </div>
-          </div>
+      <div class="m2-stack">
+        <!-- BẢNG XẾP HẠNG B -->
+        <div class="m2-box">
+          <table class="m2-t m2-st">
+            <thead>
+              <tr><th class="ttl" colspan="5">BẢNG XẾP HẠNG BẢNG B</th></tr>
+              <tr>
+                <th>STT</th>
+                <th style="text-align:left; padding-left:8px;"><span class="hide-sm">PICKLEBALL - </span>CẶP VĐV BẢNG B</th>
+                <th>ĐIỂM</th>
+                <th>HỆ SỐ</th>
+                <th>THAO TÁC</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{standingsB_rows}}
+            </tbody>
+          </table>
         </div>
 
-        <!-- BẢNG B -->
-        <div class="card" style="margin-bottom: 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 10px; font-family: 'Roboto', sans-serif;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <h3 style="margin:0; font-size:12px; color:#0369a1; font-weight:900; text-transform: uppercase;">⚡ BẢNG B - VÒNG TRÒN TÍNH ĐIỂM</h3>
-            <div style="display:flex; align-items:center; gap:6px;">
-              <span style="font-weight:700; font-size:11px; color: #475569;">Số cặp:</span>
-              <select style="padding: 2px 6px; font-weight:700; font-size:11px; border: 1px solid #cbd5e1; border-radius: 6px; background: #f8fafc;" onchange="setMini2PairCount('B', this.value)">
-                <option value="4" {{selected_mini2PairsB_length_4}}>4 Cặp</option>
-                <option value="5" {{selected_mini2PairsB_length_5}}>5 Cặp</option>
-              </select>
-            </div>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <!-- BẢNG XẾP HẠNG B -->
-            <div style="border-radius: 8px; border: 1px solid #cbd5e1; overflow-x: auto;">
-              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px; min-width: 300px;">
-                <thead>
-                  <tr style="background-color: #f8fafc; color: #1e293b; font-weight: 900;"><th colspan="5" style="padding: 6px; border-bottom: 1px solid #cbd5e1;">BẢNG XẾP HẠNG BẢNG B</th></tr>
-                  <tr style="background-color: #f1f5f9; color: #475569; font-weight: 700;">
-                    <th style="width:35px; padding: 6px 4px; border: 1px solid #cbd5e1;">STT</th>
-                    <th style="text-align: left; padding-left: 8px; border: 1px solid #cbd5e1;">CẶP VĐV BẢNG B</th>
-                    <th style="width:45px; padding: 6px 4px; border: 1px solid #cbd5e1;">ĐIỂM</th>
-                    <th style="width:50px; padding: 6px 4px; border: 1px solid #cbd5e1;">HỆ SỐ</th>
-                    <th style="width:60px; padding: 6px 4px; border: 1px solid #cbd5e1;">THAO TÁC</th>
-                  </tr>
-                </thead>
-                <tbody style="background: #ffffff;">
-                  {{standingsB_rows}}
-                </tbody>
-              </table>
-            </div>
-
-            <!-- LỊCH THI ĐẤU B -->
-            <div style="border-radius: 8px; border: 1px solid #cbd5e1; overflow-x: auto;">
-              <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px; min-width: 300px;">
-                <thead>
-                  <tr style="background-color: #f8fafc; color: #1e293b; font-weight: 900;"><th colspan="{{mini2KeoMode_colspan}}" style="padding: 6px; border-bottom: 1px solid #cbd5e1;">LỊCH THI ĐẤU BẢNG B</th></tr>
-                  <tr style="background-color: #f1f5f9; color: #475569; font-weight: 700;">
-                    <th style="width:35px; padding: 6px 4px; border: 1px solid #cbd5e1;">TRẬN</th>
-                    <th style="border: 1px solid #cbd5e1;">ĐỘI 1</th>
-                    <th style="width:85px; padding: 6px 4px; border: 1px solid #cbd5e1;">TỶ SỐ</th>
-                    <th style="border: 1px solid #cbd5e1;">ĐỘI 2</th>
-                    {{freeKeoHeader}}
-                  </tr>
-                </thead>
-                <tbody style="background: #ffffff;">
-                  {{mini2MatchesB_rows}}
-                </tbody>
-              </table>
-            </div>
-          </div>
+        <!-- LỊCH THI ĐẤU B -->
+        <div class="m2-box">
+          <table class="m2-t m2-match">
+            <thead>
+              <tr><th class="ttl" colspan="{{mini2KeoMode_colspan}}">LỊCH THI ĐẤU BẢNG B</th></tr>
+              <tr>
+                <th>TRẬN</th>
+                <th>ĐỘI 1</th>
+                <th>TỶ SỐ</th>
+                <th>ĐỘI 2</th>
+                {{freeKeoHeader}}
+              </tr>
+            </thead>
+            <tbody>
+              {{mini2MatchesB_rows}}
+            </tbody>
+          </table>
         </div>
+      </div>
+    </section>
 
-        <!-- VÒNG KNOCKOUT -->
-        <div class="card" style="margin-bottom: 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 10px; font-family: 'Roboto', sans-serif;">
-          <div style="margin-bottom: 8px;">
-            <h3 style="margin:0; font-size:12px; color:#1e293b; font-weight:900; text-transform: uppercase;">🏆 VÒNG KNOCKOUT (BÁN KẾT - CHUNG KẾT)</h3>
-          </div>
-          <div style="margin-bottom: 8px; border-radius: 8px; border: 1px solid #cbd5e1; overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 11px; min-width: 300px;">
-              <thead>
-                <tr style="background-color: #f1f5f9; color: #475569; font-weight: 700;">
-                  <th style="width:90px; padding: 6px 4px; border: 1px solid #cbd5e1;">VÒNG ĐẤU</th>
-                  <th style="border: 1px solid #cbd5e1;">ĐỘI 1</th>
-                  <th style="width:85px; padding: 6px 4px; border: 1px solid #cbd5e1;">TỶ SỐ</th>
-                  <th style="border: 1px solid #cbd5e1;">ĐỘI 2</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr style="border-bottom: 1px solid #cbd5e1; background-color: #ffffff;">
-                  <td style="padding: 6px 4px; font-weight: 700; color: #475569; border: 1px solid #cbd5e1;">Bán Kết 1</td>
-                  <td style="border: 1px solid #cbd5e1;"><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 16px; padding: 3px 6px; font-weight: 700; font-family: 'Roboto', sans-serif;" value="{{mini2Knockout_bkc1_p1}}" onchange="updateMini2Knockout('bkc1', 'p1', this.value)"></td>
-                  <td style="border: 1px solid #cbd5e1;">
-                    <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                      <input type="number" min="0" style="width: 28px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px; font-weight: 700;" value="{{mini2Knockout_bkc1_s1}}" oninput="updateMini2Knockout('bkc1', 's1', this.value)">
-                      <span>-</span>
-                      <input type="number" min="0" style="width: 28px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px; font-weight: 700;" value="{{mini2Knockout_bkc1_s2}}" oninput="updateMini2Knockout('bkc1', 's2', this.value)">
-                    </div>
-                  </td>
-                  <td style="border: 1px solid #cbd5e1;"><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 16px; padding: 3px 6px; font-weight: 700; font-family: 'Roboto', sans-serif;" value="{{mini2Knockout_bkc1_p2}}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
-                </tr>
-                <tr style="border-bottom: 1px solid #cbd5e1; background-color: #f8fafc;">
-                  <td style="padding: 6px 4px; font-weight: 700; color: #475569; border: 1px solid #cbd5e1;">Bán Kết 2</td>
-                  <td style="border: 1px solid #cbd5e1;"><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 16px; padding: 3px 6px; font-weight: 700; font-family: 'Roboto', sans-serif;" value="{{mini2Knockout_bkc2_p1}}" onchange="updateMini2Knockout('bkc2', 'p1', this.value)"></td>
-                  <td style="border: 1px solid #cbd5e1;">
-                    <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                      <input type="number" min="0" style="width: 28px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px; font-weight: 700;" value="{{mini2Knockout_bkc2_s1}}" oninput="updateMini2Knockout('bkc2', 's1', this.value)">
-                      <span>-</span>
-                      <input type="number" min="0" style="width: 28px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px; font-weight: 700;" value="{{mini2Knockout_bkc2_s2}}" oninput="updateMini2Knockout('bkc2', 's2', this.value)">
-                    </div>
-                  </td>
-                  <td style="border: 1px solid #cbd5e1;"><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 16px; padding: 3px 6px; font-weight: 700; font-family: 'Roboto', sans-serif;" value="{{mini2Knockout_bkc2_p2}}" onchange="updateMini2Knockout('bkc2', 'p2', this.value)"></td>
-                </tr>
-                <tr style="border-bottom: 1px solid #cbd5e1; background-color: #fffbeb;">
-                  <td style="padding: 6px 4px; border: 1px solid #cbd5e1;"><strong style="color:#b45309;">Tranh 3-4</strong></td>
-                  <td style="border: 1px solid #cbd5e1;"><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 16px; padding: 3px 6px; font-weight: 700; font-family: 'Roboto', sans-serif;" value="{{mini2Knockout_rank34_p1}}" onchange="updateMini2Knockout('rank34', 'p1', this.value)"></td>
-                  <td style="border: 1px solid #cbd5e1;">
-                    <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                      <input type="number" min="0" style="width: 28px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px; font-weight: 700;" value="{{mini2Knockout_rank34_s1}}" oninput="updateMini2Knockout('rank34', 's1', this.value)">
-                      <span>-</span>
-                      <input type="number" min="0" style="width: 28px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px; font-weight: 700;" value="{{mini2Knockout_rank34_s2}}" oninput="updateMini2Knockout('rank34', 's2', this.value)">
-                    </div>
-                  </td>
-                  <td style="border: 1px solid #cbd5e1;"><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 16px; padding: 3px 6px; font-weight: 700; font-family: 'Roboto', sans-serif;" value="{{mini2Knockout_rank34_p2}}" onchange="updateMini2Knockout('rank34', 'p2', this.value)"></td>
-                </tr>
-                <tr style="background-color: #f0fdf4;">
-                  <td style="padding: 6px 4px; border: 1px solid #cbd5e1;"><strong style="color:#15803d;">CHUNG KẾT</strong></td>
-                  <td style="border: 1px solid #cbd5e1;"><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 16px; padding: 3px 6px; font-weight: 700; font-family: 'Roboto', sans-serif;" value="{{mini2Knockout_final_p1}}" onchange="updateMini2Knockout('final', 'p1', this.value)"></td>
-                  <td style="border: 1px solid #cbd5e1;">
-                    <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                      <input type="number" min="0" style="width: 28px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px; font-weight: 700;" value="{{mini2Knockout_final_s1}}" oninput="updateMini2Knockout('final', 's1', this.value)">
-                      <span>-</span>
-                      <input type="number" min="0" style="width: 28px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px; font-weight: 700;" value="{{mini2Knockout_final_s2}}" oninput="updateMini2Knockout('final', 's2', this.value)">
-                    </div>
-                  </td>
-                  <td style="border: 1px solid #cbd5e1;"><input type="text" style="width: 90%; text-align: center; border: 1px solid #cbd5e1; border-radius: 16px; padding: 3px 6px; font-weight: 700; font-family: 'Roboto', sans-serif;" value="{{mini2Knockout_final_p2}}" onchange="updateMini2Knockout('final', 'p2', this.value)"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+  </div>
 
-          <div style="display:flex; flex-direction:column; gap:6px;">
-            <div style="display:flex; align-items:center; gap:8px; background: #fffdf5; padding: 5px 10px; border-radius: 8px; border: 1px solid #fef3c7;">
-              <span style="font-weight:700; color:#d97706; width:100px; font-size:11px;">🏆 Vô Địch:</span>
-              <input type="text" style="width: 100%; font-size:11px; padding:4px 10px; background:#ffffff; border: 1px solid #cbd5e1; border-radius: 16px; color:#b45309; font-weight: 700; font-family: 'Roboto', sans-serif;" value="{{mini2Knockout_champion}}" placeholder="Nhập tên đội..." onchange="updateMini2WinnerField('champion', this.value)">
-            </div>
-            <div style="display:flex; align-items:center; gap:8px; background: #f8fafc; padding: 5px 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
-              <span style="font-weight:700; color:#475569; width:100px; font-size:11px;">🥈 Về Nhì:</span>
-              <input type="text" style="width: 100%; font-size:11px; padding:4px 10px; background:#ffffff; border: 1px solid #cbd5e1; border-radius: 16px; color:#334155; font-weight: 700; font-family: 'Roboto', sans-serif;" value="{{mini2Knockout_runnerUp}}" placeholder="Nhập tên đội..." onchange="updateMini2WinnerField('runnerUp', this.value)">
-            </div>
-            <div style="display:flex; align-items:center; gap:8px; background: #fff7ed; padding: 5px 10px; border-radius: 8px; border: 1px solid #ffedd5;">
-              <span style="font-weight:700; color:#c2410c; width:100px; font-size:11px;">🥉 Về Ba:</span>
-              <input type="text" style="width: 100%; font-size:11px; padding:4px 10px; background:#ffffff; border: 1px solid #cbd5e1; border-radius: 16px; color:#9a3412; font-weight: 700; font-family: 'Roboto', sans-serif;" value="{{mini2Knockout_thirdPlace}}" placeholder="Nhập tên đội..." onchange="updateMini2WinnerField('thirdPlace', this.value)">
-            </div>
-          </div>
+  <!-- VÒNG KNOCKOUT -->
+  <section class="m2-card">
+    <div class="m2-hd" style="margin-bottom:8px;">
+      <h3 class="m2-gname" style="color:#1e293b;">🏆 VÒNG KNOCKOUT (BÁN KẾT - CHUNG KẾT)</h3>
+    </div>
+    <div class="m2-box">
+      <table class="m2-ko">
+        <colgroup><col class="k1"><col><col class="k2"><col></colgroup>
+        <thead>
+          <tr><th>VÒNG ĐẤU</th><th>ĐỘI 1</th><th>TỶ SỐ</th><th>ĐỘI 2</th></tr>
+        </thead>
+        <tbody>
+          <tr class="ko-bk" style="background:#fff;">
+            <td class="k-lbl">Bán Kết 1</td>
+            <td><input type="text" value="{{mini2Knockout_bkc1_p1}}" onchange="updateMini2Knockout('bkc1', 'p1', this.value)"></td>
+            <td>
+              <div class="m2-score">
+                <input type="number" min="0" inputmode="numeric" class="score-input" value="{{mini2Knockout_bkc1_s1}}" onchange="updateMini2Knockout('bkc1', 's1', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
+                <span>-</span>
+                <input type="number" min="0" inputmode="numeric" class="score-input" value="{{mini2Knockout_bkc1_s2}}" onchange="updateMini2Knockout('bkc1', 's2', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
+              </div>
+            </td>
+            <td><input type="text" value="{{mini2Knockout_bkc1_p2}}" onchange="updateMini2Knockout('bkc1', 'p2', this.value)"></td>
+          </tr>
+          <tr class="ko-bk" style="background:#f8fafc;">
+            <td class="k-lbl">Bán Kết 2</td>
+            <td><input type="text" value="{{mini2Knockout_bkc2_p1}}" onchange="updateMini2Knockout('bkc2', 'p1', this.value)"></td>
+            <td>
+              <div class="m2-score">
+                <input type="number" min="0" inputmode="numeric" class="score-input" value="{{mini2Knockout_bkc2_s1}}" onchange="updateMini2Knockout('bkc2', 's1', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
+                <span>-</span>
+                <input type="number" min="0" inputmode="numeric" class="score-input" value="{{mini2Knockout_bkc2_s2}}" onchange="updateMini2Knockout('bkc2', 's2', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
+              </div>
+            </td>
+            <td><input type="text" value="{{mini2Knockout_bkc2_p2}}" onchange="updateMini2Knockout('bkc2', 'p2', this.value)"></td>
+          </tr>
+          <tr class="ko-34">
+            <td class="k-lbl"><strong>Tranh 3 - 4</strong></td>
+            <td><input type="text" value="{{mini2Knockout_rank34_p1}}" onchange="updateMini2Knockout('rank34', 'p1', this.value)"></td>
+            <td>
+              <div class="m2-score">
+                <input type="number" min="0" inputmode="numeric" class="score-input" value="{{mini2Knockout_rank34_s1}}" onchange="updateMini2Knockout('rank34', 's1', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
+                <span>-</span>
+                <input type="number" min="0" inputmode="numeric" class="score-input" value="{{mini2Knockout_rank34_s2}}" onchange="updateMini2Knockout('rank34', 's2', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
+              </div>
+            </td>
+            <td><input type="text" value="{{mini2Knockout_rank34_p2}}" onchange="updateMini2Knockout('rank34', 'p2', this.value)"></td>
+          </tr>
+          <tr class="ko-fin">
+            <td class="k-lbl"><strong>🏆 CHUNG KẾT</strong></td>
+            <td><input type="text" value="{{mini2Knockout_final_p1}}" onchange="updateMini2Knockout('final', 'p1', this.value)"></td>
+            <td>
+              <div class="m2-score">
+                <input type="number" min="0" inputmode="numeric" class="score-input" value="{{mini2Knockout_final_s1}}" onchange="updateMini2Knockout('final', 's1', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
+                <span>-</span>
+                <input type="number" min="0" inputmode="numeric" class="score-input" value="{{mini2Knockout_final_s2}}" onchange="updateMini2Knockout('final', 's2', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
+              </div>
+            </td>
+            <td><input type="text" value="{{mini2Knockout_final_p2}}" onchange="updateMini2Knockout('final', 'p2', this.value)"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="m2-pod">
+      <label class="p1"><b>🏆 Đội Vô Địch:</b>
+        <input type="text" value="{{mini2Knockout_champion}}" placeholder="Nhập tên cặp đội Vô Địch..." onchange="updateMini2WinnerField('champion', this.value)">
+      </label>
+      <label class="p2"><b>🥈 Đội Về Nhì:</b>
+        <input type="text" value="{{mini2Knockout_runnerUp}}" placeholder="Nhập tên cặp đội Về Nhì..." onchange="updateMini2WinnerField('runnerUp', this.value)">
+      </label>
+      <label class="p3"><b>🥉 Đội Về Ba:</b>
+        <input type="text" value="{{mini2Knockout_thirdPlace}}" placeholder="Nhập tên cặp đội Về Ba..." onchange="updateMini2WinnerField('thirdPlace', this.value)">
+      </label>
+    </div>
+  </section>
+
+  <!-- BẢNG TỔNG HỢP KÈO  (Tùy chọn kèo nằm cùng hàng với tiêu đề) -->
+  <section class="m2-card" style="margin-bottom:0;">
+    <div class="m2-hd">
+      <h2 class="m2-ttl" style="font-size:13px;">📊 BẢNG TỔNG HỢP KÈO - GIẢI MINI GAME 2</h2>
+      <div class="m2-ctl m2-keo">
+        <span class="m2-lbl">Tùy Chọn Kèo</span>
+        {{renderKeoSelectDropdown}}
+      </div>
+    </div>
+
+    <div class="m2-box m2-scroll">
+      <table class="m2-t m2-sum">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:6px 12px;">PICK THỦ (CÁ NHÂN)</th>
+            <th style="width:62px;">SỐ TRẬN</th>
+            <th style="width:68px;">THẮNG/K</th>
+            <th style="width:68px;">THUA/K</th>
+            <th style="width:72px;">MANG VỀ</th>
+            <th style="width:62px;">TỔNG</th>
+            <th style="width:68px;">THỰC TẾ</th>
+            <th style="width:84px;">NOTE</th>
+          </tr>
+        </thead>
+        <tbody>{{summaryRowsHtml2}}</tbody>
+      </table>
+    </div>
+
+    <div class="m2-foot">
+      <div class="fr total-summary-row">
+        <span class="lbl">Tổng Tiền BTC Thu Về</span>
+        <div class="vals">
+          <span><em>Mang về</em><b>{{sumBringBack2}}</b></span>
+          <span class="red"><em>Tổng</em><b>{{btcThuVeCalculated2}}</b></span>
+          <span><em>Thực tế</em><b>{{sumThucThu2}}</b></span>
         </div>
+      </div>
+      <div class="fr quy total-summary-row">
+        <span class="lbl">Quỹ Còn</span>
+        <b>{{quyCon2}}</b>
+      </div>
+    </div>
+  </section>
 
-        <!-- BẢNG TỔNG HỢP KÈO -->
-        <div class="card" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 10px; font-family: 'Roboto', sans-serif;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
-            <h2 style="font-size:12px; font-weight:900; color:#1e293b; margin:0; text-transform: uppercase;">📊 BẢNG TỔNG HỢP KÈO - GIẢI MINI GAME 2</h2>
-            <div style="display:flex; align-items:center; gap:6px;">
-              <span style="font-size:11px; font-weight:700; color: #475569;">Tùy Chọn Kèo:</span>
-              {{renderKeoSelectDropdown}}
-            </div>
-          </div>
-          <div style="border-radius: 8px; border: 1px solid #cbd5e1; overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 11px; min-width: 580px;">
-              <thead>
-                <tr style="background-color: #f1f5f9; color: #475569; font-weight: 700; text-align: center;">
-                  <th style="text-align: left; padding: 6px 8px; border: 1px solid #cbd5e1;">PICK THỦ (CÁ NHÂN)</th>
-                  <th style="width:50px; padding: 6px 4px; border: 1px solid #cbd5e1;">SỐ TRẬN</th>
-                  <th style="width:55px; padding: 6px 4px; border: 1px solid #cbd5e1;">THẮNG/K</th>
-                  <th style="width:55px; padding: 6px 4px; border: 1px solid #cbd5e1;">THUA/K</th>
-                  <th style="width:65px; padding: 6px 4px; border: 1px solid #cbd5e1;">MANG VỀ</th>
-                  <th style="width:55px; padding: 6px 4px; border: 1px solid #cbd5e1;">TỔNG</th>
-                  <th style="width:65px; padding: 6px 4px; border: 1px solid #cbd5e1;">THỰC TẾ</th>
-                  <th style="width:70px; padding: 6px 4px; border: 1px solid #cbd5e1;">NOTE</th>
-                </tr>
-              </thead>
-              <tbody style="background: #ffffff;">
-                {{summaryRowsHtml2}}
-                <tr style="border-top: 2px solid #cbd5e1; font-weight: 700; text-align: center; background-color: #f8fafc;">
-                  <td style="color: #2563eb; text-align: left; padding: 6px 8px; border: 1px solid #cbd5e1;"><strong>Tổng Tiền BTC Thu Về</strong></td>
-                  <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
-                  <td style="color: #2563eb; border: 1px solid #cbd5e1;"><strong>{{sumBringBack2}}</strong></td>
-                  <td style="color: #ef4444; border: 1px solid #cbd5e1;"><strong>{{btcThuVeCalculated2}}</strong></td>
-                  <td style="color: #2563eb; border: 1px solid #cbd5e1;"><strong>{{sumThucThu2}}</strong></td>
-                  <td style="border: 1px solid #cbd5e1;"></td>
-                </tr>
-                <tr style="font-weight: 700; text-align: center; background-color: #fef2f2;">
-                  <td style="color: #ef4444; text-align: left; padding: 6px 8px; border: 1px solid #cbd5e1;" colspan="4"><strong>Quỹ Còn</strong></td>
-                  <td colspan="2" style="color: #ef4444; font-size: 11px; border: 1px solid #cbd5e1;"><strong>{{quyCon2}}</strong></td>
-                  <td colspan="2" style="border: 1px solid #cbd5e1;"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      
+</div>
+
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · slots: i_plus1, st_index_mod5, st_name, st_points, if_st_diff_0_color, if_st_diff_0, st_index -->
 <!-- [PART: tab-tr-2] -->
 
-                    <tr style="border-bottom: 1px solid #cbd5e1;">
-                      <td style="padding: 5px 4px; border: 1px solid #cbd5e1;"><strong>{{i_plus1}}</strong></td>
-                      <td style="text-align: left; padding-left: 8px; font-weight:700; border: 1px solid #cbd5e1;">
-                        <span class="pair-badge badge-p{{st_index_mod5}}" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: 'Roboto', sans-serif;">{{st_name}}</span>
-                      </td>
-                      <td class="txt-win" style="font-size:11px; color:#10b981; font-weight: 700; border: 1px solid #cbd5e1; padding: 5px 4px;">{{st_points}}</td>
-                      <td style="font-weight:700; color:{{if_st_diff_0_color}}; border: 1px solid #cbd5e1; padding: 5px 4px;">{{if_st_diff_0}}</td>
-                      <td style="border: 1px solid #cbd5e1; padding: 5px 4px;">
-                        <button onclick="editMini2PairName('A', {{st_index}})" title="Đổi tên" style="background:none; border:none; cursor:pointer; font-size:11px;">✏️</button>
-                        <button style="background:none; border:none; cursor:pointer; font-size:11px;" onclick="deleteMini2Pair('A', {{st_index}})" title="Xóa">🗑️</button>
+                    <tr>
+                      <td class="c-stt">{{i_plus1}}</td>
+                      <td class="c-pair"><span class="pair-badge badge-p{{st_index_mod5}}">{{st_name}}</span></td>
+                      <td class="c-pts txt-win">{{st_points}}</td>
+                      <td class="c-diff" style="color:{{if_st_diff_0_color}}">{{if_st_diff_0}}</td>
+                      <td class="c-act">
+                        <button class="m2-ico" onclick="editMini2PairName('A', {{st_index}})" title="Đổi tên">✏️</button><button class="m2-ico" onclick="deleteMini2Pair('A', {{st_index}})" title="Xóa">🗑️</button>
                       </td>
                     </tr>
-                  
+
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · slots: m_customWin_or_default, idx, m_customLose_or_default -->
 <!-- [PART: tab-td-1] -->
 
-                        <td style="border: 1px solid #cbd5e1; padding: 4px;">
-                          <div style="display:flex; gap:2px; justify-content:center;">
-                            <input type="number" placeholder="Thắng" style="width:36px; text-align:center; border:1px solid #cbd5e1; border-radius:4px; padding:2px; font-size:10px; font-weight:700;" value="{{m_customWin_or_default}}" onchange="updateMini2MatchKeo('A', {{idx}}, 'customWin', parseInt(this.value))">
-                            <input type="number" placeholder="Thua" style="width:36px; text-align:center; border:1px solid #cbd5e1; border-radius:4px; padding:2px; font-size:10px; font-weight:700;" value="{{m_customLose_or_default}}" onchange="updateMini2MatchKeo('A', {{idx}}, 'customLose', parseInt(this.value))">
+                        <td class="td-money">
+                          <div class="m2-money">
+                            <input type="number" placeholder="Thắng" title="Tiền thắng" value="{{m_customWin_or_default}}" onchange="updateMini2MatchKeo('A', {{idx}}, 'customWin', parseInt(this.value))">
+                            <input type="number" placeholder="Thua" title="Tiền thua" value="{{m_customLose_or_default}}" onchange="updateMini2MatchKeo('A', {{idx}}, 'customLose', parseInt(this.value))">
                           </div>
                         </td>
-                      
+
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · slots: m_id, if_mini2PairsA_m_pair1Index, m_score1, idx, m_score2, if_mini2PairsA_m_pair2Index, customKeoA -->
 <!-- [PART: tab-tr-3] -->
 
-                      <tr style="border-bottom: 1px solid #cbd5e1;">
-                        <td style="padding: 5px 4px; border: 1px solid #cbd5e1;"><strong>{{m_id}}</strong></td>
-                        <td style="text-align: center; border: 1px solid #cbd5e1; padding: 5px 4px;">{{if_mini2PairsA_m_pair1Index}}</td>
-                        <td style="border: 1px solid #cbd5e1; padding: 5px 4px;">
-                          <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                            <input type="number" min="0" style="width: 30px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px; font-weight: 700;" value="{{m_score1}}" oninput="updateMini2MatchScore('A', {{idx}}, 'score1', this.value)">
+                      <tr>
+                        <td class="c-id">{{m_id}}</td>
+                        <td class="c-t1">{{if_mini2PairsA_m_pair1Index}}</td>
+                        <td class="c-sc">
+                          <div class="m2-score">
+                            <input type="number" min="0" inputmode="numeric" class="score-input" value="{{m_score1}}" onchange="updateMini2MatchScore('A', {{idx}}, 'score1', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
                             <span>-</span>
-                            <input type="number" min="0" style="width: 30px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px; font-weight: 700;" value="{{m_score2}}" oninput="updateMini2MatchScore('A', {{idx}}, 'score2', this.value)">
+                            <input type="number" min="0" inputmode="numeric" class="score-input" value="{{m_score2}}" onchange="updateMini2MatchScore('A', {{idx}}, 'score2', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
                           </div>
                         </td>
-                        <td style="text-align: center; border: 1px solid #cbd5e1; padding: 5px 4px;">{{if_mini2PairsA_m_pair2Index}}</td>
+                        <td class="c-t2">{{if_mini2PairsA_m_pair2Index}}</td>
                         {{customKeoA}}
                       </tr>
-                    
+
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · slots: m_pair1Index_mod5, mini2PairsA_m_pair1Index_name -->
 <!-- [PART: tab-span-5] -->
-<span class="pair-badge badge-p{{m_pair1Index_mod5}}" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: 'Roboto', sans-serif;">{{mini2PairsA_m_pair1Index_name}}</span>
+<span class="pair-badge badge-p{{m_pair1Index_mod5}}">{{mini2PairsA_m_pair1Index_name}}</span>
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · slots: m_pair2Index_mod5, mini2PairsA_m_pair2Index_name -->
 <!-- [PART: tab-span-6] -->
-<span class="pair-badge badge-p{{m_pair2Index_mod5}}" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: 'Roboto', sans-serif;">{{mini2PairsA_m_pair2Index_name}}</span>
+<span class="pair-badge badge-p{{m_pair2Index_mod5}}">{{mini2PairsA_m_pair2Index_name}}</span>
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · slots: i_plus1, st_index_mod5, st_name, st_points, if_st_diff_0_color, if_st_diff_0, st_index -->
 <!-- [PART: tab-tr-4] -->
 
-                    <tr style="border-bottom: 1px solid #cbd5e1;">
-                      <td style="padding: 5px 4px; border: 1px solid #cbd5e1;"><strong>{{i_plus1}}</strong></td>
-                      <td style="text-align: left; padding-left: 8px; font-weight:700; border: 1px solid #cbd5e1;">
-                        <span class="pair-badge badge-p{{st_index_mod5}}" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: 'Roboto', sans-serif;">{{st_name}}</span>
-                      </td>
-                      <td class="txt-win" style="font-size:11px; color:#10b981; font-weight: 700; border: 1px solid #cbd5e1; padding: 5px 4px;">{{st_points}}</td>
-                      <td style="font-weight:700; color:{{if_st_diff_0_color}}; border: 1px solid #cbd5e1; padding: 5px 4px;">{{if_st_diff_0}}</td>
-                      <td style="border: 1px solid #cbd5e1; padding: 5px 4px;">
-                        <button onclick="editMini2PairName('B', {{st_index}})" title="Đổi tên" style="background:none; border:none; cursor:pointer; font-size:11px;">✏️</button>
-                        <button style="background:none; border:none; cursor:pointer; font-size:11px;" onclick="deleteMini2Pair('B', {{st_index}})" title="Xóa">🗑️</button>
+                    <tr>
+                      <td class="c-stt">{{i_plus1}}</td>
+                      <td class="c-pair"><span class="pair-badge badge-p{{st_index_mod5}}">{{st_name}}</span></td>
+                      <td class="c-pts txt-win">{{st_points}}</td>
+                      <td class="c-diff" style="color:{{if_st_diff_0_color}}">{{if_st_diff_0}}</td>
+                      <td class="c-act">
+                        <button class="m2-ico" onclick="editMini2PairName('B', {{st_index}})" title="Đổi tên">✏️</button><button class="m2-ico" onclick="deleteMini2Pair('B', {{st_index}})" title="Xóa">🗑️</button>
                       </td>
                     </tr>
-                  
+
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · slots: m_customWin_or_default, idx, m_customLose_or_default -->
 <!-- [PART: tab-td-2] -->
 
-                        <td style="border: 1px solid #cbd5e1; padding: 4px;">
-                          <div style="display:flex; gap:2px; justify-content:center;">
-                            <input type="number" placeholder="Thắng" style="width:36px; text-align:center; border:1px solid #cbd5e1; border-radius:4px; padding:2px; font-size:10px; font-weight:700;" value="{{m_customWin_or_default}}" onchange="updateMini2MatchKeo('B', {{idx}}, 'customWin', parseInt(this.value))">
-                            <input type="number" placeholder="Thua" style="width:36px; text-align:center; border:1px solid #cbd5e1; border-radius:4px; padding:2px; font-size:10px; font-weight:700;" value="{{m_customLose_or_default}}" onchange="updateMini2MatchKeo('B', {{idx}}, 'customLose', parseInt(this.value))">
+                        <td class="td-money">
+                          <div class="m2-money">
+                            <input type="number" placeholder="Thắng" title="Tiền thắng" value="{{m_customWin_or_default}}" onchange="updateMini2MatchKeo('B', {{idx}}, 'customWin', parseInt(this.value))">
+                            <input type="number" placeholder="Thua" title="Tiền thua" value="{{m_customLose_or_default}}" onchange="updateMini2MatchKeo('B', {{idx}}, 'customLose', parseInt(this.value))">
                           </div>
                         </td>
-                      
+
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · slots: m_id, if_mini2PairsB_m_pair1Index, m_score1, idx, m_score2, if_mini2PairsB_m_pair2Index, customKeoB -->
 <!-- [PART: tab-tr-5] -->
 
-                      <tr style="border-bottom: 1px solid #cbd5e1;">
-                        <td style="padding: 5px 4px; border: 1px solid #cbd5e1;"><strong>{{m_id}}</strong></td>
-                        <td style="text-align: center; border: 1px solid #cbd5e1; padding: 5px 4px;">{{if_mini2PairsB_m_pair1Index}}</td>
-                        <td style="border: 1px solid #cbd5e1; padding: 5px 4px;">
-                          <div style="display:flex; align-items:center; justify-content:center; gap:2px;">
-                            <input type="number" min="0" style="width: 30px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px; font-weight: 700;" value="{{m_score1}}" oninput="updateMini2MatchScore('B', {{idx}}, 'score1', this.value)">
+                      <tr>
+                        <td class="c-id">{{m_id}}</td>
+                        <td class="c-t1">{{if_mini2PairsB_m_pair1Index}}</td>
+                        <td class="c-sc">
+                          <div class="m2-score">
+                            <input type="number" min="0" inputmode="numeric" class="score-input" value="{{m_score1}}" onchange="updateMini2MatchScore('B', {{idx}}, 'score1', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
                             <span>-</span>
-                            <input type="number" min="0" style="width: 30px; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px; font-weight: 700;" value="{{m_score2}}" oninput="updateMini2MatchScore('B', {{idx}}, 'score2', this.value)">
+                            <input type="number" min="0" inputmode="numeric" class="score-input" value="{{m_score2}}" onchange="updateMini2MatchScore('B', {{idx}}, 'score2', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
                           </div>
                         </td>
-                        <td style="text-align: center; border: 1px solid #cbd5e1; padding: 5px 4px;">{{if_mini2PairsB_m_pair2Index}}</td>
+                        <td class="c-t2">{{if_mini2PairsB_m_pair2Index}}</td>
                         {{customKeoB}}
                       </tr>
-                    
+
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · slots: m_pair1Index_mod5, mini2PairsB_m_pair1Index_name -->
 <!-- [PART: tab-span-7] -->
-<span class="pair-badge badge-p{{m_pair1Index_mod5}}" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: 'Roboto', sans-serif;">{{mini2PairsB_m_pair1Index_name}}</span>
+<span class="pair-badge badge-p{{m_pair1Index_mod5}}">{{mini2PairsB_m_pair1Index_name}}</span>
 <!-- [/PART] -->
 
 <!-- từ hàm renderMiniGame2Tab() · slots: m_pair2Index_mod5, mini2PairsB_m_pair2Index_name -->
 <!-- [PART: tab-span-8] -->
-<span class="pair-badge badge-p{{m_pair2Index_mod5}}" style="display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 700; font-family: 'Roboto', sans-serif;">{{mini2PairsB_m_pair2Index_name}}</span>
+<span class="pair-badge badge-p{{m_pair2Index_mod5}}">{{mini2PairsB_m_pair2Index_name}}</span>
 <!-- [/PART] -->

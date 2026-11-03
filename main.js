@@ -703,7 +703,7 @@
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-ABSENT] ▲▲▲ */
 
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Cập nhật chuẩn 29/10) ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const targetContainer = container || document.getElementById("tabContent");
       if (!targetContainer) return;
@@ -736,7 +736,7 @@
         }
       });
 
-      let sumBringBack = 0, sumThucThu = 0, sumAmThucTe = 0, sumFine = 0;
+      let sumBringBack = 0, sumThucThu = 0, sumFine = 0;
       let btcThuVeCalculated = 0; 
       const fineMap = getAbsentFineMap(dateStr);
       let summaryRowsHtml = "";
@@ -758,12 +758,22 @@
           sumFine += fine;
 
           let bringBack = 0;
-          if (st.played >= 4 && netTotal > 0) { bringBack = netTotal; sumBringBack += bringBack; }
-          if (netTotal < 0) { sumAmThucTe += netTotal; }
+          if (st.played >= 4 && netTotal > 0) {
+            bringBack = netTotal;
+            sumBringBack += bringBack;
+          }
 
+          // KHI ĐÃ TICK NỘP TIỀN (THỰC THU TRONG THỰC TẾ)
           if (isPaid) {
-            if (netTotal < 0) sumThucThu += Math.abs(netTotal);
+            // Tổng Tiền BTC Thu Về (Đã Tích Thực Tế): Cộng dồn giá trị cột Tổng của các ô đã tick
             btcThuVeCalculated += netTotal;
+
+            // Thực Thu BTC Đã Nhận: Số tiền mặt nhận được từ VĐV nộp tiền âm (hoặc chi thưởng)
+            if (netTotal < 0) {
+              sumThucThu += Math.abs(netTotal);
+            } else if (netTotal > 0 && st.played < 4) {
+              sumThucThu += netTotal;
+            }
           }
 
           let noteText = "";
@@ -804,7 +814,9 @@
         }
       });
 
-      let quyCon = sumThucThu - Math.abs(sumAmThucTe + sumBringBack);
+      // QUỸ DƯ / THIẾU NGÀY NÀY = (Thắng Mang Về Quỹ) + (Tổng Tiền BTC Thu Về Thực Tế)
+      let quyCon = sumBringBack + btcThuVeCalculated;
+
       const pStatus = paymentStatus[dateStr];
       const currentBtcAdminOption = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption) ? pStatus.btcNoteAdminOption : "NO";
       const isYes = currentBtcAdminOption === "YES";
@@ -813,14 +825,16 @@
         summaryRowsHtml,
         sumBringBack: (sumBringBack > 0 ? `+${sumBringBack}K` : `${sumBringBack}K`),
         btcThuVeCalculated: (btcThuVeCalculated !== 0 ? (btcThuVeCalculated > 0 ? `+${btcThuVeCalculated}K` : `${btcThuVeCalculated}K`) : '0K'),
+        btcThuVe_color: (btcThuVeCalculated < 0 ? '#dc2626' : (btcThuVeCalculated > 0 ? '#059669' : '#334155')),
         sumFine_color: (sumFine < 0 ? '#dc2626' : '#64748b'),
         sumFine_value: (sumFine < 0 ? `${sumFine}K` : '0K'),
-        sumThucThu: `${sumThucThu}K`, dateStr,
+        sumThucThu: (sumThucThu > 0 ? `+${sumThucThu}K` : '0K'), 
+        dateStr,
         isYes_color: (isYes ? '#16a34a' : '#dc2626'),
         selected_isYes: (isYes ? 'selected' : ''),
         selected_not_isYes: (!isYes ? 'selected' : ''),
-        quyCon_color: (quyCon < 0 ? '#dc2626' : '#059669'),
-        quyCon: (quyCon > 0 ? `+${quyCon}K` : `${quyCon}K`)
+        quyCon_color: (quyCon < 0 ? '#dc2626' : (quyCon > 0 ? '#059669' : '#334155')),
+        quyCon: (quyCon !== 0 ? (quyCon > 0 ? `+${quyCon}K` : `${quyCon}K`) : '0K')
       });
 
       targetContainer.innerHTML = (matchesHtml || "") + (summaryTableHtml || "");

@@ -703,7 +703,7 @@
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-ABSENT] ▲▲▲ */
 
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Logic chuẩn hóa cột Tổng & Quỹ Dư Chưa Đủ Trận) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const targetContainer = container || document.getElementById("tabContent");
       if (!targetContainer) return;
@@ -736,9 +736,8 @@
         }
       });
 
-      let sumBringBack = 0, sumThucThu = 0, sumFine = 0;
+      let sumBringBack = 0, sumThucThu = 0, sumAmThucTe = 0, sumFine = 0;
       let btcThuVeCalculated = 0; 
-      let quyDuChuaDuTieuChi = 0; // Giá trị tiền dương của VĐV có số trận < 4 chưa chuyển cột bỏ túi
       const fineMap = getAbsentFineMap(dateStr);
       let summaryRowsHtml = "";
 
@@ -759,18 +758,12 @@
           sumFine += fine;
 
           let bringBack = 0;
-          if (st.played >= 4 && netTotal > 0) {
-            bringBack = netTotal;
-            sumBringBack += bringBack;
-          } else if (st.played < 4 && netTotal > 0) {
-            // Lọc giá trị tiền dương của VĐV chưa đủ tiêu chí >= 4 trận (chưa vào bỏ túi)
-            quyDuChuaDuTieuChi += netTotal;
-          }
+          if (st.played >= 4 && netTotal > 0) { bringBack = netTotal; sumBringBack += bringBack; }
+          if (netTotal < 0) { sumAmThucTe += netTotal; }
 
-          // Lấy giá trị từ CỘT TỔNG cho thực thu BTC đã nhận khi VĐV đã tick thực tế
           if (isPaid) {
+            if (netTotal < 0) sumThucThu += Math.abs(netTotal);
             btcThuVeCalculated += netTotal;
-            sumThucThu += netTotal; // Giá trị thực thu hiển thị lấy từ cột tổng
           }
 
           let noteText = "";
@@ -811,9 +804,7 @@
         }
       });
 
-      // Quỹ dư / thiếu ngày này: Bao gồm Thắng mang về quỹ cộng dồn giá trị quỹ dư chưa đủ tiêu chí
-      let quyCon = sumBringBack + btcThuVeCalculated;
-
+      let quyCon = sumThucThu - Math.abs(sumAmThucTe + sumBringBack);
       const pStatus = paymentStatus[dateStr];
       const currentBtcAdminOption = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption) ? pStatus.btcNoteAdminOption : "NO";
       const isYes = currentBtcAdminOption === "YES";
@@ -822,17 +813,14 @@
         summaryRowsHtml,
         sumBringBack: (sumBringBack > 0 ? `+${sumBringBack}K` : `${sumBringBack}K`),
         btcThuVeCalculated: (btcThuVeCalculated !== 0 ? (btcThuVeCalculated > 0 ? `+${btcThuVeCalculated}K` : `${btcThuVeCalculated}K`) : '0K'),
-        btcThuVe_color: (btcThuVeCalculated < 0 ? '#dc2626' : (btcThuVeCalculated > 0 ? '#059669' : '#334155')),
         sumFine_color: (sumFine < 0 ? '#dc2626' : '#64748b'),
         sumFine_value: (sumFine < 0 ? `${sumFine}K` : '0K'),
-        sumThucThu: (sumThucThu !== 0 ? (sumThucThu > 0 ? `+${sumThucThu}K` : `${sumThucThu}K`) : '0K'), 
-        sumThucThu_color: (sumThucThu < 0 ? '#dc2626' : (sumThucThu > 0 ? '#059669' : '#334155')),
-        dateStr,
+        sumThucThu: `${sumThucThu}K`, dateStr,
         isYes_color: (isYes ? '#16a34a' : '#dc2626'),
         selected_isYes: (isYes ? 'selected' : ''),
         selected_not_isYes: (!isYes ? 'selected' : ''),
-        quyCon_color: (quyCon < 0 ? '#dc2626' : (quyCon > 0 ? '#059669' : '#334155')),
-        quyCon: (quyCon !== 0 ? (quyCon > 0 ? `+${quyCon}K` : `${quyCon}K`) : '0K')
+        quyCon_color: (quyCon < 0 ? '#dc2626' : '#059669'),
+        quyCon: (quyCon > 0 ? `+${quyCon}K` : `${quyCon}K`)
       });
 
       targetContainer.innerHTML = (matchesHtml || "") + (summaryTableHtml || "");

@@ -703,7 +703,7 @@
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-ABSENT] ▲▲▲ */
 
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Cập nhật chuẩn 29/10) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Logic chuẩn hóa cột Tổng & Quỹ Dư Chưa Đủ Trận) ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const targetContainer = container || document.getElementById("tabContent");
       if (!targetContainer) return;
@@ -738,6 +738,7 @@
 
       let sumBringBack = 0, sumThucThu = 0, sumFine = 0;
       let btcThuVeCalculated = 0; 
+      let quyDuChuaDuTieuChi = 0; // Giá trị tiền dương của VĐV có số trận < 4 chưa chuyển cột bỏ túi
       const fineMap = getAbsentFineMap(dateStr);
       let summaryRowsHtml = "";
 
@@ -761,19 +762,15 @@
           if (st.played >= 4 && netTotal > 0) {
             bringBack = netTotal;
             sumBringBack += bringBack;
+          } else if (st.played < 4 && netTotal > 0) {
+            // Lọc giá trị tiền dương của VĐV chưa đủ tiêu chí >= 4 trận (chưa vào bỏ túi)
+            quyDuChuaDuTieuChi += netTotal;
           }
 
-          // KHI ĐÃ TICK NỘP TIỀN (THỰC THU TRONG THỰC TẾ)
+          // Lấy giá trị từ CỘT TỔNG cho thực thu BTC đã nhận khi VĐV đã tick thực tế
           if (isPaid) {
-            // Tổng Tiền BTC Thu Về (Đã Tích Thực Tế): Cộng dồn giá trị cột Tổng của các ô đã tick
             btcThuVeCalculated += netTotal;
-
-            // Thực Thu BTC Đã Nhận: Số tiền mặt nhận được từ VĐV nộp tiền âm (hoặc chi thưởng)
-            if (netTotal < 0) {
-              sumThucThu += Math.abs(netTotal);
-            } else if (netTotal > 0 && st.played < 4) {
-              sumThucThu += netTotal;
-            }
+            sumThucThu += netTotal; // Giá trị thực thu hiển thị lấy từ cột tổng
           }
 
           let noteText = "";
@@ -814,7 +811,7 @@
         }
       });
 
-      // QUỸ DƯ / THIẾU NGÀY NÀY = (Thắng Mang Về Quỹ) + (Tổng Tiền BTC Thu Về Thực Tế)
+      // Quỹ dư / thiếu ngày này: Bao gồm Thắng mang về quỹ cộng dồn giá trị quỹ dư chưa đủ tiêu chí
       let quyCon = sumBringBack + btcThuVeCalculated;
 
       const pStatus = paymentStatus[dateStr];
@@ -828,7 +825,8 @@
         btcThuVe_color: (btcThuVeCalculated < 0 ? '#dc2626' : (btcThuVeCalculated > 0 ? '#059669' : '#334155')),
         sumFine_color: (sumFine < 0 ? '#dc2626' : '#64748b'),
         sumFine_value: (sumFine < 0 ? `${sumFine}K` : '0K'),
-        sumThucThu: (sumThucThu > 0 ? `+${sumThucThu}K` : '0K'), 
+        sumThucThu: (sumThucThu !== 0 ? (sumThucThu > 0 ? `+${sumThucThu}K` : `${sumThucThu}K`) : '0K'), 
+        sumThucThu_color: (sumThucThu < 0 ? '#dc2626' : (sumThucThu > 0 ? '#059669' : '#334155')),
         dateStr,
         isYes_color: (isYes ? '#16a34a' : '#dc2626'),
         selected_isYes: (isYes ? 'selected' : ''),

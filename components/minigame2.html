@@ -115,6 +115,8 @@
 
   /* ================= KHUNG CHUNG ================= */
   .m2{--f:'Nunito','Quicksand','SF Pro Rounded',ui-rounded,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+      --grid:#d5dde8;           /* màu đường kẻ trong bảng */
+      --bd:#94a3b8;             /* màu viền ngoài bảng (đổi theo Bảng A / B) */
       font-family:var(--f);font-size:12px;line-height:1.35;color:#334155;width:100%;max-width:100%}
   .m2 *,.m2 *::before,.m2 *::after{box-sizing:border-box}
   .m2 button,.m2 input,.m2 select,.m2 textarea{font-family:inherit}
@@ -131,32 +133,37 @@
   /* ================= BẢNG A | BẢNG B ================= */
   .m2-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr));gap:10px;align-items:start;margin:0 0 10px}
   .m2-groups .m2-card{margin:0}
-  .m2-a{--tint:#fff7ed;--tc:#c2410c;--tb:#ffedd5}
-  .m2-b{--tint:#f0f9ff;--tc:#0369a1;--tb:#e0f2fe}
+  .m2-a{--tint:#fff7ed;--tc:#c2410c;--tb:#fed7aa;--bd:#fb923c}
+  .m2-b{--tint:#f0f9ff;--tc:#0369a1;--tb:#bae6fd;--bd:#38bdf8}
   .m2-gname{margin:0;font-size:13px;font-weight:900;color:var(--tc)}
   .m2-stack{display:flex;flex-direction:column;gap:8px}
-  .m2-box{border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;background:#fff}
-  .m2-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 
-  .m2 table.m2-t{width:100%;border-collapse:collapse;text-align:center;font-size:11px}
-  .m2 .m2-t th{background:#f8fafc;color:#64748b;font-size:10px;font-weight:800;padding:5px 4px;border-bottom:1px solid #e2e8f0;text-transform:uppercase;letter-spacing:.2px;white-space:nowrap}
-  .m2 .m2-t th.ttl{background:var(--tint);color:var(--tc);border-bottom:1px solid var(--tb);font-size:11px;padding:6px;letter-spacing:.3px}
-  .m2 .m2-t td{padding:4px 6px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
-  .m2 .m2-t tbody tr:last-child td{border-bottom:0}
-  .m2 .m2-t tbody tr:hover{background:#f8fafc}
+  /* ---------- KHUNG + VIỀN BẢNG ---------- */
+  .m2-box{border:1.5px solid var(--bd);border-radius:10px;overflow:hidden;background:#fff}
+  .m2-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .m2 table.m2-t,.m2 table.m2-ko{width:100%;border-collapse:collapse;text-align:center;font-size:11px}
+  .m2 .m2-t th,.m2 .m2-t td,.m2 .m2-ko th,.m2 .m2-ko td{border-bottom:1px solid var(--grid);border-right:1px solid var(--grid)}
+  .m2 .m2-t th:last-child,.m2 .m2-t td:last-child,.m2 .m2-ko th:last-child,.m2 .m2-ko td:last-child{border-right:0}
+  .m2 .m2-t tbody tr:last-child td,.m2 .m2-ko tbody tr:last-child td{border-bottom:0}
+  .m2 .m2-t thead tr:last-child th,.m2 .m2-ko thead tr:last-child th{border-bottom:1.5px solid var(--bd)}
+  .m2 .m2-t th,.m2 .m2-ko th{background:#f1f5f9;color:#475569;font-size:10px;font-weight:800;padding:6px 4px;text-transform:uppercase;letter-spacing:.2px;white-space:nowrap}
+  .m2 .m2-t th.ttl{background:var(--tint);color:var(--tc);font-size:11px;padding:7px;letter-spacing:.3px;border-right:0;border-bottom:1px solid var(--tb)}
+  .m2 .m2-t td{padding:4px 6px;vertical-align:middle}
+  .m2 .m2-t tbody tr:nth-child(even) td{background:#fafcff}
+  .m2 .m2-t tbody tr:hover td{background:#eef4fb}
   .m2 .th-money{width:112px}
 
   /* --- bảng xếp hạng --- */
-  .m2 .c-stt{width:34px;font-weight:900;color:#475569}
+  .m2 .c-stt{width:36px;font-weight:900;color:#475569}
   .m2-st tbody tr:nth-child(-n+2) .c-stt{color:#15803d}
-  .m2 .c-pair{text-align:left;padding-left:8px}
-  .m2 .c-pts{width:48px;font-weight:900;color:#10b981}
-  .m2 .c-diff{width:52px;font-weight:900}
-  .m2 .c-act{width:68px;white-space:nowrap}
+  .m2 .c-pair{text-align:left;padding-left:8px !important}
+  .m2 .c-pts{width:50px;font-weight:900;color:#10b981}
+  .m2 .c-diff{width:54px;font-weight:900}
+  .m2 .c-act{width:70px;white-space:nowrap}
   .m2-ico{background:none;border:0;cursor:pointer;font-size:13px;line-height:1;padding:4px;border-radius:6px}
-  .m2-ico:hover{background:#f1f5f9}
+  .m2-ico:hover{background:#e2e8f0}
 
-  /* --- tên cặp VĐV: viên thuốc màu đậm, chữ trắng đậm (theo ảnh mẫu) --- */
+  /* --- tên cặp VĐV: viên thuốc màu đậm, chữ trắng đậm --- */
   .m2 .pair-badge{display:inline-block;max-width:100%;padding:3px 11px;border-radius:999px;font-family:var(--f);font-size:11px;font-weight:800;line-height:1.25;
     letter-spacing:.1px;color:#fff !important;text-align:center;white-space:normal;overflow-wrap:anywhere;text-shadow:0 1px 1px rgba(0,0,0,.2);
     box-shadow:0 1px 2px rgba(15,23,42,.22),inset 0 1px 0 rgba(255,255,255,.2);border:0}
@@ -167,10 +174,10 @@
   .m2 .badge-p4{background:linear-gradient(135deg,#8b5cf6,#6d28d9) !important}
 
   /* --- lịch thi đấu --- */
-  .m2 .c-id{width:38px;font-weight:900;color:#475569}
+  .m2 .c-id{width:40px;font-weight:900;color:#475569}
   .m2 .c-t1{text-align:right}
   .m2 .c-t2{text-align:left}
-  .m2 .c-sc{width:92px;padding-left:2px;padding-right:2px}
+  .m2 .c-sc{width:94px;padding-left:2px !important;padding-right:2px !important}
   .m2-score{display:flex;align-items:center;justify-content:center;gap:3px}
   .m2-score span{color:#a855f7;font-weight:900}
   .m2 .score-input{width:34px;height:28px;padding:0;text-align:center;font-size:13px;font-weight:900;color:#6b21a8;background:#fff;
@@ -179,22 +186,20 @@
   .m2 .score-input:focus{outline:0;box-shadow:0 0 0 3px rgba(168,85,247,.25)}
   .m2-money{display:flex;gap:4px;justify-content:center}
   .m2-money input{width:44px;height:26px;padding:0;text-align:center;font-size:11px;font-weight:800;border:1px solid #cbd5e1;border-radius:6px;background:#fff}
+  .m2-money input:first-child{color:#059669} .m2-money input:last-child{color:#dc2626}
 
   /* --- knockout --- */
-  .m2 table.m2-ko{table-layout:fixed;width:100%;border-collapse:collapse;text-align:center;font-size:11px}
+  .m2 table.m2-ko{table-layout:fixed}
   .m2-ko col.k1{width:112px} .m2-ko col.k2{width:96px}
-  .m2-ko th{background:#f8fafc;color:#64748b;font-size:10px;font-weight:800;padding:6px;border-bottom:1px solid #e2e8f0}
-  .m2-ko td{padding:5px 6px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
-  .m2-ko tr:last-child td{border-bottom:0}
-  .m2-ko .k-lbl{font-weight:800;color:#475569;text-align:left;padding-left:10px}
+  .m2-ko td{padding:5px 6px;vertical-align:middle}
+  .m2-ko .k-lbl{font-weight:800;color:#475569;text-align:left;padding-left:10px !important}
   .m2-ko input[type=text]{display:block;width:100%;min-width:0;text-align:center;border:1px solid #cbd5e1;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:800;background:#fafafa;color:#1e293b}
-  .m2-ko .ko-bk:nth-of-type(even){background:#f8fafc}
-  .m2-ko .ko-34{background:#fffbeb}
+  .m2-ko .ko-34 td{background:#fffbeb}
   .m2-ko .ko-34 .k-lbl{color:#b45309}
   .m2-ko .ko-34 input[type=text]{border-color:#fde68a;background:#fff;color:#92400e}
   .m2-ko .ko-34 .score-input{border-color:#d97706;color:#92400e}
   .m2-ko .ko-34 .m2-score span{color:#d97706}
-  .m2-ko .ko-fin{background:#f0fdf4}
+  .m2-ko .ko-fin td{background:#f0fdf4}
   .m2-ko .ko-fin .k-lbl{color:#15803d}
   .m2-ko .ko-fin input[type=text]{border-color:#bbf7d0;background:#fff;color:#166534}
   .m2-ko .ko-fin .score-input{border-color:#16a34a;color:#15803d}
@@ -208,26 +213,28 @@
   .m2-pod .p2{background:#f8fafc;border-color:#e2e8f0} .m2-pod .p2 b{color:#475569} .m2-pod .p2 input{border-color:#cbd5e1;color:#334155}
   .m2-pod .p3{background:#fff7ed;border-color:#ffedd5} .m2-pod .p3 b{color:#c2410c} .m2-pod .p3 input{border-color:#fed7aa;color:#9a3412}
 
-  /* --- tổng hợp kèo --- */
-  .m2 .m2-sum{min-width:600px}
-  .m2 .m2-sum th{white-space:nowrap}
-  .m2 .s-name{text-align:left;padding:6px 8px 6px 12px !important;font-weight:900;font-size:12px}
-  .m2 .s-played,.m2 .s-win,.m2 .s-lose,.m2 .s-bring,.m2 .s-total,.m2 .s-chk,.m2 .s-note{text-align:center}
-  .m2 .s-win{color:#10b981;font-weight:800} .m2 .s-lose{color:#ef4444;font-weight:800}
-  .m2 .s-bring{color:#2563eb;font-weight:900}
-  .m2 .s-chk input{width:16px;height:16px;cursor:pointer}
-  .m2 .s-note{font-weight:700;font-size:11px;white-space:nowrap}
-  .m2-foot{margin-top:8px;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;font-weight:800}
-  .m2-foot .fr{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;padding:7px 12px;background:#f8fafc}
-  .m2-foot .fr+.fr{border-top:1px solid #e2e8f0}
-  .m2-foot .quy{background:#fef2f2}
-  .m2-foot .lbl{color:#2563eb;font-size:12px}
-  .m2-foot .quy .lbl,.m2-foot .quy b{color:#ef4444}
-  .m2-foot .vals{display:flex;gap:6px}
-  .m2-foot .vals span{display:flex;flex-direction:column;align-items:center;min-width:72px;padding:3px 8px;border-radius:8px;background:#fff;border:1px solid #e2e8f0}
-  .m2-foot .vals em{font-style:normal;font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase}
-  .m2-foot .vals b{font-size:13px;color:#2563eb} .m2-foot .vals span.red b{color:#ef4444}
-  .m2-foot .quy b{font-size:15px}
+  /* ================= BẢNG TỔNG HỢP KÈO ================= */
+  .m2-sumbox{--bd:#64748b}
+  .m2 table.m2-sum{table-layout:fixed;min-width:640px}
+  .m2 .m2-sum th.h-win{color:#059669} .m2 .m2-sum th.h-lose{color:#dc2626} .m2 .m2-sum th.h-bring{color:#2563eb}
+  .m2 .m2-sum td{padding:6px 6px;text-align:center}
+  .m2 .m2-sum .s-name{text-align:left;padding:6px 8px 6px 12px;font-weight:900;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .m2 .m2-sum .s-played{font-weight:700}
+  .m2 .m2-sum .s-win{color:#10b981;font-weight:800}
+  .m2 .m2-sum .s-lose{color:#ef4444;font-weight:800}
+  .m2 .m2-sum .s-bring{color:#2563eb;font-weight:900}
+  .m2 .m2-sum .s-total{font-size:12px}
+  .m2 .m2-sum .s-total.number-pos{color:#16a34a} .m2 .m2-sum .s-total.number-neg{color:#dc2626} .m2 .m2-sum .s-total.number-zero{color:#64748b}
+  .m2 .m2-sum .s-chk input{width:17px;height:17px;cursor:pointer;vertical-align:middle}
+  .m2 .m2-sum .s-note{font-weight:800;font-size:11px;white-space:nowrap}
+  .m2 .m2-sum tfoot td{background:#f1f5f9;font-weight:900;padding:8px 6px;border-bottom:1px solid var(--grid)}
+  .m2 .m2-sum tfoot tr.f-1 td{border-top:1.5px solid var(--bd)}
+  .m2 .m2-sum tfoot tr:last-child td{border-bottom:0}
+  .m2 .m2-sum .f-lbl{text-align:left;padding-left:12px;color:#2563eb;font-size:12px}
+  .m2 .m2-sum .f-bring,.m2 .m2-sum .f-real{color:#2563eb;font-size:13px}
+  .m2 .m2-sum .f-total{color:#ef4444;font-size:13px}
+  .m2 .m2-sum tr.f-2 td{background:#fef2f2;color:#ef4444}
+  .m2 .m2-sum .f-quy{font-size:15px}
 
   /* ================= ĐIỆN THOẠI ================= */
   @media (max-width:640px){
@@ -240,56 +247,73 @@
     /* bảng xếp hạng gọn */
     .m2 .c-stt{width:28px} .m2 .c-pts{width:38px} .m2 .c-diff{width:42px} .m2 .c-act{width:60px}
     .m2 .m2-t td{padding:4px 3px}
-
-    /* lịch đấu: mỗi trận 1 dòng lưới  [Trận | Đội 1 | Tỷ số | Đội 2] (+ dòng kèo tự do bên dưới) */
-    .m2 table.m2-match,.m2 .m2-match thead,.m2 .m2-match tbody{display:block;width:100%}
-    .m2 .m2-match tr{display:grid;grid-template-columns:34px minmax(0,1fr) 80px minmax(0,1fr);align-items:center;border-bottom:1px solid #f1f5f9;padding:3px 0}
-    .m2 .m2-match tbody tr:last-child{border-bottom:0}
-    .m2 .m2-match thead tr{padding:0;border-bottom:0}
-    .m2 .m2-match td{border-bottom:0 !important}
-    .m2 .m2-match th.ttl{grid-column:1/-1}
-    .m2 .m2-match th.th-money{display:none}
-    .m2 .m2-match td.td-money{grid-column:1/-1;padding:0 6px 6px !important}
-    .m2 .m2-match .c-id{width:auto}
-    .m2 .m2-match .c-sc{width:auto}
-    .m2 .m2-match th,.m2 .m2-match td{min-width:0}
-    .m2 .score-input{width:34px;height:34px;font-size:16px !important}
-    .m2-money input{width:70px;height:34px}
-    .m2-money{justify-content:flex-start;padding-left:30px}
-    .m2 .pair-badge{font-size:10px;padding:3px 7px;letter-spacing:0}
-    .m2 .c-pair .pair-badge{font-size:11px;padding:3px 10px}
     .m2 .m2-t th{font-size:9px;padding:5px 2px}
     .m2 .m2-t th.ttl{font-size:11px}
+
+    /* lịch đấu: mỗi trận 1 hàng lưới [Trận | Đội 1 | Tỷ số | Đội 2] (+ hàng kèo tự do), ô giãn kín chiều cao để viền thẳng hàng */
+    .m2 table.m2-match,.m2 .m2-match thead,.m2 .m2-match tbody{display:block;width:100%}
+    .m2 .m2-match tr{display:grid;grid-template-columns:34px minmax(0,1fr) 80px minmax(0,1fr);align-items:stretch}
+    .m2 .m2-match th.ttl{grid-column:1/-1}
+    .m2 .m2-match th.th-money{display:none}
+    .m2 .m2-match th:nth-child(4),.m2 .m2-match td.c-t2{border-right:0}
+    .m2 .m2-match td{display:flex;align-items:center;justify-content:center;min-width:0;padding:5px 4px !important}
+    .m2 .m2-match td.c-t1{justify-content:flex-end} .m2 .m2-match td.c-t2{justify-content:flex-start}
+    .m2 .m2-match td.c-id,.m2 .m2-match td.c-sc{width:auto}
+    .m2 .m2-match th{display:flex;align-items:center;justify-content:center;min-width:0}
+    .m2 .m2-match td.td-money{grid-column:1/-1;justify-content:flex-start;padding:2px 6px 7px 40px !important;border-right:0}
+    .m2 .m2-match tr:has(td.td-money) td:not(.td-money){border-bottom:0}
+    .m2 .m2-match tbody tr:last-child td{border-bottom:1px solid var(--grid)}
+    .m2 .m2-match tbody tr:last-child td.c-id:last-of-type,.m2 .m2-match tbody tr:last-child{border-bottom:0}
+    .m2 .m2-match tbody tr:last-child td{border-bottom:0}
+    .m2 .score-input{width:34px;height:34px;font-size:16px !important}
+    .m2-money input{width:70px;height:34px}
+    .m2-money{justify-content:flex-start}
+    .m2 .pair-badge{font-size:10px;padding:3px 7px;letter-spacing:0}
+    .m2 .c-pair .pair-badge{font-size:11px;padding:3px 10px}
 
     /* knockout: mỗi trận 2 dòng lưới */
     .m2 table.m2-ko,.m2 .m2-ko thead,.m2 .m2-ko tbody{display:block;width:100%}
     .m2 .m2-ko thead{display:none}
-    .m2 .m2-ko tr{display:grid;grid-template-columns:minmax(0,1fr) 88px minmax(0,1fr);align-items:center;padding:4px 0 6px;border-bottom:1px solid #f1f5f9}
+    .m2 .m2-ko tr{display:grid;grid-template-columns:minmax(0,1fr) 88px minmax(0,1fr);align-items:center;padding:4px 0 6px;border-bottom:1px solid var(--grid)}
     .m2 .m2-ko tr:last-child{border-bottom:0}
-    .m2 .m2-ko td{border:0;padding:2px 4px}
+    .m2 .m2-ko td{border:0 !important;padding:2px 4px}
     .m2 .m2-ko td.k-lbl{grid-column:1/-1;padding:2px 8px;font-size:12px}
     .m2 .m2-ko input[type=text]{padding:6px 8px}
     .m2-pod b{flex-basis:100%}
 
-    /* tổng hợp kèo: mỗi VĐV 1 thẻ */
-    .m2 .m2-sum{min-width:0}
-    .m2 table.m2-sum,.m2 .m2-sum thead,.m2 .m2-sum tbody{display:block;width:100%}
+    /* tổng hợp kèo: mỗi VĐV 1 thẻ có viền */
+    .m2 table.m2-sum{min-width:0}
+    .m2 .m2-sum,.m2 .m2-sum thead,.m2 .m2-sum tbody,.m2 .m2-sum tfoot{display:block;width:100%}
     .m2 .m2-sum thead{display:none}
-    .m2 .m2-sum tr.s-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px 4px;padding:8px 8px;border-bottom:1px solid #f1f5f9;
+    .m2 .m2-sum tbody{padding:6px 6px 0;background:#f8fafc}
+    .m2 .m2-sum td,.m2 .m2-sum tfoot td{display:block;border:0 !important;min-width:0;background:transparent !important}
+    .m2 .m2-sum tr.s-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px 5px;padding:9px;margin-bottom:6px;background:#fff;
+      border:1px solid var(--grid);border-radius:10px;
       grid-template-areas:"name name name chk chk" "played win lose bring total" "note note note note note"}
-    .m2 .m2-sum td{display:block;border:0 !important;padding:0 !important;min-width:0}
-    .m2 .m2-sum td.s-name{grid-area:name;font-size:14px;padding:0 !important;align-self:center}
-    .m2 .m2-sum td.s-chk{grid-area:chk;display:flex;align-items:center;justify-content:flex-end;gap:6px}
+    .m2 .m2-sum td.s-name{grid-area:name;font-size:14px;padding:0;align-self:center;white-space:normal}
+    .m2 .m2-sum td.s-chk{grid-area:chk;display:flex;align-items:center;justify-content:flex-end;gap:6px;padding:0}
     .m2 .m2-sum td.s-chk::before{content:attr(data-label);font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase}
     .m2 .m2-sum td.s-chk input{width:22px;height:22px}
     .m2 .m2-sum td.s-played{grid-area:played} .m2 .m2-sum td.s-win{grid-area:win} .m2 .m2-sum td.s-lose{grid-area:lose}
     .m2 .m2-sum td.s-bring{grid-area:bring} .m2 .m2-sum td.s-total{grid-area:total}
     .m2 .m2-sum td.s-played,.m2 .m2-sum td.s-win,.m2 .m2-sum td.s-lose,.m2 .m2-sum td.s-bring,.m2 .m2-sum td.s-total{
-      background:#f8fafc;border-radius:8px;padding:5px 2px !important;font-size:13px}
+      background:#f1f5f9 !important;border-radius:8px;padding:5px 2px;font-size:13px}
     .m2 .m2-sum td[data-label]:not(.s-chk):not(.s-note)::before{content:attr(data-label);display:block;font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase}
-    .m2 .m2-sum td.s-note{grid-area:note;text-align:left;white-space:normal;font-size:12px}
+    .m2 .m2-sum td.s-note{grid-area:note;text-align:left;white-space:normal;font-size:12px;padding:2px 0 0}
     .m2 .m2-sum td.s-note:empty{display:none}
-    .m2-foot .vals{width:100%} .m2-foot .vals span{flex:1;min-width:0}
+
+    .m2 .m2-sum tfoot{padding:0 6px 6px;background:#f8fafc}
+    .m2 .m2-sum tfoot tr.f-1{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px 5px;padding:9px;margin-bottom:6px;background:#fff;border:1px solid var(--grid);border-radius:10px;
+      grid-template-areas:"lbl lbl lbl" "a b c"}
+    .m2 .m2-sum tfoot tr.f-1 td{padding:0}
+    .m2 .m2-sum .f-lbl{grid-area:lbl;padding:0;font-size:13px}
+    .m2 .m2-sum .f-bring{grid-area:a} .m2 .m2-sum .f-total{grid-area:b} .m2 .m2-sum .f-real{grid-area:c}
+    .m2 .m2-sum .f-bring,.m2 .m2-sum .f-total,.m2 .m2-sum .f-real{background:#f1f5f9 !important;border-radius:8px;padding:5px 2px !important;text-align:center}
+    .m2 .m2-sum .f-bring::before,.m2 .m2-sum .f-total::before,.m2 .m2-sum .f-real::before{content:attr(data-label);display:block;font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase}
+    .m2 .m2-sum .f-empty{display:none !important}
+    .m2 .m2-sum tfoot tr.f-2{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px}
+    .m2 .m2-sum tfoot tr.f-2 td{padding:0}
+    .m2 .m2-sum tfoot tr.f-2 .f-lbl{font-size:13px;color:#ef4444}
   }
 </style>
 
@@ -506,37 +530,39 @@
       </div>
     </div>
 
-    <div class="m2-box m2-scroll">
+    <div class="m2-box m2-sumbox m2-scroll">
       <table class="m2-t m2-sum">
+        <colgroup>
+          <col style="width:25%"><col style="width:9%"><col style="width:10%"><col style="width:10%">
+          <col style="width:11%"><col style="width:10%"><col style="width:11%"><col style="width:14%">
+        </colgroup>
         <thead>
           <tr>
-            <th style="text-align:left; padding:6px 12px;">PICK THỦ (CÁ NHÂN)</th>
-            <th style="width:62px;">SỐ TRẬN</th>
-            <th style="width:68px;">THẮNG/K</th>
-            <th style="width:68px;">THUA/K</th>
-            <th style="width:72px;">MANG VỀ</th>
-            <th style="width:62px;">TỔNG</th>
-            <th style="width:68px;">THỰC TẾ</th>
-            <th style="width:84px;">NOTE</th>
+            <th style="text-align:left; padding-left:12px;">PICK THỦ (CÁ NHÂN)</th>
+            <th>SỐ TRẬN</th>
+            <th class="h-win">THẮNG/K</th>
+            <th class="h-lose">THUA/K</th>
+            <th class="h-bring">MANG VỀ</th>
+            <th>TỔNG</th>
+            <th>THỰC TẾ</th>
+            <th>NOTE</th>
           </tr>
         </thead>
         <tbody>{{summaryRowsHtml2}}</tbody>
+        <tfoot>
+          <tr class="f-1 total-summary-row">
+            <td class="f-lbl" colspan="4">Tổng Tiền BTC Thu Về</td>
+            <td class="f-bring" data-label="Mang về">{{sumBringBack2}}</td>
+            <td class="f-total" data-label="Tổng">{{btcThuVeCalculated2}}</td>
+            <td class="f-real" data-label="Thực tế">{{sumThucThu2}}</td>
+            <td class="f-empty"></td>
+          </tr>
+          <tr class="f-2 total-summary-row">
+            <td class="f-lbl" colspan="4">Quỹ Còn</td>
+            <td class="f-quy" colspan="4">{{quyCon2}}</td>
+          </tr>
+        </tfoot>
       </table>
-    </div>
-
-    <div class="m2-foot">
-      <div class="fr total-summary-row">
-        <span class="lbl">Tổng Tiền BTC Thu Về</span>
-        <div class="vals">
-          <span><em>Mang về</em><b>{{sumBringBack2}}</b></span>
-          <span class="red"><em>Tổng</em><b>{{btcThuVeCalculated2}}</b></span>
-          <span><em>Thực tế</em><b>{{sumThucThu2}}</b></span>
-        </div>
-      </div>
-      <div class="fr quy total-summary-row">
-        <span class="lbl">Quỹ Còn</span>
-        <b>{{quyCon2}}</b>
-      </div>
     </div>
   </section>
 

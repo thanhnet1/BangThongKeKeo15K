@@ -249,7 +249,7 @@
     <h3 class="text-xs sm:text-sm font-bold text-slate-700 uppercase tracking-wide">Bảng Tổng Hợp Thống Kê Trong Ngày</h3>
   </div>
 
-  <!-- Bảng thống kê ngày: Tự co dãn vừa khít màn hình dọc di động mà KHÔNG CẦN TRƯỢT NGANG -->
+  <!-- Bảng thống kê danh sách VĐV trong ngày -->
   <div class="w-full sum-table-container">
     <table class="sum-table-responsive w-full text-left border-collapse sm:min-w-[650px]">
       <thead>
@@ -270,24 +270,34 @@
     </table>
   </div>
 
-  <!-- Tổng kết Quỹ ngày (Dàn hàng cân đối, co dãn mượt trên di động) -->
+  <!-- Khối tổng kết tài chính ngày (Đồng bộ cho tất cả các ngày mới tạo) -->
   <div class="border-t-2 border-slate-200 bg-slate-50 text-xs sm:text-sm font-bold divide-y divide-slate-200">
+    
+    <!-- 1. Thắng Mang Về Quỹ (>= 4 Trận) -->
     <div class="flex items-center justify-between gap-2 px-3 sm:px-4 py-2">
       <span class="text-slate-600">Thắng Mang Về Quỹ (&gt;= 4 Trận):</span>
       <span class="text-emerald-600 font-extrabold text-sm text-right whitespace-nowrap">{{sumBringBack}}</span>
     </div>
+
+    <!-- 2. Tổng Tiền Phạt Nghỉ -->
     <div class="flex items-center justify-between gap-2 px-3 sm:px-4 py-2">
       <span class="text-slate-600">Tổng Tiền Phạt Nghỉ:</span>
       <span class="text-right whitespace-nowrap" style="color: {{sumFine_color}};">{{sumFine_value}}</span>
     </div>
+
+    <!-- 3. Tổng Tiền BTC Thu Về (Đã Tích Thực Tế - Chỉ tính các khoản Âm) -->
     <div class="flex items-center justify-between gap-2 px-3 sm:px-4 py-2 bg-emerald-50/40">
       <span class="text-slate-800">Tổng Tiền BTC Thu Về (Đã Tích Thực Tế):</span>
-      <span class="text-emerald-700 font-black text-sm sm:text-base text-right whitespace-nowrap">{{btcThuVeCalculated}}</span>
+      <span class="font-black text-sm sm:text-base text-right whitespace-nowrap" style="color: {{btcThuVe_color}};">{{btcThuVeCalculated}}</span>
     </div>
+
+    <!-- 4. Thực Thu BTC Đã Nhận (Lấy giá trị tại Cột TỔNG khi được tích) -->
     <div class="flex items-center justify-between gap-2 px-3 sm:px-4 py-2">
       <span class="text-slate-600">Thực Thu BTC Đã Nhận:</span>
-      <span class="text-emerald-600 font-extrabold text-sm text-right whitespace-nowrap">{{sumThucThu}}</span>
+      <span class="font-extrabold text-sm text-right whitespace-nowrap" style="color: {{sumThucThu_color}};">{{sumThucThu}}</span>
     </div>
+
+    <!-- 5. BTC Xác Nhận Chuyển Tổng Ngày -->
     <div class="flex items-center justify-between gap-2 px-3 sm:px-4 py-2 bg-emerald-50/60">
       <span class="text-slate-700">BTC Xác Nhận Chuyển Tổng Ngày:</span>
       <select onchange="handleBtcNoteAdminChange('{{dateStr}}', this)" class="text-xs font-bold rounded border-slate-300 px-2 py-1" style="color: {{isYes_color}};">
@@ -295,10 +305,13 @@
         <option value="YES" {{selected_isYes}}>🟢 ĐÃ CHUYỂN QUỸ</option>
       </select>
     </div>
+
+    <!-- 6. Quỹ Dư / Thiếu Ngày Này (Tiền dương VĐV chưa đủ > 4 trận) -->
     <div class="flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 bg-slate-100">
       <span class="text-slate-800 text-sm">Quỹ Dư / Thiếu Ngày Này:</span>
       <span class="text-base font-black text-right whitespace-nowrap" style="color: {{quyCon_color}};">{{quyCon}}</span>
     </div>
+
   </div>
 </div>
 <!-- [/PART] -->

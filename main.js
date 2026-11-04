@@ -703,7 +703,24 @@
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-ABSENT] ▲▲▲ */
 
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Thống Kê & Tính Toán Tổng Hợp Ngày ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ XÁC THỰC ADMIN QUA Ô INPUT TRỰC TIẾP TRÊN BẢNG ▼▼▼ BẮT ĐẦU */
+    function verifyAdminByInput() {
+      const inputEl = document.getElementById("adminPassInput");
+      if (!inputEl) return;
+      const pass = inputEl.value.trim();
+      if (pass === ADMIN_PASSCODE) {
+        isAdminVerified = true;
+        alert("✅ Đã mở khóa quyền Quản trị viên thành công!");
+        updateAdminUIState();
+        renderCurrentTab();
+      } else {
+        alert("❌ Mật khẩu không đúng!");
+      }
+      inputEl.value = "";
+    }
+/* ▲▲▲ KẾT THÚC XÁC THỰC ADMIN ▲▲▲ */
+
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Đồng bộ theo ảnh mẫu) ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const targetContainer = container || document.getElementById("tabContent");
       if (!targetContainer) return;
@@ -712,10 +729,8 @@
       const currentMode = dateKeoMode[dateStr] || "default";
       let stats = {};
 
-      // Khởi tạo bảng điểm cho danh sách VĐV
       vdvs.forEach(v => { stats[v] = { played: 0, wincount: 0, losecount: 0, winK: 0, loseK: 0, total: 0 }; });
 
-      // Tính điểm các trận đã đấu trong ngày
       matches.forEach(m => {
         const s1 = parseInt(m.score1);
         const s2 = parseInt(m.score2);
@@ -738,16 +753,13 @@
         }
       });
 
-      // KHỞI TẠO CÁC BIẾN TỔNG KẾT THEO YÊU CẦU MỚI
-      let sumBringBack = 0;          // Thắng Mang Về Quỹ (>= 4 Trận)
-      let sumThucThu = 0;             // Thực Thu BTC Đã Nhận (Tổng các ô được tick tại Cột Tổng)
-      let sumFine = 0;                // Tổng Tiền Phạt Nghỉ
-      let btcThuVeCalculated = 0;     // Tổng Tiền BTC Thu Về (Đã Tích Thực Tế - Chỉ tính cột TỔNG ÂM)
-      let quyDuChuaDuTieuChi = 0;     // Quỹ Dư / Thiếu Ngày (Giá trị tiền DƯƠNG của VĐV thi đấu < 4 trận)
-
+      let sumBringBack = 0, sumThucThu = 0, sumFine = 0;
+      let btcThuVeCalculated = 0; 
       const fineMap = getAbsentFineMap(dateStr);
       let summaryRowsHtml = "";
+
       const uniqueVdvs = Array.from(new Set(vdvs));
+      const infoAbsent = getAbsentInfo(dateStr);
 
       uniqueVdvs.forEach((v) => {
         const st = stats[v];
@@ -763,102 +775,108 @@
           const netTotal = st.total + fine;
           sumFine += fine;
 
-          // 1. Phân loại Thắng mang về quỹ (>= 4 trận) & Quỹ dư chưa đủ tiêu chí (< 4 trận)
           let bringBack = 0;
           if (st.played >= 4 && netTotal > 0) {
             bringBack = netTotal;
             sumBringBack += bringBack;
-          } else if (st.played < 4 && netTotal > 0) {
-            // Tiền dương của VĐV nhưng chưa đủ > 4 trận
-            quyDuChuaDuTieuChi += netTotal;
           }
 
-          // 2. Tính toán khi VĐV ĐÃ ĐƯỢC TICK [THỰC] (isPaid === true)
           if (isPaid) {
-            // Realtime: Thực Thu BTC Đã Nhận = Tổng giá trị tại cột TỔNG
+            btcThuVeCalculated += netTotal;
             sumThucThu += netTotal;
-
-            // Realtime: Tổng Tiền BTC Thu Về (Đã Tích Thực Tế) = Chỉ tính các khoản TỔNG ÂM
-            if (netTotal < 0) {
-              btcThuVeCalculated += Math.abs(netTotal);
-            }
           }
 
-          // Ghi chú trạng thái nộp/nhận
           let noteText = "";
           let noteStyle = "";
           let noteClass = "";
 
           if (isAbsent && st.played === 0) {
             if (fine < 0) {
-              noteText = isPaid ? "Đã nộp phạt" : `Nghỉ không phép (-${ABSENT_FINE_K}K)`;
+              noteText = isPaid ? "Đã nộp phạt" : "Chưa nộp";
               noteStyle = isPaid ? "color:#16a34a; font-weight:bold;" : "color:#dc2626; font-weight:bold;";
             } else {
-              noteText = "Nghỉ có phép (0K)";
+              noteText = "Nghi - không phạt";
               noteStyle = "color:#64748b;";
             }
           } else if (netTotal < 0) {
             noteText = isPaid ? "Đã nộp" : "Chưa nộp";
             noteStyle = isPaid ? "color:#16a34a; font-weight:bold;" : "color:#dc2626; font-weight:bold;";
           } else if (netTotal > 0) {
-            noteText = isPaid ? "Đã nhận" : "Chưa nhận";
+            noteText = isPaid ? "Đã nhận" : "Chữa nhận";
             noteStyle = isPaid ? "color:#16a34a; font-weight:bold;" : "color:#0284c7; font-weight:bold;";
-          } else if (isAbsent) {
-            noteText = "Nghỉ phép";
-            noteStyle = "color:#64748b;";
+          }
+
+          // Xử lý hiển thị cột XIN NGHỈ nếu VĐV xin nghỉ
+          let xinNghiCell = "";
+          if (isAbsent) {
+            let slotIdx = infoAbsent.players.indexOf(v);
+            let isUnexcused = (infoAbsent.status[v] !== 'excused');
+            xinNghiCell = `
+              <select onchange="setAbsentStatus('${dateStr}', ${slotIdx}, this.value)" class="text-[11px] font-bold rounded border border-slate-300 px-1 py-1 bg-white" style="color: ${isUnexcused ? '#dc2626' : '#16a34a'};">
+                <option value="unexcused" ${isUnexcused ? 'selected' : ''}>Nộp phạt (-30K)</option>
+                <option value="excused" {!isUnexcused ? 'selected' : ''}>Không nộp phạt (0K)</option>
+              </select>
+            `;
           }
 
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
 
           summaryRowsHtml += renderComponent('home.summary-tr-1', {
-            vColor, v, st_played: st.played, st_wincount: st.wincount, st_losecount: st.losecount,
-            if_st_winK_0: (st.winK > 0 ? `+${st.winK}K` : '-'),
-            if_st_loseK_0: (st.loseK < 0 ? `${st.loseK}K` : '-'),
-            if_bringBack_0: (bringBack > 0 ? `+${bringBack}K` : '-'),
+            vColor, v, st_played: st.played, 
+            st_wincount: st.wincount > 0 ? st.wincount : '', 
+            st_losecount: st.losecount > 0 ? st.losecount : '',
+            if_st_winK_0: (st.winK > 0 ? `${st.winK}` : ''),
+            if_st_loseK_0: (st.loseK < 0 ? `${st.loseK}` : ''),
+            if_bringBack_0: (bringBack > 0 ? `${bringBack}` : ''),
             if_st_total_0_class: (netTotal < 0 ? 'number-neg' : (netTotal > 0 ? 'number-pos' : 'number-zero')),
-            st_total: (netTotal > 0 ? `+${netTotal}K` : `${netTotal}K`),
+            st_total: netTotal,
+            xinNghiCell,
             checkboxClass, if_isPaid: (isPaid ? 'checked' : ''), payKey,
             if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'), noteText, noteStyle, noteClass
           });
         }
       });
 
-      // Lấy trạng thái BTC xác nhận chuyển tổng
+      // Quỹ còn
+      let quyCon = sumBringBack + btcThuVeCalculated;
       const pStatus = paymentStatus[dateStr];
       const currentBtcAdminOption = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption) ? pStatus.btcNoteAdminOption : "NO";
       const isYes = currentBtcAdminOption === "YES";
 
-      // Hàm format hiển thị tiền dạng đơn vị K (+10K, -15K, 0K)
-      const formatMoneyK = (val, forceSign = true) => {
-        if (val === 0) return "0K";
-        if (val > 0) return (forceSign ? "+" : "") + (val) + "K";
-        return (val) + "K";
-      };
+      // Render danh sách chọn VĐV xin nghỉ cho phần dưới bảng
+      let countOpts = ABSENT_COUNT_OPTIONS.slice();
+      let countSelect = `
+        <select onchange="setAbsentCount('${dateStr}', this.value)" class="text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded px-2 py-1">
+          ${countOpts.map(n => `<option value="${n}" ${infoAbsent.count === n ? 'selected' : ''}>${n === 0 ? 'Không có' : n + ' VĐV nghỉ'}</option>`).join('')}
+        </select>
+      `;
 
-      // Nạp dữ liệu vào component template summary
+      let slots = infoAbsent.players.map((cur, i) => {
+        let names = Array.from(new Set(vdvs));
+        let optHtml = names.map(nm => `<option value="${escAbsentAttr(nm)}" ${cur === nm ? 'selected' : ''}>${nm}</option>`).join('');
+        return `
+          <select onchange="setAbsentPlayerSlot('${dateStr}', ${i}, this.value)" class="text-xs font-bold border border-slate-300 rounded px-2 py-1 bg-white">
+            <option value="">-- Chọn VĐV --</option>
+            ${optHtml}
+          </select>
+        `;
+      }).join('');
+
       let summaryTableHtml = renderComponent('home.summary', {
         summaryRowsHtml,
-        sumBringBack: formatMoneyK(sumBringBack),
-        
-        // Cột 3: Tổng Tiền BTC Thu Về (Đã Tích Thực Tế) -> Hiện số dương thu phạt
-        btcThuVeCalculated: btcThuVeCalculated > 0 ? `+${btcThuVeCalculated}K` : "0K",
-        btcThuVe_color: btcThuVeCalculated > 0 ? "#059669" : "#64748b",
-        
+        countSelect,
+        slots,
+        sumBringBack: sumBringBack !== 0 ? sumBringBack : '',
+        btcThuVeCalculated: btcThuVeCalculated !== 0 ? btcThuVeCalculated : '0',
         sumFine_color: (sumFine < 0 ? '#dc2626' : '#64748b'),
-        sumFine_value: (sumFine < 0 ? `${sumFine}K` : '0K'),
-        
-        // Cột 4: Thực Thu BTC Đã Nhận -> Giá trị hiển thị từ cột Tổng
-        sumThucThu: formatMoneyK(sumThucThu), 
-        sumThucThu_color: sumThucThu < 0 ? '#dc2626' : (sumThucThu > 0 ? '#059669' : '#334155'),
-        
+        sumFine_value: sumFine !== 0 ? sumFine : '0',
+        sumThucThu: sumThucThu !== 0 ? sumThucThu : '0', 
         dateStr,
         isYes_color: (isYes ? '#16a34a' : '#dc2626'),
         selected_isYes: (isYes ? 'selected' : ''),
         selected_not_isYes: (!isYes ? 'selected' : ''),
-        
-        // Cột 6: Quỹ Dư / Thiếu Ngày Này -> Hiển thị số tiền dương của VĐV chưa đủ > 4 trận
-        quyCon_color: quyDuChuaDuTieuChi > 0 ? "#059669" : "#64748b",
-        quyCon: formatMoneyK(quyDuChuaDuTieuChi)
+        quyCon_color: (quyCon < 0 ? '#dc2626' : '#059669'),
+        quyCon: quyCon
       });
 
       targetContainer.innerHTML = (matchesHtml || "") + (summaryTableHtml || "");

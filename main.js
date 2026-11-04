@@ -720,7 +720,7 @@
     }
 /* ▲▲▲ KẾT THÚC XÁC THỰC ADMIN ▲▲▲ */
 
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Đồng bộ theo ảnh mẫu) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Cập nhật chuẩn Thắng/Thua số nguyên & Phạt nghỉ cộng vào Tổng) ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const targetContainer = container || document.getElementById("tabContent");
       if (!targetContainer) return;
@@ -744,11 +744,11 @@
           let effectiveLose = isHam ? loseAmt * 2 : loseAmt;
 
           if (s1 > s2) {
-            pair1.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].wincount++; stats[v].winK += effectiveWin; stats[v].total += effectiveWin; } });
-            pair2.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].losecount++; stats[v].loseK += effectiveLose; stats[v].total += effectiveLose; } });
+            pair1.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].wincount++; stats[v].total += effectiveWin; } });
+            pair2.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].losecount++; stats[v].total += effectiveLose; } });
           } else if (s2 > s1) {
-            pair2.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].wincount++; stats[v].winK += effectiveWin; stats[v].total += effectiveWin; } });
-            pair1.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].losecount++; stats[v].loseK += effectiveLose; stats[v].total += effectiveLose; } });
+            pair2.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].wincount++; stats[v].total += effectiveWin; } });
+            pair1.forEach(v => { if (stats[v]) { stats[v].played++; stats[v].losecount++; stats[v].total += effectiveLose; } });
           }
         }
       });
@@ -771,8 +771,8 @@
           const vIndex = vdvs.indexOf(v);
           const vColor = VDV_COLORS[vIndex % VDV_COLORS.length];
 
-          const fine = isAbsent ? fineMap[v] : 0;
-          const netTotal = st.total + fine;
+          const fine = isAbsent ? fineMap[v] : 0; // Tiền phạt nghỉ không phép (-30K)
+          const netTotal = st.total + fine;     // Cộng trực tiếp vào cột Tổng
           sumFine += fine;
 
           let bringBack = 0;
@@ -802,19 +802,18 @@
             noteText = isPaid ? "Đã nộp" : "Chưa nộp";
             noteStyle = isPaid ? "color:#16a34a; font-weight:bold;" : "color:#dc2626; font-weight:bold;";
           } else if (netTotal > 0) {
-            noteText = isPaid ? "Đã nhận" : "Chữa nhận";
+            noteText = isPaid ? "Đã nhận" : "Chưa nhận";
             noteStyle = isPaid ? "color:#16a34a; font-weight:bold;" : "color:#0284c7; font-weight:bold;";
           }
 
-          // Xử lý hiển thị cột XIN NGHỈ nếu VĐV xin nghỉ
           let xinNghiCell = "";
           if (isAbsent) {
             let slotIdx = infoAbsent.players.indexOf(v);
             let isUnexcused = (infoAbsent.status[v] !== 'excused');
             xinNghiCell = `
-              <select onchange="setAbsentStatus('${dateStr}', ${slotIdx}, this.value)" class="text-[11px] font-bold rounded border border-slate-300 px-1 py-1 bg-white" style="color: ${isUnexcused ? '#dc2626' : '#16a34a'};">
+              <select onchange="setAbsentStatus('${dateStr}', ${slotIdx}, this.value)" class="text-[10px] font-bold rounded border border-slate-300 px-1 py-0.5 bg-white" style="color: ${isUnexcused ? '#dc2626' : '#16a34a'};">
                 <option value="unexcused" ${isUnexcused ? 'selected' : ''}>Nộp phạt (-30K)</option>
-                <option value="excused" {!isUnexcused ? 'selected' : ''}>Không nộp phạt (0K)</option>
+                <option value="excused" {!isUnexcused ? 'selected' : ''}>Không phạt (0K)</option>
               </select>
             `;
           }
@@ -822,11 +821,10 @@
           const checkboxClass = isAdminVerified ? "checkbox-cell admin-active" : "checkbox-cell";
 
           summaryRowsHtml += renderComponent('home.summary-tr-1', {
-            vColor, v, st_played: st.played, 
+            vColor, v, 
+            st_played: st.played > 0 ? st.played : (isAbsent ? 0 : '-'),
             st_wincount: st.wincount > 0 ? st.wincount : '', 
             st_losecount: st.losecount > 0 ? st.losecount : '',
-            if_st_winK_0: (st.winK > 0 ? `${st.winK}` : ''),
-            if_st_loseK_0: (st.loseK < 0 ? `${st.loseK}` : ''),
             if_bringBack_0: (bringBack > 0 ? `${bringBack}` : ''),
             if_st_total_0_class: (netTotal < 0 ? 'number-neg' : (netTotal > 0 ? 'number-pos' : 'number-zero')),
             st_total: netTotal,
@@ -837,17 +835,15 @@
         }
       });
 
-      // Quỹ còn
       let quyCon = sumBringBack + btcThuVeCalculated;
       const pStatus = paymentStatus[dateStr];
       const currentBtcAdminOption = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption) ? pStatus.btcNoteAdminOption : "NO";
       const isYes = currentBtcAdminOption === "YES";
 
-      // Render danh sách chọn VĐV xin nghỉ cho phần dưới bảng
       let countOpts = ABSENT_COUNT_OPTIONS.slice();
       let countSelect = `
-        <select onchange="setAbsentCount('${dateStr}', this.value)" class="text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded px-2 py-1">
-          ${countOpts.map(n => `<option value="${n}" ${infoAbsent.count === n ? 'selected' : ''}>${n === 0 ? 'Không có' : n + ' VĐV nghỉ'}</option>`).join('')}
+        <select onchange="setAbsentCount('${dateStr}', this.value)" class="text-[11px] font-semibold text-slate-700 bg-white border border-slate-300 rounded px-1.5 py-0.5">
+          ${countOpts.map(n => `<option value="${n}" ${infoAbsent.count === n ? 'selected' : ''}>${n === 0 ? 'Không' : n + ' VĐV'}</option>`).join('')}
         </select>
       `;
 
@@ -855,8 +851,8 @@
         let names = Array.from(new Set(vdvs));
         let optHtml = names.map(nm => `<option value="${escAbsentAttr(nm)}" ${cur === nm ? 'selected' : ''}>${nm}</option>`).join('');
         return `
-          <select onchange="setAbsentPlayerSlot('${dateStr}', ${i}, this.value)" class="text-xs font-bold border border-slate-300 rounded px-2 py-1 bg-white">
-            <option value="">-- Chọn VĐV --</option>
+          <select onchange="setAbsentPlayerSlot('${dateStr}', ${i}, this.value)" class="text-[11px] font-bold border border-slate-300 rounded px-1.5 py-0.5 bg-white max-w-[100px]">
+            <option value="">-- Chọn --</option>
             ${optHtml}
           </select>
         `;

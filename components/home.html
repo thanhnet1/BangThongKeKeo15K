@@ -209,49 +209,49 @@
 <!-- [/PART] -->
 
 <!-- [PART: summary-tr-1] -->
-<tr class="hover:bg-slate-50 transition border-b border-slate-100 text-xs">
-  <td class="py-2.5 px-3 font-bold whitespace-nowrap" style="color: {{vColor}}; text-align: left;">{{v}}</td>
-  <td class="py-2.5 px-1 text-center text-slate-700">{{st_played}}</td>
-  <td class="py-2.5 px-1 text-center font-bold text-emerald-600">{{if_st_winK_0}}</td>
-  <td class="py-2.5 px-1 text-center font-bold text-red-600">{{if_st_loseK_0}}</td>
-  <td class="py-2.5 px-1 text-center font-bold text-blue-600 whitespace-nowrap">{{if_bringBack_0}}</td>
-  <td class="py-2.5 px-1 text-center font-bold whitespace-nowrap {{if_st_total_0_class}}">{{st_total}}</td>
-  <td class="py-2.5 px-2 text-center text-slate-500">{{xinNghiCell}}</td>
-  <td class="py-2.5 px-1 text-center">
-    <input type="checkbox" onclick="togglePayment('{{payKey}}')" class="{{checkboxClass}} w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" {{if_isPaid}} title="{{if_isAdminVerified}}">
+<tr class="hover:bg-slate-50 transition border-b border-slate-100 text-[11px]">
+  <td class="py-2 px-1.5 font-bold truncate max-w-[90px]" style="color: {{vColor}}; text-align: left;" title="{{v}}">{{v}}</td>
+  <td class="py-2 px-0.5 text-center text-slate-700">{{st_played}}</td>
+  <td class="py-2 px-0.5 text-center font-bold text-emerald-600">{{st_wincount}}</td>
+  <td class="py-2 px-0.5 text-center font-bold text-red-600">{{st_losecount}}</td>
+  <td class="py-2 px-0.5 text-center font-bold text-blue-600 whitespace-nowrap">{{if_bringBack_0}}</td>
+  <td class="py-2 px-0.5 text-center font-bold whitespace-nowrap {{if_st_total_0_class}}">{{st_total}}</td>
+  <td class="py-2 px-1 text-center">{{xinNghiCell}}</td>
+  <td class="py-2 px-0.5 text-center">
+    <input type="checkbox" onclick="togglePayment('{{payKey}}')" class="{{checkboxClass}} w-3.5 h-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" {{if_isPaid}} title="{{if_isAdminVerified}}">
   </td>
-  <td class="py-2.5 px-3 font-semibold whitespace-nowrap {{noteClass}}" style="{{noteStyle}}">{{noteText}}</td>
+  <td class="py-2 px-1.5 font-semibold truncate max-w-[70px] {{noteClass}}" style="{{noteStyle}}">{{noteText}}</td>
 </tr>
 <!-- [/PART] -->
 
 <!-- [PART: summary] -->
-<div class="mt-4 sm:mt-6 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden font-sans">
+<div class="mt-3 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden font-sans">
   <!-- Tiêu đề bảng -->
-  <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
-    <h3 class="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wide flex items-center gap-2">
+  <div class="px-3 py-2.5 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2">
+    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5">
       <i class="fa-solid fa-table text-indigo-600"></i> BẢNG TỔNG HỢP KÈO NGÀY
     </h3>
-    <div class="flex items-center gap-2 bg-white border border-slate-300 rounded-lg px-3 py-1.5 shadow-sm">
-      <span class="text-xs font-bold text-red-600 whitespace-nowrap"><i class="fa-solid fa-lock"></i> Mở Khóa Admin Tích Nộp:</span>
-      <input type="password" id="adminPassInput" placeholder="Nhập Pass..." class="text-xs border border-slate-300 rounded px-2 py-1 w-28 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-      <button onclick="verifyAdminByInput()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1 rounded shadow transition">Xác Nhận</button>
+    <div class="flex items-center gap-1.5 bg-white border border-slate-300 rounded-lg px-2.5 py-1 shadow-sm">
+      <span class="text-[11px] font-bold text-red-600 whitespace-nowrap"><i class="fa-solid fa-lock"></i> Mở Admin:</span>
+      <input type="password" id="adminPassInput" placeholder="Pass..." class="text-[11px] border border-slate-300 rounded px-1.5 py-0.5 w-20 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+      <button onclick="verifyAdminByInput()" class="bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold px-2 py-0.5 rounded shadow transition">Xác Nhận</button>
     </div>
   </div>
 
-  <!-- Bảng dữ liệu chi tiết VĐV -->
+  <!-- Bảng dữ liệu chi tiết VĐV (Tối ưu Mobile dọc, không cuộn ngang rườm rà) -->
   <div class="w-full sum-table-container overflow-x-auto">
-    <table class="sum-table-responsive w-full text-left border-collapse min-w-[850px]">
+    <table class="sum-table-responsive w-full text-left border-collapse min-w-[720px]">
       <thead>
-        <tr class="bg-slate-100 text-slate-700 text-[11px] uppercase font-bold border-b border-slate-200">
-          <th class="py-2.5 px-3 border-r border-slate-200" style="width: 16%;">PICK THỦ</th>
-          <th class="py-2.5 px-2 text-center border-r border-slate-200" style="width: 8%;">SỐ TRẬN</th>
-          <th class="py-2.5 px-2 text-center border-r border-slate-200 text-emerald-700" style="width: 10%;">THẮNG/K</th>
-          <th class="py-2.5 px-2 text-center border-r border-slate-200 text-red-700" style="width: 10%;">THUA/K</th>
-          <th class="py-2.5 px-2 text-center border-r border-slate-200 text-blue-600" style="width: 10%;">MANG VỀ</th>
-          <th class="py-2.5 px-2 text-center border-r border-slate-200" style="width: 10%;">TỔNG</th>
-          <th class="py-2.5 px-2 text-center border-r border-slate-200 bg-red-50/30 text-red-700" style="width: 16%;">XIN NGHỈ</th>
-          <th class="py-2.5 px-2 text-center border-r border-slate-200 bg-amber-50/50 text-amber-800" style="width: 10%;">THỰC TẾ (ADMIN)</th>
-          <th class="py-2.5 px-3" style="width: 10%;">NOTE</th>
+        <tr class="bg-slate-100 text-slate-700 text-[10px] uppercase font-bold border-b border-slate-200">
+          <th class="py-2 px-1.5 border-r border-slate-200" style="width: 15%;">PICK THỦ</th>
+          <th class="py-2 px-0.5 text-center border-r border-slate-200" style="width: 7%;">TRẬN</th>
+          <th class="py-2 px-0.5 text-center border-r border-slate-200 text-emerald-700" style="width: 9%;">THẮNG</th>
+          <th class="py-2 px-0.5 text-center border-r border-slate-200 text-red-700" style="width: 9%;">THUA</th>
+          <th class="py-2 px-0.5 text-center border-r border-slate-200 text-blue-600" style="width: 9%;">MANG VỀ</th>
+          <th class="py-2 px-0.5 text-center border-r border-slate-200" style="width: 9%;">TỔNG</th>
+          <th class="py-2 px-1 text-center border-r border-slate-200 bg-red-50/30 text-red-700" style="width: 17%;">XIN NGHỈ</th>
+          <th class="py-2 px-0.5 text-center border-r border-slate-200 bg-amber-50/50 text-amber-800" style="width: 8%;">THỰC</th>
+          <th class="py-2 px-1.5" style="width: 17%;">NOTE</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-200">
@@ -261,40 +261,39 @@
   </div>
 
   <!-- Phần quản lý xin nghỉ phía dưới bảng -->
-  <div class="p-3 bg-red-50/20 border-t border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-    <div class="flex items-center gap-2 flex-wrap">
-      <span class="text-xs font-bold text-red-700 flex items-center gap-1.5">
-        <i class="fa-solid fa-user-slash"></i> VĐV XIN NGHỈ HÔM NAY:
+  <div class="p-2.5 bg-red-50/20 border-t border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+    <div class="flex items-center gap-1.5 flex-wrap">
+      <span class="text-[11px] font-bold text-red-700 flex items-center gap-1">
+        <i class="fa-solid fa-user-slash"></i> NGHỈ:
       </span>
       {{countSelect}}
-      <div class="flex items-center gap-2 flex-wrap">
+      <div class="flex items-center gap-1.5 flex-wrap">
         {{slots}}
       </div>
     </div>
-    <span class="text-[11px] italic text-slate-500">VĐV được chọn sẽ hiện trong bảng; chọn "Nộp phạt (-30K)" hoặc "Không nộp phạt" ở cột XIN NGHỈ.</span>
   </div>
 
   <!-- Khối tổng kết tài chính cuối bảng -->
-  <div class="border-t-2 border-slate-300 bg-slate-50 text-xs sm:text-sm font-bold divide-y divide-slate-200">
+  <div class="border-t-2 border-slate-300 bg-slate-50 text-[11px] sm:text-xs font-bold divide-y divide-slate-200">
     <div class="grid grid-cols-9 divide-x divide-slate-200 text-center items-center">
-      <div class="col-span-2 py-2.5 px-3 text-left font-extrabold text-slate-800">TỔNG BTC THU VỀ</div>
-      <div class="py-2.5 px-1"></div>
-      <div class="py-2.5 px-1"></div>
-      <div class="py-2.5 px-1 text-blue-600 font-extrabold">{{sumBringBack}}</div>
-      <div class="py-2.5 px-1 text-red-600 font-extrabold">{{btcThuVeCalculated}}</div>
-      <div class="py-2.5 px-1 text-slate-600">{{sumFine_value}}</div>
-      <div class="py-2.5 px-1 text-emerald-700 font-extrabold">{{sumThucThu}}</div>
-      <div class="py-2.5 px-3 text-right">
-        <select onchange="handleBtcNoteAdminChange('{{dateStr}}', this)" class="text-xs font-bold rounded border-slate-300 px-2 py-1 shadow-sm" style="color: {{isYes_color}};">
-          <option value="NO" {{selected_not_isYes}}>🔴 CHƯA CHUYỂN</option>
-          <option value="YES" {{selected_isYes}}>🟢 (Chuyển tổng ngày)</option>
+      <div class="col-span-2 py-2 px-2 text-left font-extrabold text-slate-800">TỔNG BTC THU VỀ</div>
+      <div class="py-2 px-0.5"></div>
+      <div class="py-2 px-0.5"></div>
+      <div class="py-2 px-0.5 text-blue-600 font-extrabold">{{sumBringBack}}</div>
+      <div class="py-2 px-0.5 text-red-600 font-extrabold">{{btcThuVeCalculated}}</div>
+      <div class="py-2 px-0.5 text-slate-600">{{sumFine_value}}</div>
+      <div class="py-2 px-0.5 text-emerald-700 font-extrabold">{{sumThucThu}}</div>
+      <div class="py-2 px-2 text-right">
+        <select onchange="handleBtcNoteAdminChange('{{dateStr}}', this)" class="text-[10px] font-bold rounded border-slate-300 px-1 py-0.5 shadow-sm" style="color: {{isYes_color}};">
+          <option value="NO" {{selected_not_isYes}}>🔴 CHƯA</option>
+          <option value="YES" {{selected_isYes}}>🟢 (ĐÃ CHUYỂN)</option>
         </select>
       </div>
     </div>
     
-    <div class="flex items-center justify-between px-4 py-3 bg-slate-100">
-      <span class="text-slate-900 font-black uppercase">Quỹ Còn:</span>
-      <span class="text-base font-black text-red-600 tracking-wider">{{quyCon}}</span>
+    <div class="flex items-center justify-between px-3 py-2.5 bg-slate-100">
+      <span class="text-slate-900 font-black uppercase text-xs">Quỹ Còn:</span>
+      <span class="text-sm font-black text-red-600 tracking-wider">{{quyCon}}</span>
     </div>
   </div>
 </div>

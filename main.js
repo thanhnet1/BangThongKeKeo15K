@@ -703,7 +703,7 @@
     }
 /* ▲▲▲ KẾT THÚC KHỐI [HOME-ABSENT] ▲▲▲ */
 
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Thống Kê & Tính Toán Tổng Hợp Ngày ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const targetContainer = container || document.getElementById("tabContent");
       if (!targetContainer) return;
@@ -712,8 +712,10 @@
       const currentMode = dateKeoMode[dateStr] || "default";
       let stats = {};
 
+      // Khởi tạo bảng điểm cho danh sách VĐV
       vdvs.forEach(v => { stats[v] = { played: 0, wincount: 0, losecount: 0, winK: 0, loseK: 0, total: 0 }; });
 
+      // Tính điểm các trận đã đấu trong ngày
       matches.forEach(m => {
         const s1 = parseInt(m.score1);
         const s2 = parseInt(m.score2);
@@ -736,11 +738,15 @@
         }
       });
 
-      let sumBringBack = 0, sumThucThu = 0, sumAmThucTe = 0, sumFine = 0;
-      let btcThuVeCalculated = 0; 
+      // KHỞI TẠO CÁC BIẾN TỔNG KẾT THEO YÊU CẦU MỚI
+      let sumBringBack = 0;          // Thắng Mang Về Quỹ (>= 4 Trận)
+      let sumThucThu = 0;             // Thực Thu BTC Đã Nhận (Tổng các ô được tick tại Cột Tổng)
+      let sumFine = 0;                // Tổng Tiền Phạt Nghỉ
+      let btcThuVeCalculated = 0;     // Tổng Tiền BTC Thu Về (Đã Tích Thực Tế - Chỉ tính cột TỔNG ÂM)
+      let quyDuChuaDuTieuChi = 0;     // Quỹ Dư / Thiếu Ngày (Giá trị tiền DƯƠNG của VĐV thi đấu < 4 trận)
+
       const fineMap = getAbsentFineMap(dateStr);
       let summaryRowsHtml = "";
-
       const uniqueVdvs = Array.from(new Set(vdvs));
 
       uniqueVdvs.forEach((v) => {
@@ -757,15 +763,28 @@
           const netTotal = st.total + fine;
           sumFine += fine;
 
+          // 1. Phân loại Thắng mang về quỹ (>= 4 trận) & Quỹ dư chưa đủ tiêu chí (< 4 trận)
           let bringBack = 0;
-          if (st.played >= 4 && netTotal > 0) { bringBack = netTotal; sumBringBack += bringBack; }
-          if (netTotal < 0) { sumAmThucTe += netTotal; }
-
-          if (isPaid) {
-            if (netTotal < 0) sumThucThu += Math.abs(netTotal);
-            btcThuVeCalculated += netTotal;
+          if (st.played >= 4 && netTotal > 0) {
+            bringBack = netTotal;
+            sumBringBack += bringBack;
+          } else if (st.played < 4 && netTotal > 0) {
+            // Tiền dương của VĐV nhưng chưa đủ > 4 trận
+            quyDuChuaDuTieuChi += netTotal;
           }
 
+          // 2. Tính toán khi VĐV ĐÃ ĐƯỢC TICK [THỰC] (isPaid === true)
+          if (isPaid) {
+            // Realtime: Thực Thu BTC Đã Nhận = Tổng giá trị tại cột TỔNG
+            sumThucThu += netTotal;
+
+            // Realtime: Tổng Tiền BTC Thu Về (Đã Tích Thực Tế) = Chỉ tính các khoản TỔNG ÂM
+            if (netTotal < 0) {
+              btcThuVeCalculated += Math.abs(netTotal);
+            }
+          }
+
+          // Ghi chú trạng thái nộp/nhận
           let noteText = "";
           let noteStyle = "";
           let noteClass = "";
@@ -804,23 +823,42 @@
         }
       });
 
-      let quyCon = sumThucThu - Math.abs(sumAmThucTe + sumBringBack);
+      // Lấy trạng thái BTC xác nhận chuyển tổng
       const pStatus = paymentStatus[dateStr];
       const currentBtcAdminOption = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption) ? pStatus.btcNoteAdminOption : "NO";
       const isYes = currentBtcAdminOption === "YES";
 
+      // Hàm format hiển thị tiền dạng đơn vị K (+10K, -15K, 0K)
+      const formatMoneyK = (val, forceSign = true) => {
+        if (val === 0) return "0K";
+        if (val > 0) return (forceSign ? "+" : "") + (val) + "K";
+        return (val) + "K";
+      };
+
+      // Nạp dữ liệu vào component template summary
       let summaryTableHtml = renderComponent('home.summary', {
         summaryRowsHtml,
-        sumBringBack: (sumBringBack > 0 ? `+${sumBringBack}K` : `${sumBringBack}K`),
-        btcThuVeCalculated: (btcThuVeCalculated !== 0 ? (btcThuVeCalculated > 0 ? `+${btcThuVeCalculated}K` : `${btcThuVeCalculated}K`) : '0K'),
+        sumBringBack: formatMoneyK(sumBringBack),
+        
+        // Cột 3: Tổng Tiền BTC Thu Về (Đã Tích Thực Tế) -> Hiện số dương thu phạt
+        btcThuVeCalculated: btcThuVeCalculated > 0 ? `+${btcThuVeCalculated}K` : "0K",
+        btcThuVe_color: btcThuVeCalculated > 0 ? "#059669" : "#64748b",
+        
         sumFine_color: (sumFine < 0 ? '#dc2626' : '#64748b'),
         sumFine_value: (sumFine < 0 ? `${sumFine}K` : '0K'),
-        sumThucThu: `${sumThucThu}K`, dateStr,
+        
+        // Cột 4: Thực Thu BTC Đã Nhận -> Giá trị hiển thị từ cột Tổng
+        sumThucThu: formatMoneyK(sumThucThu), 
+        sumThucThu_color: sumThucThu < 0 ? '#dc2626' : (sumThucThu > 0 ? '#059669' : '#334155'),
+        
+        dateStr,
         isYes_color: (isYes ? '#16a34a' : '#dc2626'),
         selected_isYes: (isYes ? 'selected' : ''),
         selected_not_isYes: (!isYes ? 'selected' : ''),
-        quyCon_color: (quyCon < 0 ? '#dc2626' : '#059669'),
-        quyCon: (quyCon > 0 ? `+${quyCon}K` : `${quyCon}K`)
+        
+        // Cột 6: Quỹ Dư / Thiếu Ngày Này -> Hiển thị số tiền dương của VĐV chưa đủ > 4 trận
+        quyCon_color: quyDuChuaDuTieuChi > 0 ? "#059669" : "#64748b",
+        quyCon: formatMoneyK(quyDuChuaDuTieuChi)
       });
 
       targetContainer.innerHTML = (matchesHtml || "") + (summaryTableHtml || "");

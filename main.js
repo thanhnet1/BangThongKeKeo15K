@@ -720,7 +720,7 @@
     }
 /* ▲▲▲ KẾT THÚC XÁC THỰC ADMIN ▲▲▲ */
 
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Thống Kê Tổng Hợp Ngày (Cộng phạt nghỉ trực tiếp vào TỔNG & Đồng bộ cho mọi ngày) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Cập nhật chuẩn Thắng/Thua số nguyên & Phạt nghỉ cộng vào Tổng) ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const targetContainer = container || document.getElementById("tabContent");
       if (!targetContainer) return;
@@ -731,7 +731,6 @@
 
       vdvs.forEach(v => { stats[v] = { played: 0, wincount: 0, losecount: 0, winK: 0, loseK: 0, total: 0 }; });
 
-      // Tính tổng điểm thắng/thua theo các trận đấu trong ngày
       matches.forEach(m => {
         const s1 = parseInt(m.score1);
         const s2 = parseInt(m.score2);
@@ -756,7 +755,7 @@
 
       let sumBringBack = 0, sumThucThu = 0, sumFine = 0;
       let btcThuVeCalculated = 0; 
-      const fineMap = getAbsentFineMap(dateStr); // Không phép: -30k | Có phép: 0k[cite: 10]
+      const fineMap = getAbsentFineMap(dateStr);
       let summaryRowsHtml = "";
 
       const uniqueVdvs = Array.from(new Set(vdvs));
@@ -772,9 +771,8 @@
           const vIndex = vdvs.indexOf(v);
           const vColor = VDV_COLORS[vIndex % VDV_COLORS.length];
 
-          // Tính tiền phạt nghỉ và CỘNG TRỰC TIẾP VÀO CỘT TỔNG[cite: 10]
-          const fine = isAbsent ? fineMap[v] : 0; 
-          const netTotal = st.total + fine;
+          const fine = isAbsent ? fineMap[v] : 0; // Tiền phạt nghỉ không phép (-30K)
+          const netTotal = st.total + fine;     // Cộng trực tiếp vào cột Tổng
           sumFine += fine;
 
           let bringBack = 0;
@@ -790,13 +788,14 @@
 
           let noteText = "";
           let noteStyle = "";
+          let noteClass = "";
 
           if (isAbsent && st.played === 0) {
             if (fine < 0) {
-              noteText = isPaid ? "Đã nộp" : "Chưa nộp";
+              noteText = isPaid ? "Đã nộp phạt" : "Chưa nộp";
               noteStyle = isPaid ? "color:#16a34a; font-weight:bold;" : "color:#dc2626; font-weight:bold;";
             } else {
-              noteText = "Nghỉ phép";
+              noteText = "Nghi - không phạt";
               noteStyle = "color:#64748b;";
             }
           } else if (netTotal < 0) {
@@ -807,15 +806,14 @@
             noteStyle = isPaid ? "color:#16a34a; font-weight:bold;" : "color:#0284c7; font-weight:bold;";
           }
 
-          // Cột XIN NGHỈ gọn gàng tối ưu không tràn khung
           let xinNghiCell = "";
           if (isAbsent) {
             let slotIdx = infoAbsent.players.indexOf(v);
             let isUnexcused = (infoAbsent.status[v] !== 'excused');
             xinNghiCell = `
-              <select onchange="setAbsentStatus('${dateStr}', ${slotIdx}, this.value)" class="text-[9px] font-bold rounded border border-slate-300 px-0.5 py-0.5 bg-white w-full" style="color: ${isUnexcused ? '#dc2626' : '#16a34a'};">
-                <option value="unexcused" ${isUnexcused ? 'selected' : ''}>-30K</option>
-                <option value="excused" {!isUnexcused ? 'selected' : ''}>0K</option>
+              <select onchange="setAbsentStatus('${dateStr}', ${slotIdx}, this.value)" class="text-[10px] font-bold rounded border border-slate-300 px-1 py-0.5 bg-white" style="color: ${isUnexcused ? '#dc2626' : '#16a34a'};">
+                <option value="unexcused" ${isUnexcused ? 'selected' : ''}>Nộp phạt (-30K)</option>
+                <option value="excused" {!isUnexcused ? 'selected' : ''}>Không phạt (0K)</option>
               </select>
             `;
           }
@@ -832,7 +830,7 @@
             st_total: netTotal,
             xinNghiCell,
             checkboxClass, if_isPaid: (isPaid ? 'checked' : ''), payKey,
-            if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'), noteText, noteStyle
+            if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'), noteText, noteStyle, noteClass
           });
         }
       });
@@ -844,8 +842,8 @@
 
       let countOpts = ABSENT_COUNT_OPTIONS.slice();
       let countSelect = `
-        <select onchange="setAbsentCount('${dateStr}', this.value)" class="text-[9px] font-semibold text-slate-700 bg-white border border-slate-300 rounded px-1 py-0.5">
-          ${countOpts.map(n => `<option value="${n}" ${infoAbsent.count === n ? 'selected' : ''}>${n === 0 ? '0' : n}</option>`).join('')}
+        <select onchange="setAbsentCount('${dateStr}', this.value)" class="text-[11px] font-semibold text-slate-700 bg-white border border-slate-300 rounded px-1.5 py-0.5">
+          ${countOpts.map(n => `<option value="${n}" ${infoAbsent.count === n ? 'selected' : ''}>${n === 0 ? 'Không' : n + ' VĐV'}</option>`).join('')}
         </select>
       `;
 
@@ -853,8 +851,8 @@
         let names = Array.from(new Set(vdvs));
         let optHtml = names.map(nm => `<option value="${escAbsentAttr(nm)}" ${cur === nm ? 'selected' : ''}>${nm}</option>`).join('');
         return `
-          <select onchange="setAbsentPlayerSlot('${dateStr}', ${i}, this.value)" class="text-[9px] font-bold border border-slate-300 rounded px-0.5 py-0.5 bg-white max-w-[70px] truncate">
-            <option value="">--VĐV--</option>
+          <select onchange="setAbsentPlayerSlot('${dateStr}', ${i}, this.value)" class="text-[11px] font-bold border border-slate-300 rounded px-1.5 py-0.5 bg-white max-w-[100px]">
+            <option value="">-- Chọn --</option>
             ${optHtml}
           </select>
         `;

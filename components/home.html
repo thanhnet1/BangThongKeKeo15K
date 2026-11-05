@@ -203,9 +203,9 @@
     <option value="">-- Chọn VĐV --</option>
     {{opts}}
   </select>
-  <select onchange="setAbsentStatus('{{d}}', {{i}}, this.value)" class="text-[11px] font-bold border-none p-0 focus:ring-0 cursor-pointer ml-0.5" style="color: {{fine_color}};">
-    <option value="unexcused" {{selected_unexcused}}>-30K</option>
-    <option value="excused" {{selected_excused}}>0K</option>
+  <select onchange="setAbsentStatus('{{d}}', {{i}}, this.value)" class="text-[11px] font-bold border-none p-0 focus:ring-0 cursor-pointer ml-0.5 text-center" style="color: {{fine_color}};">
+    <option value="unexcused" {{selected_unexcused}}>-30k</option>
+    <option value="excused" {{selected_excused}}>0k</option>
   </select>
 </div>
 <!-- [/PART] -->
@@ -222,7 +222,7 @@
   <td class="py-1.5 px-0.5 text-center font-bold text-red-600">{{st_losecount}}</td>
   <td class="py-1.5 px-0.5 text-center font-bold text-blue-600 whitespace-nowrap">{{if_bringBack_0}}</td>
   <td class="py-1.5 px-0.5 text-center font-bold whitespace-nowrap {{if_st_total_0_class}}">{{st_total}}</td>
-  <td class="py-1.5 px-0.5 text-center">{{xinNghiCell}}</td>
+  <td class="py-1.5 px-0.5 text-center flex justify-center items-center">{{xinNghiCell}}</td>
   <td class="py-1.5 px-0.5 text-center">
     <input type="checkbox" onclick="togglePayment('{{payKey}}')" class="{{checkboxClass}} w-3.5 h-3.5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer" {{if_isPaid}} title="{{if_isAdminVerified}}">
   </td>
@@ -251,8 +251,8 @@
         <tr class="bg-slate-100 text-slate-700 text-[10px] uppercase font-bold border-b border-slate-200">
           <th class="py-2 px-1 border-r border-slate-200" style="width: 18%;">PICK THỦ</th>
           <th class="py-2 px-0.5 text-center border-r border-slate-200" style="width: 7%;">TRẬN</th>
-          <th class="py-2 px-0.5 text-center border-r border-slate-200 text-emerald-700" style="width: 8%;">WIN</th>
-          <th class="py-2 px-0.5 text-center border-r border-slate-200 text-red-700" style="width: 8%;">LOSE</th>
+          <th class="py-2 px-0.5 text-center border-r border-slate-200 text-emerald-700" style="width: 8%;">THẮNG</th>
+          <th class="py-2 px-0.5 text-center border-r border-slate-200 text-red-700" style="width: 8%;">THUA</th>
           <th class="py-2 px-0.5 text-center border-r border-slate-200 text-blue-600" style="width: 9%;">BỎ TÚI</th>
           <th class="py-2 px-0.5 text-center border-r border-slate-200 font-extrabold text-slate-900" style="width: 10%;">TỔNG</th>
           <th class="py-2 px-0.5 text-center border-r border-slate-200 bg-red-50/30 text-red-700" style="width: 16%;">NGHỈ</th>
@@ -270,7 +270,7 @@
   <div class="p-2 bg-red-50/20 border-t border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
     <div class="flex items-center gap-1.5 flex-wrap">
       <span class="text-[11px] font-bold text-red-700 flex items-center gap-1">
-        <i class="fa-solid fa-user-slash"></i> PICK THỦ NGHỈ:
+        <i class="fa-solid fa-user-slash"></i> NGHỈ:
       </span>
       {{countSelect}}
       <div class="flex items-center gap-1 flex-wrap">
@@ -297,9 +297,10 @@
       </div>
     </div>
     
-    <div class="flex items-center justify-between px-3 py-2 bg-slate-100">
-      <span class="text-slate-900 font-black uppercase text-xs">Quỹ Còn:</span>
-      <span class="text-sm font-black text-red-600 tracking-wider">{{quyCon}}</span>
+    <!-- Dòng TỔNG BTC THỰC THU (Chuyển từ giá trị Quỹ Còn và đổi màu chữ trắng trên nền đen) -->
+    <div class="flex items-center justify-between px-3 py-2.5 bg-slate-900 text-white">
+      <span class="font-black uppercase text-xs tracking-wider">TỔNG BTC THỰC THU:</span>
+      <span class="text-sm sm:text-base font-black text-emerald-400 tracking-wider">{{sumThucThu}}</span>
     </div>
   </div>
 </div>

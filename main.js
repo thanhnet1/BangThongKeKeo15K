@@ -1045,12 +1045,10 @@
 /* ▲▲▲ KẾT THÚC KHỐI [TONGHOP-MENU] ▲▲▲ */
 /* ▼▼▼ KHỐI [TONGHOP-TAB] · Bảng Tổng Hợp Các Ngày ▼▼▼ BẮT ĐẦU */
     function renderTongHopTab(container) {
+      // Chỉ lấy các ngày có trạng thái btcNoteAdminOption === "YES" (Đã chuyển về quỹ)
       let activeDates = dates.filter(d => {
-        const matches = matchesData[d] || [];
-        const hasMatchData = matches.some(m => (!isNaN(parseInt(m.score1)) && !isNaN(parseInt(m.score2))) || m.c1_p1 || m.c1_p2 || m.c2_p1 || m.c2_p2);
         const pStatus = paymentStatus[d];
-        const isYes = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption === "YES");
-        return hasMatchData || isYes;
+        return (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption === "YES");
       });
 
       if (activeDates.length === 0) {
@@ -1111,7 +1109,6 @@
         });
 
         let btcThuVeCalculatedDay = 0;
-        let sumBringBackDay = 0;
 
         uniqueVdvs.forEach(v => {
           let st = statsDay[v];
@@ -1120,13 +1117,10 @@
             vdvRowKeoSum[v] += st.total;
 
             btcThuVeCalculatedDay += st.total;
-            if (st.played >= 4 && st.total > 0) {
-              sumBringBackDay += st.total;
-            }
           }
         });
 
-        // Gán đúng giá trị bằng đúng BTC thực thu của ngày đó (tổng các khoản VĐV + bring back nếu có)
+        // Gán đúng giá trị bằng đúng BTC thực thu của ngày đó
         dayTotalsSum[d] = btcThuVeCalculatedDay;
       });
 

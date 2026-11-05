@@ -1012,8 +1012,8 @@
             if (data.mini2MatchesA) mini2MatchesA = data.mini2MatchesA;
             if (data.mini2MatchesB) mini2MatchesB = data.mini2MatchesB;
             if (data.mini2Knockout) mini2Knockout = Object.assign(mini2Knockout, data.mini2Knockout);
-            if (data.miniGame2Tour1Content) mini2Tour1Content = data.miniGame2Tour1Content;
-            if (data.miniGame2Tour2Content) mini2Tour2Content = data.miniGame2Tour2Content;
+            if (data.mini2Tour1Content) mini2Tour1Content = data.mini2Tour1Content;
+            if (data.mini2Tour2Content) mini2Tour2Content = data.mini2Tour2Content;
             if (data.mini2KeoMode) mini2KeoMode = data.mini2KeoMode;
             if (data.mini2Payment) mini2Payment = data.mini2Payment;
 
@@ -1110,7 +1110,7 @@
           }
         });
 
-        let sumAmDay = 0;
+        let btcThuVeCalculatedDay = 0;
         let sumBringBackDay = 0;
 
         uniqueVdvs.forEach(v => {
@@ -1119,22 +1119,15 @@
             vdvDayTotals[v][d] = st.total;
             vdvRowKeoSum[v] += st.total;
 
-            if (st.total < 0) {
-              sumAmDay += st.total;
-            } else if (st.played >= 4 && st.total > 0) {
+            btcThuVeCalculatedDay += st.total;
+            if (st.played >= 4 && st.total > 0) {
               sumBringBackDay += st.total;
             }
           }
         });
 
-        const pStatus = paymentStatus[d];
-        const isYes = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption === "YES");
-
-        if (isYes) {
-          dayTotalsSum[d] = sumAmDay - sumBringBackDay;
-        } else {
-          dayTotalsSum[d] = 0;
-        }
+        // Gán đúng giá trị bằng đúng BTC thực thu của ngày đó (tổng các khoản VĐV + bring back nếu có)
+        dayTotalsSum[d] = btcThuVeCalculatedDay;
       });
 
       let grandTotalAllDays = 0;

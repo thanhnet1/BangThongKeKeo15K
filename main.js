@@ -720,7 +720,7 @@
     }
 /* ▲▲▲ KẾT THÚC XÁC THỰC ADMIN ▲▲▲ */
 
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Chỉnh sửa cột Phạt Nghỉ & hiển thị đủ 3 giá trị BTC Thu Về) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Căn giữa cột NGHỈ & tổng thực thu) ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const targetContainer = container || document.getElementById("tabContent");
       if (!targetContainer) return;
@@ -811,7 +811,7 @@
             let slotIdx = infoAbsent.players.indexOf(v);
             let isUnexcused = (infoAbsent.status[v] !== 'excused');
             xinNghiCell = `
-              <select onchange="setAbsentStatus('${dateStr}', ${slotIdx}, this.value)" class="text-[10px] font-bold rounded border border-slate-300 px-0.5 py-0.5 bg-white w-full" style="color: ${isUnexcused ? '#dc2626' : '#16a34a'};">
+              <select onchange="setAbsentStatus('${dateStr}', ${slotIdx}, this.value)" class="text-[10px] font-bold rounded border border-slate-300 px-1 py-0.5 bg-white text-center mx-auto block" style="color: ${isUnexcused ? '#dc2626' : '#16a34a'};">
                 <option value="unexcused" ${isUnexcused ? 'selected' : ''}>-30k</option>
                 <option value="excused" ${!isUnexcused ? 'selected' : ''}>0k</option>
               </select>
@@ -835,7 +835,6 @@
         }
       });
 
-      let quyCon = sumBringBack + btcThuVeCalculated;
       const pStatus = paymentStatus[dateStr];
       const currentBtcAdminOption = (pStatus && typeof pStatus === 'object' && pStatus.btcNoteAdminOption) ? pStatus.btcNoteAdminOption : "NO";
       const isYes = currentBtcAdminOption === "YES";
@@ -851,7 +850,7 @@
         let names = Array.from(new Set(vdvs));
         let optHtml = names.map(nm => `<option value="${escAbsentAttr(nm)}" ${cur === nm ? 'selected' : ''}>${nm}</option>`).join('');
         return `
-          <select onchange="setAbsentPlayerSlot('${dateStr}', ${i}, this.value)" class="text-[11px] font-bold border border-slate-300 rounded px-1 py-0.5 bg-white max-w-[90px]">
+          <select onchange="setAbsentPlayerSlot('${dateStr}', ${i}, this.value)" class="text-[11px] font-bold border border-slate-300 rounded px-1.5 py-0.5 bg-white max-w-[90px]">
             <option value="">-- Chọn --</option>
             ${optHtml}
           </select>
@@ -870,9 +869,7 @@
         dateStr,
         isYes_color: (isYes ? '#16a34a' : '#dc2626'),
         selected_isYes: (isYes ? 'selected' : ''),
-        selected_not_isYes: (!isYes ? 'selected' : ''),
-        quyCon_color: (quyCon < 0 ? '#dc2626' : '#059669'),
-        quyCon: quyCon !== 0 ? (quyCon > 0 ? `+${quyCon}` : quyCon) : '0'
+        selected_not_isYes: (!isYes ? 'selected' : '')
       });
 
       targetContainer.innerHTML = (matchesHtml || "") + (summaryTableHtml || "");
@@ -1183,7 +1180,6 @@
       container.innerHTML = html;
     }
 /* ▲▲▲ KẾT THÚC KHỐI [TONGHOP-TAB] ▲▲▲ */
-
 /* ████████████████ MODULE MINIGAME · MINIGAME - DÙNG CHUNG ████████████████ */
 /* ▼▼▼ KHỐI [MINIGAME-COMMON-DATA] · Dữ liệu chung ▼▼▼ BẮT ĐẦU */
     let miniGame1Content = "Lịch Thi Đấu Team A & Team B Xoay V vòng.";

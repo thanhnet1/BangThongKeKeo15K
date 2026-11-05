@@ -720,7 +720,7 @@
     }
 /* ▲▲▲ KẾT THÚC XÁC THỰC ADMIN ▲▲▲ */
 
-/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Cập nhật chuẩn Thắng/Thua số nguyên & Phạt nghỉ cộng vào Tổng) ▼▼▼ BẮT ĐẦU */
+/* ▼▼▼ KHỐI [HOME-SUMMARY] · Bảng Tổng Hợp Ngày (Chỉnh sửa cột Phạt Nghỉ & hiển thị đủ 3 giá trị BTC Thu Về) ▼▼▼ BẮT ĐẦU */
     function renderSingleDaySummaryTable(dateStr, matchesHtml, container) {
       const targetContainer = container || document.getElementById("tabContent");
       if (!targetContainer) return;
@@ -771,9 +771,10 @@
           const vIndex = vdvs.indexOf(v);
           const vColor = VDV_COLORS[vIndex % VDV_COLORS.length];
 
-          const fine = isAbsent ? fineMap[v] : 0; // Tiền phạt nghỉ không phép (-30K)
-          const netTotal = st.total + fine;     // Cộng trực tiếp vào cột Tổng
+          const fine = isAbsent ? fineMap[v] : 0; // Tiền phạt nghỉ không phép (-30K) hoặc 0K
+          const netTotal = st.total + fine;       // Cộng trực tiếp phạt/nghỉ vào cột TỔNG
           sumFine += fine;
+          btcThuVeCalculated += netTotal;
 
           let bringBack = 0;
           if (st.played >= 4 && netTotal > 0) {
@@ -782,7 +783,6 @@
           }
 
           if (isPaid) {
-            btcThuVeCalculated += netTotal;
             sumThucThu += netTotal;
           }
 
@@ -795,7 +795,7 @@
               noteText = isPaid ? "Đã nộp phạt" : "Chưa nộp";
               noteStyle = isPaid ? "color:#16a34a; font-weight:bold;" : "color:#dc2626; font-weight:bold;";
             } else {
-              noteText = "Nghi - không phạt";
+              noteText = "Nghỉ - 0k";
               noteStyle = "color:#64748b;";
             }
           } else if (netTotal < 0) {
@@ -806,14 +806,14 @@
             noteStyle = isPaid ? "color:#16a34a; font-weight:bold;" : "color:#0284c7; font-weight:bold;";
           }
 
-          let xinNghiCell = "";
+          let xinNghiCell = "-";
           if (isAbsent) {
             let slotIdx = infoAbsent.players.indexOf(v);
             let isUnexcused = (infoAbsent.status[v] !== 'excused');
             xinNghiCell = `
-              <select onchange="setAbsentStatus('${dateStr}', ${slotIdx}, this.value)" class="text-[10px] font-bold rounded border border-slate-300 px-1 py-0.5 bg-white" style="color: ${isUnexcused ? '#dc2626' : '#16a34a'};">
-                <option value="unexcused" ${isUnexcused ? 'selected' : ''}>Nộp phạt (-30K)</option>
-                <option value="excused" {!isUnexcused ? 'selected' : ''}>Không phạt (0K)</option>
+              <select onchange="setAbsentStatus('${dateStr}', ${slotIdx}, this.value)" class="text-[10px] font-bold rounded border border-slate-300 px-0.5 py-0.5 bg-white w-full" style="color: ${isUnexcused ? '#dc2626' : '#16a34a'};">
+                <option value="unexcused" ${isUnexcused ? 'selected' : ''}>-30k</option>
+                <option value="excused" ${!isUnexcused ? 'selected' : ''}>0k</option>
               </select>
             `;
           }
@@ -827,7 +827,7 @@
             st_losecount: st.losecount > 0 ? st.losecount : '',
             if_bringBack_0: (bringBack > 0 ? `${bringBack}` : ''),
             if_st_total_0_class: (netTotal < 0 ? 'number-neg' : (netTotal > 0 ? 'number-pos' : 'number-zero')),
-            st_total: netTotal,
+            st_total: netTotal !== 0 ? (netTotal > 0 ? `+${netTotal}` : netTotal) : '0',
             xinNghiCell,
             checkboxClass, if_isPaid: (isPaid ? 'checked' : ''), payKey,
             if_isAdminVerified: (isAdminVerified ? '' : 'Cần đăng nhập Admin'), noteText, noteStyle, noteClass
@@ -851,7 +851,7 @@
         let names = Array.from(new Set(vdvs));
         let optHtml = names.map(nm => `<option value="${escAbsentAttr(nm)}" ${cur === nm ? 'selected' : ''}>${nm}</option>`).join('');
         return `
-          <select onchange="setAbsentPlayerSlot('${dateStr}', ${i}, this.value)" class="text-[11px] font-bold border border-slate-300 rounded px-1.5 py-0.5 bg-white max-w-[100px]">
+          <select onchange="setAbsentPlayerSlot('${dateStr}', ${i}, this.value)" class="text-[11px] font-bold border border-slate-300 rounded px-1 py-0.5 bg-white max-w-[90px]">
             <option value="">-- Chọn --</option>
             ${optHtml}
           </select>
@@ -862,17 +862,17 @@
         summaryRowsHtml,
         countSelect,
         slots,
-        sumBringBack: sumBringBack !== 0 ? sumBringBack : '',
-        btcThuVeCalculated: btcThuVeCalculated !== 0 ? btcThuVeCalculated : '0',
+        sumBringBack: sumBringBack !== 0 ? (sumBringBack > 0 ? `+${sumBringBack}` : sumBringBack) : '',
+        btcThuVeCalculated: btcThuVeCalculated !== 0 ? (btcThuVeCalculated > 0 ? `+${btcThuVeCalculated}` : btcThuVeCalculated) : '0',
         sumFine_color: (sumFine < 0 ? '#dc2626' : '#64748b'),
-        sumFine_value: sumFine !== 0 ? sumFine : '0',
-        sumThucThu: sumThucThu !== 0 ? sumThucThu : '0', 
+        sumFine_value: sumFine !== 0 ? `${sumFine}k` : '0k',
+        sumThucThu: sumThucThu !== 0 ? (sumThucThu > 0 ? `+${sumThucThu}` : sumThucThu) : '0', 
         dateStr,
         isYes_color: (isYes ? '#16a34a' : '#dc2626'),
         selected_isYes: (isYes ? 'selected' : ''),
         selected_not_isYes: (!isYes ? 'selected' : ''),
         quyCon_color: (quyCon < 0 ? '#dc2626' : '#059669'),
-        quyCon: quyCon
+        quyCon: quyCon !== 0 ? (quyCon > 0 ? `+${quyCon}` : quyCon) : '0'
       });
 
       targetContainer.innerHTML = (matchesHtml || "") + (summaryTableHtml || "");
@@ -2692,7 +2692,6 @@
           if (data.mini1Sub2KeoMode) mini1Sub2KeoMode = data.mini1Sub2KeoMode;
           if (data.mini1Sub2Payment) mini1Sub2Payment = data.mini1Sub2Payment;
 
-          // SỬA ĐỔI QUAN TRỌNG: Gọi tạo lại 17 trận nếu nhận mảng rỗng từ Firestore
           if (data.miniGame1Sub2Matches && data.miniGame1Sub2Matches.length >= 17) {
             miniGame1Sub2Matches = data.miniGame1Sub2Matches;
           } else {
@@ -2806,7 +2805,7 @@
       try {
         await loadComponents();
       } catch (err) {
-        showComponentError(err);
+        console.error(err);
         return;
       }
       mountShell();

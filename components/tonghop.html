@@ -1,62 +1,96 @@
-<!-- [PART: dates-menu-item] -->
-<button onclick="switchTab('{{d}}')" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-lg transition {{if_currentTab_d_class}}">
-  📅 Ngày {{d}}
-</button>
-<!-- [/PART] -->
-
-<!-- [PART: tab-head-div-1] -->
-<div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 text-center text-slate-500 text-xs">
-  Chưa có dữ liệu ngày thi đấu hoặc chưa có ngày nào được chuyển về quỹ.
-</div>
-<!-- [/PART] -->
-
-<!-- [PART: tab-head] -->
-<div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden font-sans">
-  <div class="px-3 py-2.5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-    <h3 class="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5">
-      <i class="fa-solid fa-chart-line text-emerald-600"></i> BẢNG TỔNG HỢP TẤT CẢ CÁC NGÀY (ĐÃ CHUYỂN VỀ QUỸ)
-    </h3>
-  </div>
-  <div class="overflow-x-auto scrollbar-thin">
-    <table class="w-full text-center border-collapse min-w-[700px] text-[11px] sm:text-xs">
-      <thead>
-        <tr class="bg-slate-100 text-slate-700 uppercase font-bold border-b border-slate-200">
-          <th class="py-2.5 px-2 text-left border-r border-slate-200 sticky left-0 bg-slate-100 z-10 w-36">PICK THỦ</th>
-          {{activeDates_rows}}
-          <th class="py-2.5 px-2 border-l border-slate-200 bg-slate-900 text-white font-extrabold">TỔNG CỘNG</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-200">
-<!-- [/PART] -->
-
-<!-- [PART: tab-head-tr-1] -->
-        <tr class="hover:bg-slate-50 transition">
-          <td class="py-2 px-2 font-bold text-left border-r border-slate-200 sticky left-0 bg-white z-10 truncate" style="color: {{vdvColor}};" title="{{v}}">{{v}}</td>
-          {{{dayCells}}}
-          <td class="py-2 px-2 font-black border-l border-slate-200 {{totalCls}}">{{rowSum_text}}</td>
-        </tr>
-<!-- [/PART] -->
-
-<!-- [PART: tab-head-td-1] -->
-          <td class="py-2.5 px-2 font-bold {{cls}}">{{val_text}}</td>
-<!-- [/PART] -->
-
-<!-- [PART: tab-head-tr-2] -->
-        <tr class="bg-slate-50 font-black text-xs sm:text-sm border-t-2 border-slate-300">
-          <td class="py-3 px-2 text-left border-r border-slate-200 sticky left-0 bg-slate-50 z-10 uppercase text-slate-800">TỔNG QUỸ NGÀY</td>
-          {{{daySumCells}}}
-          <td class="py-3 px-2 border-l border-slate-200 {{grandTotalCls}}">{{grandTotalAllDays_text}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-<!-- [/PART] -->
+<!-- ==========================================================================
+     COMPONENT: components/tonghop.html — TỔNG HỢP CÁC NGÀY: nút menu + danh sách ngày + bảng tổng hợp.
+     Mỗi PART nằm giữa dòng chú thích "[PART: tên]" và dòng chú thích "[/PART]" (HTML được giữ nguyên từng ký tự).
+     {{tên_slot}} là chỗ js/main.js điền dữ liệu (số liệu, hàng của bảng...). Sửa chữ/màu/bố cục thoải mái;
+     chỉ cần giữ nguyên các {{tên_slot}} (không đổi tên, không xóa nếu vẫn muốn hiện dữ liệu đó).
+     ========================================================================== -->
 
 <!-- [PART: nav] -->
-<div class="relative group">
-  <button onclick="switchTab('tonghop')" class="w-full flex items-center justify-between px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 rounded-lg transition">
-    <span class="flex items-center gap-2"><i class="fa-solid fa-table-cells text-indigo-600"></i> Tổng Hợp Các Ngày</span>
-  </button>
-</div>
+
+        <div class="nav-item">
+          <button class="nav-btn" onclick="toggleMenu('menuTongHop', event)">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>TỔNG HỢP CÁC NGÀY ▾</span>
+          </button>
+          <div class="dropdown-menu" id="menuTongHop">
+            <div id="datesMenuList"></div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item" style="font-weight: 800; color: var(--accent-color);" onclick="switchTab('tonghop')"><i class="fa-solid fa-table"></i> Bảng Tổng Hợp Tất Cả Ngày</div>
+          </div>
+        </div>
+
+<!-- [/PART] -->
+
+<!-- từ hàm renderDatesMenu() · slots: if_currentTab_d_class, d -->
+<!-- [PART: dates-menu-item] -->
+
+        <div class="dropdown-item {{if_currentTab_d_class}}" onclick="switchTab('{{d}}')">
+          📅 Ngày {{d}}
+        </div>
+      
+<!-- [/PART] -->
+
+<!-- từ hàm renderTongHopTab() · không có slot -->
+<!-- [PART: tab-head-div-1] -->
+
+          <div class="card">
+            <div class="card-header-flex">
+              <h2 class="card-title">BẢNG TỔNG HỢP CÁC NGÀY</h2>
+            </div>
+            <div style="padding: 20px; text-align: center; font-weight: bold; color: #64748b;">
+              Hiện chưa có ngày nào phát sinh dữ liệu trận đấu hoặc chuyển tổng tiền.
+            </div>
+          </div>
+        
+<!-- [/PART] -->
+
+<!-- từ hàm renderTongHopTab() · slots: activeDates_rows -->
+<!-- [PART: tab-head] -->
+
+        <div class="card">
+          <div class="card-header-flex">
+            <h2 class="card-title">BẢNG TỔNG HỢP CÁC NGÀY (CHỈ NGÀY ĐÃ TẠO)</h2>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 140px; text-align: left; padding-left: 8px;">VĐV (PICK THỦ)</th>
+                  {{activeDates_rows}}
+                  <th style="background-color: #fef08a; color: #854d0e;">TỔNG KÈO</th>
+                </tr>
+              </thead>
+              <tbody>
+      
+<!-- [/PART] -->
+
+<!-- từ hàm renderTongHopTab() · slots: vdvColor, v, dayCells, totalCls, rowSum_text -->
+<!-- [PART: tab-head-tr-1] -->
+
+          <tr>
+            <td style="color: {{vdvColor}}; font-weight: 800; font-size: 11px; text-align: left; padding-left: 8px;">{{v}}</td>
+            {{dayCells}}
+            <td class="{{totalCls}}" style="background-color: #fef9c3;"><strong>{{rowSum_text}}</strong></td>
+          </tr>
+        
+<!-- [/PART] -->
+
+<!-- từ hàm renderTongHopTab() · slots: cls, val_text -->
+<!-- [PART: tab-head-td-1] -->
+<td class="{{cls}}"><strong>{{val_text}}</strong></td>
+<!-- [/PART] -->
+
+<!-- từ hàm renderTongHopTab() · slots: daySumCells, grandTotalCls, grandTotalAllDays_text -->
+<!-- [PART: tab-head-tr-2] -->
+
+                <tr class="total-summary-row">
+                  <td style="color: red; text-align: center;"><strong>TỔNG NGÀY</strong></td>
+                  {{daySumCells}}
+                  <td class="{{grandTotalCls}}" style="background-color: #fef08a;"><strong>{{grandTotalAllDays_text}}</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      
 <!-- [/PART] -->

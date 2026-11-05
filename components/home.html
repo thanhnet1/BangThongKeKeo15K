@@ -254,7 +254,8 @@
           <th class="py-2 px-0.5 text-center border-r border-slate-200 text-emerald-700" style="width: 8%;">WIN</th>
           <th class="py-2 px-0.5 text-center border-r border-slate-200 text-red-700" style="width: 8%;">LOSE</th>
           <th class="py-2 px-0.5 text-center border-r border-slate-200 text-blue-600" style="width: 9%;">BỎ TÚI</th>
-          <th class="py-2 px-0.5 text-center border-r border-slate-200 style="width: 10%;">TỔNG</th>
+          <!-- Đổi màu chữ TỔNG sang trắng trên nền đen cho đồng bộ -->
+          <th class="py-2 px-0.5 text-center border-r border-slate-200 text-white" style="width: 10%;">TỔNG</th>
           <th class="py-2 px-0.5 text-center border-r border-slate-200 bg-red-50/30 text-red-700" style="width: 16%;">NGHỈ</th>
           <th class="py-2 px-0.5 text-center border-r border-slate-200 bg-amber-50/50 text-amber-800" style="width: 8%;">THỰC</th>
           <th class="py-2 px-1" style="width: 16%;">NOTE</th>
@@ -297,10 +298,10 @@
       </div>
     </div>
     
-    <!-- Dòng TỔNG BTC THỰC THU (Chuyển từ giá trị Quỹ Còn và đổi màu chữ trắng trên nền đen) -->
-    <div class="flex items-center justify-between px-3 py-2.5 bg-slate-900 text-white">
-      <span class="font-black uppercase text-xs tracking-wider">TỔNG BTC THỰC THU:</span>
-      <span class="text-sm sm:text-base font-black text-emerald-400 tracking-wider">{{sumThucThu}}</span>
+    <!-- Dòng TỔNG BTC THỰC THU: Chuyển nền thành trắng, chữ đậm nổi bật -->
+    <div class="flex items-center justify-between px-3 py-2.5 bg-white text-slate-900 border-t border-slate-200">
+      <span class="font-black uppercase text-xs tracking-wider text-slate-800">TỔNG BTC THỰC THU:</span>
+      <span class="text-sm sm:text-base font-black text-emerald-600 tracking-wider">{{sumThucThu}}</span>
     </div>
   </div>
 </div>
